@@ -8,6 +8,14 @@ int main(void)
 
   engine.initialize(800, 600);
   
+  while(engine.running())
+  {
+  	engine.update();
+  	engine.beginRender();
+
+  	engine.endRender();
+  }
+
   engine.shutDown();
 
   return 0;  

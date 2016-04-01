@@ -1,6 +1,8 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#include <GLFW/glfw3.h>
+
 // Engine base class
 
 class Log;
@@ -22,6 +24,21 @@ public:
 	// GetterMethods
 	static Log * getLog();
 
+	// check for gl version
+	static bool checkVersionSupport(unsigned int version_major, unsigned int version_minor );
+
+	// update function
+	static void update();
+
+	// returns true if application should continue running
+	static bool running();
+
+	// starts the rendering cycle
+	static void beginRender();
+
+	// ends the rendering cycle
+	static void endRender();
+
 private:
 
 	// indicates if Engine is initialized
@@ -32,6 +49,9 @@ private:
 
 	// Subsystems
 	static RenderSubsystem * m_render_system;
+
+	// gl context
+	static GLFWwindow * m_window;
 };
 
 

@@ -19,6 +19,12 @@ public:
 	// shuts down the render system
 	bool shutDown();
 
+	// starts the rendering cycle
+	void startRender();
+
+	// ends the rendering cycle
+	void endRender();
+
 private:
 
 	// the gl window pointer
