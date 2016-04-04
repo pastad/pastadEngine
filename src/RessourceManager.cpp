@@ -1,6 +1,7 @@
 #include "RessourceManager.h"
 
 #include "Model.h"
+#include "Object.h"
 
 
 std::map<std::string, Model *> RessourceManager::m_models;
@@ -32,4 +33,10 @@ Model * RessourceManager::loadModel(std::string path)
 	}
 
 	return model;
+}
+
+Object * RessourceManager::getObject(std::string path)
+{
+	Model * m = loadModel(path);
+	return m->getInstance();
 }
