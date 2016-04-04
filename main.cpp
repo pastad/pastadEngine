@@ -11,14 +11,10 @@ int main(void)
   // run the main loop
   while(engine.running())
   {
+    // do stuff here
+
   	engine.update();
-  	engine.beginRender();
-
-  	// render stuff here
-  	// should be later done by engine through a scene
-
-
-  	engine.endRender();
+  	engine.render();
   }
 
   engine.shutDown();

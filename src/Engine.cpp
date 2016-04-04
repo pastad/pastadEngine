@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Log.h"
+#include "Scene.h"
 #include "RenderSubsystem.h"
 #include "IOSubsystem.h"
 
@@ -13,6 +14,7 @@ RenderSubsystem * Engine::m_render_system;
 IOSubsystem * Engine::m_io_system;
 GLFWwindow * Engine::m_window;
 unsigned int Engine::m_system_flags;
+Scene * Engine::m_scene;
 
 Engine::Engine()
 {
@@ -175,6 +177,16 @@ void Engine::endRender()
 	}
 }
 
+void Engine::render()
+{
+	beginRender();
+
+	if(m_scene != nullptr)
+		m_scene->render();
+
+	endRender();
+}
+
 void Engine::errorShutDown()
 {
 	m_log->log("Engine", "error shut down");
@@ -212,3 +224,14 @@ bool Engine::shutDownSubsystems()
 
 	return true;
 }
+
+void Engine::setScene(Scene * scene)
+{
+	m_scene = scene;
+}
+
+Scene * Engine::getScene()
+{
+	return m_scene;
+}
+

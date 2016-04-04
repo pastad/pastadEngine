@@ -7,6 +7,7 @@
 // Engine class ... nothing more .. nothing less
 
 class Log;
+class Scene;
 class RenderSubsystem;
 class IOSubsystem;
 
@@ -45,11 +46,14 @@ public:
 	// returns true if application should continue running
 	static bool running();
 
-	// starts the rendering cycle
-	static void beginRender();
+	// renders the current set scene
+	static void render();
+	
+	// sets the scene 
+	static void setScene(Scene * scene);
 
-	// ends the rendering cycle
-	static void endRender();
+	// returns the current set scene
+	static Scene * getScene();
 
 private:
 
@@ -69,11 +73,21 @@ private:
 	// the subsystems to be started
 	static unsigned int m_system_flags;
 
+	// the scene that should be used
+	static Scene * m_scene;
+
 	// starts the subsystems
 	static bool startUpSubsystems();
 
 	// shuts down the subsystems
 	static bool shutDownSubsystems();
+
+	// starts the rendering cycle
+	static void beginRender();
+
+	// ends the rendering cycle
+	static void endRender();
+
 
 };
 
