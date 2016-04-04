@@ -5,32 +5,40 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(SOURCE
    ${SOURCE}
+   
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Engine.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Log.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/src/Subsystem.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/src/RenderSubsystem.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Subsystems/Subsystem.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Subsystems/RenderSubsystem.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Subsystems/IOSubsystem.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/Shader.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/external/gl_core_4_.c
    
 )
 set(HEADERS
    ${HEADERS}
+  
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Engine.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Log.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystem.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderSubsystem.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems/Subsystem.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems/RenderSubsystem.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems/IOSubsystem.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/Shader.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/external/gl_core_4_.h
 
 )
 
-
-
-
 find_package(OpenGL REQUIRED)
-find_package(GLEW REQUIRED)
-include_directories( ${OPENGL_INCLUDE_DIRS}  ${GLEW_INCLUDE_DIRS} ${GLFW_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+include_directories( ${OPENGL_INCLUDE_DIRS}  {GLFW_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include
+${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems
+${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders
+${CMAKE_CURRENT_SOURCE_DIR}/external )
 
 LINK_DIRECTORIES(${GLFW_LIBRARY_DIR})
 
 add_executable(Engine main.cpp ${SOURCE} ${HEADERS})
 
-target_link_libraries(Engine  GL glfw3   ${GLEW_LIBRARY} ${GLFW_LIBRARIES}  ${OPENGL_LIBRARIES} Xcursor Xinerama Xxf86vm Xi Xrandr  pthread dl  )
+target_link_libraries(Engine  GL glfw3  ${GLFW_LIBRARIES}  ${OPENGL_LIBRARIES} Xcursor Xinerama Xxf86vm Xi Xrandr pthread dl  )
 
 

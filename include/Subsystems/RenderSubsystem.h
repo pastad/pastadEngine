@@ -1,6 +1,6 @@
 #ifndef RENDERSUBSYSTEM_H
 #define RENDERSUBSYSTEM_H
-
+#include "Engine.h"
 #include <GLFW/glfw3.h>
 
 #include "Subsystem.h"
@@ -19,11 +19,18 @@ public:
 	// shuts down the render system
 	bool shutDown();
 
+	// returns true if everything is up and running
+	bool systemCheck();
+
+
+	// --- Additionals ---
+
 	// starts the rendering cycle
 	void startRender();
 
 	// ends the rendering cycle
 	void endRender();
+	
 
 private:
 

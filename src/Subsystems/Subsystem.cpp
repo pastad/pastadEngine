@@ -9,11 +9,13 @@ Subsystem::~Subsystem()
 }
 bool Subsystem::startUp()
 {
-
 	return true;
 }
 bool Subsystem::shutDown()
 {
-
+	return true;
+}
+bool Subsystem::systemCheck()
+{
 	return true;
 }
