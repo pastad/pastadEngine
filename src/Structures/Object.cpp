@@ -1,6 +1,6 @@
 #include "Object.h"
 
-Object::Object():m_transform(glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(1,1,1))
+Object::Object():m_transform(glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(0.5,0.5,0.5))
 {	
 }
 

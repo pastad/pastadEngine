@@ -43,15 +43,22 @@ protected:
 	// binds the program for usage
 	void bind();
 
-	// uniform setters
+	// uniform and subroutone setters
 	void setUniform(const std::string name, glm::vec3 v);
 	void setUniform(const std::string name, glm::vec4 v);
 	void setUniform(const std::string name, glm::mat4 v);
 	void setUniform(const std::string name, float v);
 	void setUniform(const std::string name, int v);
+	void setRenderPassSubroutine(const std::string pass);
 
 	// checks for program errors (true if failed)
-	bool checkError(GLuint flag, std::string msg);
+	bool checkError(GLuint flag, std::string msg, GLuint shader,  bool use_program);
+	
+	//checks uniform errors
+	void checkUniformError(std::string place);
+
+	// prints the active uniforms
+	void printUniforms();
 
 private:
 

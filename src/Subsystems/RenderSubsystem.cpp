@@ -1,9 +1,15 @@
 #include "RenderSubsystem.h"
+
 #include "Log.h"
+#include "Camera.h"
+#include "Scene.h"
+#include "RenderShader.h"
+
 
 RenderSubsystem::RenderSubsystem()
 {	
 	m_initialized = false;
+	
 }
 
 RenderSubsystem::~RenderSubsystem()
@@ -15,7 +21,9 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 	if(!m_initialized)
 	{
 		m_window = window;
-
+		m_shader = new RenderShader();
+	  if( ! m_shader->load("shaders/rendershaderV1") )
+			return false;
 		Engine::getLog()->log("RenderSubsystem", "started");
 		m_initialized = true;
 		return true;
@@ -38,16 +46,34 @@ void RenderSubsystem::startRender()
 	{
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
  	 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+ 	 	glEnable(GL_DEPTH_TEST);
+ 	 	
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+ 	 	m_shader->use();
+ 	 	m_shader->setRenderPass(1);
+ 	 	Camera * cam = Engine::getScene()->getCamera();
+ 	 	m_shader->setProjectionMatrix(cam->getProjection());
+ 	 	m_shader->setViewMatrix(cam->getView());
+
+    glFinish();
 	}
 }
 
 void RenderSubsystem::endRender()
 {
 	if(m_initialized)
+	{		
 		glfwSwapBuffers(m_window);
+	}
 }
 
 bool RenderSubsystem::systemCheck()
 {
 	return m_initialized;
+}
+
+RenderShader * RenderSubsystem::getRenderShader()
+{
+	return m_shader;
 }

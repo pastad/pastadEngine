@@ -55,6 +55,13 @@ public:
 	// returns the current set scene
 	static Scene * getScene();
 
+	// window size getters
+	static unsigned int getWindowWidth();
+	static unsigned int getWindowHeight();
+
+	// returns the render subsystem
+	static RenderSubsystem * getRenderSubsystem();
+
 private:
 
 	// indicates if Engine is initialized
@@ -75,6 +82,10 @@ private:
 
 	// the scene that should be used
 	static Scene * m_scene;
+
+	// the window size
+	static unsigned int m_win_width;
+	static unsigned int m_win_height;
 
 	// starts the subsystems
 	static bool startUpSubsystems();

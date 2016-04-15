@@ -2,9 +2,13 @@
 
 #include "Model.h"
 #include "Object.h"
+#include "Texture.h"
+#include "Engine.h"
+#include "Log.h"
 
 
 std::map<std::string, Model *> RessourceManager::m_models;
+std::map<std::string, Texture *> RessourceManager::m_textures;
 
 RessourceManager::RessourceManager()
 {
@@ -25,18 +29,35 @@ Model * RessourceManager::loadModel(std::string path)
 	if( it != m_models.end() )
 	{
 		model = it->second;
+		Engine::getLog()->log("RessourceManager","found model",path);
 	}
 	else
 	{
-		model =  new Model();
+		model =  new Model(path);
+		model->load();
 		m_models[path] = model;
+		Engine::getLog()->log("RessourceManager","loaded model",path);
 	}
 
 	return model;
 }
 
-Object * RessourceManager::getObject(std::string path)
-{
-	Model * m = loadModel(path);
-	return m->getInstance();
+Texture * RessourceManager::loadTexture(std::string path)
+{	
+	Texture * texture;
+
+	std::map<std::string, Texture *>::iterator it = m_textures.find(path);
+	
+	if( it != m_textures.end() )
+	{
+		texture = it->second;
+	}
+	else
+	{
+		texture =  new Texture(path);
+		texture->load();
+		m_textures[path] = texture;
+	}
+
+	return texture;
 }

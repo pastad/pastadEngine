@@ -5,6 +5,8 @@
 
 #include "Subsystem.h"
 
+class RenderShader;
+
 // Subsystem that is used for rendering
 
 class RenderSubsystem : public Subsystem
@@ -30,12 +32,18 @@ public:
 
 	// ends the rendering cycle
 	void endRender();
+
+	// returns the shader used for standard rendering
+	RenderShader * getRenderShader();
 	
 
 private:
 
 	// the gl window pointer
 	GLFWwindow * m_window;
+
+	// the render shader
+	RenderShader * m_shader; 
 	
 };
 

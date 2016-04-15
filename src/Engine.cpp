@@ -15,6 +15,8 @@ IOSubsystem * Engine::m_io_system;
 GLFWwindow * Engine::m_window;
 unsigned int Engine::m_system_flags;
 Scene * Engine::m_scene;
+unsigned int Engine::m_win_width;
+unsigned int Engine::m_win_height;
 
 Engine::Engine()
 {
@@ -27,6 +29,8 @@ Engine::~Engine()
 
 bool Engine::initialize(unsigned int width, unsigned int height, unsigned int system_flags)
 {
+	m_win_width = width;
+	m_win_height = height;
 	m_log = new Log();
 	m_log->debugMode();
 
@@ -49,11 +53,14 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
+	glfwWindowHint(GLFW_DOUBLEBUFFER,GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
 
-	// create gl context
-	m_window = glfwCreateWindow(width, height, "Engine", nullptr, nullptr);
+	// create gl context ..... -1 to fix black window bug
+	m_window = glfwCreateWindow(width-1, height-1, "Engine", nullptr, nullptr);
 	glfwMakeContextCurrent(m_window);
+
+	
 
 	// check window creation
 	if(m_window == nullptr)
@@ -87,6 +94,11 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 		glfwTerminate();
   	return false;
 	}
+
+	// for fixing black window bug 
+	glfwSetWindowSize(m_window,m_win_width,m_win_height);
+	glDepthFunc(GL_LEQUAL);
+  glCullFace(GL_BACK);
 
 	m_initialized = true;
 	m_log->log("Engine", "initialized");
@@ -142,8 +154,9 @@ void Engine::update()
 {
 	if(m_initialized)
 	{
+		if(m_scene != nullptr)
+			m_scene->update();
 		glfwPollEvents();
-
 	}
 }
 
@@ -162,34 +175,31 @@ bool Engine::running()
 }
 
 void Engine::beginRender()
-{
-	if(m_initialized)
-	{
-		m_render_system->startRender();
-	}
+{	
+	m_render_system->startRender();	
 }
 
 void Engine::endRender()
 {
-	if(m_initialized)
-	{
-		m_render_system->endRender();
-	}
+	m_render_system->endRender();	
 }
 
 void Engine::render()
 {
-	beginRender();
+	if(m_initialized)
+	{
+		beginRender();
 
-	if(m_scene != nullptr)
-		m_scene->render();
+		if(m_scene != nullptr)
+			m_scene->render();
 
-	endRender();
+		endRender();
+	}
 }
 
 void Engine::errorShutDown()
 {
-	m_log->log("Engine", "error shut down");
+	m_log->log("Engine", "shut down due to request");
 	glfwSetWindowShouldClose(m_window, GL_TRUE);
 }
 
@@ -197,7 +207,7 @@ bool Engine::startUpSubsystems()
 {
 	if( m_system_flags & IO_SUBSYSTEM )
 	{
-		if(! m_io_system->startUp() )
+		if(! m_io_system->startUp(m_window) )
 			return false;
 	}
 	if( m_system_flags & RENDER_SUBSYSTEM )
@@ -235,3 +245,16 @@ Scene * Engine::getScene()
 	return m_scene;
 }
 
+unsigned int Engine::getWindowWidth()
+{
+	return m_win_width;
+}
+unsigned int Engine::getWindowHeight()
+{
+	return m_win_height;
+}
+
+RenderSubsystem * Engine::getRenderSubsystem()
+{
+	return m_render_system;
+}
