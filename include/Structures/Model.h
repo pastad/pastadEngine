@@ -17,6 +17,7 @@
 class Object;
 class Mesh;
 class Material;
+class RenderShader;
 
 class Model
 {
@@ -35,7 +36,7 @@ public:
 	bool load();
 
 	// renders the model
-	void render();
+	void render(RenderShader * render_shader);
 
 private:
 

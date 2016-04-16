@@ -8,12 +8,12 @@
 
 RenderSubsystem::RenderSubsystem()
 {	
-	m_initialized = false;
-	
+	m_initialized = false;	
 }
 
 RenderSubsystem::~RenderSubsystem()
 {	
+	delete m_shader;
 }
 
 bool RenderSubsystem::startUp(GLFWwindow * window)
@@ -21,9 +21,11 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 	if(!m_initialized)
 	{
 		m_window = window;
-		m_shader = new RenderShader();
+		m_shader = new RenderShader();		
+
 	  if( ! m_shader->load("shaders/rendershaderV1") )
 			return false;
+
 		Engine::getLog()->log("RenderSubsystem", "started");
 		m_initialized = true;
 		return true;
@@ -58,6 +60,26 @@ void RenderSubsystem::startRender()
 
     glFinish();
 	}
+}
+
+void RenderSubsystem::renderPassOne()
+{
+
+}
+void RenderSubsystem::renderPassTwo()
+{
+	
+}
+
+void RenderSubsystem::render()
+{
+	startRender();
+	Scene * scene = Engine::getScene();
+
+	if(scene != nullptr)
+		scene->render(m_shader);
+
+	endRender();
 }
 
 void RenderSubsystem::endRender()

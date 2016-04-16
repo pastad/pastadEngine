@@ -27,11 +27,12 @@ public:
 
 	// --- Additionals ---
 
-	// starts the rendering cycle
-	void startRender();
+	// Renders the scene currently set in the Engine
+	void render();
 
-	// ends the rendering cycle
-	void endRender();
+	// the render passess
+	void renderPassOne();
+	void renderPassTwo();
 
 	// returns the shader used for standard rendering
 	RenderShader * getRenderShader();
@@ -44,6 +45,12 @@ private:
 
 	// the render shader
 	RenderShader * m_shader; 
+
+	// starts the rendering cycle
+	void startRender();
+
+	// ends the rendering cycle
+	void endRender();
 	
 };
 

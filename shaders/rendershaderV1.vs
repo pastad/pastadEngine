@@ -8,6 +8,7 @@ layout( location = 4 ) in mat4 ModelMatrix;
 out vec3 Position;
 out vec3 Normal;
 out vec2 TexCoord;
+out vec4 ModelPos;
 
 uniform mat4 ViewMat;
 uniform mat3 NormalMat;
@@ -18,11 +19,12 @@ uniform mat4 ProjectionMat;
 void main()
 {
   mat4 MVMatrix = ViewMat* ModelMatrix;
-  mat4 MVP = ProjectionMat * MVMatrix ;
+  mat4 MVP      = ProjectionMat * MVMatrix ;
 
-  Normal = normalize(VertexNormal);
-
-  gl_Position =  MVP * vec4(VertexPosition, 1.0f);
+  Normal   = normalize(VertexNormal);
   Position = vec3(MVMatrix * vec4(VertexPosition,1.0f)  );
   TexCoord = VertexCoord;
+  ModelPos = ModelMatrix * vec4(VertexPosition,1.0f);
+
+  gl_Position =  MVP * vec4(VertexPosition, 1.0f);
 }

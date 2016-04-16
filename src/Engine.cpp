@@ -1,6 +1,7 @@
 #include "Engine.h"
 
 #include <iostream>
+#include <sstream>
 
 #include "Log.h"
 #include "Scene.h"
@@ -17,6 +18,11 @@ unsigned int Engine::m_system_flags;
 Scene * Engine::m_scene;
 unsigned int Engine::m_win_width;
 unsigned int Engine::m_win_height;
+float Engine::m_time_samples[NUM_TIME_SAMPLES];
+unsigned int Engine::m_current_time_sample;
+float Engine::m_time_delta;
+float Engine::m_time_last;
+
 
 Engine::Engine()
 {
@@ -31,6 +37,10 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 {
 	m_win_width = width;
 	m_win_height = height;
+	m_current_time_sample = 0;
+	Engine::m_time_delta = 0.0f;
+	Engine::m_time_last = -1.0f;
+
 	m_log = new Log();
 	m_log->debugMode();
 
@@ -54,13 +64,12 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
 	glfwWindowHint(GLFW_DOUBLEBUFFER,GL_TRUE);
+	glfwWindowHint(GLFW_SAMPLES,8);
 	glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
 
 	// create gl context ..... -1 to fix black window bug
 	m_window = glfwCreateWindow(width-1, height-1, "Engine", nullptr, nullptr);
-	glfwMakeContextCurrent(m_window);
-
-	
+	glfwMakeContextCurrent(m_window);	
 
 	// check window creation
 	if(m_window == nullptr)
@@ -97,8 +106,13 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 
 	// for fixing black window bug 
 	glfwSetWindowSize(m_window,m_win_width,m_win_height);
+
+	// set callback for resize
+	glfwSetWindowSizeCallback(m_window, windowSizeChangedCallback);
+
 	glDepthFunc(GL_LEQUAL);
   glCullFace(GL_BACK);
+  glEnable(GL_MULTISAMPLE);
 
 	m_initialized = true;
 	m_log->log("Engine", "initialized");
@@ -155,9 +169,43 @@ void Engine::update()
 	if(m_initialized)
 	{
 		if(m_scene != nullptr)
-			m_scene->update();
+			m_scene->update(m_time_delta);
+
 		glfwPollEvents();
+
+		timeUpdate();
 	}
+}
+
+void Engine::timeUpdate()
+{
+	float now = float(glfwGetTime());
+	m_time_samples[m_current_time_sample] = now;
+
+  if(m_time_last == -1.0f)
+  	m_time_last = now;
+  else
+  {  	
+  	m_time_delta = now - m_time_last;
+  	m_time_last = now;
+  }
+
+  // smooth the FPS for better representation
+  m_current_time_sample = (m_current_time_sample + 1) % NUM_TIME_SAMPLES;
+
+  if( m_current_time_sample == 0 ) 
+  {
+    float sample_sum = 0.0f;
+    for( int i = 0; i < NUM_TIME_SAMPLES-1 ; i++ )
+      sample_sum += m_time_samples[i + 1] - m_time_samples[i];
+    float fps = NUM_TIME_SAMPLES / sample_sum;
+
+    std::stringstream ss;
+    
+    ss.precision(4);
+    ss<< "("<< m_win_width<< " x "<< m_win_height << ") FPS: " << fps << "  Delta: " <<m_time_delta;
+    glfwSetWindowTitle(m_window, ss.str().c_str());
+  }
 }
 
 bool Engine::running()
@@ -174,26 +222,12 @@ bool Engine::running()
 	return true;
 }
 
-void Engine::beginRender()
-{	
-	m_render_system->startRender();	
-}
-
-void Engine::endRender()
-{
-	m_render_system->endRender();	
-}
 
 void Engine::render()
 {
 	if(m_initialized)
 	{
-		beginRender();
-
-		if(m_scene != nullptr)
-			m_scene->render();
-
-		endRender();
+		m_render_system->render();
 	}
 }
 
@@ -254,7 +288,9 @@ unsigned int Engine::getWindowHeight()
 	return m_win_height;
 }
 
-RenderSubsystem * Engine::getRenderSubsystem()
+void Engine::windowSizeChangedCallback(GLFWwindow* window, int width, int height)
 {
-	return m_render_system;
+	m_win_width = width;
+	m_win_height = height;
+	glViewport(0, 0, width, height);
 }

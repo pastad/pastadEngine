@@ -22,6 +22,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Texture.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Material.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/IndexedRepresentation.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Light.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RessourceManager.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/external/gl_core_4_.c
    
@@ -43,8 +44,9 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Model.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Mesh.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Texture.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Material.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/IndexedRepresentation.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Material.h 
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/IndexedRepresentation.h   
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Light.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RessourceManager.h
    ${CMAKE_CURRENT_SOURCE_DIR}/external/gl_core_4_.h
 

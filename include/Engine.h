@@ -4,6 +4,8 @@
 #include "gl_core_4_.h"
 #include <GLFW/glfw3.h>
 
+#define NUM_TIME_SAMPLES 40
+
 // Engine class ... nothing more .. nothing less
 
 class Log;
@@ -46,7 +48,7 @@ public:
 	// returns true if application should continue running
 	static bool running();
 
-	// renders the current set scene
+	// renders the current set scene threw the render subsystem
 	static void render();
 	
 	// sets the scene 
@@ -58,9 +60,6 @@ public:
 	// window size getters
 	static unsigned int getWindowWidth();
 	static unsigned int getWindowHeight();
-
-	// returns the render subsystem
-	static RenderSubsystem * getRenderSubsystem();
 
 private:
 
@@ -87,18 +86,27 @@ private:
 	static unsigned int m_win_width;
 	static unsigned int m_win_height;
 
+	// times samples
+	static float m_time_samples[NUM_TIME_SAMPLES];
+
+	// current time sample
+	static unsigned int m_current_time_sample;
+
+	// the time difference between two updates and the last time
+	static float m_time_delta;
+	static float m_time_last;
+
 	// starts the subsystems
 	static bool startUpSubsystems();
 
 	// shuts down the subsystems
 	static bool shutDownSubsystems();
 
-	// starts the rendering cycle
-	static void beginRender();
+	// updates the time (FPS,...)
+	static void timeUpdate();
 
-	// ends the rendering cycle
-	static void endRender();
-
+	// callbacks for opengl
+	static void windowSizeChangedCallback(GLFWwindow* window, int width, int height);
 
 };
 

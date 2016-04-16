@@ -38,16 +38,15 @@ Object * Model::getInstance()
 	return obj;
 }
 
-void Model::render()
+void Model::render(RenderShader * render_shader)
 {	
   std::vector<glm::mat4> matrices;
   for(std::vector<Object *>::iterator it = m_instances.begin(); it != m_instances.end();it++)
       matrices.insert(matrices.end(),  (*it)->getModelMatrix()  );
-  //Engine::getLog()->log("Model","rendering",std::to_string(matrices.size()));
 
   for(std::vector<Mesh *>::iterator it = m_meshes.begin(); it != m_meshes.end(); it++)
   {
-    m_materials.at((*it)->getMaterialIndex())->bind(0);
+    m_materials.at((*it)->getMaterialIndex())->bind(0, render_shader);
     (*it)->bufferModelMatrices(&matrices);
     (*it)->render(matrices.size());
   }
@@ -78,7 +77,7 @@ bool Model::load()
   m_GlobalInverseTransform.Inverse();
 
   processScene();
-  Engine::getLog()->log("Model", "loaded. Nr meshes:",std::to_string(m_meshes.size()));
+  //Engine::getLog()->log("Model", "loaded. Nr meshes:",std::to_string(m_meshes.size()));
 	return true;
 }
 
@@ -86,7 +85,6 @@ void Model::processScene()
 {
   int vertexes = 0;
   int indices =0;
-  std::cout <<m_scene->mNumMeshes <<std::endl;
   for (unsigned int i = 0 ; i <m_scene->mNumMeshes ; i++)
   {
     const aiMesh* mesh = m_scene->mMeshes[i];

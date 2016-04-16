@@ -6,6 +6,8 @@
 #include <glm/glm.hpp>
 #include "Engine.h"
 
+class RenderShader;
+
 class Texture
 {
     public:
@@ -20,7 +22,7 @@ class Texture
         bool load();
 
         // binds the texure to the texture unit
-        void bind(unsigned int tex);
+        void bind(unsigned int tex, RenderShader * render_shader);
     protected:
 
     private:

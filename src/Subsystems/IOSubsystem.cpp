@@ -12,6 +12,7 @@
 bool IOSubsystem::m_keys[GLFW_KEY_LAST];
 double IOSubsystem::m_mouse_x = -1;
 double IOSubsystem::m_mouse_y= -1;
+glm::vec2 IOSubsystem::m_mouse_delta;
 
 IOSubsystem::IOSubsystem()
 {
@@ -104,12 +105,24 @@ void IOSubsystem::mouseMoveCallback(GLFWwindow* window, double x, double y )
   }
   else
   {
-    double deltax=m_mouse_x -x;
-    double deltay=m_mouse_y -y;
-   // Engine::getScene()->getCamera()->rotate(deltax,deltay);
+    double deltax= x - m_mouse_x ;
+    double deltay= y - m_mouse_y ;
+    m_mouse_delta = glm::vec2(deltax,deltay);
+    m_mouse_x =x;
+    m_mouse_y =y;
   }
 }
 bool IOSubsystem::isKeyPressed(int key)
 {
   return m_keys[key];
+}
+glm::vec2 IOSubsystem::getMouseCoordinates()
+{
+  return glm::vec2(m_mouse_x,m_mouse_y);
+}
+glm::vec2 IOSubsystem::getMouseDelta()
+{
+  glm::vec2 ret = m_mouse_delta; 
+  m_mouse_delta = glm::vec2(0,0);
+  return ret;
 }

@@ -8,38 +8,38 @@
 
 Mesh::Mesh(const aiMesh*mesh, int mat_index)
 {
-    m_mat_index = mat_index;
-    IndexedRepresentation model;
+  m_mat_index = mat_index;
+  IndexedRepresentation model;
 
-    aiVector3D zero(0.0f, 0.0f, 0.0f);
+  aiVector3D zero(0.0f, 0.0f, 0.0f);
 
-    for(unsigned int i = 0; i < mesh->mNumVertices; i++)
+  for(unsigned int i = 0; i < mesh->mNumVertices; i++)
+  {
+    aiVector3D* pPos      = &(mesh->mVertices[i]);
+    aiVector3D* pNormal   = &(mesh->mNormals[i]);
+    aiVector3D* pTexCoord = mesh->HasTextureCoords(0) ? &(mesh->mTextureCoords[0][i]) : &zero;
+
+    model.m_positions.push_back(glm::vec3(pPos->x,pPos->y,pPos->z )  );
+    model.m_texCoords.push_back(glm::vec2(pTexCoord->x,1-pTexCoord->y)); // Flipp tex coords in y
+    model.m_normals.push_back(glm::vec3(pNormal->x,pNormal->y,pNormal->z ));
+  }
+
+
+  for (unsigned int i = 0 ; i < mesh->mNumFaces ; i++)
+  {
+    const aiFace& face = mesh->mFaces[i];
+    assert(face.mNumIndices == 3);
+
+    if(face.mNumIndices == 3)
     {
-        aiVector3D* pPos      = &(mesh->mVertices[i]);
-        aiVector3D* pNormal   = &(mesh->mNormals[i]);
-        aiVector3D* pTexCoord = mesh->HasTextureCoords(0) ? &(mesh->mTextureCoords[0][i]) : &zero;
+      model.m_indices.push_back(face.mIndices[0]);
+      model.m_indices.push_back(face.mIndices[1]);
+      model.m_indices.push_back(face.mIndices[2]);
 
-        model.m_positions.push_back(glm::vec3(pPos->x,pPos->y,pPos->z )  );
-        model.m_texCoords.push_back(glm::vec2(pTexCoord->x,1-pTexCoord->y)); // Flipp tex coords in y
-        model.m_normals.push_back(glm::vec3(pNormal->x,pNormal->y,pNormal->z ));
     }
+  }
 
-
-    for (unsigned int i = 0 ; i < mesh->mNumFaces ; i++)
-    {
-        const aiFace& face = mesh->mFaces[i];
-        assert(face.mNumIndices == 3);
-
-        if(face.mNumIndices == 3)
-        {
-            model.m_indices.push_back(face.mIndices[0]);
-            model.m_indices.push_back(face.mIndices[1]);
-            model.m_indices.push_back(face.mIndices[2]);
-
-        }
-    }
-
-    initMesh(model);
+  initMesh(model);
 }
 
 Mesh::~Mesh()

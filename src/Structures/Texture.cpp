@@ -1,6 +1,7 @@
 #include "Texture.h"
 #include <SOIL/SOIL.h>
 #include "RenderSubsystem.h"
+#include "RenderShader.h"
 
 #include "Log.h"
 
@@ -35,11 +36,8 @@ bool Texture::load()
 
     return true;
 }
-void Texture::bind(unsigned int unit)
+void Texture::bind(unsigned int unit, RenderShader * render_shader)
 {
-   // RenderSystem::getInstance()->getShader()->setColorOnly(0); TODO: change me
-   // RenderSystem::getInstance()->getShader()->updateTexture(unit);
-     Engine::getLog()->log("Texture", "shader not set PROGRAMMER");
     glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(GL_TEXTURE_2D, m_texture);
 }

@@ -4,9 +4,12 @@
 // the shader that renders
 
 #include <string>
+#include <vector>
 
 #include "Shader.h"
 #include "Material.h"
+
+class Light;
 
 class RenderShader :  public Shader
 {
@@ -32,8 +35,21 @@ public:
   // sets the material that should be used
   void setMaterial(MaterialColorSpecs specs);
 
+  // sets the lights that should be rendered
+  void setLights(std::vector<Light*> * lights);
+
+  // sets the camera for rendering effects
+  void setCameraPosition(glm::vec3 pos);
+
+  // binds the shader  
   void use();
+  
 private:
+
+  // function for setting the lights
+  void setDirectionalLight(Light* light, unsigned int pos);
+  void setSpotLight(Light* light, unsigned int pos);
+  void setPointLight(Light* light, unsigned int pos);
 
 };
 

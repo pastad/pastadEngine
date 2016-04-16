@@ -18,6 +18,9 @@ RessourceManager::~RessourceManager()
 {	
 	for(std::map<std::string, Model *>::iterator it = m_models.begin(); it != m_models.end();it++)
 		delete it->second;
+	for(std::map<std::string,Texture *>::iterator iterator = m_textures.begin(); iterator != m_textures.end(); iterator++)
+    delete iterator->second;
+  
 }
 
 Model * RessourceManager::loadModel(std::string path)

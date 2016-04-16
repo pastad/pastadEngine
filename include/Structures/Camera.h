@@ -1,7 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include<string>
+#include <string>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -38,7 +38,7 @@ public:
     void recalculateMatrices();
 
     // updates the camera / key movement
-    void update();
+    void update(float delta_time);
    
 
 private:
@@ -60,8 +60,9 @@ private:
     // field ov fiew
     float m_fov;    
 
-    // movement speed 
+    // movement and rotation speed 
     float m_speed;
+    float m_rotation_speed;
 };
 
 #endif // CAMERA_H
