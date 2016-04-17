@@ -16,6 +16,9 @@ int main(void)
   Object * object = scene.addObject("models/cube2.obj"); 
   Object * object2 = scene.addObject("models/bush.obj");
   Object * object3 = scene.addObject("models/base.obj"); 
+
+  object->setPosition(glm::vec3(-2,0,0));
+
   Light * light = scene.addLight();
   Light * light2 = scene.addLight();
   light->setDirectional(glm::vec3(0,0,1), glm::vec3(1,1,1),glm::vec3(1,1,1), glm::vec3(1,1,1),1.0f);

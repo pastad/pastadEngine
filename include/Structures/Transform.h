@@ -27,7 +27,7 @@ public:
 	void setRotation(glm::vec3 r);
 	void setScale(glm::vec3 s);
 
-private:
+protected:
 
 	// holds the position
 	glm::vec3 m_position;

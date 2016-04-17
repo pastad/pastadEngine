@@ -6,7 +6,7 @@
 // the representation of an Model to the user
 
 
-class Object
+class Object : public Transform
 {
 public:
 	Object();
@@ -15,10 +15,13 @@ public:
 	// returns the model matrix
 	glm::mat4 getModelMatrix();
 
+  using  Transform::setPosition;
+  using  Transform::setRotation;
+  using  Transform::setScale;
+
 private:
 
-	// holds the transform of the object
-	Transform m_transform;
+	
 };
 
 #endif
