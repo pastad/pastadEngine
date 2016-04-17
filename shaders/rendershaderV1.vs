@@ -14,17 +14,24 @@ uniform mat4 ViewMat;
 uniform mat3 NormalMat;
 uniform mat4 ProjectionMat;
 
-
+uniform int RenderThrew;
 
 void main()
 {
-  mat4 MVMatrix = ViewMat* ModelMatrix;
-  mat4 MVP      = ProjectionMat * MVMatrix ;
-
+  if(RenderThrew == 0)
+  {
+    mat4 MVMatrix = ViewMat* ModelMatrix;
+    mat4 MVP      = ProjectionMat * MVMatrix ;    
+    Position = vec3(MVMatrix * vec4(VertexPosition,1.0f)  );
+    ModelPos = ModelMatrix * vec4(VertexPosition,1.0f);
+    gl_Position =  MVP * vec4(VertexPosition, 1.0f);
+  }
+  else
+  {
+    mat4 VP   = ProjectionMat * ViewMat ;
+    Position = vec3(VP * vec4(VertexPosition,1.0f)  );    
+    gl_Position =  VP * vec4(VertexPosition, 1.0f);
+  }
   Normal   = normalize(VertexNormal);
-  Position = vec3(MVMatrix * vec4(VertexPosition,1.0f)  );
   TexCoord = VertexCoord;
-  ModelPos = ModelMatrix * vec4(VertexPosition,1.0f);
-
-  gl_Position =  MVP * vec4(VertexPosition, 1.0f);
 }

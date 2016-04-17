@@ -17,13 +17,14 @@ Material::~Material()
 
 Material::Material(aiMaterial * pMaterial, std::string dir)
 {
-  aiString name;
+  aiString name;  
   pMaterial->Get(AI_MATKEY_NAME,name);
 
   // TODO:must be reimplemented to include all textures
   std::string n(name.C_Str());
   //Engine::getLog()->log("Material",n);
-
+  m_name = n;
+  
   m_base_texture_set = false;
 
   unsigned int num_diffuse_textures = pMaterial->GetTextureCount(aiTextureType_DIFFUSE);
@@ -89,7 +90,7 @@ void Material::bind(int unit, RenderShader * render_shader)
   {
     render_shader->setColorOnly(true); 
   }
-  render_shader->setMaterial(m_material_specs); 
+  render_shader->setMaterial(m_name,m_material_specs); 
 }
 bool Material::isTransparent()
 {

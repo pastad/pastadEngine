@@ -13,10 +13,13 @@ layout(location = 0 ) out vec4 FragColor;
 layout(location = 1 ) out vec3 PositionData;
 layout(location = 2 ) out vec3 NormalData;
 layout(location = 3 ) out vec3 ColorData;
+layout(location = 4 ) out vec3 MaterialData;
 
 layout(binding=0) uniform sampler2D Tex1; 
 layout(binding=1) uniform sampler2D Tex2; 
 layout(binding=2) uniform sampler2D Tex3; 
+layout(binding=3) uniform sampler2D Tex4; 
+layout(binding=4) uniform sampler2D Tex5; 
 
 uniform int ColorOnly;
 uniform vec4 Color;
@@ -25,10 +28,13 @@ uniform int NumSpotLights;
 uniform int NumPointLights;
 
 uniform vec3 CameraPosition;
+uniform int MaterialIndex;
 
 // MATERIAL -----------------------------------------------------------
 
-struct MaterialS
+const int MAX_NUM_MATERIALS =  20;
+
+struct Material
 {
   vec3  DiffuseColor;
   vec3  AmbientColor;
@@ -36,7 +42,7 @@ struct MaterialS
   float Shininess;
   float Opacity;
 };
-uniform MaterialS Material;
+uniform Material Materials[MAX_NUM_MATERIALS];
 
 // MATERIAL END  ------------------------------------------------------
 
@@ -87,47 +93,47 @@ uniform SpotLight        SpotLights[MAX_SPOT_LIGHTS];
 // LIGHT CALCULATION -------------------------------------------------
 
 // calculates the specular part
-vec3 calcSpecularColor(vec3 lightDirection, vec3 specularColor)
+vec3 calcSpecularColor(vec3 lightDirection, vec3 specularColor, Material mat, vec3 pos, vec3 normal)
 {
-  vec3 norm =       normalize(Normal);
-  vec3 viewDir =    normalize(CameraPosition - ModelPos.xyz);
+  vec3 norm =       normalize(normal);
+  vec3 viewDir =    normalize(CameraPosition - pos.xyz);
   vec3 reflectDir = reflect(-lightDirection, norm);
-  float spec =      pow(max(dot(viewDir, reflectDir), 0.0), Material.Shininess);
+  float spec =      pow(max(dot(viewDir, reflectDir), 0.0), mat.Shininess);
 
-  vec3 specular =   specularColor * spec * Material.SpecularColor;
+  vec3 specular =   specularColor * spec * mat.SpecularColor;
   return specular;
 }
 
 // directionLight calculation
-vec4 calcDirectionalLight(int idx)
+vec4 calcDirectionalLight(int idx, Material mat, vec3 pos, vec3 normal)
 {
   DirectionalLight l = DirectionalLights[idx];
-  vec3  norm     = normalize(Normal);
+  vec3  norm     = normalize(normal);
   vec3  lightDir = normalize(-l.Direction);
   float diff     = max(dot(norm, lightDir), 0.0);
   vec3 diffuse = diff * l.Base.DiffuseColor;
 
-  vec3 ambient   = l.Base.AmbientColor * Material.AmbientColor;
+  vec3 ambient   = l.Base.AmbientColor * mat.AmbientColor;
   
-  vec3  specular   = calcSpecularColor(lightDir, l.Base.SpecularColor);
+  vec3  specular   = calcSpecularColor(lightDir, l.Base.SpecularColor, mat,pos,normal);
 
   return vec4(diffuse* l.Base.Intensity + ambient* l.Base.Intensity + specular* l.Base.Intensity,1) ;
 }
 
 // pointLight calculation
-vec4 calcPointLights(int idx)
+vec4 calcPointLights(int idx, Material mat, vec3 pos, vec3 normal)
 {  
   PointLight l = PointLights[idx];
-  vec3 norm = normalize(Normal);
-  vec3 lightDir = normalize(l.Position - ModelPos.xyz);
-  float distance   = length(l.Position - ModelPos.xyz);
+  vec3 norm = normalize(normal);
+  vec3 lightDir = normalize(l.Position - pos.xyz);
+  float distance   = length(l.Position - pos.xyz);
 
   float diff = max(dot(norm, lightDir), 0.0);
-  vec3 diffuse = diff * l.Base.DiffuseColor * Material.DiffuseColor;
+  vec3 diffuse = diff * l.Base.DiffuseColor * mat.DiffuseColor;
 
-  vec3 ambient = l.Base.AmbientColor * Material.AmbientColor;
+  vec3 ambient = l.Base.AmbientColor * mat.AmbientColor;
 
-  vec3 specular = calcSpecularColor(lightDir, l.Base.SpecularColor);
+  vec3 specular = calcSpecularColor(lightDir, l.Base.SpecularColor, mat,pos,normal);
 
   float attenuation = 1.0f / (l.Attenuation.Constant + l.Attenuation.Linear * distance + l.Attenuation.Quadratic * (distance * distance));
 
@@ -135,33 +141,33 @@ vec4 calcPointLights(int idx)
 }
 
 // spotLight calculation
-vec4 calcSpotLight(int idx)
+vec4 calcSpotLight(int idx, Material mat, vec3 pos, vec3 normal)
 {
   SpotLight l = SpotLights[idx];
-  vec3 lightToPixel = normalize( l.Pointlight.Position - ModelPos.xyz);
+  vec3 lightToPixel = normalize( l.Pointlight.Position - pos.xyz);
   float angle = acos(dot(-lightToPixel,l.Direction));
   float cutoff = radians (clamp (l.CutoffAngle, 0.0 ,90.0));
   float spotFactor =pow (dot( -lightToPixel, l.Direction),0.1);
 
-  float distance   = length(l.Pointlight.Position - ModelPos.xyz);
+  float distance   = length(l.Pointlight.Position - pos.xyz);
 
-  vec3 ambient = l.Pointlight.Base.AmbientColor * Material.AmbientColor;
+  vec3 ambient = l.Pointlight.Base.AmbientColor * mat.AmbientColor;
   float attenuation = 1.0f / (l.Pointlight.Attenuation.Constant + l.Pointlight.Attenuation.Linear * distance + l.Pointlight.Attenuation.Quadratic * (distance * distance));
 
   if (angle < cutoff)
   {
     vec4 color;
-    vec3 norm = normalize(Normal);
-    vec3 lightDir = normalize(l.Pointlight.Position - ModelPos.xyz);   
+    vec3 norm = normalize(normal);
+    vec3 lightDir = normalize(l.Pointlight.Position - pos.xyz);   
 
     float diff = max(dot(lightToPixel, norm), 0.0);
-    vec3 diffuse = diff * l.Pointlight.Base.DiffuseColor * Material.DiffuseColor ;
+    vec3 diffuse = diff * l.Pointlight.Base.DiffuseColor * mat.DiffuseColor ;
 
-    vec3 v = normalize( vec3(-ModelPos.xyz));
+    vec3 v = normalize( vec3(-pos.xyz));
     vec3 h = normalize( v +lightToPixel );
-    float spec = pow(max(dot(h, norm), 0.0), Material.Shininess);
+    float spec = pow(max(dot(h, norm), 0.0), mat.Shininess);
 
-    vec3 specular =    l.Pointlight.Base.SpecularColor * spec * Material.SpecularColor;
+    vec3 specular =    l.Pointlight.Base.SpecularColor * spec * mat.SpecularColor;
 
     color =vec4( (diffuse* l.Pointlight.Base.Intensity  * spotFactor + ambient* l.Pointlight.Base.Intensity + specular* l.Pointlight.Base.Intensity  * spotFactor ) * attenuation,1) ;
     return color;
@@ -180,30 +186,48 @@ void pass1()
 {
   vec4 color;
   vec4 light = vec4(0,0,0,0);
+  Material mat = Materials[MaterialIndex]; 
 
   if(ColorOnly == 1)
-    color = vec4(Material.DiffuseColor,1.0);
+    color = vec4(mat.DiffuseColor,1.0);
   else
     color = vec4( vec3(texture(Tex1, TexCoord)) ,1.0 );
 
-  for(int x=0; x< NumDirectionalLights; x++ )
-    light += calcDirectionalLight(x);
-  for(int x=0; x< NumPointLights; x++ )
-    light += calcPointLights(x);
-  for(int x=0; x< NumSpotLights; x++ )
-    light += calcSpotLight(x);
-  FragColor = color * light;
-
-
+  PositionData = Position;
+  NormalData = normalize(Normal);
+  ColorData = vec3(color);
+  MaterialData = vec3(MaterialIndex,0,0);
 }
 // PASS 1 END    -----------------------------------------------------
 
 // PASS 2     --------------------------------------------------------
-
 subroutine (RenderPassType)
 void pass2()
 {
-  FragColor = vec4(Position,1.0);
+  vec3 pos = vec3( texture( Tex1, TexCoord ) );
+  vec3 norm = vec3( texture( Tex2, TexCoord ) );
+  vec3 diffColor = vec3( texture(Tex3, TexCoord) );
+  vec3 materialIndex = vec3( texture(Tex4, TexCoord) );
+
+  vec4 color = vec4(diffColor,1.0);
+  vec4 light = vec4(0,0,0,0);
+
+  // prevent flicker because of not set texture
+  if( (norm.x==0) && (norm.y==0) && (norm.z==0) )
+    FragColor = vec4(0,0,0,0);
+  else
+  {
+    Material mat = Materials[int(materialIndex.x)];
+
+    for(int x=0; x< NumDirectionalLights; x++ )
+      light += calcDirectionalLight(x,mat,pos,norm);
+    for(int x=0; x< NumPointLights; x++ )
+      light += calcPointLights(x,mat,pos,norm);
+    for(int x=0; x< NumSpotLights; x++ )
+      light += calcSpotLight(x,mat,pos,norm);
+
+    FragColor = color * light;
+  }
 }
 // PASS 2 END    -----------------------------------------------------
 

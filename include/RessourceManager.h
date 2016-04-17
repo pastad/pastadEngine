@@ -4,9 +4,14 @@
 #include <string>
 #include <map>
 
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include <assimp/Importer.hpp>
+
 class Model;
 class Object;
 class Texture;
+class Material;
 
 // loads the ressources and stores them to prevent loading multiple times
 
@@ -25,6 +30,9 @@ public:
   // returns the requested model (and loads it if not loaded)
   static Model * loadModel(std::string path);
 
+  // returns the materiall (and loads it if not loaded)
+  static Material * loadMaterial(std::string dir, aiMaterial* mat);
+
 private:
 
 	// holds the loaded models
@@ -32,6 +40,9 @@ private:
 
   // holds the loaded textures
   static std::map<std::string, Texture *> m_textures;
+
+   // holds the loaded materials
+  static std::map<std::string, Material *> m_materials;
   
 
 };

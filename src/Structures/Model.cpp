@@ -5,6 +5,7 @@
 #include "Engine.h"
 #include "Log.h"
 #include "Mesh.h"
+#include "RessourceManager.h"
 
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -95,7 +96,6 @@ void Model::processScene()
     m_meshes.push_back(n);      
   }
 
-
   std::string::size_type slashpos = m_path.find_last_of("/");
   std::string dir;
 
@@ -113,7 +113,7 @@ void Model::processMaterials(std::string directory)
   for (unsigned int i = 0 ; i < m_scene->mNumMaterials ; i++)
   {
     aiMaterial* pMaterial = m_scene->mMaterials[i];
-    Material * mat = new Material(pMaterial,directory);
+    Material * mat = RessourceManager::loadMaterial(directory, pMaterial);
     m_materials.insert(m_materials.begin(),std::pair<int ,Material*>(i,mat));
   }
 }

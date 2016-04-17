@@ -6,6 +6,8 @@
 #include "Subsystem.h"
 
 class RenderShader;
+class GBuffer;
+class Quad;
 
 // Subsystem that is used for rendering
 
@@ -45,6 +47,12 @@ private:
 
 	// the render shader
 	RenderShader * m_shader; 
+
+	// the gbuffer
+	GBuffer * m_gbuffer;
+
+	// the quad where the scene should be rendered on
+	Quad * m_render_quad;
 
 	// starts the rendering cycle
 	void startRender();

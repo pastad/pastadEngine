@@ -19,7 +19,8 @@ near:
   - shadow
   - text
   - transparency ordering
-  - screen culling
+  - screen space culling
+  - gui
 
 far:
   - animation

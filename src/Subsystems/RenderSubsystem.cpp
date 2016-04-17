@@ -4,7 +4,8 @@
 #include "Camera.h"
 #include "Scene.h"
 #include "RenderShader.h"
-
+#include "GBuffer.h"
+#include "Quad.h"
 
 RenderSubsystem::RenderSubsystem()
 {	
@@ -21,9 +22,15 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 	if(!m_initialized)
 	{
 		m_window = window;
-		m_shader = new RenderShader();		
+		m_shader = new RenderShader();
+		m_gbuffer = new GBuffer();		
+		m_render_quad = new Quad();
 
 	  if( ! m_shader->load("shaders/rendershaderV1") )
+			return false;
+		if( ! m_gbuffer->initialize() )
+			return false;
+		if( ! m_render_quad->load() )
 			return false;
 
 		Engine::getLog()->log("RenderSubsystem", "started");
@@ -46,39 +53,67 @@ void RenderSubsystem::startRender()
 {
 	if(m_initialized)
 	{
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
- 	 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
- 	 	glEnable(GL_DEPTH_TEST);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		m_shader->reset();
+ 	 //	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+ 	 	//glEnable(GL_DEPTH_TEST);
+
+
  	 	
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+   // glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
- 	 	m_shader->use();
- 	 	m_shader->setRenderPass(1);
- 	 	Camera * cam = Engine::getScene()->getCamera();
- 	 	m_shader->setProjectionMatrix(cam->getProjection());
- 	 	m_shader->setViewMatrix(cam->getView());
+ 	 //	m_shader->use();
+ 	 //	m_shader->setRenderPass(1);
+ 	 //	Camera * cam = Engine::getScene()->getCamera();
+ 	 	//m_shader->setProjectionMatrix(cam->getProjection());
+ 	 	//m_shader->setViewMatrix(cam->getView());
 
-    glFinish();
+   // glFinish();
 	}
 }
 
 void RenderSubsystem::renderPassOne()
 {
+ 	m_shader->use();
+	m_gbuffer->bindForInput();
 
+ 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glEnable(GL_DEPTH_TEST);
+
+ 	m_shader->setRenderPass(1);
+
+ 	Camera * cam = Engine::getScene()->getCamera();
+ 	m_shader->setProjectionMatrix(cam->getProjection());
+ 	m_shader->setViewMatrix(cam->getView());
+
+ 	Scene * scene = Engine::getScene();
+
+	if(scene != nullptr)
+		scene->render(m_shader);
+	glFinish();
 }
 void RenderSubsystem::renderPassTwo()
 {
-	
+ 	m_shader->use();
+	m_gbuffer->unbindFromInput();
+	m_gbuffer->bindForOutput();
+	m_shader->setRenderPass(2);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glDisable(GL_DEPTH_TEST);
+
+  m_shader->setIdentityMatrices();
+  m_shader->setAllMaterialsForRenderPass();
+
+	m_render_quad->render();	
+	glFinish();
 }
 
 void RenderSubsystem::render()
 {
 	startRender();
-	Scene * scene = Engine::getScene();
-
-	if(scene != nullptr)
-		scene->render(m_shader);
-
+	renderPassOne();
+	renderPassTwo();
 	endRender();
 }
 

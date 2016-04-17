@@ -29,6 +29,7 @@ bool RenderShader::load(const std::string path)
   linkAndValidate();
 
   Engine::getLog()->log("RenderShader","loaded");
+  reset();
 
   return true;
 }
@@ -56,9 +57,15 @@ void RenderShader::setRenderPass(unsigned int pass)
 {
   bind();
   if(pass == 1)
+  {
     setRenderPassSubroutine("pass1");
+    setUniform("RenderThrew",0);
+  }
   else
+  {
     setRenderPassSubroutine("pass2");
+    setUniform("RenderThrew",1);
+  }
 
   checkUniformError("set Subroutine");
   //printUniforms();
@@ -70,15 +77,8 @@ void RenderShader::setColorOnly(bool color_only)
   else
     setUniform("ColorOnly",0);
 }
-void RenderShader::setMaterial(MaterialColorSpecs specs)
-{
-  setUniform("Material.DiffuseColor",specs.m_diffuse_color);
-  setUniform("Material.AmbientColor",specs.m_ambient_color);
-  setUniform("Material.SpecularColor",specs.m_specular_color);
-  setUniform("Material.Shininess",specs.m_shininess);
-  setUniform("Material.Opacity",specs.m_opacity);
-  checkUniformError("set material specs");
-}
+
+
 void RenderShader::setLights(std::vector<Light*> * lights)
 {
   int num_directional_lights = 0;
@@ -215,10 +215,85 @@ void RenderShader::setCameraPosition(glm::vec3 pos)
   setUniform("CameraPosition", pos);
 }
 
-
-
-
 void RenderShader::use()
 {
   Shader::bind();
+}
+
+void RenderShader::setIdentityMatrices()
+{
+  glm::mat4 view = glm::mat4(1.0);
+  glm::mat4 projection = glm::mat4(1.0);
+  setViewMatrix(view);
+  setProjectionMatrix(projection);
+}
+
+void RenderShader::reset()
+{
+  m_materials.clear();
+  m_materials_mapping.clear();
+  m_material_number = 0;
+}
+void RenderShader::setMaterial(std::string name, MaterialColorSpecs specs)
+{
+  int idx;
+  std::map<std::string,int>::iterator it = m_materials_mapping.find(name);
+  if(it == m_materials_mapping.end())
+  {
+    if(m_material_number < MAX_NUM_MATERIALS)
+    {
+      m_materials.insert(std::pair<int, MaterialColorSpecs>(m_material_number,specs) );
+      m_materials_mapping.insert(std::pair<std::string,int>(name,m_material_number));
+      idx = m_material_number;
+      m_material_number++;    
+    }
+    else
+      Engine::getLog()->log("RenderShader","to many materials allready set");
+  } 
+  else
+    idx = it->second;
+  setMaterialIndex(idx);
+}
+void RenderShader::setMaterialIndex(int idx)
+{
+   setUniform("MaterialIndex",idx);
+}
+void RenderShader::setAllMaterialsForRenderPass()
+{
+  for(std::map<std::string, int>::iterator it = m_materials_mapping.begin(); it != m_materials_mapping.end();it++)
+  {
+    int idx = it->second;
+    std::map<int, MaterialColorSpecs>::iterator it2 = m_materials.find(idx);
+    if(it2 != m_materials.end())
+    {      
+      std::stringstream ss,ssi;
+      ss<< "Materials["<<idx <<"].";
+
+      ssi<< ss.str() <<"DiffuseColor";
+      setUniform(ssi.str(),it2->second.m_diffuse_color);
+      ssi.str(""); ssi.clear();
+
+      ssi<< ss.str() <<"AmbientColor";
+      setUniform(ssi.str(),it2->second.m_ambient_color);
+      ssi.str(""); ssi.clear();
+
+      ssi<< ss.str() <<"SpecularColor";
+      setUniform(ssi.str(),it2->second.m_specular_color);
+      ssi.str(""); ssi.clear();
+
+      ssi<< ss.str() <<"Shininess";
+      setUniform(ssi.str(),it2->second.m_shininess);
+      ssi.str(""); ssi.clear();
+
+      ssi<< ss.str() <<"Opacity";
+      setUniform(ssi.str(),it2->second.m_opacity);
+      ssi.str(""); ssi.clear();
+
+      checkUniformError("set material specs");
+    }
+    else
+    {
+      Engine::getLog()->log("RenderShader", "error while setting materials");
+    }
+  }
 }

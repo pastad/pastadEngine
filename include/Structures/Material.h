@@ -5,8 +5,8 @@
 #include <assimp/postprocess.h>
 #include <assimp/Importer.hpp>
 
-#include<map>
-#include<string>
+#include <map>
+#include <string>
 
 #include <glm/glm.hpp>
 
@@ -48,6 +48,9 @@ public:
 protected:
 
 private:
+
+  // the name of the material
+  std::string m_name;
 
   // pointers to the diffuse texures and their strengths
   std::map<int,Texture*> m_diffuse_textures;

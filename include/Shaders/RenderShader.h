@@ -1,6 +1,8 @@
 #ifndef RENDER_SHADER_H
 #define RENDER_SHADER_H
 
+#define MAX_NUM_MATERIALS 20
+
 // the shader that renders
 
 #include <string>
@@ -33,13 +35,22 @@ public:
   void setColorOnly(bool color_only);
 
   // sets the material that should be used
-  void setMaterial(MaterialColorSpecs specs);
+  void setMaterial(std::string name, MaterialColorSpecs specs);
 
+  // sets the material to the shader for the render pass
+  void setAllMaterialsForRenderPass();
+ 
   // sets the lights that should be rendered
   void setLights(std::vector<Light*> * lights);
 
   // sets the camera for rendering effects
   void setCameraPosition(glm::vec3 pos);
+
+  // sets the view and projection matrices to the identity matrices
+  void setIdentityMatrices();
+
+  // resets the materials
+  void reset();
 
   // binds the shader  
   void use();
@@ -50,6 +61,15 @@ private:
   void setDirectionalLight(Light* light, unsigned int pos);
   void setSpotLight(Light* light, unsigned int pos);
   void setPointLight(Light* light, unsigned int pos);
+
+  //holds the materials set for rendering 
+  std::map<int, MaterialColorSpecs> m_materials;
+  std::map<std::string, int> m_materials_mapping;
+  int m_material_number = 0;
+
+  // sets the material for the current material
+  void setMaterialIndex(int);
+
 
 };
 
