@@ -5,6 +5,7 @@
 
 #include "Log.h"
 #include "Scene.h"
+#include "GUI.h"
 #include "RenderSubsystem.h"
 #include "IOSubsystem.h"
 
@@ -22,6 +23,8 @@ float Engine::m_time_samples[NUM_TIME_SAMPLES];
 unsigned int Engine::m_current_time_sample;
 float Engine::m_time_delta;
 float Engine::m_time_last;
+std::vector<GUI *> Engine::m_guis;
+unsigned int Engine::m_guis_id = 0;
 
 
 Engine::Engine()
@@ -277,6 +280,15 @@ void Engine::setScene(Scene * scene)
 Scene * Engine::getScene()
 {
 	return m_scene;
+}
+GUI * Engine::getGUI()
+{
+	GUI * gui = new GUI(m_guis_id);
+	m_guis.insert(m_guis.end(), gui);
+
+	m_guis_id++;
+
+	return gui;
 }
 
 unsigned int Engine::getWindowWidth()

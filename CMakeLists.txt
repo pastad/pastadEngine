@@ -13,6 +13,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Subsystems/IOSubsystem.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/Shader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/RenderShader.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/TextShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Scene.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Camera.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Transform.cpp
@@ -25,6 +26,8 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Light.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/GBuffer.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Quad.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/GUI.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/Text.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RessourceManager.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/external/gl_core_4_.c
    
@@ -39,6 +42,7 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems/IOSubsystem.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/Shader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/RenderShader.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/TextShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Scene.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Camera.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Transform.h
@@ -51,23 +55,27 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Light.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/GBuffer.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Quad.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/GUI.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/Text.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RessourceManager.h
    ${CMAKE_CURRENT_SOURCE_DIR}/external/gl_core_4_.h
 
 )
 
 find_package(OpenGL REQUIRED)
+find_package(Freetype REQUIRED)
 
-include_directories( ${OPENGL_INCLUDE_DIRS}  {GLFW_INCLUDE_DIRS} {ASSIMP_INCLUDE_DIRS} {SOIL_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include
+include_directories( ${OPENGL_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} {GLFW_INCLUDE_DIRS} {ASSIMP_INCLUDE_DIRS} {SOIL_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures
+${CMAKE_CURRENT_SOURCE_DIR}/include/GUI
 ${CMAKE_CURRENT_SOURCE_DIR}/external )
 
-LINK_DIRECTORIES(${GLFW_LIBRARY_DIR} ${ASSIMP_LIBRARY_DIR} ${SOIL_LIBRARY_DIR})
+LINK_DIRECTORIES(${GLFW_LIBRARY_DIR} ${FREETYPE_LIBRARY_DIRS} ${ASSIMP_LIBRARY_DIR} ${SOIL_LIBRARY_DIR})
 
 add_executable(Engine main.cpp ${SOURCE} ${HEADERS})
 
-target_link_libraries(Engine  GL glfw3 assimp SOIL  ${GLFW_STATIC_LIBRARIES}  ${OPENGL_LIBRARIES} X11 Xcursor Xinerama Xxf86vm Xi Xrandr pthread dl  )
+target_link_libraries(Engine  GL glfw3 assimp SOIL freetype  ${GLFW_STATIC_LIBRARIES}  ${OPENGL_LIBRARIES} X11 Xcursor Xinerama Xxf86vm Xi Xrandr pthread dl  )
 
 

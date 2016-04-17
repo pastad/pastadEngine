@@ -3,6 +3,7 @@
 
 #include "gl_core_4_.h"
 #include <GLFW/glfw3.h>
+#include <vector>
 
 #define NUM_TIME_SAMPLES 40
 
@@ -12,6 +13,7 @@ class Log;
 class Scene;
 class RenderSubsystem;
 class IOSubsystem;
+class GUI;
 
 enum SubsystemType
 {
@@ -57,6 +59,9 @@ public:
 	// returns the current set scene
 	static Scene * getScene();
 
+	// function to request a GUI
+	static GUI * getGUI();
+
 	// window size getters
 	static unsigned int getWindowWidth();
 	static unsigned int getWindowHeight();
@@ -81,6 +86,10 @@ private:
 
 	// the scene that should be used
 	static Scene * m_scene;
+
+	// the graphical user interfaces and the id
+	static std::vector<GUI *> m_guis;
+	static unsigned int m_guis_id;
 
 	// the window size
 	static unsigned int m_win_width;

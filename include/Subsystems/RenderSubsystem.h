@@ -6,6 +6,7 @@
 #include "Subsystem.h"
 
 class RenderShader;
+class TextShader;
 class GBuffer;
 class Quad;
 
@@ -38,6 +39,9 @@ public:
 
 	// returns the shader used for standard rendering
 	RenderShader * getRenderShader();
+
+	// returns the shader for text rendering
+	TextShader * getTextShader();
 	
 
 private:
@@ -47,6 +51,9 @@ private:
 
 	// the render shader
 	RenderShader * m_shader; 
+
+	// the text shader
+	TextShader * m_text_shader;
 
 	// the gbuffer
 	GBuffer * m_gbuffer;

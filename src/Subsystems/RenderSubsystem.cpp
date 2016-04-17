@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "Scene.h"
 #include "RenderShader.h"
+#include "TextShader.h"
 #include "GBuffer.h"
 #include "Quad.h"
 
@@ -15,6 +16,9 @@ RenderSubsystem::RenderSubsystem()
 RenderSubsystem::~RenderSubsystem()
 {	
 	delete m_shader;
+	delete m_text_shader;
+	delete m_gbuffer;
+	delete m_render_quad;
 }
 
 bool RenderSubsystem::startUp(GLFWwindow * window)
@@ -23,10 +27,13 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 	{
 		m_window = window;
 		m_shader = new RenderShader();
+		m_text_shader = new TextShader();
 		m_gbuffer = new GBuffer();		
 		m_render_quad = new Quad();
 
 	  if( ! m_shader->load("shaders/rendershaderV1") )
+			return false;
+		if( ! m_text_shader->load("shaders/textshaderV1") )
 			return false;
 		if( ! m_gbuffer->initialize() )
 			return false;
@@ -55,20 +62,6 @@ void RenderSubsystem::startRender()
 	{
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		m_shader->reset();
- 	 //	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
- 	 	//glEnable(GL_DEPTH_TEST);
-
-
- 	 	
-   // glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
- 	 //	m_shader->use();
- 	 //	m_shader->setRenderPass(1);
- 	 //	Camera * cam = Engine::getScene()->getCamera();
- 	 	//m_shader->setProjectionMatrix(cam->getProjection());
- 	 	//m_shader->setViewMatrix(cam->getView());
-
-   // glFinish();
 	}
 }
 
@@ -113,7 +106,13 @@ void RenderSubsystem::render()
 {
 	startRender();
 	renderPassOne();
-	renderPassTwo();
+	renderPassTwo();	
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	m_text_shader->setProjection();
+	m_text_shader->renderText("test",glm::vec3(50,50,0),1.0f,glm::vec3(1,1,1));
+	glDisable(GL_BLEND);
 	endRender();
 }
 
@@ -133,4 +132,8 @@ bool RenderSubsystem::systemCheck()
 RenderShader * RenderSubsystem::getRenderShader()
 {
 	return m_shader;
+}
+TextShader * RenderSubsystem::getTextShader()
+{
+	return m_text_shader;
 }

@@ -1,7 +1,7 @@
 # pastadEngine
 
 
-requires GL glm 
+requires GL glfw3 assimp SOIL freetype 
 gl loader file generated with https://bitbucket.org/alfonse/glloadgen/wiki/Home 
 some code parts inspired by openGl 4 shading cookbook
 
@@ -10,22 +10,25 @@ Basic workflow
   to be set to the engine
 
 Lighting: 
-  uses forward rendering
+  uses deferred rendering
 
 
 TODO:
 
-near:
-  - shadow
-  - text
-  - transparency ordering
+Structural:
   - screen space culling
-  - gui
 
-far:
+Graphical:
+  - shadow  
+  - OIT
   - animation
 
-don't know:
+GUI:
+  - buttons
+  - GUI class
+  - Panels
+
+Customizability:
   - setting specifactions (MULTI_SAMPLES,...)
 
 
