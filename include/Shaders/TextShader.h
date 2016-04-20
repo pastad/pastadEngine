@@ -27,6 +27,8 @@ public:
   // returns the text size
   glm::vec2 approximateTextOffset(std::string text);
 
+  void use();
+
 protected:
 
 private:

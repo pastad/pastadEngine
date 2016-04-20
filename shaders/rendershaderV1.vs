@@ -22,7 +22,7 @@ void main()
   {
     mat4 MVMatrix = ViewMat* ModelMatrix;
     mat4 MVP      = ProjectionMat * MVMatrix ;    
-    Position = vec3(MVMatrix * vec4(VertexPosition,1.0f)  );
+    Position = vec3(ModelMatrix * vec4(VertexPosition,1.0f)  );
     ModelPos = ModelMatrix * vec4(VertexPosition,1.0f);
     gl_Position =  MVP * vec4(VertexPosition, 1.0f);
   }

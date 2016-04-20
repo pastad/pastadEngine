@@ -165,7 +165,10 @@ glm::vec2 TextShader::approximateTextOffset(std::string text)
   }
   return glm::vec2(ret,ret_y);
 }
-
+void TextShader::use()
+{
+  bind();
+}
 
 
 

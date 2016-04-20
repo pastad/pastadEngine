@@ -8,9 +8,12 @@
 class RenderShader;
 class TextShader;
 class ImageShader;
+class PostProcessingShader;
+
 class GBuffer;
 class Quad;
 class ShadowBuffer;
+class RenderBuffer;
 
 // Subsystem that is used for rendering
 
@@ -38,6 +41,7 @@ public:
 	// the render passess
 	void renderPassOne();
 	void renderPassTwo();
+	void renderPassFXAA();
 	void renderPassShadow();
 
 	// renders the ui set to the engine
@@ -64,6 +68,9 @@ private:
 	// the image shader
 	ImageShader * m_image_shader;
 
+	// the post processing shader
+	PostProcessingShader * m_pp_shader;
+
 	// the gbuffer
 	GBuffer * m_gbuffer;
 
@@ -72,6 +79,9 @@ private:
 
 	// tmp shadow buffer
 	ShadowBuffer * m_shadow_buffer;
+
+	// buffer for the fxaa step
+	RenderBuffer * m_fxaa_buffer;
 
 	// starts the rendering cycle
 	void startRender();

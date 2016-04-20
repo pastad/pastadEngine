@@ -29,26 +29,17 @@ int main(void)
 
   object->setPosition(glm::vec3(-2,0,0));
 
-  Light * light = scene.addLight();
+  //Light * light = scene.addLight();
   Light * light2 = scene.addLight();
-  light->setDirectional(glm::vec3(0,0,1), glm::vec3(1,1,1),glm::vec3(1,1,1), glm::vec3(1,1,1),1.0f);
+  //light->setDirectional(glm::vec3(0,0,1), glm::vec3(1,1,1),glm::vec3(1,1,1), glm::vec3(1,1,1),1.0f);
   light2->setPoint(glm::vec3(2,0,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),1.0f,1.0f,0.09f,0.032f);
- 
+  Light * light3 = scene.addLight();
+  light3->setSpot(glm::vec3(-4,0,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),
+      1.0f,1.0f,0.09f,0.032f, 45.0f, glm::vec3(0,0,1) );
+
+
   engine.setScene(&scene);
 
-  GUI * gui = engine.getGUI();
-  gui->registerButtonPressedCallback(test_callback);
-  Text * text = gui->getText();
-  text->setPosition(glm::vec2(100,100));
-  text->setText("external GUI");
-
- // Image* image = gui->getImage();
-  //image->load("models/image_test.png");
-  //image->setPosition(glm::vec2(20,20));
-  //Button * button = gui->getButton();
-  //button->load("models/image_test.png", "my button");
-  //button->setPositionAndScale(glm::vec2(100.0f,100.0f),glm::vec2(0.5f,0.5f));
-  
   // run the main loop
   while(engine.running())
   {

@@ -5,8 +5,10 @@
 #include "Scene.h"
 #include "RenderShader.h"
 #include "ShadowBuffer.h"
+#include "RenderBuffer.h"
 #include "TextShader.h"
 #include "ImageShader.h"
+#include "PostProcessingShader.h"
 #include "GBuffer.h"
 #include "Quad.h"
 #include "Transform.h"
@@ -23,9 +25,11 @@ RenderSubsystem::~RenderSubsystem()
 	delete m_shader;
 	delete m_text_shader;
 	delete m_image_shader;
+	delete m_pp_shader;
 	delete m_gbuffer;
 	delete m_render_quad;
-	delete m_shadow_buffer;
+	//delete m_shadow_buffer;
+	delete m_fxaa_buffer;
 }
 
 bool RenderSubsystem::startUp(GLFWwindow * window)
@@ -36,7 +40,10 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 		m_shader = new RenderShader();
 		m_text_shader = new TextShader();
 		m_image_shader = new ImageShader();
-		m_gbuffer = new GBuffer();		
+		m_pp_shader = new PostProcessingShader();
+
+		m_gbuffer = new GBuffer();	
+		m_fxaa_buffer = new RenderBuffer();		
 		m_render_quad = new Quad();
 
 	  if( ! m_shader->load("shaders/rendershaderV1") )
@@ -45,14 +52,17 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 			return false;
 		if( ! m_image_shader->load("shaders/imageshaderV1") )
 			return false;
+		if( ! m_pp_shader->load("shaders/ppshaderV1") )
+			return false;
 		if( ! m_gbuffer->initialize() )
 			return false;
 		if( ! m_render_quad->load() )
 			return false;
-
-		m_shadow_buffer = new ShadowBuffer();
-		if( !m_shadow_buffer->initialize(800,600))
+		if( !m_fxaa_buffer->initialize())
 			return false;
+		//m_shadow_buffer = new ShadowBuffer();
+		//if( !m_shadow_buffer->initialize(800,600))
+	//		return false;
 
 		Engine::getLog()->log("RenderSubsystem", "started");
 		m_initialized = true;
@@ -101,7 +111,7 @@ void RenderSubsystem::renderPassOne()
 }
 void RenderSubsystem::renderPassShadow()
 {
-	m_shader->use();
+/*	m_shader->use();
 	m_shadow_buffer->bindForInput();
 	m_shader->setRenderPass(3);
 
@@ -118,14 +128,18 @@ void RenderSubsystem::renderPassShadow()
 		scene->render(m_shader);
 
 	glDisable(GL_CULL_FACE);
-	glFinish();
+	glFinish();*/
 
 }
+
 void RenderSubsystem::renderPassTwo()
 {
  	m_shader->use();
 	m_gbuffer->unbindFromInput();
 	m_gbuffer->bindForOutput();
+
+	m_fxaa_buffer->bindForInput();
+
 	m_shader->setRenderPass(2);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -135,7 +149,27 @@ void RenderSubsystem::renderPassTwo()
   m_shader->setAllMaterialsForRenderPass();
 
 	m_render_quad->render();	
+
 	glFinish();
+
+	m_fxaa_buffer->unbindFromInput();
+}
+void RenderSubsystem::renderPassFXAA()
+{
+	m_pp_shader->use();
+	m_fxaa_buffer->bindForOutput();
+
+	//m_pp_shader->setRenderPass();
+	m_pp_shader->setIdentityMatrices();
+	m_pp_shader->setTextureScaling( glm::vec2(1.0f /Engine::getWindowWidth(),1.0f /Engine::getWindowHeight()) );
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glDisable(GL_DEPTH_TEST);
+
+  m_render_quad->render();	
+
+	glFinish();
+
 }
 
 void RenderSubsystem::renderUI()
@@ -151,12 +185,13 @@ void RenderSubsystem::render()
 	startRender();
 	renderPassOne();
 	//renderPassShadow();
-	renderPassTwo();	
+	renderPassTwo();
+	renderPassFXAA();
 
+	m_text_shader->use();
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);	
 	m_text_shader->setProjection();
-	//m_text_shader->renderText("test",glm::vec2(50,50),1.0f,glm::vec3(1,1,1), false);
 	renderUI();
 	glDisable(GL_BLEND);
 	endRender();

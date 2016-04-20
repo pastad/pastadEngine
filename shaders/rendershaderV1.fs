@@ -174,7 +174,7 @@ vec4 calcSpotLight(int idx, Material mat, vec3 pos, vec3 normal)
   }
   else
   {
-    return  vec4(ambient,1.0) *l.Pointlight.Base.Intensity * attenuation;
+    return  vec4(0,0,0,0);//vec4(ambient,1.0) *l.Pointlight.Base.Intensity * attenuation;
   }
 }
 // LIGHT CALCULATION END ---------------------------------------------
