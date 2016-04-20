@@ -4,9 +4,14 @@
 #include "Camera.h"
 #include "Scene.h"
 #include "RenderShader.h"
+#include "ShadowBuffer.h"
 #include "TextShader.h"
+#include "ImageShader.h"
 #include "GBuffer.h"
 #include "Quad.h"
+#include "Transform.h"
+#include "GUI.h"
+#include "EngineGUI.h"
 
 RenderSubsystem::RenderSubsystem()
 {	
@@ -17,8 +22,10 @@ RenderSubsystem::~RenderSubsystem()
 {	
 	delete m_shader;
 	delete m_text_shader;
+	delete m_image_shader;
 	delete m_gbuffer;
 	delete m_render_quad;
+	delete m_shadow_buffer;
 }
 
 bool RenderSubsystem::startUp(GLFWwindow * window)
@@ -28,6 +35,7 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 		m_window = window;
 		m_shader = new RenderShader();
 		m_text_shader = new TextShader();
+		m_image_shader = new ImageShader();
 		m_gbuffer = new GBuffer();		
 		m_render_quad = new Quad();
 
@@ -35,9 +43,15 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 			return false;
 		if( ! m_text_shader->load("shaders/textshaderV1") )
 			return false;
+		if( ! m_image_shader->load("shaders/imageshaderV1") )
+			return false;
 		if( ! m_gbuffer->initialize() )
 			return false;
 		if( ! m_render_quad->load() )
+			return false;
+
+		m_shadow_buffer = new ShadowBuffer();
+		if( !m_shadow_buffer->initialize(800,600))
 			return false;
 
 		Engine::getLog()->log("RenderSubsystem", "started");
@@ -85,6 +99,28 @@ void RenderSubsystem::renderPassOne()
 		scene->render(m_shader);
 	glFinish();
 }
+void RenderSubsystem::renderPassShadow()
+{
+	m_shader->use();
+	m_shadow_buffer->bindForInput();
+	m_shader->setRenderPass(3);
+
+	//Transform trans;
+ 	//m_shader->setProjectionMatrix(cam->getProjection());
+ //	m_shader->setViewMatrix(cam->getView());
+
+ 	glEnable(GL_CULL_FACE);
+  glCullFace(GL_FRONT);
+
+  Scene * scene = Engine::getScene();
+
+	if(scene != nullptr)
+		scene->render(m_shader);
+
+	glDisable(GL_CULL_FACE);
+	glFinish();
+
+}
 void RenderSubsystem::renderPassTwo()
 {
  	m_shader->use();
@@ -102,16 +138,26 @@ void RenderSubsystem::renderPassTwo()
 	glFinish();
 }
 
+void RenderSubsystem::renderUI()
+{
+	std::vector<GUI* > * guis = Engine::getGUIs();
+	for( std::vector<GUI*>::iterator it = guis->begin(); it != guis->end();it++)
+		(*it)->render(m_text_shader,m_image_shader, m_render_quad);
+	Engine::getEngineGUI()->render(m_text_shader,m_image_shader, m_render_quad);
+}
+
 void RenderSubsystem::render()
 {
 	startRender();
 	renderPassOne();
+	//renderPassShadow();
 	renderPassTwo();	
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	m_text_shader->setProjection();
-	m_text_shader->renderText("test",glm::vec3(50,50,0),1.0f,glm::vec3(1,1,1));
+	//m_text_shader->renderText("test",glm::vec2(50,50),1.0f,glm::vec3(1,1,1), false);
+	renderUI();
 	glDisable(GL_BLEND);
 	endRender();
 }

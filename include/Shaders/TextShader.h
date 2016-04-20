@@ -19,10 +19,13 @@ public:
   bool load(const std::string path);
 
   // renders the text
-  void renderText(std::string txt, glm::vec3 pos ,float scale, glm::vec3 color);
+  void renderText(std::string txt, glm::vec2 pos ,float scale, glm::vec3 color, bool centered);
   
   // sets the right projection matrix
   void setProjection();
+
+  // returns the text size
+  glm::vec2 approximateTextOffset(std::string text);
 
 protected:
 

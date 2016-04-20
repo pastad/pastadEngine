@@ -7,8 +7,10 @@
 
 class RenderShader;
 class TextShader;
+class ImageShader;
 class GBuffer;
 class Quad;
+class ShadowBuffer;
 
 // Subsystem that is used for rendering
 
@@ -36,6 +38,10 @@ public:
 	// the render passess
 	void renderPassOne();
 	void renderPassTwo();
+	void renderPassShadow();
+
+	// renders the ui set to the engine
+	void renderUI();
 
 	// returns the shader used for standard rendering
 	RenderShader * getRenderShader();
@@ -55,11 +61,17 @@ private:
 	// the text shader
 	TextShader * m_text_shader;
 
+	// the image shader
+	ImageShader * m_image_shader;
+
 	// the gbuffer
 	GBuffer * m_gbuffer;
 
 	// the quad where the scene should be rendered on
 	Quad * m_render_quad;
+
+	// tmp shadow buffer
+	ShadowBuffer * m_shadow_buffer;
 
 	// starts the rendering cycle
 	void startRender();

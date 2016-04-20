@@ -36,9 +36,13 @@ public:
 	// the callback functions for glfw
 	static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	static void mouseMoveCallback(GLFWwindow* window, double x, double y );
+	static void mouseButtonCallback(GLFWwindow *, int, int, int);
 
 	// returns true if key is pressed
 	static bool isKeyPressed(int key);
+
+	// returns true if mouse button is pressed
+	static bool isMouseButtonPressed(int key);
 
 	// returns the current mouse coords
 	static glm::vec2 getMouseCoordinates();
@@ -49,7 +53,10 @@ public:
 private:
 
 	// determines if keys are pressed
-	static bool m_keys[GLFW_KEY_LAST];
+	static bool m_keys[GLFW_KEY_LAST + 1];
+
+	// determines which mouse buttons are currently pressed
+	static bool m_mouse_buttons[GLFW_MOUSE_BUTTON_8 + 1 ];
 
 	// current mouse position and movement
 	static double m_mouse_x;

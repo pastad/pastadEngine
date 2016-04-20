@@ -39,6 +39,10 @@ public:
 
     // updates the camera / key movement
     void update(float delta_time);
+
+    // rotation setters
+    void setRotationAllowed();
+    void setRotationNotAllowed();
    
 
 private:
@@ -63,6 +67,9 @@ private:
     // movement and rotation speed 
     float m_speed;
     float m_rotation_speed;
+
+    // true if camera is allowed to rotate with mouse
+    bool m_rotation_allowed;
 };
 
 #endif // CAMERA_H

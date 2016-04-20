@@ -1,8 +1,5 @@
 #include "Transform.h"
 
-
-
-#include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/transform.hpp>
 

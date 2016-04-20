@@ -22,7 +22,11 @@ class Texture
         bool load();
 
         // binds the texure to the texture unit
-        void bind(unsigned int tex, RenderShader * render_shader);
+        void bind(unsigned int tex);
+
+        // getters for width and height
+        glm::vec2 getSize();
+
     protected:
 
     private:

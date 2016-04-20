@@ -8,6 +8,7 @@
 #include "GUI.h"
 #include "RenderSubsystem.h"
 #include "IOSubsystem.h"
+#include "EngineGUI.h"
 
 // the statics
 bool Engine::m_initialized;
@@ -25,6 +26,7 @@ float Engine::m_time_delta;
 float Engine::m_time_last;
 std::vector<GUI *> Engine::m_guis;
 unsigned int Engine::m_guis_id = 0;
+EngineGUI * Engine::m_engine_gui;
 
 
 Engine::Engine()
@@ -33,7 +35,7 @@ Engine::Engine()
 	
 }
 Engine::~Engine()
-{	
+{		
 }
 
 bool Engine::initialize(unsigned int width, unsigned int height, unsigned int system_flags)
@@ -67,7 +69,7 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
 	glfwWindowHint(GLFW_DOUBLEBUFFER,GL_TRUE);
-	glfwWindowHint(GLFW_SAMPLES,8);
+	glfwWindowHint(GLFW_RESIZABLE,GL_FALSE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
 
 	// create gl context ..... -1 to fix black window bug
@@ -87,6 +89,7 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 	{
 		m_log->log("Engine", "OpenGL function wrapper couldn't be loaded");
 		glfwTerminate();
+		delete m_log;
 		return false;
 	}
 
@@ -96,6 +99,7 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 	{
 		m_log->log("Engine", "OpenGL version not compatible");
 		glfwTerminate();
+		delete m_log;
   	return false;
 	}
 
@@ -104,6 +108,7 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 	{
 		m_log->log("Engine", "Subsystems couldn't be initialized");
 		glfwTerminate();
+		delete m_log;
   	return false;
 	}
 
@@ -116,6 +121,10 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 	glDepthFunc(GL_LEQUAL);
   glCullFace(GL_BACK);
   glEnable(GL_MULTISAMPLE);
+
+  m_engine_gui =  new EngineGUI();
+  if(!m_engine_gui->initialize())
+  	return false;
 
 	m_initialized = true;
 	m_log->log("Engine", "initialized");
@@ -131,7 +140,20 @@ void Engine::shutDown()
 		glfwTerminate();
 
 		m_log->log("Engine", "shut down");
+		delete m_engine_gui;
 		delete m_log;
+		delete m_render_system;
+		delete m_io_system;
+
+		for( std::vector<GUI*>::iterator it = m_guis.begin(); it != m_guis.end();it++)
+		{
+			if( (*it) != nullptr)
+			{	
+				delete (*it);
+			}
+		}
+		m_guis.clear();
+		m_initialized = false;
 	}
 }
 
@@ -291,6 +313,29 @@ GUI * Engine::getGUI()
 	return gui;
 }
 
+
+void Engine::removeGUI(GUI * gui)
+{
+	for( std::vector<GUI*>::iterator it = m_guis.begin(); it != m_guis.end();it++)
+	{
+		if( (*it)->getId() == gui->getId() )
+		{
+			delete (*it);
+			m_guis.erase(it);
+			it = m_guis.end();
+		}
+	}
+}
+
+std::vector<GUI *> * Engine::getGUIs()
+{
+	return &m_guis;
+}
+EngineGUI * Engine::getEngineGUI()
+{
+	return m_engine_gui;
+}
+
 unsigned int Engine::getWindowWidth()
 {
 	return m_win_width;
@@ -305,4 +350,22 @@ void Engine::windowSizeChangedCallback(GLFWwindow* window, int width, int height
 	m_win_width = width;
 	m_win_height = height;
 	glViewport(0, 0, width, height);
+}
+
+bool Engine::checkGUIsForButtonPresses(float x, float y)
+{
+	bool ret = false;
+
+	for( std::vector<GUI*>::iterator it = m_guis.begin(); it != m_guis.end();it++)
+	{
+		if( (*it)->isActive() )
+		{
+			if ( (*it)->checkButtonPressed(x,y))
+				ret = true;
+		}
+	}
+	if(m_engine_gui->checkButtonPressed(x,y))
+		ret = true;
+
+	return ret;
 }

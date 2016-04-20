@@ -44,6 +44,7 @@ protected:
 	void bind();
 
 	// uniform and subroutone setters
+	void setUniform(const std::string name, glm::vec2 v);
 	void setUniform(const std::string name, glm::vec3 v);
 	void setUniform(const std::string name, glm::vec4 v);
 	void setUniform(const std::string name, glm::mat4 v);

@@ -14,6 +14,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/Shader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/RenderShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/TextShader.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/ImageShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Scene.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Camera.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Transform.cpp
@@ -25,9 +26,13 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/IndexedRepresentation.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Light.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/GBuffer.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/ShadowBuffer.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Quad.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/GUI.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/EngineGUI.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/Text.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/Image.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/Button.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RessourceManager.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/external/gl_core_4_.c
    
@@ -43,6 +48,7 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/Shader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/RenderShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/TextShader.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/ImageShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Scene.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Camera.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Transform.h
@@ -54,9 +60,13 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/IndexedRepresentation.h   
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Light.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/GBuffer.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/ShadowBuffer.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Quad.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/GUI.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/EngineGUI.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/Text.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/Image.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/Button.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RessourceManager.h
    ${CMAKE_CURRENT_SOURCE_DIR}/external/gl_core_4_.h
 

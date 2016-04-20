@@ -191,7 +191,7 @@ void pass1()
   if(ColorOnly == 1)
     color = vec4(mat.DiffuseColor,1.0);
   else
-    color = vec4( vec3(texture(Tex1, TexCoord)) ,1.0 );
+    color = texture(Tex1, TexCoord);
 
   PositionData = Position;
   NormalData = normalize(Normal);
@@ -230,6 +230,15 @@ void pass2()
   }
 }
 // PASS 2 END    -----------------------------------------------------
+
+
+// PASS LIGHT   ------------------------------------------------------
+subroutine (RenderPassType)
+void pass3()
+{
+  //just the z buffer
+}
+// PASS LIGHT END  ---------------------------------------------------
 
 // MAIN    -----------------------------------------------------------
 

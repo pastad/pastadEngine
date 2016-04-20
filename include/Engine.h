@@ -14,6 +14,7 @@ class Scene;
 class RenderSubsystem;
 class IOSubsystem;
 class GUI;
+class EngineGUI;
 
 enum SubsystemType
 {
@@ -62,9 +63,19 @@ public:
 	// function to request a GUI
 	static GUI * getGUI();
 
+	// returns engine gui
+	static EngineGUI * getEngineGUI();
+
+	// requiering and removing GUis
+	static std::vector< GUI *> * getGUIs();
+	static void removeGUI(GUI * gui);
+
 	// window size getters
 	static unsigned int getWindowWidth();
 	static unsigned int getWindowHeight();
+
+	// checks the guis in case mouse button is pressed
+	static bool checkGUIsForButtonPresses(float x, float y);
 
 private:
 
@@ -90,6 +101,9 @@ private:
 	// the graphical user interfaces and the id
 	static std::vector<GUI *> m_guis;
 	static unsigned int m_guis_id;
+
+	// internal engine gui 
+	static EngineGUI * m_engine_gui;
 
 	// the window size
 	static unsigned int m_win_width;

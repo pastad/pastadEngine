@@ -95,13 +95,18 @@ bool  TextShader::load(const std::string path)
 }
 
 // modified from http://learnopengl.com/code_viewer.php?code=in-practice/text_rendering (19.03.2016)
-void TextShader::renderText(std::string text, glm::vec3 pos ,float scale, glm::vec3 color)
+void TextShader::renderText(std::string text, glm::vec2 pos ,float scale, glm::vec3 color, bool centered)
 {
   bind();
   setUniform("TextColor",color);
   glActiveTexture(GL_TEXTURE0);
   glBindVertexArray(m_vao);
 
+  
+  if(centered)
+    pos -= (approximateTextOffset(text) / 2.0f *scale);
+
+  
 
   std::string::const_iterator c;
   for (c = text.begin(); c != text.end(); c++)
@@ -137,7 +142,7 @@ void TextShader::renderText(std::string text, glm::vec3 pos ,float scale, glm::v
   }
   glBindVertexArray(0);
   glBindTexture(GL_TEXTURE_2D, 0);
-  checkUniformError("end txtshader render");
+  checkUniformError("end textshader render");
 }
 
 void TextShader::setProjection()
@@ -146,7 +151,20 @@ void TextShader::setProjection()
   glm::mat4 projection = glm::ortho(0.0f,(float) Engine::getWindowWidth(), 0.0f, (float)Engine::getWindowHeight());
   setUniform("ProjectionMat", projection);
 }
-
+glm::vec2 TextShader::approximateTextOffset(std::string text)
+{
+  float ret = 0.0f;
+  float ret_y = 0.0f;
+  std::string::const_iterator c;
+  for (c = text.begin(); c != text.end(); c++)
+  {
+    Character ch = m_characters[*c] ;
+    ret += ch.size.x + ch.bearing.x;
+    if(ch.size.y > ret_y)
+      ret_y = ch.size.y;
+  }
+  return glm::vec2(ret,ret_y);
+}
 
 
 

@@ -6,6 +6,16 @@
 #include "Object.h"
 #include "Light.h"
 
+#include "GUI.h"
+#include "Text.h"
+#include "Image.h"
+#include "Button.h"
+
+void test_callback(Button * b)
+{
+  std::cout << "woho callback"<<std::endl;
+}
+
 int main(void)
 {
   Engine engine;
@@ -25,6 +35,19 @@ int main(void)
   light2->setPoint(glm::vec3(2,0,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),1.0f,1.0f,0.09f,0.032f);
  
   engine.setScene(&scene);
+
+  GUI * gui = engine.getGUI();
+  gui->registerButtonPressedCallback(test_callback);
+  Text * text = gui->getText();
+  text->setPosition(glm::vec2(100,100));
+  text->setText("external GUI");
+
+ // Image* image = gui->getImage();
+  //image->load("models/image_test.png");
+  //image->setPosition(glm::vec2(20,20));
+  //Button * button = gui->getButton();
+  //button->load("models/image_test.png", "my button");
+  //button->setPositionAndScale(glm::vec2(100.0f,100.0f),glm::vec2(0.5f,0.5f));
   
   // run the main loop
   while(engine.running())

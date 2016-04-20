@@ -84,7 +84,7 @@ void Material::bind(int unit, RenderShader * render_shader)
   {    
     render_shader->setColorOnly(false); 
     for(int x=0; x < m_diffuse_textures.size();x++)
-      m_diffuse_textures.at(x)->bind(unit+x, render_shader);
+      m_diffuse_textures.at(x)->bind(unit+x);
   }
   else
   {

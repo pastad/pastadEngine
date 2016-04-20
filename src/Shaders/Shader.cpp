@@ -56,6 +56,11 @@ void Shader::bind()
   glUseProgram(m_program);
 }
 
+void Shader::setUniform(const std::string name, glm::vec2 v)
+{ 
+  glUniform2f(glGetUniformLocation(m_program, name.c_str()),v.x ,v.y);
+}
+
 void Shader::setUniform(const std::string name, glm::vec3 v)
 { 
   glUniform3f(glGetUniformLocation(m_program, name.c_str()),v.x ,v.y ,v.z);

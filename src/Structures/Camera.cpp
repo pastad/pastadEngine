@@ -10,7 +10,7 @@
 #include <sstream>
 #include <iomanip>
 
-Camera::Camera(float x, float y, float z): m_pos(x,y,z)
+Camera::Camera(float x, float y, float z): m_pos(x,y,z),m_rotation_allowed(false)
 {
   m_forward = glm::vec3(0.0f, 0.0f, 1.0f);
   m_up    = glm::vec3(0.0f, 1.0f,  0.0f);
@@ -86,13 +86,16 @@ glm::mat4 Camera::getProjection()
 }
 void Camera::rotate(float deltax,float deltay)
 {
-  m_rot_1 +=deltax*m_rotation_speed;
-  m_rot_2 -=deltay*m_rotation_speed;
-  glm::vec3 front;
-  front.x = cos(glm::radians(m_rot_1)) * cos(glm::radians(m_rot_2));
-  front.y = sin(glm::radians(m_rot_2));
-  front.z = sin(glm::radians(m_rot_1)) * cos(glm::radians(m_rot_2));
-  m_forward = glm::normalize(front); 
+  if(m_rotation_allowed)
+  {
+    m_rot_1 +=deltax*m_rotation_speed;
+    m_rot_2 -=deltay*m_rotation_speed;
+    glm::vec3 front;
+    front.x = cos(glm::radians(m_rot_1)) * cos(glm::radians(m_rot_2));
+    front.y = sin(glm::radians(m_rot_2));
+    front.z = sin(glm::radians(m_rot_1)) * cos(glm::radians(m_rot_2));
+    m_forward = glm::normalize(front);
+  }
 }
 glm::vec3 Camera::getPosition()
 {
@@ -110,4 +113,12 @@ void Camera::recalculateMatrices()
   m_view = glm::lookAt(m_pos, m_pos +  m_forward, m_up);
   m_view_wt = glm::lookAt(glm::vec3(0,0,0), glm::vec3(0,0,0) +  m_forward, m_up);
   m_projection =glm::perspective(m_fov, (float)Engine::getWindowWidth()/(float)Engine::getWindowHeight(), 0.1f, 1000.0f);
+}
+void Camera::setRotationAllowed()
+{
+  m_rotation_allowed = true;
+}
+void Camera::setRotationNotAllowed()
+{
+  m_rotation_allowed = false;
 }

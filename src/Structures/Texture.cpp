@@ -20,14 +20,14 @@ bool Texture::load()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    unsigned char* image = SOIL_load_image(m_path.c_str(), &m_width, &m_height, 0, SOIL_LOAD_RGB);
+    unsigned char* image = SOIL_load_image(m_path.c_str(), &m_width, &m_height, 0, SOIL_LOAD_RGBA);
     if(image == nullptr )
     {
         Engine::getLog()->log("Texture", "loading failed");
         return false;
     }
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
     glGenerateMipmap(GL_TEXTURE_2D);
     SOIL_free_image_data(image);
     glGenerateMipmap(GL_TEXTURE_2D);
@@ -36,8 +36,13 @@ bool Texture::load()
 
     return true;
 }
-void Texture::bind(unsigned int unit, RenderShader * render_shader)
+void Texture::bind(unsigned int unit)
 {
     glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(GL_TEXTURE_2D, m_texture);
+}
+
+glm::vec2 Texture::getSize()
+{
+  return glm::vec2(m_width,m_height);
 }

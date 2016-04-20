@@ -9,7 +9,8 @@
 #include <fstream>
 #include <sstream>
 
-bool IOSubsystem::m_keys[GLFW_KEY_LAST];
+bool IOSubsystem::m_keys[GLFW_KEY_LAST + 1 ];
+bool IOSubsystem::m_mouse_buttons[GLFW_MOUSE_BUTTON_8 + 1 ];
 double IOSubsystem::m_mouse_x = -1;
 double IOSubsystem::m_mouse_y= -1;
 glm::vec2 IOSubsystem::m_mouse_delta;
@@ -31,6 +32,7 @@ bool IOSubsystem::startUp(GLFWwindow * window)
 		// init system here
     glfwSetKeyCallback(window, keyCallback);
     glfwSetCursorPosCallback(window, mouseMoveCallback);
+    glfwSetMouseButtonCallback(window, mouseButtonCallback);
 		m_initialized = true;
 		Engine::getLog()->log("IOSubsystem", "started");
 		return true;
@@ -112,9 +114,34 @@ void IOSubsystem::mouseMoveCallback(GLFWwindow* window, double x, double y )
     m_mouse_y =y;
   }
 }
+void IOSubsystem::mouseButtonCallback(GLFWwindow * window, int button, int action, int mods)
+{ 
+  if(action == GLFW_PRESS)
+  {        
+    m_mouse_buttons[button] = true;
+    Engine::checkGUIsForButtonPresses(m_mouse_x, Engine::getWindowHeight() - m_mouse_y);
+  }
+  if(action == GLFW_RELEASE)
+  {
+   // Engine::getLog()->log("IOSubsystem", "mouse button released");
+    m_mouse_buttons[button] = false;
+  }
+
+}
+
 bool IOSubsystem::isKeyPressed(int key)
 {
-  return m_keys[key];
+  if(key <= GLFW_KEY_LAST)
+    return m_keys[key];
+  else
+    return false;
+}
+bool IOSubsystem::isMouseButtonPressed(int key)
+{
+  if(key <= GLFW_MOUSE_BUTTON_8)
+    return m_mouse_buttons[key];
+  else
+    return false;
 }
 glm::vec2 IOSubsystem::getMouseCoordinates()
 {

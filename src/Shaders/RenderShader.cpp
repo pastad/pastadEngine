@@ -61,9 +61,14 @@ void RenderShader::setRenderPass(unsigned int pass)
     setRenderPassSubroutine("pass1");
     setUniform("RenderThrew",0);
   }
-  else
+  if(pass == 2)
   {
     setRenderPassSubroutine("pass2");
+    setUniform("RenderThrew",1);
+  }
+  if(pass == 3)
+  {
+    setRenderPassSubroutine("pass3");
     setUniform("RenderThrew",1);
   }
 
