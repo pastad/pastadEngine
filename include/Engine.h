@@ -21,6 +21,15 @@ enum SubsystemType
 	RENDER_SUBSYSTEM = 1,
 	IO_SUBSYSTEM = 2
 };
+enum PostprocessType
+{
+	PP_FXAA = 1
+};
+enum ShadowTechniqueType
+{	
+	ST_STANDARD =1,
+	ST_STANDARD_PCF = 2
+};
 
 
 class Engine
@@ -76,6 +85,12 @@ public:
 
 	// checks the guis in case mouse button is pressed
 	static bool checkGUIsForButtonPresses(float x, float y);
+
+	// sets the post processing technique according to boolean
+	static void setPostProcessing(PostprocessType type, bool enable);
+
+	// sets a shadow property
+	static void setShadowTechnique(ShadowTechniqueType type, bool enable);
 
 private:
 

@@ -28,6 +28,16 @@ private:
   static Button * m_tb_camera;
   static Text * m_txt_camera;
 
+  static Button * m_tb_fxaa;
+  static Text * m_txt_fxaa;
+
+  static Button * m_tb_shadow_pcf;
+  static Text * m_txt_shadow_pcf;
+
+  static Button * m_tb_shadow_standard;
+  static Text * m_txt_shadow_standard;
+
+
   // callback four mouse button press
   static void mouseButtonCallback(Button * btn);
   

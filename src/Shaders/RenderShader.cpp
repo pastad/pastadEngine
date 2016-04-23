@@ -302,3 +302,52 @@ void RenderShader::setAllMaterialsForRenderPass()
     }
   }
 }
+
+int RenderShader::setDirectionalShadowMap(glm::mat4 shadow_mat)
+{
+  int c = m_shadow_map_count;
+  std::stringstream ss;
+  ss << "DirectionalShadowMat[" << c << "]";
+  setUniform(ss.str(),shadow_mat );
+  setUniform("DirectionalShadowMatCount",c+1 );
+  checkUniformError("set shadow map");
+  m_shadow_map_count++;
+  //Engine::getLog()->log("RenderShader",ss.str(), " shadow maps set");
+  return c;
+}
+void RenderShader::resetShadowMapping()
+{
+  m_shadow_map_count =0;
+  setUniform("DirectionalShadowMatCount",0 );
+  checkUniformError("resset shadow map count");
+}
+
+void RenderShader::setPCF(bool state)
+{
+  if(state)
+  {
+    setUniform("EnablePCF",1 );
+    Engine::getLog()->log("RenderShader", "Enabled PCF for shadows");
+  }
+  else
+  {
+    setUniform("EnablePCF",0 );
+    Engine::getLog()->log("RenderShader", "Disabled PCF for shadows");
+  }
+  checkUniformError("set shadow map");
+}
+void RenderShader::setStandardShadows(bool state)
+{
+  if(state)
+  {
+    setUniform("EnableStandardShadows",1 );
+    Engine::getLog()->log("RenderShader", "Disabled standard shadows");
+  }
+  else
+  {
+    setUniform("EnableStandardShadows",0 );    
+    resetShadowMapping();
+    Engine::getLog()->log("RenderShader", "Disabled standard shadows");
+  }
+  checkUniformError("set standard shadows");
+}

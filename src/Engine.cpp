@@ -369,3 +369,12 @@ bool Engine::checkGUIsForButtonPresses(float x, float y)
 
 	return ret;
 }
+
+void Engine::setPostProcessing(PostprocessType type, bool enable)
+{
+	m_render_system->setPostProcessing(type,enable);
+}	
+void Engine::setShadowTechnique(ShadowTechniqueType type, bool enable)
+{
+	m_render_system->setShadowTechnique(type,enable);
+}	

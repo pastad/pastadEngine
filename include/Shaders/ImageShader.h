@@ -1,5 +1,5 @@
 #ifndef IMAGESHADER_H
-#define TEXTSHADER_H
+#define IMAGESHADER_H
 
 #include <Shader.h>
 #include <glm/glm.hpp>
@@ -33,4 +33,4 @@ private:
 
 };
 
-#endif // TEXTSHADER_H
+#endif // IMAGESHADER_H

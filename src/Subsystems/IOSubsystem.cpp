@@ -116,6 +116,9 @@ void IOSubsystem::mouseMoveCallback(GLFWwindow* window, double x, double y )
 }
 void IOSubsystem::mouseButtonCallback(GLFWwindow * window, int button, int action, int mods)
 { 
+  // std::stringstream ss;
+ //ss <<m_mouse_x<<" "<< Engine::getWindowHeight() - m_mouse_y;
+  //Engine::getLog()->log("IOSubsystem","mouse pressed",ss.str());   
   if(action == GLFW_PRESS)
   {        
     m_mouse_buttons[button] = true;

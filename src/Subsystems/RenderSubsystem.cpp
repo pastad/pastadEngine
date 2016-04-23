@@ -3,15 +3,20 @@
 #include "Log.h"
 #include "Camera.h"
 #include "Scene.h"
-#include "RenderShader.h"
-#include "ShadowBuffer.h"
+
+#include "DirectionalShadowBuffer.h"
 #include "RenderBuffer.h"
+#include "GBuffer.h"
+
+#include "RenderShader.h"
 #include "TextShader.h"
 #include "ImageShader.h"
 #include "PostProcessingShader.h"
-#include "GBuffer.h"
+#include "ShadowShader.h"
+
 #include "Quad.h"
 #include "Transform.h"
+
 #include "GUI.h"
 #include "EngineGUI.h"
 
@@ -22,14 +27,24 @@ RenderSubsystem::RenderSubsystem()
 
 RenderSubsystem::~RenderSubsystem()
 {	
-	delete m_shader;
-	delete m_text_shader;
-	delete m_image_shader;
-	delete m_pp_shader;
-	delete m_gbuffer;
-	delete m_render_quad;
-	//delete m_shadow_buffer;
-	delete m_fxaa_buffer;
+	if(m_shader != nullptr)
+		delete m_shader;
+	if(m_text_shader != nullptr)
+		delete m_text_shader;
+	if(m_image_shader != nullptr)
+		delete m_image_shader;
+	if(m_pp_shader != nullptr)
+		delete m_pp_shader;
+	if(m_shadow_shader != nullptr)
+		delete m_shadow_shader;
+	if(m_gbuffer != nullptr)
+		delete m_gbuffer;
+	if(m_render_quad != nullptr)
+		delete m_render_quad;
+	if(m_shadow_buffer != nullptr)
+		delete m_shadow_buffer;
+	if(m_pp_buffer != nullptr)
+		delete m_pp_buffer;
 }
 
 bool RenderSubsystem::startUp(GLFWwindow * window)
@@ -41,9 +56,10 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 		m_text_shader = new TextShader();
 		m_image_shader = new ImageShader();
 		m_pp_shader = new PostProcessingShader();
+		m_shadow_shader = new ShadowShader();
 
 		m_gbuffer = new GBuffer();	
-		m_fxaa_buffer = new RenderBuffer();		
+		m_pp_buffer = new RenderBuffer();		
 		m_render_quad = new Quad();
 
 	  if( ! m_shader->load("shaders/rendershaderV1") )
@@ -54,15 +70,27 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 			return false;
 		if( ! m_pp_shader->load("shaders/ppshaderV1") )
 			return false;
+		if( ! m_shadow_shader->load("shaders/shadowshaderV1") )
+			return false;
 		if( ! m_gbuffer->initialize() )
 			return false;
 		if( ! m_render_quad->load() )
 			return false;
-		if( !m_fxaa_buffer->initialize())
+		if( !m_pp_buffer->initialize())
 			return false;
-		//m_shadow_buffer = new ShadowBuffer();
-		//if( !m_shadow_buffer->initialize(800,600))
-	//		return false;
+		m_shadow_buffer = new DirectionalShadowBuffer();
+		if( !m_shadow_buffer->initialize(1240, 720))
+			return false;
+
+		m_pp_shader->use();
+		m_pp_shader->setFXAA(true);
+
+		m_shader->use();
+		m_shader->setPCF(true);
+		m_shader->setStandardShadows(true);
+
+		m_shadows_standard_enabled = true;
+
 
 		Engine::getLog()->log("RenderSubsystem", "started");
 		m_initialized = true;
@@ -89,7 +117,7 @@ void RenderSubsystem::startRender()
 	}
 }
 
-void RenderSubsystem::renderPassOne()
+void RenderSubsystem::renderPassGBuffer()
 {
  	m_shader->use();
 	m_gbuffer->bindForInput();
@@ -108,39 +136,33 @@ void RenderSubsystem::renderPassOne()
 	if(scene != nullptr)
 		scene->render(m_shader);
 	glFinish();
+	m_gbuffer->unbindFromInput();
 }
 void RenderSubsystem::renderPassShadow()
 {
-/*	m_shader->use();
-	m_shadow_buffer->bindForInput();
-	m_shader->setRenderPass(3);
-
-	//Transform trans;
- 	//m_shader->setProjectionMatrix(cam->getProjection());
- //	m_shader->setViewMatrix(cam->getView());
-
- 	glEnable(GL_CULL_FACE);
-  glCullFace(GL_FRONT);
+	m_shadow_shader->use();
 
   Scene * scene = Engine::getScene();
 
 	if(scene != nullptr)
-		scene->render(m_shader);
-
-	glDisable(GL_CULL_FACE);
-	glFinish();*/
-
+		scene->renderShadow(m_shadow_shader);
 }
 
-void RenderSubsystem::renderPassTwo()
+void RenderSubsystem::renderPassLight()
 {
  	m_shader->use();
 	m_gbuffer->unbindFromInput();
 	m_gbuffer->bindForOutput();
 
-	m_fxaa_buffer->bindForInput();
+	m_pp_buffer->bindForInput();
 
 	m_shader->setRenderPass(2);
+	
+	Scene * scene = Engine::getScene();
+
+	if(m_shadows_standard_enabled)
+		scene->setupLightsForShadingPass(m_shader);
+
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glDisable(GL_DEPTH_TEST);
@@ -152,14 +174,13 @@ void RenderSubsystem::renderPassTwo()
 
 	glFinish();
 
-	m_fxaa_buffer->unbindFromInput();
+	m_pp_buffer->unbindFromInput();
 }
-void RenderSubsystem::renderPassFXAA()
+void RenderSubsystem::renderPassPostProcess()
 {
 	m_pp_shader->use();
-	m_fxaa_buffer->bindForOutput();
+	m_pp_buffer->bindForOutput();
 
-	//m_pp_shader->setRenderPass();
 	m_pp_shader->setIdentityMatrices();
 	m_pp_shader->setTextureScaling( glm::vec2(1.0f /Engine::getWindowWidth(),1.0f /Engine::getWindowHeight()) );
 
@@ -169,7 +190,24 @@ void RenderSubsystem::renderPassFXAA()
   m_render_quad->render();	
 
 	glFinish();
+}
+void RenderSubsystem::renderPassTest()
+{
+	m_shader->use();
+	m_shadow_buffer->bindForOutput(0);
+	//m_pp_buffer->bindForOutput();
+	m_shader->setRenderPass(2);
+	
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glDisable(GL_DEPTH_TEST);
 
+  m_shader->setIdentityMatrices();
+  m_shader->setAllMaterialsForRenderPass();
+
+
+  m_render_quad->render();	
+
+	glFinish();
 }
 
 void RenderSubsystem::renderUI()
@@ -183,10 +221,12 @@ void RenderSubsystem::renderUI()
 void RenderSubsystem::render()
 {
 	startRender();
-	renderPassOne();
-	//renderPassShadow();
-	renderPassTwo();
-	renderPassFXAA();
+	renderPassGBuffer();
+	if(m_shadows_standard_enabled)
+		renderPassShadow();
+	renderPassLight();
+	renderPassPostProcess();
+	//renderPassTest();
 
 	m_text_shader->use();
 	glEnable(GL_BLEND);
@@ -217,4 +257,32 @@ RenderShader * RenderSubsystem::getRenderShader()
 TextShader * RenderSubsystem::getTextShader()
 {
 	return m_text_shader;
+}
+
+
+void RenderSubsystem::setPostProcessing(PostprocessType type, bool enable)
+{
+	m_pp_shader->use();
+	if( type == PP_FXAA)
+		m_pp_shader->setFXAA(enable);
+}
+void RenderSubsystem::setShadowTechnique(ShadowTechniqueType type, bool enable)
+{
+	m_shader->use();
+	if( type == ST_STANDARD_PCF)
+		m_shader->setPCF(enable);
+	if( type == ST_STANDARD)
+	{
+		m_shadows_standard_enabled = enable;
+		if(enable)
+		{
+			Engine::getLog()->log("RenderSubsystem", "Enabled standard shadows");
+			m_shader->setStandardShadows(true);
+		}
+		else
+		{
+			m_shader->setStandardShadows(false);
+			Engine::getLog()->log("RenderSubsystem", "Disabled standard shadows");
+		}
+	}
 }

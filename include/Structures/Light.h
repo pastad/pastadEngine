@@ -16,6 +16,9 @@ enum
     LIGHT_SPOT
 };
 
+class DirectionalShadowBuffer;
+class ShadowShader;
+class RenderShader;
 
 class Light
 {
@@ -26,10 +29,10 @@ class Light
         Light& operator=(const Light& other) = delete;
 
         // light setters        
-        void setDirectional(glm::vec3 direction, glm::vec3 col_am ,glm::vec3 col_dif, glm::vec3 spec,float intensity);
-        void setPoint(glm::vec3 position, glm::vec3 col_am ,glm::vec3 col_dif, glm::vec3 spec,float intensity,
+        bool setDirectional(glm::vec3 direction, glm::vec3 col_am ,glm::vec3 col_dif, glm::vec3 spec,float intensity);
+        bool setPoint(glm::vec3 position, glm::vec3 col_am ,glm::vec3 col_dif, glm::vec3 spec,float intensity,
                       float con ,float lin, float qua );
-        void setSpot(glm::vec3 position, glm::vec3 col_am ,glm::vec3 col_dif, glm::vec3 spec,float intensity,
+        bool setSpot(glm::vec3 position, glm::vec3 col_am ,glm::vec3 col_dif, glm::vec3 spec,float intensity,
                       float con ,float lin, float qua, float cutoffAngle, glm::vec3 direction );
 
 
@@ -53,6 +56,19 @@ class Light
 
         // returns the cutoff angle in case of spot light 
         float getCutoffAngle();
+
+        // binds the light for shadow rendering
+        void bindForShadowRender(ShadowShader * shadow_shader);
+
+        // unbinds the light from shadow rendering
+        void unbindFromShadowRender();
+
+        // binds the shadow buffer for render
+        void bindForRender(RenderShader * render_shader);
+
+        // returns the view and projection mat
+        glm::mat4 getView();
+        glm::mat4 getProjection();
 
 
     protected:
@@ -79,6 +95,10 @@ class Light
 
         // cuttoff angle
         float m_cutoff_angle;
+
+        // the shadow buffer for directional lights
+        DirectionalShadowBuffer * m_directional_buffer = nullptr;
+
 };
 
 

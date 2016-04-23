@@ -27,15 +27,28 @@ int main(void)
   Object * object2 = scene.addObject("models/bush.obj");
   Object * object3 = scene.addObject("models/base.obj"); 
 
-  object->setPosition(glm::vec3(-2,0,0));
+  object->setPosition(glm::vec3(-2,0,6));
+  object2->setPosition(glm::vec3(0,0,6));
+  object3->setPosition(glm::vec3(0,-1,6));
 
   //Light * light = scene.addLight();
   Light * light2 = scene.addLight();
   //light->setDirectional(glm::vec3(0,0,1), glm::vec3(1,1,1),glm::vec3(1,1,1), glm::vec3(1,1,1),1.0f);
   light2->setPoint(glm::vec3(2,0,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),1.0f,1.0f,0.09f,0.032f);
   Light * light3 = scene.addLight();
-  light3->setSpot(glm::vec3(-4,0,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),
+  light3->setSpot(glm::vec3(0,0,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),
       1.0f,1.0f,0.09f,0.032f, 45.0f, glm::vec3(0,0,1) );
+ // Light * light4 = scene.addLight();
+ //  light4->setSpot(glm::vec3(5,0,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),
+   //   1.0f,1.0f,0.09f,0.032f, 45.0f, glm::vec3(-1,0,1) );
+ // Light * light5 = scene.addLight();
+ // light5->setSpot(glm::vec3(0,2,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),
+  //    1.0f,1.0f,0.09f,0.032f, 45.0f, glm::vec3(0,0,1) );
+
+//Light * light6 = scene.addLight();
+ // light6->setSpot(glm::vec3(-5,0,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),
+  //    1.0f,1.0f,0.09f,0.032f, 45.0f, glm::vec3(1,0,1) );
+
 
 
   engine.setScene(&scene);

@@ -2,6 +2,7 @@
 
 #include "RessourceManager.h"
 #include "RenderShader.h"
+#include "ShadowShader.h"
 #include "Model.h"
 #include "Object.h"
 #include "Camera.h"
@@ -9,7 +10,7 @@
 
 Scene::Scene()
 {
-  m_camera = new Camera(0,0,-5);
+  m_camera = new Camera(0,0,0);
   
 }
 Scene::~Scene()
@@ -29,8 +30,33 @@ void Scene::render(RenderShader * render_shader)
 {  
   render_shader->setLights(&m_lights);
   render_shader->setCameraPosition(m_camera->getPosition());
+
 	for(std::map<std::string, Model *>::iterator it = m_models.begin(); it != m_models.end();it++)
     it->second->render(render_shader);
+}
+void Scene::renderShadow(ShadowShader * shadow_shader)
+{  
+  shadow_shader->use();
+  for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end();it++)
+  {
+    if( (*it)->getType() == LIGHT_SPOT )
+    {
+      (*it)->bindForShadowRender(shadow_shader);
+
+      for(std::map<std::string, Model *>::iterator it = m_models.begin(); it != m_models.end();it++)
+        it->second->renderWithoutMaterial();
+
+      (*it)->unbindFromShadowRender();
+    }
+  }
+}
+void Scene::setupLightsForShadingPass(RenderShader * render_shader)
+{
+  render_shader->resetShadowMapping();
+  for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end();it++)
+  {
+    (*it)->bindForRender(render_shader);
+  }
 }
 
 Object * Scene::addObject(std::string path)

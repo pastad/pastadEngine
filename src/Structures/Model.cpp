@@ -52,6 +52,19 @@ void Model::render(RenderShader * render_shader)
     (*it)->render(matrices.size());
   }
 }
+void Model::renderWithoutMaterial()
+{ 
+  std::vector<glm::mat4> matrices;
+  for(std::vector<Object *>::iterator it = m_instances.begin(); it != m_instances.end();it++)
+      matrices.insert(matrices.end(),  (*it)->getModelMatrix()  );
+
+  for(std::vector<Mesh *>::iterator it = m_meshes.begin(); it != m_meshes.end(); it++)
+  {
+    (*it)->bufferModelMatrices(&matrices);
+    (*it)->render(matrices.size());
+  }
+}
+
 
 bool Model::load()
 {

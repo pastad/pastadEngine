@@ -9,10 +9,11 @@ class RenderShader;
 class TextShader;
 class ImageShader;
 class PostProcessingShader;
+class ShadowShader;
 
 class GBuffer;
 class Quad;
-class ShadowBuffer;
+class DirectionalShadowBuffer;
 class RenderBuffer;
 
 // Subsystem that is used for rendering
@@ -39,10 +40,11 @@ public:
 	void render();
 
 	// the render passess
-	void renderPassOne();
-	void renderPassTwo();
-	void renderPassFXAA();
+	void renderPassGBuffer();
+	void renderPassLight();
+	void renderPassPostProcess();
 	void renderPassShadow();
+	void renderPassTest();
 
 	// renders the ui set to the engine
 	void renderUI();
@@ -52,6 +54,12 @@ public:
 
 	// returns the shader for text rendering
 	TextShader * getTextShader();
+
+	// sets the post processing technique according to boolean
+	void setPostProcessing(PostprocessType type, bool enable);
+
+	// sets a shading technique property
+	void setShadowTechnique(ShadowTechniqueType type, bool enable);
 	
 
 private:
@@ -71,6 +79,9 @@ private:
 	// the post processing shader
 	PostProcessingShader * m_pp_shader;
 
+	// the shadow shader
+	ShadowShader * m_shadow_shader;
+
 	// the gbuffer
 	GBuffer * m_gbuffer;
 
@@ -78,16 +89,20 @@ private:
 	Quad * m_render_quad;
 
 	// tmp shadow buffer
-	ShadowBuffer * m_shadow_buffer;
+	DirectionalShadowBuffer * m_shadow_buffer;
 
 	// buffer for the fxaa step
-	RenderBuffer * m_fxaa_buffer;
+	RenderBuffer * m_pp_buffer;
+
+	// true if standard shadows are enabled
+	bool m_shadows_standard_enabled;
 
 	// starts the rendering cycle
 	void startRender();
 
 	// ends the rendering cycle
 	void endRender();
+
 	
 };
 

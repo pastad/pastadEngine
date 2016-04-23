@@ -10,6 +10,7 @@ class Model;
 class Object;
 class Camera;
 class RenderShader;
+class ShadowShader;
 class Light;
 
 class Scene
@@ -23,6 +24,12 @@ public:
 
   //renders the scene
 	void render(RenderShader * render_shader);
+
+  // renders the scene for the shadow passes
+  void renderShadow(ShadowShader * shadow_shader);
+
+  // sets the shadow textures
+  void setupLightsForShadingPass(RenderShader * render_shader);
 
   // adds an object to the scene
   Object * addObject(std::string  path);

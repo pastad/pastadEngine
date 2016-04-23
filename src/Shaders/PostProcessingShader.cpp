@@ -72,3 +72,11 @@ void PostProcessingShader::setTextureScaling(glm::vec2 scale)
   setUniform("TextureScale",scale);    
   checkUniformError("texture scale set");
 }
+
+void PostProcessingShader::setFXAA(bool enable)
+{
+  if(enable)
+    setUniform("EnableFXAA",1);
+  else
+    setUniform("EnableFXAA",0);
+}

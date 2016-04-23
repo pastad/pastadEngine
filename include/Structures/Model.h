@@ -38,6 +38,9 @@ public:
 	// renders the model
 	void render(RenderShader * render_shader);
 
+	// renders the model without material
+	void renderWithoutMaterial();
+
 private:
 
 	// holds pointers to the instances

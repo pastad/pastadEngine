@@ -1,25 +1,26 @@
-#include "ShadowBuffer.h"
+#include "DirectionalShadowBuffer.h"
 
 #include "Engine.h"
 #include "Log.h"
 
-ShadowBuffer::ShadowBuffer()
+DirectionalShadowBuffer::DirectionalShadowBuffer()
 {  
 }
-ShadowBuffer::~ShadowBuffer()
+DirectionalShadowBuffer::~DirectionalShadowBuffer()
 {  
 }
 
-bool ShadowBuffer::initialize(  float width ,  float height)
+bool DirectionalShadowBuffer::initialize(  float width ,  float height)
 {
   GLfloat border[] = {1.0f, 0.0f,0.0f,0.0f };
-
+  m_width = width;
+  m_height =height;
   
   glGenTextures(1, &m_depth_texture);
   glBindTexture(GL_TEXTURE_2D, m_depth_texture);
   glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH_COMPONENT24, width, height);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
   glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border);
@@ -39,7 +40,7 @@ bool ShadowBuffer::initialize(  float width ,  float height)
   GLenum result = glCheckFramebufferStatus(GL_FRAMEBUFFER);
   if( result != GL_FRAMEBUFFER_COMPLETE)
   {
-    Engine::getLog()->log("ShadowBuffer", "couldn't be inititalized" );
+    Engine::getLog()->log("DirectionalShadowBuffer", "couldn't be inititalized" );
     return false;
   }
 
@@ -48,16 +49,25 @@ bool ShadowBuffer::initialize(  float width ,  float height)
   return true;
 }
 
-void ShadowBuffer::bindForInput()
+void DirectionalShadowBuffer::bindForInput()
 {
   glBindFramebuffer(GL_FRAMEBUFFER, m_buffer_handle);
 }
-void ShadowBuffer::unbindFromInput()
+void DirectionalShadowBuffer::unbindFromInput()
 {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
-void ShadowBuffer::bindForOutput(unsigned int offset)
+void DirectionalShadowBuffer::bindForOutput(unsigned int offset)
 {
-  glActiveTexture(GL_TEXTURE0 + offset);
+  glActiveTexture(GL_TEXTURE0+ 20 + offset);
   glBindTexture(GL_TEXTURE_2D, m_depth_texture);
 }
+
+int DirectionalShadowBuffer::getWidth()
+{
+  return m_width;
+}
+int DirectionalShadowBuffer::getHeight()
+{
+  return m_height;
+} 

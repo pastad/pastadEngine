@@ -15,6 +15,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/RenderShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/TextShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/ImageShader.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/ShadowShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/PostProcessingShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Scene.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Camera.cpp
@@ -26,10 +27,10 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Material.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/IndexedRepresentation.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Light.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/GBuffer.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/ShadowBuffer.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/RenderBuffer.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Quad.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/RenderStructures/GBuffer.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/RenderStructures/DirectionalShadowBuffer.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/RenderStructures/RenderBuffer.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/RenderStructures/Quad.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/GUI.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/EngineGUI.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/Text.cpp
@@ -51,6 +52,7 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/RenderShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/TextShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/ImageShader.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/ShadowShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/PostProcessingShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Scene.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Camera.h
@@ -62,10 +64,10 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Material.h 
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/IndexedRepresentation.h   
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Light.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/GBuffer.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/ShadowBuffer.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/RenderBuffer.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Quad.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures/GBuffer.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures/DirectionalShadowBuffer.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures/RenderBuffer.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures/Quad.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/GUI.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/EngineGUI.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/Text.h
@@ -83,6 +85,7 @@ include_directories( ${OPENGL_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} {GLFW_INCLU
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures
+${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures
 ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI
 ${CMAKE_CURRENT_SOURCE_DIR}/external )
 

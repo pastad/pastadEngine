@@ -6,6 +6,9 @@
 #include "ImageShader.h"
 #include "Button.h"
 
+#include "Engine.h"
+#include "Log.h"
+
 GUI::GUI(unsigned int id):m_id(id),m_text_ids(0),m_button_ids(0),m_active(true)
 {  
   external_buttonPressedCallback = nullptr;
@@ -93,6 +96,7 @@ void GUI::removeButton(Button * button)
 
 bool GUI::checkButtonPressed(float x, float y)
 {
+  //Engine::getLog()->log("GUI", "btn check");
   bool ret = false;
   for( std::map<int,Button*>::iterator it = m_buttons.begin(); it != m_buttons.end();it++)
   {

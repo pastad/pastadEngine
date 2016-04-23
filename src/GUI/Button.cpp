@@ -71,9 +71,9 @@ bool Button::wasPressed(float x, float y)
     return false;
   glm::vec2 size  = m_texture->getSize() * m_scale ;
   if (  ( x < (m_position.x +size.x) ) && ( x > m_position.x )  &&
-          ( y < (m_position.y +size.y) ) && ( y > m_position.x )      ) 
+          ( y < (m_position.y +size.y) ) && ( y > m_position.y )      ) 
   {
-    //Engine::getLog()->log("Button", "I was pressed");
+
     if(m_toggl_enable)
     {
       m_toggl = ! m_toggl;

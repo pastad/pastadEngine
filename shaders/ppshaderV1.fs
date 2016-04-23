@@ -8,9 +8,14 @@ layout(location = 1 ) out vec3 PositionData;
 layout(binding=0) uniform sampler2D Tex1; 
 
 
+
 uniform vec2 TextureScale;
+
+uniform int EnableFXAA;
+
 // inspired by https://www.youtube.com/watch?v=Z9bYzpwVINA
-void main()
+
+vec4 fxaa()
 {
   float SPAN_MAX = 8.0;
   float REDUCE_MIN = 1.0/ 128.0; // 128.0f s
@@ -35,20 +40,30 @@ void main()
   direction = min(vec2(SPAN_MAX, SPAN_MAX), max(vec2(-SPAN_MAX,-SPAN_MAX), direction * sc) ) * 
   TextureScale; 
 
-  vec3 res1 = (1.0/2.0) * (
-texture2D(Tex1, TexCoord + (direction * vec2(1.0/3.0 -0.5) ) ).xyz +
-texture2D(Tex1, TexCoord + (direction * vec2(2.0/3.0 -0.5) ) ).xyz ); 
+  vec3 res1 = (1.0/2.0) * ( texture2D(Tex1, TexCoord + (direction * vec2(1.0/3.0 -0.5) ) ).xyz +
+    texture2D(Tex1, TexCoord + (direction * vec2(2.0/3.0 -0.5) ) ).xyz ); 
   
-  vec3 res2 = res1 * (1.0/2.0) + (1.0/4.0)* (
-texture2D(Tex1, TexCoord + (direction * vec2(0.0/3.0 -0.5) ) ).xyz +
-texture2D(Tex1, TexCoord + (direction * vec2(3.0/3.0 -0.5) ) ).xyz ); 
+  vec3 res2 = res1 * (1.0/2.0) + (1.0/4.0)* ( texture2D(Tex1, TexCoord + (direction * vec2(0.0/3.0 -0.5) ) ).xyz +
+    texture2D(Tex1, TexCoord + (direction * vec2(3.0/3.0 -0.5) ) ).xyz ); 
 
   float lMin = min(lM, min(min(lTL,lTR), min(lBL,lBR))  );
   float lMax = max(lM, max(max(lTL,lTR), max(lBL,lBR) )  );
   float lres2 = dot(lumi ,res2);
   if( lres2 < lMin || lres2 >lMax )
-    FragColor = vec4(res1,1.0);
+    return vec4(res1,1.0);
   else
-   FragColor = vec4(res2,1.0);
+   return vec4(res2,1.0);
+}
+
+void main()
+{
+  vec4 color = texture2D(Tex1, TexCoord );
+
+  if( EnableFXAA == 1 )
+   color = fxaa();
+
+
+  FragColor = color;
+  
 }
 

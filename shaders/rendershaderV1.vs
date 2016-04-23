@@ -9,10 +9,13 @@ out vec3 Position;
 out vec3 Normal;
 out vec2 TexCoord;
 out vec4 ModelPos;
+out vec4 ShadowCoord;
 
 uniform mat4 ViewMat;
 uniform mat3 NormalMat;
 uniform mat4 ProjectionMat;
+
+uniform mat4 ShadowMat; //TEST
 
 uniform int RenderThrew;
 
@@ -31,7 +34,9 @@ void main()
     mat4 VP   = ProjectionMat * ViewMat ;
     Position = vec3(VP * vec4(VertexPosition,1.0f)  );    
     gl_Position =  VP * vec4(VertexPosition, 1.0f);
+
   }
+  ShadowCoord = ShadowMat * vec4(VertexPosition,1.0); // test maybe model missing
   Normal   = normalize(VertexNormal);
   TexCoord = VertexCoord;
 }

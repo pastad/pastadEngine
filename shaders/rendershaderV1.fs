@@ -21,6 +21,23 @@ layout(binding=2) uniform sampler2D Tex3;
 layout(binding=3) uniform sampler2D Tex4; 
 layout(binding=4) uniform sampler2D Tex5; 
 
+layout(binding=20) uniform sampler2DShadow ShadowData0; 
+layout(binding=21) uniform sampler2DShadow ShadowData1; 
+layout(binding=22) uniform sampler2DShadow ShadowData2; 
+layout(binding=23) uniform sampler2DShadow ShadowData3; 
+layout(binding=24) uniform sampler2DShadow ShadowData4; 
+layout(binding=25) uniform sampler2DShadow ShadowData5; 
+layout(binding=26) uniform sampler2DShadow ShadowData6; 
+layout(binding=27) uniform sampler2DShadow ShadowData7; 
+layout(binding=28) uniform sampler2DShadow ShadowData8; 
+layout(binding=29) uniform sampler2DShadow ShadowData9; 
+layout(binding=30) uniform sampler2DShadow ShadowData10; 
+layout(binding=31) uniform sampler2DShadow ShadowData11; 
+layout(binding=32) uniform sampler2DShadow ShadowData12; 
+layout(binding=33) uniform sampler2DShadow ShadowData13; 
+
+
+
 uniform int ColorOnly;
 uniform vec4 Color;
 uniform int NumDirectionalLights;
@@ -48,9 +65,9 @@ uniform Material Materials[MAX_NUM_MATERIALS];
 
 //  LIGHTS ------------------------------------------------------------
 
-const int MAX_DIRECTIONAL_LIGHTS =  5;
+const int MAX_DIRECTIONAL_LIGHTS =  3;
 const int MAX_POINT_LIGHTS =  20;
-const int MAX_SPOT_LIGHTS =  20;
+const int MAX_SPOT_LIGHTS =  10;
 
 struct BaseLight
 {
@@ -88,7 +105,97 @@ uniform DirectionalLight DirectionalLights[MAX_DIRECTIONAL_LIGHTS];
 uniform PointLight       PointLights[MAX_POINT_LIGHTS];
 uniform SpotLight        SpotLights[MAX_SPOT_LIGHTS];
 
+
+
 // LIGHTS END --------------------------------------------------------
+
+// SHADOWs    --------------------------------------------------------
+
+uniform mat4 DirectionalShadowMat[MAX_SPOT_LIGHTS+MAX_DIRECTIONAL_LIGHTS]; 
+uniform int DirectionalShadowMatCount;
+uniform int EnablePCF;
+uniform int EnableStandardShadows;
+
+float calcSingleDirectionalShadow(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap)
+{ 
+  float sum = 0;
+  if( EnableStandardShadows )
+  {
+    vec4 ShadowCoord = shadowMat * vec4(pos,1);
+
+    
+    if(ShadowCoord.z  < 0)
+      sum = 1;
+    else
+    {
+      if(EnablePCF == 1)
+      {
+        sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(-1,-1));
+        sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(1,-1));
+        sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(-1,1));
+        sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(1,1));
+        sum *= 0.25; 
+      }
+      else
+        sum = textureProj(shadowMap, ShadowCoord);
+    }
+  }
+  else
+    sum = 1;
+   
+  return sum;
+}
+
+
+float calcShadowFactor()
+{
+  float ret = 0.0;
+  vec3 pos = vec3( texture( Tex1, TexCoord ) );
+
+  if(DirectionalShadowMatCount > 0 )  
+    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[0], ShadowData0);
+  
+  if(DirectionalShadowMatCount > 1 )
+    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[1], ShadowData1);
+  
+  if(DirectionalShadowMatCount > 2 )
+    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[2], ShadowData2);
+  
+  if(DirectionalShadowMatCount > 3 )
+    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[3], ShadowData3);
+
+  if(DirectionalShadowMatCount > 4 )
+    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[4], ShadowData4);
+
+  if(DirectionalShadowMatCount > 5 )
+    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[5], ShadowData5);
+
+  if(DirectionalShadowMatCount > 6 )
+    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[6], ShadowData6);
+
+  if(DirectionalShadowMatCount > 7 )
+    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[7], ShadowData7);
+
+  if(DirectionalShadowMatCount > 8 )
+    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[8], ShadowData8);
+
+  if(DirectionalShadowMatCount > 9 )
+    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[9], ShadowData9);
+
+  if(DirectionalShadowMatCount > 10 )
+    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[10], ShadowData10);
+
+  if(DirectionalShadowMatCount > 11 )
+    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[11], ShadowData11);
+
+  if(DirectionalShadowMatCount > 12 )
+    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[12], ShadowData12);
+
+  
+  return ret;
+}
+
+// SHADOWS END  ------------------------------------------------------
 
 // LIGHT CALCULATION -------------------------------------------------
 
@@ -117,7 +224,7 @@ vec4 calcDirectionalLight(int idx, Material mat, vec3 pos, vec3 normal)
   
   vec3  specular   = calcSpecularColor(lightDir, l.Base.SpecularColor, mat,pos,normal);
 
-  return vec4(diffuse* l.Base.Intensity + ambient* l.Base.Intensity + specular* l.Base.Intensity,1) ;
+  return vec4(diffuse* l.Base.Intensity *calcShadowFactor()+ ambient* l.Base.Intensity + specular* l.Base.Intensity,1) ;
 }
 
 // pointLight calculation
@@ -137,7 +244,7 @@ vec4 calcPointLights(int idx, Material mat, vec3 pos, vec3 normal)
 
   float attenuation = 1.0f / (l.Attenuation.Constant + l.Attenuation.Linear * distance + l.Attenuation.Quadratic * (distance * distance));
 
-  return vec4( (diffuse* l.Base.Intensity + ambient* l.Base.Intensity + specular* l.Base.Intensity ) * attenuation,1) ;
+  return vec4( (diffuse* l.Base.Intensity *calcShadowFactor() + ambient* l.Base.Intensity + specular* l.Base.Intensity ) * attenuation,1) ;
 }
 
 // spotLight calculation
@@ -169,12 +276,12 @@ vec4 calcSpotLight(int idx, Material mat, vec3 pos, vec3 normal)
 
     vec3 specular =    l.Pointlight.Base.SpecularColor * spec * mat.SpecularColor;
 
-    color =vec4( (diffuse* l.Pointlight.Base.Intensity  * spotFactor + ambient* l.Pointlight.Base.Intensity + specular* l.Pointlight.Base.Intensity  * spotFactor ) * attenuation,1) ;
+    color =vec4( (diffuse* l.Pointlight.Base.Intensity *calcShadowFactor() * spotFactor + ambient* l.Pointlight.Base.Intensity + specular* l.Pointlight.Base.Intensity  * spotFactor ) * attenuation,1) ;
     return color;
   }
   else
   {
-    return  vec4(0,0,0,0);//vec4(ambient,1.0) *l.Pointlight.Base.Intensity * attenuation;
+    return vec4(ambient,1.0) *l.Pointlight.Base.Intensity * attenuation;
   }
 }
 // LIGHT CALCULATION END ---------------------------------------------
@@ -200,6 +307,7 @@ void pass1()
 }
 // PASS 1 END    -----------------------------------------------------
 
+
 // PASS 2     --------------------------------------------------------
 subroutine (RenderPassType)
 void pass2()
@@ -219,14 +327,15 @@ void pass2()
   {
     Material mat = Materials[int(materialIndex.x)];
 
-    for(int x=0; x< NumDirectionalLights; x++ )
-      light += calcDirectionalLight(x,mat,pos,norm);
-    for(int x=0; x< NumPointLights; x++ )
-      light += calcPointLights(x,mat,pos,norm);
+    //for(int x=0; x< NumDirectionalLights; x++ )
+   //   light += calcDirectionalLight(x,mat,pos,norm);
+   // for(int x=0; x< NumPointLights; x++ )
+   //   light += calcPointLights(x,mat,pos,norm);
     for(int x=0; x< NumSpotLights; x++ )
       light += calcSpotLight(x,mat,pos,norm);
 
-    FragColor = color * light;
+    FragColor = color * light ;
+    //FragColor = vec4(0,shadow,0,1.0);
   }
 }
 // PASS 2 END    -----------------------------------------------------

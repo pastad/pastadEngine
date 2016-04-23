@@ -29,6 +29,9 @@ public:
   //sets the basic matrices
   void setIdentityMatrices();
 
+  // pass true if fxaa should be enabled
+  void setFXAA(bool enable);
+
   // binds the shader  
   void use();
   

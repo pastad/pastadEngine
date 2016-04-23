@@ -54,6 +54,22 @@ public:
 
   // binds the shader  
   void use();
+
+  // TEST 
+  void setTestShadow(glm::mat4 mat);
+
+  // set directional shadow matrix
+  int setDirectionalShadowMap(glm::mat4 shadow_mat);
+
+  // resets the shadow mapping
+  void resetShadowMapping();
+
+  // sets the pcf for shadow maps
+  void setPCF(bool state);
+
+  // enable shadows
+  void setStandardShadows(bool state);
+
   
 private:
 
@@ -70,7 +86,7 @@ private:
   // sets the material for the current material
   void setMaterialIndex(int);
 
-
+  int m_shadow_map_count;
 };
 
 #endif
