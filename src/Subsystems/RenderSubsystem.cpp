@@ -7,12 +7,17 @@
 #include "DirectionalShadowBuffer.h"
 #include "RenderBuffer.h"
 #include "GBuffer.h"
+#include "JitterTexture.h"
+#include "Texture.h"
+
 
 #include "RenderShader.h"
 #include "TextShader.h"
 #include "ImageShader.h"
 #include "PostProcessingShader.h"
 #include "ShadowShader.h"
+#include "PointShadowShader.h"
+#include "SkyboxShader.h"
 
 #include "Quad.h"
 #include "Transform.h"
@@ -37,14 +42,18 @@ RenderSubsystem::~RenderSubsystem()
 		delete m_pp_shader;
 	if(m_shadow_shader != nullptr)
 		delete m_shadow_shader;
+	if(m_point_shadow_shader != nullptr)
+		delete m_point_shadow_shader;
+	if(m_skybox_shader != nullptr)
+		delete m_skybox_shader;
 	if(m_gbuffer != nullptr)
 		delete m_gbuffer;
 	if(m_render_quad != nullptr)
 		delete m_render_quad;
-	if(m_shadow_buffer != nullptr)
-		delete m_shadow_buffer;
 	if(m_pp_buffer != nullptr)
 		delete m_pp_buffer;
+	if(m_jitter != nullptr)
+		delete m_jitter;
 }
 
 bool RenderSubsystem::startUp(GLFWwindow * window)
@@ -57,10 +66,13 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 		m_image_shader = new ImageShader();
 		m_pp_shader = new PostProcessingShader();
 		m_shadow_shader = new ShadowShader();
+		m_point_shadow_shader = new PointShadowShader();
+		m_skybox_shader = new SkyboxShader();
 
 		m_gbuffer = new GBuffer();	
 		m_pp_buffer = new RenderBuffer();		
 		m_render_quad = new Quad();
+		m_jitter =  new JitterTexture();
 
 	  if( ! m_shader->load("shaders/rendershaderV1") )
 			return false;
@@ -72,22 +84,24 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 			return false;
 		if( ! m_shadow_shader->load("shaders/shadowshaderV1") )
 			return false;
+		if( ! m_point_shadow_shader->load("shaders/pointshadowshaderV1") )
+			return false;
+		if( ! m_skybox_shader->load("shaders/skyboxshaderV1") )
+			return false;
 		if( ! m_gbuffer->initialize() )
 			return false;
 		if( ! m_render_quad->load() )
 			return false;
 		if( !m_pp_buffer->initialize())
 			return false;
-		m_shadow_buffer = new DirectionalShadowBuffer();
-		if( !m_shadow_buffer->initialize(1240, 720))
+		if( !m_jitter->load())
 			return false;
-
+		
 		m_pp_shader->use();
 		m_pp_shader->setFXAA(true);
 
 		m_shader->use();
-		m_shader->setPCF(true);
-		m_shader->setStandardShadows(true);
+		m_shader->setShadows(ST_STANDARD_RS);
 
 		m_shadows_standard_enabled = true;
 
@@ -134,7 +148,7 @@ void RenderSubsystem::renderPassGBuffer()
  	Scene * scene = Engine::getScene();
 
 	if(scene != nullptr)
-		scene->render(m_shader);
+		scene->render(m_shader, m_skybox_shader);
 	glFinish();
 	m_gbuffer->unbindFromInput();
 }
@@ -145,7 +159,7 @@ void RenderSubsystem::renderPassShadow()
   Scene * scene = Engine::getScene();
 
 	if(scene != nullptr)
-		scene->renderShadow(m_shadow_shader);
+		scene->renderShadow(m_shadow_shader,m_point_shadow_shader);
 }
 
 void RenderSubsystem::renderPassLight()
@@ -157,6 +171,7 @@ void RenderSubsystem::renderPassLight()
 	m_pp_buffer->bindForInput();
 
 	m_shader->setRenderPass(2);
+	m_jitter->bind(TEXTURE_JITTER);
 	
 	Scene * scene = Engine::getScene();
 
@@ -247,6 +262,7 @@ void RenderSubsystem::endRender()
 
 bool RenderSubsystem::systemCheck()
 {
+	m_skybox_shader->use();
 	return m_initialized;
 }
 
@@ -266,23 +282,12 @@ void RenderSubsystem::setPostProcessing(PostprocessType type, bool enable)
 	if( type == PP_FXAA)
 		m_pp_shader->setFXAA(enable);
 }
-void RenderSubsystem::setShadowTechnique(ShadowTechniqueType type, bool enable)
+void RenderSubsystem::setShadowTechnique(ShadowTechniqueType type)
 {
 	m_shader->use();
-	if( type == ST_STANDARD_PCF)
-		m_shader->setPCF(enable);
-	if( type == ST_STANDARD)
-	{
-		m_shadows_standard_enabled = enable;
-		if(enable)
-		{
-			Engine::getLog()->log("RenderSubsystem", "Enabled standard shadows");
-			m_shader->setStandardShadows(true);
-		}
-		else
-		{
-			m_shader->setStandardShadows(false);
-			Engine::getLog()->log("RenderSubsystem", "Disabled standard shadows");
-		}
-	}
+	m_shader->setShadows(type);
+	if(type == ST_NONE)
+		m_shadows_standard_enabled = false;
+	else
+		m_shadows_standard_enabled = true;
 }

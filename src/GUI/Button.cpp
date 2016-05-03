@@ -87,6 +87,17 @@ bool Button::wasPressed(float x, float y)
   else
     return false;
 }
+void Button::togglOn()
+{
+  m_toggl = true;
+  setImage(m_path_image_on);
+}
+void Button::togglOff()
+{
+  m_toggl = false;
+  setImage(m_path_image_off);
+}
+
 std::string Button::getDescriptor()
 {
   return m_descriptor;

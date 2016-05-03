@@ -1,11 +1,12 @@
 #version 440
 
 
-layout (location = 0) out vec4 FragColor;
+layout (location = 0) out float FragColor;
 
-in float Depth;
+in vec4 FragPos;
 
 void main()
 { 
-  //gl_FragDepth = 1.0 /gl_FragCoord.z ;
+  //= 1.0 /gl_FragCoord.z ;
+  FragColor = gl_FragCoord.z ; 
 }

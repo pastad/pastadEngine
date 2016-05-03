@@ -61,6 +61,10 @@ public:
   bool isToggled();
   bool isTogglEnabled();
 
+  // sets the toggle state
+  void togglOn();
+  void togglOff();
+
 private:
 
   // the text of the button

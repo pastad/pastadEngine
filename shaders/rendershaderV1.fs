@@ -35,6 +35,24 @@ layout(binding=30) uniform sampler2DShadow ShadowData10;
 layout(binding=31) uniform sampler2DShadow ShadowData11; 
 layout(binding=32) uniform sampler2DShadow ShadowData12; 
 layout(binding=33) uniform sampler2DShadow ShadowData13; 
+layout(binding=34) uniform sampler2DShadow ShadowData14; 
+layout(binding=35) uniform sampler2DShadow ShadowData15; 
+
+layout(binding=40) uniform samplerCube PointShadowData00; 
+layout(binding=41) uniform samplerCube PointShadowData01; 
+layout(binding=42) uniform samplerCube PointShadowData02; 
+layout(binding=43) uniform samplerCube PointShadowData03; 
+layout(binding=44) uniform samplerCube PointShadowData04; 
+layout(binding=45) uniform samplerCube PointShadowData05; 
+layout(binding=46) uniform samplerCube PointShadowData06; 
+layout(binding=47) uniform samplerCube PointShadowData07; 
+layout(binding=48) uniform samplerCube PointShadowData08; 
+layout(binding=49) uniform samplerCube PointShadowData09; 
+
+
+
+
+
 
 
 
@@ -66,7 +84,7 @@ uniform Material Materials[MAX_NUM_MATERIALS];
 //  LIGHTS ------------------------------------------------------------
 
 const int MAX_DIRECTIONAL_LIGHTS =  3;
-const int MAX_POINT_LIGHTS =  20;
+const int MAX_POINT_LIGHTS =  10;
 const int MAX_SPOT_LIGHTS =  10;
 
 struct BaseLight
@@ -109,89 +127,205 @@ uniform SpotLight        SpotLights[MAX_SPOT_LIGHTS];
 
 // LIGHTS END --------------------------------------------------------
 
-// SHADOWs    --------------------------------------------------------
+// SHADOWS    --------------------------------------------------------
 
-uniform mat4 DirectionalShadowMat[MAX_SPOT_LIGHTS+MAX_DIRECTIONAL_LIGHTS]; 
-uniform int DirectionalShadowMatCount;
-uniform int EnablePCF;
-uniform int EnableStandardShadows;
+uniform mat4 ShadowMatrices[MAX_SPOT_LIGHTS+MAX_POINT_LIGHTS*6]; 
+uniform int ShadowMatricesCount;
+uniform int PointShadowCount;
+uniform int EnableShadows;
+
+layout(binding=19) uniform sampler3D JitterTex;
+
+float calcDirShadowPCF(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap)
+{
+  vec4 ShadowCoord = shadowMat * vec4(pos,1);  
+  float sum = 1.0;
+
+  if(ShadowCoord.z  >= 0)
+  {    
+    sum = 0.0;
+    sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(-1,-1));
+    sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(1,-1));
+    sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(-1,1));
+    sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(1,1));
+    sum *= 0.25; 
+    if(sum < 1.0)
+      sum = 0.5;
+    if(sum > 1.0)
+      sum = 0.5;
+  }
+
+  return sum;
+}
+float calcDirShadowRandomSampling(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap)
+{
+  float sum = 0.0;
+  float ergeb = 1.0;
+  float softness =  2.0 / 512.0;
+  int sizeX = 4;
+  int sizeY = 8;
+  int sizeZ = 8; 
+  vec4 ShadowCoord = shadowMat * vec4(pos,1);
+  if(ShadowCoord.z  >= 0)
+  { 
+    ivec3 offset;
+    offset.xy = ivec2(mod( gl_FragCoord.xy, vec2(sizeX,sizeY) ) );
+
+    for( int i = 0 ; i < 4; i++ ) 
+    {
+      vec4 tShadowCoord = ShadowCoord;
+      offset.z = i;
+      vec4 jitteredOffset = texelFetch(JitterTex,offset,0) * softness * ShadowCoord.w;
+
+      tShadowCoord.xy = ShadowCoord.xy + jitteredOffset.xy;
+      sum += textureProj(shadowMap, tShadowCoord);
+      tShadowCoord.xy = ShadowCoord.xy + jitteredOffset.zw;
+      sum += textureProj(shadowMap, tShadowCoord);
+    }
+    ergeb= sum /(4.0 *2.0);
+
+    if( (ergeb != 0.0) && (ergeb != 1.0) ) 
+    {
+      for(int i = 4; i < sizeZ; i++) 
+      {    
+        vec4 tShadowCoord = ShadowCoord;
+        offset.z = i;
+        vec4 jitteredOffset = texelFetch(JitterTex, offset,0) * softness * ShadowCoord.w;
+
+        tShadowCoord.xy = ShadowCoord.xy + jitteredOffset.xy;
+        sum += textureProj(shadowMap, tShadowCoord);
+        tShadowCoord.xy = ShadowCoord.xy + jitteredOffset.zw;
+        sum += textureProj(shadowMap, tShadowCoord);
+      }
+      ergeb = sum / float(sizeZ * 2.0);
+    }
+    if(ergeb < 1.0)
+      ergeb = 0.5;
+    if(ergeb > 1.0)
+      ergeb = 0.5;
+  }
+
+  return ergeb;
+}
 
 float calcSingleDirectionalShadow(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap)
 { 
-  float sum = 0;
-  if( EnableStandardShadows )
+  float sum = 1.0;
+  vec4 ShadowCoord = shadowMat * vec4(pos,1);
+  if( EnableShadows > 0 )
   {
-    vec4 ShadowCoord = shadowMat * vec4(pos,1);
-
-    
-    if(ShadowCoord.z  < 0)
-      sum = 1;
-    else
+    if(EnableShadows == 2 )
     {
-      if(EnablePCF == 1)
-      {
-        sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(-1,-1));
-        sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(1,-1));
-        sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(-1,1));
-        sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(1,1));
-        sum *= 0.25; 
-      }
-      else
-        sum = textureProj(shadowMap, ShadowCoord);
+      sum = calcDirShadowPCF(pos,shadowMat, shadowMap);
     }
-  }
-  else
-    sum = 1;
+    if(EnableShadows == 3)
+    {
+      sum = calcDirShadowRandomSampling(pos,shadowMat, shadowMap);
+    }
+    if(EnableShadows == 1)
+    {
+      if(ShadowCoord.z + 0.001 >= 0)
+      { 
+        vec4 ShadowCoord = shadowMat * vec4(pos,1);  
+        sum = textureProj(shadowMap, ShadowCoord);        
+      }
+    }
+    
+  }  
    
   return sum;
 }
 
+float PointShadowCalculation(vec3 lightDir,float lightDistance, samplerCube sam)
+{ 
+  float shadow =1.0f;
+
+  float closestDepth = texture(sam, lightDir).r;
+
+  if(lightDistance+0.001 >= closestDepth)
+    shadow =0.5f;
+  return shadow;
+}
+
+
+
+float calcPointShadowfactor(int idx,vec3 lightDir,float lightDistance)
+{
+  vec3 pos = vec3( texture( Tex1, TexCoord ) );
+  float ret =0.0;
+  if( EnableShadows > 0 )
+  {
+    if( idx == 0 )
+      ret += PointShadowCalculation(lightDir, lightDistance,PointShadowData00);
+    if( PointShadowCount > 1 )
+      ret += PointShadowCalculation(lightDir, lightDistance,PointShadowData01);
+    if( PointShadowCount > 2 )
+      ret += PointShadowCalculation(lightDir, lightDistance,PointShadowData02);
+    if( PointShadowCount > 3 )
+      ret += PointShadowCalculation(lightDir, lightDistance,PointShadowData03);
+    if( PointShadowCount > 4 )
+      ret += PointShadowCalculation(lightDir, lightDistance,PointShadowData04);
+    if( PointShadowCount > 5 )
+      ret += PointShadowCalculation(lightDir, lightDistance,PointShadowData05);
+    if( PointShadowCount > 6 )
+      ret += PointShadowCalculation(lightDir, lightDistance,PointShadowData06);
+    if( PointShadowCount > 7 )
+      ret += PointShadowCalculation(lightDir, lightDistance,PointShadowData07);
+    if( PointShadowCount > 8 )
+      ret += PointShadowCalculation(lightDir, lightDistance,PointShadowData08);
+    if( PointShadowCount > 9 )
+      ret += PointShadowCalculation(lightDir, lightDistance,PointShadowData09);
+  }
+  else
+    ret =1.0;
+  return ret;
+}  
 
 float calcShadowFactor()
 {
   float ret = 0.0;
   vec3 pos = vec3( texture( Tex1, TexCoord ) );
 
-  if(DirectionalShadowMatCount > 0 )  
-    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[0], ShadowData0);
-  
-  if(DirectionalShadowMatCount > 1 )
-    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[1], ShadowData1);
-  
-  if(DirectionalShadowMatCount > 2 )
-    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[2], ShadowData2);
-  
-  if(DirectionalShadowMatCount > 3 )
-    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[3], ShadowData3);
+  if( EnableShadows > 0 )
+  {
+    if(ShadowMatricesCount > 0 )  
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[0], ShadowData0);  
+    if(ShadowMatricesCount > 1 )
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[1], ShadowData1);  
+    if(ShadowMatricesCount > 2 )
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[2], ShadowData2);  
+    if(ShadowMatricesCount > 3 )
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[3], ShadowData3);
+    if(ShadowMatricesCount > 4 )
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[4], ShadowData4);
+    if(ShadowMatricesCount > 5 )
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[5], ShadowData5);
+    if(ShadowMatricesCount > 6 )
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[6], ShadowData6);
+    if(ShadowMatricesCount > 7 )
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[7], ShadowData7);
+    if(ShadowMatricesCount > 8 )
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[8], ShadowData8);
+    if(ShadowMatricesCount > 9 )
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[9], ShadowData9);
+    if(ShadowMatricesCount > 10 )
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[10], ShadowData10);
+    if(ShadowMatricesCount > 11 )
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[11], ShadowData11);
+    if(ShadowMatricesCount > 12 )
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[12], ShadowData12);
+    if(ShadowMatricesCount > 13 )
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[13], ShadowData13);
+    if(ShadowMatricesCount > 14 )
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[14], ShadowData14);
+    if(ShadowMatricesCount > 15 )
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[15], ShadowData15);   
+ 
+    ret /=  ShadowMatricesCount;
+  }
+  else
+    ret =1.0;
 
-  if(DirectionalShadowMatCount > 4 )
-    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[4], ShadowData4);
-
-  if(DirectionalShadowMatCount > 5 )
-    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[5], ShadowData5);
-
-  if(DirectionalShadowMatCount > 6 )
-    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[6], ShadowData6);
-
-  if(DirectionalShadowMatCount > 7 )
-    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[7], ShadowData7);
-
-  if(DirectionalShadowMatCount > 8 )
-    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[8], ShadowData8);
-
-  if(DirectionalShadowMatCount > 9 )
-    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[9], ShadowData9);
-
-  if(DirectionalShadowMatCount > 10 )
-    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[10], ShadowData10);
-
-  if(DirectionalShadowMatCount > 11 )
-    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[11], ShadowData11);
-
-  if(DirectionalShadowMatCount > 12 )
-    ret += calcSingleDirectionalShadow(pos, DirectionalShadowMat[12], ShadowData12);
-
-  
   return ret;
 }
 
@@ -232,7 +366,8 @@ vec4 calcPointLights(int idx, Material mat, vec3 pos, vec3 normal)
 {  
   PointLight l = PointLights[idx];
   vec3 norm = normalize(normal);
-  vec3 lightDir = normalize(l.Position - pos.xyz);
+  vec3 lightDirection = l.Position - pos.xyz;
+  vec3 lightDir = normalize(lightDirection);
   float distance   = length(l.Position - pos.xyz);
 
   float diff = max(dot(norm, lightDir), 0.0);
@@ -244,7 +379,7 @@ vec4 calcPointLights(int idx, Material mat, vec3 pos, vec3 normal)
 
   float attenuation = 1.0f / (l.Attenuation.Constant + l.Attenuation.Linear * distance + l.Attenuation.Quadratic * (distance * distance));
 
-  return vec4( (diffuse* l.Base.Intensity *calcShadowFactor() + ambient* l.Base.Intensity + specular* l.Base.Intensity ) * attenuation,1) ;
+  return vec4( (diffuse* l.Base.Intensity * calcPointShadowfactor(x,-lightDirection, distance) + ambient* 1* l.Base.Intensity + specular* l.Base.Intensity ) * attenuation,1) ;
 }
 
 // spotLight calculation
@@ -319,24 +454,27 @@ void pass2()
 
   vec4 color = vec4(diffColor,1.0);
   vec4 light = vec4(0,0,0,0);
-
+ 
   // prevent flicker because of not set texture
   if( (norm.x==0) && (norm.y==0) && (norm.z==0) )
-    FragColor = vec4(0,0,0,0);
+   FragColor = vec4(0,0,0,0);
   else
   {
     Material mat = Materials[int(materialIndex.x)];
 
-    //for(int x=0; x< NumDirectionalLights; x++ )
-   //   light += calcDirectionalLight(x,mat,pos,norm);
-   // for(int x=0; x< NumPointLights; x++ )
-   //   light += calcPointLights(x,mat,pos,norm);
+    for(int x=0; x< NumDirectionalLights; x++ )
+      light += calcDirectionalLight(x,mat,pos,norm);
+    for(int x=0; x< NumPointLights; x++ )
+      light += calcPointLights(x,mat,pos,norm);
     for(int x=0; x< NumSpotLights; x++ )
       light += calcSpotLight(x,mat,pos,norm);
 
     FragColor = color * light ;
     //FragColor = vec4(0,shadow,0,1.0);
-  }
+ }
+ if(int(materialIndex.x) ==99999)
+  FragColor = color; 
+  
 }
 // PASS 2 END    -----------------------------------------------------
 

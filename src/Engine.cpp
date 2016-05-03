@@ -297,6 +297,7 @@ bool Engine::shutDownSubsystems()
 void Engine::setScene(Scene * scene)
 {
 	m_scene = scene;
+	m_log->log("Engine", "scene was set");
 }
 
 Scene * Engine::getScene()
@@ -374,7 +375,7 @@ void Engine::setPostProcessing(PostprocessType type, bool enable)
 {
 	m_render_system->setPostProcessing(type,enable);
 }	
-void Engine::setShadowTechnique(ShadowTechniqueType type, bool enable)
+void Engine::setShadowTechnique(ShadowTechniqueType type)
 {
-	m_render_system->setShadowTechnique(type,enable);
+	m_render_system->setShadowTechnique(type);
 }	

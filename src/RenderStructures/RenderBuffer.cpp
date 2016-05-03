@@ -1,6 +1,7 @@
 #include "RenderBuffer.h"
 
 #include "Engine.h"
+#include "Texture.h"
 
 #include <vector>
 
@@ -9,6 +10,8 @@ RenderBuffer::RenderBuffer()
 }
 RenderBuffer::~RenderBuffer()
 {  
+  delete m_buffer_texture;
+  glDeleteFramebuffers(1, &m_buffer_handle);  
 }
 
 bool RenderBuffer::initialize()
@@ -17,9 +20,9 @@ bool RenderBuffer::initialize()
   glGenFramebuffers(1, &m_buffer_handle);
   glBindFramebuffer(GL_FRAMEBUFFER, m_buffer_handle);  
 
-  createTexture(GL_TEXTURE0, GL_RGB32F, m_buffer_texture);  
-  
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_buffer_texture, 0);
+  m_buffer_texture = new Texture();
+  m_buffer_texture->create(0, GL_RGB32F,Engine::getWindowWidth(),  Engine::getWindowHeight());
+  m_buffer_texture->bindToFramebuffer(GL_COLOR_ATTACHMENT0);
   
   GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0};
   glDrawBuffers(1, drawBuffers);
@@ -27,16 +30,6 @@ bool RenderBuffer::initialize()
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
   return true;
-}
-
-void RenderBuffer::createTexture( GLenum texUnit, GLenum format, GLuint &texid) 
-{
-  glActiveTexture(texUnit);
-  glGenTextures(1, &texid);
-  glBindTexture(GL_TEXTURE_2D, texid);
-  glTexStorage2D(GL_TEXTURE_2D, 1, format, Engine::getWindowWidth(),  Engine::getWindowHeight());
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
 
@@ -50,6 +43,5 @@ void RenderBuffer::unbindFromInput()
 }
 void RenderBuffer::bindForOutput()
 {
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, m_buffer_texture);
+  m_buffer_texture->bind(0);
 }

@@ -4,6 +4,7 @@
 // the scene class for objects,.. that should be rendered
 
 #include <vector>
+#include <string>
 #include <map>
 
 class Model;
@@ -11,7 +12,10 @@ class Object;
 class Camera;
 class RenderShader;
 class ShadowShader;
+class PointShadowShader;
 class Light;
+class Skybox;
+class SkyboxShader;
 
 class Scene
 {
@@ -23,10 +27,16 @@ public:
   void update(float delta);
 
   //renders the scene
-	void render(RenderShader * render_shader);
+	void render(RenderShader * render_shader, SkyboxShader * skybox_shader);
 
   // renders the scene for the shadow passes
-  void renderShadow(ShadowShader * shadow_shader);
+  void renderShadow(ShadowShader * shadow_shader, PointShadowShader* point_shadow_shader);
+
+  // renders the skybox of the scene
+  void renderSkybox(SkyboxShader * sybox_shader);
+
+  // sets the skybox for the scene  returns | true if succeeded
+  bool setSkybox(const std::string path);
 
   // sets the shadow textures
   void setupLightsForShadingPass(RenderShader * render_shader);
@@ -53,6 +63,10 @@ private:
 
   // camera of the scene
   Camera * m_camera;
+
+  // the skybox of the scene
+  Skybox * m_skybox;
+
 };
 
 #endif

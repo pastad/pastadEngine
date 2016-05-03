@@ -44,7 +44,7 @@ void RenderShader::setProjectionMatrix( glm::mat4 projmatrix )
 {
   bind();
   setUniform("ProjectionMat",projmatrix);
-  checkUniformError("set ProjectionMarix");
+  checkUniformError("set ProjectionMatrix");
 }
 void RenderShader::setNormalMatrix( glm::mat4 normalmatrix )
 {
@@ -55,7 +55,9 @@ void RenderShader::setNormalMatrix( glm::mat4 normalmatrix )
 
 void RenderShader::setRenderPass(unsigned int pass)
 {
+  checkUniformError("pre set Subroutine");
   bind();
+
   if(pass == 1)
   {
     setRenderPassSubroutine("pass1");
@@ -222,6 +224,7 @@ void RenderShader::setCameraPosition(glm::vec3 pos)
 
 void RenderShader::use()
 {
+  checkUniformError("at binding"); 
   Shader::bind();
 }
 
@@ -262,6 +265,9 @@ void RenderShader::setMaterial(std::string name, MaterialColorSpecs specs)
 void RenderShader::setMaterialIndex(int idx)
 {
    setUniform("MaterialIndex",idx);
+   //std::stringstream ss;
+   //ss <<idx;
+   //Engine::getLog()->log("RenderShader","set material index ", ss.str());
 }
 void RenderShader::setAllMaterialsForRenderPass()
 {
@@ -303,51 +309,59 @@ void RenderShader::setAllMaterialsForRenderPass()
   }
 }
 
-int RenderShader::setDirectionalShadowMap(glm::mat4 shadow_mat)
+int RenderShader::setShadowMap(glm::mat4 shadow_mat)
 {
   int c = m_shadow_map_count;
   std::stringstream ss;
-  ss << "DirectionalShadowMat[" << c << "]";
+  ss << "ShadowMatrices[" << c << "]";
   setUniform(ss.str(),shadow_mat );
-  setUniform("DirectionalShadowMatCount",c+1 );
+  setUniform("ShadowMatricesCount",c+1 );
   checkUniformError("set shadow map");
   m_shadow_map_count++;
-  //Engine::getLog()->log("RenderShader",ss.str(), " shadow maps set");
+ // Engine::getLog()->log("RenderShader",ss.str(), " shadow maps set");
   return c;
 }
 void RenderShader::resetShadowMapping()
 {
-  m_shadow_map_count =0;
-  setUniform("DirectionalShadowMatCount",0 );
+  m_shadow_map_count =m_cube_shadow_map_count = 0;
+  setUniform("ShadowMatricesCount",0 );
+  setUniform("PointShadowCount",0 );
   checkUniformError("resset shadow map count");
 }
 
-void RenderShader::setPCF(bool state)
+int RenderShader::setPointShadow()
 {
-  if(state)
-  {
-    setUniform("EnablePCF",1 );
-    Engine::getLog()->log("RenderShader", "Enabled PCF for shadows");
-  }
-  else
-  {
-    setUniform("EnablePCF",0 );
-    Engine::getLog()->log("RenderShader", "Disabled PCF for shadows");
-  }
-  checkUniformError("set shadow map");
+  int ret = m_cube_shadow_map_count;
+  setUniform("PointShadowCount",m_cube_shadow_map_count+1 );  
+  checkUniformError("set point shadow map count");
+  m_cube_shadow_map_count++;
+
+  return ret;
 }
-void RenderShader::setStandardShadows(bool state)
+
+
+void RenderShader::setShadows(ShadowTechniqueType tech)
 {
-  if(state)
+  if(tech == ST_NONE)
   {
-    setUniform("EnableStandardShadows",1 );
-    Engine::getLog()->log("RenderShader", "Disabled standard shadows");
-  }
-  else
-  {
-    setUniform("EnableStandardShadows",0 );    
+    setUniform("EnableShadows",0 );
     resetShadowMapping();
-    Engine::getLog()->log("RenderShader", "Disabled standard shadows");
+    Engine::getLog()->log("RenderShader", "Disable Shadows");     
+  }
+  if(tech == ST_STANDARD)
+  {
+    setUniform("EnableShadows",1 );
+    Engine::getLog()->log("RenderShader", "Enable Standard Shadows");     
+  }
+  if(tech == ST_STANDARD_PCF)
+  {
+    setUniform("EnableShadows",2 );
+    Engine::getLog()->log("RenderShader", "Enable Standard PCF Shadows");     
+  }
+  if(tech == ST_STANDARD_RS)
+  {
+    setUniform("EnableShadows",3 );
+    Engine::getLog()->log("RenderShader", "Enable Standard RandomSampling Shadows");     
   }
   checkUniformError("set standard shadows");
 }

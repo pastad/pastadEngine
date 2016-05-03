@@ -8,6 +8,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+class Texture;
+
 class GBuffer
 {
 public:
@@ -25,9 +27,6 @@ public:
     void unbindFromInput();
     void bindForOutput();
 
-    // creates a texture for the gbuffer
-    void createTexture( GLenum texUnit, GLenum format, GLuint &texid ) ;
-
 private:
 
     // the handle for the buffer
@@ -35,12 +34,10 @@ private:
 
     // the texture handles
     GLuint m_depth_buffer;
-    GLuint m_position_texture; 
-    GLuint m_normal_texture;
-    GLuint m_color_texture;
-    GLuint m_material_texture;
-
-
+    Texture * m_position_texture; 
+    Texture * m_normal_texture;
+    Texture * m_color_texture;
+    Texture * m_material_texture;
 };
 
 #endif // GBUFFER_H

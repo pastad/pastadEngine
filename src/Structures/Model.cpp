@@ -48,6 +48,7 @@ void Model::render(RenderShader * render_shader)
   for(std::vector<Mesh *>::iterator it = m_meshes.begin(); it != m_meshes.end(); it++)
   {
     m_materials.at((*it)->getMaterialIndex())->bind(0, render_shader);
+    //Engine::getLog()->log("Model", "set mat",m_path);
     (*it)->bufferModelMatrices(&matrices);
     (*it)->render(matrices.size());
   }
@@ -91,7 +92,6 @@ bool Model::load()
   m_GlobalInverseTransform.Inverse();
 
   processScene();
-  //Engine::getLog()->log("Model", "loaded. Nr meshes:",std::to_string(m_meshes.size()));
 	return true;
 }
 

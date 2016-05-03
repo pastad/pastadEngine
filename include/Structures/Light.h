@@ -5,100 +5,120 @@
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 
-
-
 // class to represent a light (direcitonal, point or spot)
+
+#define MAX_NUM_POINT_LIGHTS 10
+#define MAX_NUM_SPOT_LIGHTS 10
+#define MAX_NUM_DIRECTIONAL_LIGHTS 3
 
 enum
 {
     LIGHT_DIRECTIONAL,
     LIGHT_POINT,
-    LIGHT_SPOT
+    LIGHT_SPOT,
+    LIGHT_NONE
 };
 
 class DirectionalShadowBuffer;
+class PointShadowBuffer;
 class ShadowShader;
+class PointShadowShader;
 class RenderShader;
 
 class Light
 {
-    public:
-        Light();
-        ~Light();
-        Light(const Light& other) = delete;
-        Light& operator=(const Light& other) = delete;
+public:
+  Light();
+  ~Light();
+  Light(const Light& other) = delete;
+  Light& operator=(const Light& other) = delete;
 
-        // light setters        
-        bool setDirectional(glm::vec3 direction, glm::vec3 col_am ,glm::vec3 col_dif, glm::vec3 spec,float intensity);
-        bool setPoint(glm::vec3 position, glm::vec3 col_am ,glm::vec3 col_dif, glm::vec3 spec,float intensity,
-                      float con ,float lin, float qua );
-        bool setSpot(glm::vec3 position, glm::vec3 col_am ,glm::vec3 col_dif, glm::vec3 spec,float intensity,
-                      float con ,float lin, float qua, float cutoffAngle, glm::vec3 direction );
-
-
-        //returns the type of the light
-        unsigned int getType();
-        
-        // returns the position or direction of the light
-        glm::vec3 getDirection();
-        glm::vec3 getPosition();
-
-        // returns the individual color
-        glm::vec3 getAmbientColor();
-        glm::vec3 getDiffuseColor();
-        glm::vec3 getSpecularColor();
-
-        // returns attenuation specs
-        float getIntensity();
-        float getAttenuationConstant();
-        float getAttenuationLinear();
-        float getAttenuationQuadratic();
-
-        // returns the cutoff angle in case of spot light 
-        float getCutoffAngle();
-
-        // binds the light for shadow rendering
-        void bindForShadowRender(ShadowShader * shadow_shader);
-
-        // unbinds the light from shadow rendering
-        void unbindFromShadowRender();
-
-        // binds the shadow buffer for render
-        void bindForRender(RenderShader * render_shader);
-
-        // returns the view and projection mat
-        glm::mat4 getView();
-        glm::mat4 getProjection();
+  // light setters        
+  bool setDirectional(glm::vec3 direction, glm::vec3 col_am ,glm::vec3 col_dif, glm::vec3 spec,float intensity);
+  bool setPoint(glm::vec3 position, glm::vec3 col_am ,glm::vec3 col_dif, glm::vec3 spec,float intensity,
+                float con ,float lin, float qua );
+  bool setSpot(glm::vec3 position, glm::vec3 col_am ,glm::vec3 col_dif, glm::vec3 spec,float intensity,
+                float con ,float lin, float qua, float cutoffAngle, glm::vec3 direction );
 
 
-    protected:
+  //returns the type of the light
+  unsigned int getType();
+  
+  // returns the position or direction of the light
+  glm::vec3 getDirection();
+  glm::vec3 getPosition();
 
-    private:
+  // returns the individual color
+  glm::vec3 getAmbientColor();
+  glm::vec3 getDiffuseColor();
+  glm::vec3 getSpecularColor();
 
-        // the ligth type
-        unsigned int m_type;
+  // returns attenuation specs
+  float getIntensity();
+  float getAttenuationConstant();
+  float getAttenuationLinear();
+  float getAttenuationQuadratic();
 
-        // position and direction
-        glm::vec3 m_position;
-        glm::vec3 m_direction;
+  // returns the cutoff angle in case of spot light 
+  float getCutoffAngle();
 
-        // light colors
-        glm::vec3 m_color_ambient;
-        glm::vec3 m_color_diffuse;
-        glm::vec3 m_color_specular;
+  // binds the light for shadow rendering
+  void bindForShadowRenderSpot(ShadowShader * shadow_shader);
+  void bindForShadowRenderPoint( PointShadowShader * point_shadow_shader, int iteration);
 
-        // attenuation specs
-        float m_att_const;
-        float m_att_linear;
-        float m_att_quadratic;
-        float m_intensity;
+  // unbinds the light from shadow rendering
+  void unbindFromShadowRender();
 
-        // cuttoff angle
-        float m_cutoff_angle;
+  // binds the shadow buffer for render
+  void bindForRender(RenderShader * render_shader);
 
-        // the shadow buffer for directional lights
-        DirectionalShadowBuffer * m_directional_buffer = nullptr;
+  // returns the view and projection mat
+  glm::mat4 getView();
+  glm::mat4 getView(glm::vec3 dir, glm::vec3 up);
+  glm::mat4 getProjection();
 
+  //returns true if shadow needs to be recalculated
+  bool getShadowRefresh();
+
+
+protected:
+
+private:
+
+  // the ligth type
+  unsigned int m_type;
+
+  // position and direction
+  glm::vec3 m_position;
+  glm::vec3 m_direction;
+
+  // light colors
+  glm::vec3 m_color_ambient;
+  glm::vec3 m_color_diffuse;
+  glm::vec3 m_color_specular;
+
+  // attenuation specs
+  float m_att_const;
+  float m_att_linear;
+  float m_att_quadratic;
+  float m_intensity;
+
+  // cuttoff angle
+  float m_cutoff_angle;
+
+  // light type counters
+  static unsigned int m_num_point_lights;
+  static unsigned int m_num_spot_lights;
+  static unsigned int m_num_directional_lights;
+
+  // the shadow buffer for directional lights
+  DirectionalShadowBuffer * m_directional_buffer = nullptr;
+
+  // the shadow buffer for point lights
+  PointShadowBuffer * m_point_buffer = nullptr;
+
+  // determines if light should be refreshed
+  bool m_refresh_shadow;
 };
 
 

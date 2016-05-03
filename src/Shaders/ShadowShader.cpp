@@ -24,7 +24,7 @@ bool ShadowShader::load(const std::string path)
     return false;
 
   if( ! addShader(path + ".fs", FRAGMENT) )
-    return false;
+    return false;  
 
   linkAndValidate();
 
@@ -36,22 +36,24 @@ void ShadowShader::setViewMatrix( glm::mat4 mvmatrix )
 {
   bind();
   setUniform("ViewMat",mvmatrix);
-  checkUniformError("set ViewMarix"); 
+  checkUniformError("set ViewMarix ShadowShader"); 
 }
+
 void ShadowShader::setProjectionMatrix( glm::mat4 projmatrix )
 {
   bind();
   setUniform("ProjectionMat",projmatrix);
-  checkUniformError("set ProjectionMarix");
+  checkUniformError("set ProjectionMatrix ShadowShader");
 }
 void ShadowShader::setNormalMatrix( glm::mat4 normalmatrix )
 {
   bind();
   setUniform("NormalMat",normalmatrix);
-  checkUniformError("set NormalMarix");
+  checkUniformError("set NormalMarix ShadowShader");
 }
 
 void ShadowShader::use()
 {
   Shader::bind();
+  checkUniformError("before binding ShadowShader");
 }

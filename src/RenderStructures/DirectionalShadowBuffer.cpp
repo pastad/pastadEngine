@@ -2,12 +2,17 @@
 
 #include "Engine.h"
 #include "Log.h"
+#include "Texture.h"
+
+#include <sstream>
 
 DirectionalShadowBuffer::DirectionalShadowBuffer()
 {  
 }
 DirectionalShadowBuffer::~DirectionalShadowBuffer()
 {  
+  glDeleteFramebuffers(1, &m_buffer_handle);
+  glDeleteTextures(1, &m_depth_texture);
 }
 
 bool DirectionalShadowBuffer::initialize(  float width ,  float height)
@@ -59,8 +64,11 @@ void DirectionalShadowBuffer::unbindFromInput()
 }
 void DirectionalShadowBuffer::bindForOutput(unsigned int offset)
 {
-  glActiveTexture(GL_TEXTURE0+ 20 + offset);
+  glActiveTexture(GL_TEXTURE0+ TEXTURE_SHADOW_START + offset);
   glBindTexture(GL_TEXTURE_2D, m_depth_texture);
+  //std::stringstream ss;
+ // ss <<(TEXTURE_SHADOW_START + offset);
+  //Engine::getLog()->log("DirectionalShadowBuffer", " bound buffer to", ss.str());
 }
 
 int DirectionalShadowBuffer::getWidth()

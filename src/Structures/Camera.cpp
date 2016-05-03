@@ -64,6 +64,26 @@ void Camera::update(float delta_time)
     moved = true;
     m_pos -= m_up* step;
   }
+  if(IOSubsystem::isKeyPressed('L'))
+  {
+    moved = true;
+    rotate(5,0);
+  }
+  if(IOSubsystem::isKeyPressed('J'))
+  {
+    moved = true;
+    rotate(-5,0);
+  }
+  if(IOSubsystem::isKeyPressed('K'))
+  {
+    moved = true;
+    rotate(0,5);
+  }
+  if(IOSubsystem::isKeyPressed('I'))
+  {
+    moved = true;
+    rotate(0,-5);
+  }
   if(moved)
   {   
   }
@@ -79,7 +99,6 @@ glm::mat4 Camera::getViewWithoutTranslation()
 {
   return  m_view_wt;
 }
-
 glm::mat4 Camera::getProjection()
 {
   return m_projection;
@@ -112,7 +131,7 @@ void Camera::recalculateMatrices()
 {
   m_view = glm::lookAt(m_pos, m_pos +  m_forward, m_up);
   m_view_wt = glm::lookAt(glm::vec3(0,0,0), glm::vec3(0,0,0) +  m_forward, m_up);
-  m_projection =glm::perspective(m_fov, (float)Engine::getWindowWidth()/(float)Engine::getWindowHeight(), 0.1f, 1000.0f);
+  m_projection =glm::perspective(m_fov, (float)Engine::getWindowWidth()/(float)Engine::getWindowHeight(), NEAR_CLIPPING_PLANE, FAR_CLIPPING_PLANE);
 }
 void Camera::setRotationAllowed()
 {

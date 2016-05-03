@@ -10,11 +10,14 @@ class TextShader;
 class ImageShader;
 class PostProcessingShader;
 class ShadowShader;
+class PointShadowShader;
+class SkyboxShader;
 
 class GBuffer;
 class Quad;
 class DirectionalShadowBuffer;
 class RenderBuffer;
+class JitterTexture;
 
 // Subsystem that is used for rendering
 
@@ -59,7 +62,7 @@ public:
 	void setPostProcessing(PostprocessType type, bool enable);
 
 	// sets a shading technique property
-	void setShadowTechnique(ShadowTechniqueType type, bool enable);
+	void setShadowTechnique(ShadowTechniqueType type);
 	
 
 private:
@@ -82,6 +85,12 @@ private:
 	// the shadow shader
 	ShadowShader * m_shadow_shader;
 
+	// the point shadow shader
+	PointShadowShader * m_point_shadow_shader;
+
+	// the skybox shader
+	SkyboxShader * m_skybox_shader;
+
 	// the gbuffer
 	GBuffer * m_gbuffer;
 
@@ -93,6 +102,9 @@ private:
 
 	// buffer for the fxaa step
 	RenderBuffer * m_pp_buffer;
+
+	// the jitter texture to smooth shadows
+	JitterTexture * m_jitter;
 
 	// true if standard shadows are enabled
 	bool m_shadows_standard_enabled;

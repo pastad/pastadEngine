@@ -34,6 +34,9 @@ private:
   static Button * m_tb_shadow_pcf;
   static Text * m_txt_shadow_pcf;
 
+  static Button * m_tb_shadow_rs;
+  static Text * m_txt_shadow_rs;
+
   static Button * m_tb_shadow_standard;
   static Text * m_txt_shadow_standard;
 

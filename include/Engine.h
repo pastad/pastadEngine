@@ -7,6 +7,9 @@
 
 #define NUM_TIME_SAMPLES 40
 
+#define NEAR_CLIPPING_PLANE 0.1f
+#define FAR_CLIPPING_PLANE 1000.0f
+
 // Engine class ... nothing more .. nothing less
 
 class Log;
@@ -27,8 +30,10 @@ enum PostprocessType
 };
 enum ShadowTechniqueType
 {	
+	ST_NONE =0,
 	ST_STANDARD =1,
-	ST_STANDARD_PCF = 2
+	ST_STANDARD_PCF = 2,
+	ST_STANDARD_RS = 3
 };
 
 
@@ -90,7 +95,7 @@ public:
 	static void setPostProcessing(PostprocessType type, bool enable);
 
 	// sets a shadow property
-	static void setShadowTechnique(ShadowTechniqueType type, bool enable);
+	static void setShadowTechnique(ShadowTechniqueType type);
 
 private:
 

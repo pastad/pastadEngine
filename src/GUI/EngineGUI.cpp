@@ -22,6 +22,9 @@ Text * EngineGUI::m_txt_shadow_pcf;
 Button * EngineGUI::m_tb_shadow_standard;
 Text * EngineGUI::m_txt_shadow_standard;
 
+Button * EngineGUI::m_tb_shadow_rs;
+Text * EngineGUI::m_txt_shadow_rs;
+
 EngineGUI::EngineGUI() :GUI( 0 )
 {  
 }
@@ -65,21 +68,34 @@ bool EngineGUI::initialize()
   m_txt_fxaa->setPosition(glm::vec2(40.0f,Engine::getWindowHeight()-400.0f));
   m_txt_fxaa->setScale(0.2f);
   m_txt_fxaa->setColor(glm::vec3(0,0,0));
-  m_txt_fxaa->setText("Enable FXAA");
+  m_txt_fxaa->setText("FXAA");
   m_txt_fxaa->setInactive();
 
   m_tb_shadow_pcf = GUI::getButton();
   m_tb_shadow_pcf->intitializeWithToggle("resources/toggle_on.png","resources/toggle_off.png",
-    glm::vec2(20.0f,Engine::getWindowHeight()-320.0f),glm::vec2(0.5f,0.5f),
-    "shadowPCF", true);
+    glm::vec2(30.0f,Engine::getWindowHeight()-320.0f),glm::vec2(0.5f,0.5f),
+    "shadowPCF", false);
   m_tb_shadow_pcf->setInactive();
 
   m_txt_shadow_pcf = GUI::getText();
-  m_txt_shadow_pcf->setPosition(glm::vec2(40.0f,Engine::getWindowHeight()-320.0f));
+  m_txt_shadow_pcf->setPosition(glm::vec2(50.0f,Engine::getWindowHeight()-320.0f));
   m_txt_shadow_pcf->setScale(0.2f);
   m_txt_shadow_pcf->setColor(glm::vec3(0,0,0));
-  m_txt_shadow_pcf->setText("Enable Shadow PCF");
+  m_txt_shadow_pcf->setText("Percentag Closer Filtering");
   m_txt_shadow_pcf->setInactive();
+
+  m_tb_shadow_rs = GUI::getButton();
+  m_tb_shadow_rs->intitializeWithToggle("resources/toggle_on.png","resources/toggle_off.png",
+    glm::vec2(30.0f,Engine::getWindowHeight()-340.0f),glm::vec2(0.5f,0.5f),
+    "shadowRS", true);
+  m_tb_shadow_rs->setInactive();
+
+  m_txt_shadow_rs = GUI::getText();
+  m_txt_shadow_rs->setPosition(glm::vec2(50.0f,Engine::getWindowHeight()-340.0f));
+  m_txt_shadow_rs->setScale(0.2f);
+  m_txt_shadow_rs->setColor(glm::vec3(0,0,0));
+  m_txt_shadow_rs->setText("Random Sampling");
+  m_txt_shadow_rs->setInactive();
 
   m_tb_shadow_standard = GUI::getButton();
   m_tb_shadow_standard->intitializeWithToggle("resources/toggle_on.png","resources/toggle_off.png",
@@ -91,7 +107,7 @@ bool EngineGUI::initialize()
   m_txt_shadow_standard->setPosition(glm::vec2(40.0f,Engine::getWindowHeight()-300.0f));
   m_txt_shadow_standard->setScale(0.2f);
   m_txt_shadow_standard->setColor(glm::vec3(0,0,0));
-  m_txt_shadow_standard->setText("Enable Shadow Standard");
+  m_txt_shadow_standard->setText("Shadows");
   m_txt_shadow_standard->setInactive();
 
 
@@ -118,6 +134,8 @@ void EngineGUI::mouseButtonCallback(Button * btn)
     m_txt_shadow_pcf->setActive();
     m_tb_shadow_standard->setActive();
     m_txt_shadow_standard->setActive();
+    m_tb_shadow_rs->setActive();
+    m_txt_shadow_rs->setActive();
   }
   else
   {
@@ -135,7 +153,9 @@ void EngineGUI::mouseButtonCallback(Button * btn)
       m_tb_shadow_pcf->setInactive();
       m_txt_shadow_pcf->setInactive();
       m_tb_shadow_standard->setInactive();
-    m_txt_shadow_standard->setInactive();
+      m_txt_shadow_standard->setInactive();
+      m_tb_shadow_rs->setInactive();
+      m_txt_shadow_rs->setInactive();
     }
   }
   if(btn->getDescriptor() == "camera_toggle")
@@ -165,22 +185,67 @@ void EngineGUI::mouseButtonCallback(Button * btn)
   {
     if(btn->isToggled())
     {
-      Engine::setShadowTechnique(ST_STANDARD_PCF,true);
+      m_tb_shadow_standard->togglOn();
+      Engine::setShadowTechnique(ST_STANDARD_PCF);
+      if(m_tb_shadow_rs->isToggled())
+      {
+        m_tb_shadow_rs->togglOff();
+      }
     }
     else
     {
-      Engine::setShadowTechnique(ST_STANDARD_PCF,false);
+      if( m_tb_shadow_standard->isToggled())
+      {
+        Engine::setShadowTechnique(ST_STANDARD);
+      }
     }
+  }
+   if(btn->getDescriptor() == "shadowRS")
+  {
+    if(btn->isToggled())
+    {
+      m_tb_shadow_standard->togglOn();
+      Engine::setShadowTechnique(ST_STANDARD_RS);
+      if(m_tb_shadow_pcf->isToggled())
+      {
+        m_tb_shadow_pcf->togglOff();
+      }
+    }
+    else
+    {
+      if( m_tb_shadow_standard->isToggled())
+      {
+        Engine::setShadowTechnique(ST_STANDARD);
+      }
+    }
+
   }
   if(btn->getDescriptor() == "shadowStandard")
   {
     if(btn->isToggled())
     {
-      Engine::setShadowTechnique(ST_STANDARD,true);
+      bool set = false;
+
+      if( m_tb_shadow_pcf->isToggled())
+      {
+        Engine::setShadowTechnique(ST_STANDARD_PCF);
+        set = true;
+      }
+      if( m_tb_shadow_pcf->isToggled())
+      {
+        Engine::setShadowTechnique(ST_STANDARD_RS);
+        set = true;
+      }
+      if(!set)
+        Engine::setShadowTechnique(ST_STANDARD);
     }
     else
     {
-      Engine::setShadowTechnique(ST_STANDARD,false);
+      Engine::setShadowTechnique(ST_NONE);
+      if( m_tb_shadow_pcf->isToggled())
+        m_tb_shadow_pcf->togglOff();
+      if( m_tb_shadow_rs->isToggled())
+        m_tb_shadow_rs->togglOff();
     }
   }
 }

@@ -13,49 +13,49 @@ class IndexedRepresentation;
 
 class Mesh
 {
-    public:
-        Mesh(const aiMesh*mesh, int mat_index);
-        ~Mesh();
+public:
+  Mesh(const aiMesh*mesh, int mat_index);
+  ~Mesh();
 
-        Mesh(const Mesh& other) = delete;
-        Mesh& operator=(const Mesh& other)= delete ;
+  Mesh(const Mesh& other) = delete;
+  Mesh& operator=(const Mesh& other)= delete ;
 
-        // renders the mesh 
-        void render(unsigned int num_indices) ;
+  // renders the mesh 
+  void render(unsigned int num_indices) ;
 
-        // returns the material index
-        int getMaterialIndex();
+  // returns the material index
+  int getMaterialIndex();
 
-        // buffers the matrices to a gml buffer
-        void bufferModelMatrices(std::vector<glm::mat4> * matrices);
+  // buffers the matrices to a gml buffer
+  void bufferModelMatrices(std::vector<glm::mat4> * matrices);
 
-    protected:
+protected:
 
-    private:
+private:
 
-        // enum specifying the vb structures
-        enum
-        {
-            POSITION_VB,
-            TEXCOORD_VB,
-            NORMAL_VB,
-            INDEX_VB,
-            MODEL_VB,
-            NUM_BUFFERS
-        };
+  // enum specifying the vb structures
+  enum
+  {
+      POSITION_VB,
+      TEXCOORD_VB,
+      NORMAL_VB,
+      INDEX_VB,
+      MODEL_VB,
+      NUM_BUFFERS
+  };
 
-        //  the vao and vbo
-        GLuint m_vertex_array_object;
-        GLuint m_vertex_array_buffers[NUM_BUFFERS];
+  //  the vao and vbo
+  GLuint m_vertex_array_object;
+  GLuint m_vertex_array_buffers[NUM_BUFFERS];
 
-        // holds the material index        
-        int m_mat_index;
+  // holds the material index        
+  int m_mat_index;
 
-        // holds the draw count
-        unsigned int m_draw_count = 0;
+  // holds the draw count
+  unsigned int m_draw_count = 0;
 
-        // inits the mesh
-        void initMesh(const  IndexedRepresentation& model);
+  // inits the mesh
+  void initMesh(const  IndexedRepresentation& model);
 };
 
 #endif // MESH_H

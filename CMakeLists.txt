@@ -16,6 +16,8 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/TextShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/ImageShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/ShadowShader.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/PointShadowShader.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/SkyboxShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/PostProcessingShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Scene.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Camera.cpp
@@ -27,10 +29,13 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Material.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/IndexedRepresentation.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Light.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Skybox.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RenderStructures/GBuffer.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RenderStructures/DirectionalShadowBuffer.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/RenderStructures/PointShadowBuffer.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RenderStructures/RenderBuffer.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RenderStructures/Quad.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/RenderStructures/JitterTexture.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/GUI.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/EngineGUI.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/Text.cpp
@@ -53,6 +58,8 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/TextShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/ImageShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/ShadowShader.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/PointShadowShader.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/SkyboxShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/PostProcessingShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Scene.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Camera.h
@@ -64,10 +71,13 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Material.h 
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/IndexedRepresentation.h   
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Light.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Skybox.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures/GBuffer.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures/DirectionalShadowBuffer.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures/PointShadowBuffer.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures/RenderBuffer.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures/Quad.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures/JitterTexture.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/GUI.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/EngineGUI.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/Text.h

@@ -8,33 +8,33 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+class Texture;
+
 class RenderBuffer
 {
 public:
-    RenderBuffer();
-    ~RenderBuffer();
+  RenderBuffer();
+  ~RenderBuffer();
 
-    RenderBuffer(const RenderBuffer& other) = delete;
-    RenderBuffer& operator=(const RenderBuffer& other) = delete;
+  RenderBuffer(const RenderBuffer& other) = delete;
+  RenderBuffer& operator=(const RenderBuffer& other) = delete;
 
-    // returns true if succeeded
-    bool initialize();
+  // returns true if succeeded
+  bool initialize();
 
-    // bind and unbind
-    void bindForInput();
-    void unbindFromInput();
-    void bindForOutput();
+  // bind and unbind
+  void bindForInput();
+  void unbindFromInput();
+  void bindForOutput();
 
-    // creates the texture
-    void createTexture( GLenum texUnit, GLenum format, GLuint &texid) ;
 
 private:
 
-    // the handle for the buffer
-    GLuint m_buffer_handle;
+  // the handle for the buffer
+  GLuint m_buffer_handle;
 
-    // the texture handles
-    GLuint m_buffer_texture;
+  // the texture
+  Texture *  m_buffer_texture;
 
 };
 
