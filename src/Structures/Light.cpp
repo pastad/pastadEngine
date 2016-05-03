@@ -208,6 +208,7 @@ void Light::bindForShadowRenderPoint( PointShadowShader * point_shadow_shader, i
     glPolygonOffset(0.01f,0.01f);
 
     point_shadow_shader->setProjectionMatrix(getProjection());  
+    point_shadow_shader->setLightPosition(getPosition());  
     glViewport(0,0, 1000 ,1000);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -258,7 +259,7 @@ void Light::bindForRender(RenderShader * render_shader)
   if( getType() == LIGHT_POINT)
   {
     int num = render_shader->setPointShadow();
-    m_point_buffer->bindForOutput(0);    
+    m_point_buffer->bindForOutput(num);    
   }
 }
 

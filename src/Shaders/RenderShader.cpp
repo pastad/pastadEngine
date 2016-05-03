@@ -121,6 +121,8 @@ void RenderShader::setDirectionalLight(Light* light, unsigned int pos)
 {
   std::stringstream ss, ssi;
   ss << "DirectionalLights["<<pos<<"]";
+  ssi << ss.str() <<".ShadowMapIndex";
+  setUniform(ssi.str(), (int) pos);
 
   // base light
   ssi << ss.str() <<".Direction";
@@ -151,6 +153,11 @@ void RenderShader::setSpotLight(Light* light, unsigned int pos)
   ssi << ss.str() <<".CutoffAngle";
   setUniform(ssi.str(), light->getCutoffAngle());
   ssi.str(""); ssi.clear();
+
+  ssi << ss.str() <<".ShadowMapIndex";
+  setUniform(ssi.str(), (int)pos);
+  ssi.str(""); ssi.clear();
+
 
 
   // point light 
@@ -190,6 +197,9 @@ void RenderShader::setPointLight(Light* light, unsigned int pos)
 
   ssi << ss.str() <<".Position";
   setUniform(ssi.str(), light->getPosition());
+  ssi.str(""); ssi.clear();
+  ssi << ss.str() <<".ShadowMapIndex";
+  setUniform(ssi.str(), (int) pos);
   ssi.str(""); ssi.clear();
 
   // attenuation
@@ -315,7 +325,6 @@ int RenderShader::setShadowMap(glm::mat4 shadow_mat)
   std::stringstream ss;
   ss << "ShadowMatrices[" << c << "]";
   setUniform(ss.str(),shadow_mat );
-  setUniform("ShadowMatricesCount",c+1 );
   checkUniformError("set shadow map");
   m_shadow_map_count++;
  // Engine::getLog()->log("RenderShader",ss.str(), " shadow maps set");
@@ -324,16 +333,12 @@ int RenderShader::setShadowMap(glm::mat4 shadow_mat)
 void RenderShader::resetShadowMapping()
 {
   m_shadow_map_count =m_cube_shadow_map_count = 0;
-  setUniform("ShadowMatricesCount",0 );
-  setUniform("PointShadowCount",0 );
   checkUniformError("resset shadow map count");
 }
 
 int RenderShader::setPointShadow()
 {
   int ret = m_cube_shadow_map_count;
-  setUniform("PointShadowCount",m_cube_shadow_map_count+1 );  
-  checkUniformError("set point shadow map count");
   m_cube_shadow_map_count++;
 
   return ret;

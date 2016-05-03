@@ -20,7 +20,7 @@ int main(void)
 {
   Engine engine;
 
-  engine.initialize(1000, 1000, 0);
+  engine.initialize(1240, 720, 0);
 
   Scene scene;
   Object * object = scene.addObject("models/ape.obj"); 
@@ -36,9 +36,9 @@ int main(void)
   //Light * light = scene.addLight();
  // Light * light10 = scene.addLight();
   
-  Light * light11 = scene.addLight();
-  light11->setPoint(glm::vec3(0,0,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),2.0f,1.0f,0.09f,0.032f);
-   Light * light111 = scene.addLight();
+  //Light * light11 = scene.addLight();
+  //light11->setPoint(glm::vec3(0,1,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),2.0f,1.0f,0.09f,0.032f);
+  Light * light111 = scene.addLight();
   light111->setPoint(glm::vec3(-2,2,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),1.0f,1.0f,0.09f,0.032f);
   //Light * light12 = scene.addLight();
  // light12->setPoint(glm::vec3(0,2,2),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),1.0f,1.0f,0.09f,0.032f);
@@ -61,13 +61,13 @@ int main(void)
 
 
 
- // Light * light3 = scene.addLight();
- // light3->setSpot(glm::vec3(0,0,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),
-  //   1.0f,1.0f,0.09f,0.032f, 45.0f, glm::vec3(0,0,1) );
+  Light * light3 = scene.addLight();
+  light3->setSpot(glm::vec3(0,0,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),
+     1.0f,1.0f,0.09f,0.032f, 45.0f, glm::vec3(0,0,1) );
 
-//   Light * light4 = scene.addLight();
-  // light4->setSpot(glm::vec3(5,0,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),
-  //   1.0f,1.0f,0.09f,0.032f, 45.0f, glm::vec3(-1,0,1) );
+   Light * light4 = scene.addLight();
+   light4->setSpot(glm::vec3(5,0,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),
+     1.0f,1.0f,0.09f,0.032f, 45.0f, glm::vec3(-1,0,1) );
  // Light * light5 = scene.addLight();
  // light5->setSpot(glm::vec3(0,2,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),
  //     1.0f,1.0f,0.09f,0.032f, 45.0f, glm::vec3(0,0,1) );
