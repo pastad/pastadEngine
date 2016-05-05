@@ -394,7 +394,7 @@ vec4 calcDirectionalLight(int idx, Material mat, vec3 pos, vec3 normal)
   
   vec3  specular   = calcSpecularColor(lightDir, l.Base.SpecularColor, mat,pos,normal);
 
-  return vec4(diffuse* calcSpotShadowFactor(idx) * l.Base.Intensity + ambient* l.Base.Intensity + specular* l.Base.Intensity,1) ;
+  return vec4(diffuse* calcSpotShadowFactor(l.ShadowMapIndex) * l.Base.Intensity + ambient* l.Base.Intensity + specular* l.Base.Intensity,1) ;
 }
 
 // pointLight calculation

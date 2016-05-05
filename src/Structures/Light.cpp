@@ -304,6 +304,7 @@ void Light::bindForRender(RenderShader * render_shader)
     0.5, 0.5, 0.5, 1.0
     );
     int num = render_shader->setShadowMap(biasMatrix * getProjection() * getView());
+    m_shadow_index = num;
     m_directional_buffer->bindForOutput(num);
   }
   if( getType() == LIGHT_DIRECTIONAL)
@@ -315,11 +316,13 @@ void Light::bindForRender(RenderShader * render_shader)
     0.5, 0.5, 0.5, 1.0
     );
     int num = render_shader->setShadowMap(biasMatrix * getProjection() * getView());
+    m_shadow_index = num;
     m_directional_buffer->bindForOutput(num);
   }
   if( getType() == LIGHT_POINT)
   {
     int num = render_shader->setPointShadow();
+    m_shadow_index = num;
     m_point_buffer->bindForOutput(num);    
   }
 }
@@ -373,4 +376,13 @@ void Light::setPosition(glm::vec3 p )
 {
   m_position = p;
   m_refresh_shadow = true;
+}
+
+void Light::setShadowIndex( unsigned int idx)
+{
+  m_shadow_index = idx;
+}
+unsigned int Light::getShadowIndex()
+{
+  return m_shadow_index;
 }

@@ -115,7 +115,7 @@ void RenderShader::setDirectionalLight(Light* light, unsigned int pos)
   std::stringstream ss, ssi;
   ss << "DirectionalLights["<<pos<<"]";
   ssi << ss.str() <<".ShadowMapIndex";
-  setUniform(ssi.str(), (int) pos);
+  setUniform(ssi.str(), (int) light->getShadowIndex());
   ssi.str(""); ssi.clear();
 
   // base light
@@ -149,9 +149,9 @@ void RenderShader::setSpotLight(Light* light, unsigned int pos)
   ssi.str(""); ssi.clear();
 
   ssi << ss.str() <<".ShadowMapIndex";
-  setUniform(ssi.str(), (int)pos);
+  setUniform(ssi.str(), (int)light->getShadowIndex());
   ssi.str(""); ssi.clear();
-
+  
 
   // point light 
   ssi << ss.str() <<".Pointlight.Position";

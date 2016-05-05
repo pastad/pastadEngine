@@ -89,6 +89,10 @@ public:
   // called when shadow should be rerendered
   void refresh();
 
+  // getter and setter for shadow index
+  void setShadowIndex( unsigned int idx);
+  unsigned int getShadowIndex();
+
 
 protected:
 
@@ -114,6 +118,9 @@ private:
 
   // cuttoff angle
   float m_cutoff_angle;
+
+  // defines in which shadow map the shadow is stored
+  unsigned int m_shadow_index;
 
   // light type counters
   static unsigned int m_num_point_lights;

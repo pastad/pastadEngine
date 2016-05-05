@@ -3,7 +3,7 @@
 
 requires GL glfw3 assimp SOIL freetype 
 gl loader file generated with https://bitbucket.org/alfonse/glloadgen/wiki/Home 
-some code parts inspired by openGl 4 shading cookbook due to the fact that 
+Some code parts inspired by openGl 4 shading cookbook due to the fact that 
 the subjects where studied with it
 
 Basic workflow
@@ -20,22 +20,17 @@ Structural:
   - screen space culling
 
 Graphical:
-  - shadow  
-  - OIT
   - animation
-
+  - water
+  - OIT
+  - material refactor and improvement
 
 GUI:
-  - buttons
   - GUI class
   - Panels
 
 Customizability:
   - setting specifactions (MULTI_SAMPLES,...)
-
-
-- texture refactoring (all in one , renderTexture,...)
-- gbuffer refactoring
 
 
 

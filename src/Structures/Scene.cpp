@@ -52,7 +52,7 @@ void Scene::renderShadow(ShadowShader * shadow_shader, PointShadowShader* point_
   {
     if( (*it)->getShadowRefresh() )
     {
-      Engine::getLog()->log("Scene", "re-render light");
+      //Engine::getLog()->log("Scene", "re-render light");
       if( ( (*it)->getType() == LIGHT_SPOT )  )
       {
         shadow_shader->use();
