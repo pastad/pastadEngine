@@ -33,7 +33,6 @@ public:
   // setters for matrices
   void setViewMatrix( glm::mat4 mvmatrix );
   void setProjectionMatrix( glm::mat4 projmatrix );
-  void setNormalMatrix( glm::mat4 normalmatrix );
 
   // sets the camera for rendering effects
   void setCameraPosition(glm::vec3 pos);

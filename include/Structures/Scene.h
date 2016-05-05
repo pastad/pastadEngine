@@ -41,6 +41,9 @@ public:
   // sets the shadow textures
   void setupLightsForShadingPass(RenderShader * render_shader);
 
+  // function to be called when camera is moved
+  void cameraMoved();
+
   // adds an object to the scene
   Object * addObject(std::string  path);
 

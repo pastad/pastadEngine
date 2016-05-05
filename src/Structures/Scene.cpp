@@ -53,10 +53,20 @@ void Scene::renderShadow(ShadowShader * shadow_shader, PointShadowShader* point_
     if( (*it)->getShadowRefresh() )
     {
       Engine::getLog()->log("Scene", "re-render light");
-      if( (*it)->getType() == LIGHT_SPOT )
+      if( ( (*it)->getType() == LIGHT_SPOT )  )
       {
         shadow_shader->use();
         (*it)->bindForShadowRenderSpot(shadow_shader);
+
+        for(std::map<std::string, Model *>::iterator it = m_models.begin(); it != m_models.end();it++)
+          it->second->renderWithoutMaterial();
+
+        (*it)->unbindFromShadowRender();
+      }
+       if( ( (*it)->getType() == LIGHT_DIRECTIONAL )  )
+      {
+        shadow_shader->use();
+        (*it)->bindForShadowRenderDirectional(shadow_shader);
 
         for(std::map<std::string, Model *>::iterator it = m_models.begin(); it != m_models.end();it++)
           it->second->renderWithoutMaterial();
@@ -114,6 +124,8 @@ void Scene::setupLightsForShadingPass(RenderShader * render_shader)
       (*it)->bindForRender(render_shader);
     if( (*it)->getType() == LIGHT_POINT )
       (*it)->bindForRender(render_shader);
+    if( (*it)->getType() == LIGHT_DIRECTIONAL )
+      (*it)->bindForRender(render_shader);
   }
 }
 
@@ -136,4 +148,13 @@ Light * Scene::addLight()
 Camera * Scene::getCamera()
 {
   return m_camera;
+}
+
+void Scene::cameraMoved()
+{
+  for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end();it++)
+  {
+    if( (*it)->getType() == LIGHT_DIRECTIONAL )
+      (*it)->refresh();
+  }
 }

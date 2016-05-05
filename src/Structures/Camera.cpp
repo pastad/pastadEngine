@@ -2,6 +2,7 @@
 
 #include "Engine.h"
 #include "Log.h"
+#include "Scene.h"
 #include "IOSubsystem.h"
 
 #include "glm/ext.hpp"
@@ -85,7 +86,8 @@ void Camera::update(float delta_time)
     rotate(0,-5);
   }
   if(moved)
-  {   
+  {
+    Engine::getScene()->cameraMoved();  
   }
   glm::vec2 mouse_movement = IOSubsystem::getMouseDelta();
   rotate(mouse_movement.x, mouse_movement.y);

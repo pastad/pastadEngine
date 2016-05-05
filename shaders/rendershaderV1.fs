@@ -157,7 +157,7 @@ float calcDirShadowRandomSampling(vec3 pos,mat4 shadowMat,sampler2DShadow shadow
 {
   float sum = 0.0;
   float ergeb = 1.0;
-  float softness =  2.0 / 1024.0; // 
+  float softness =  2.0 / 2048.0; // lower ->lower radius
   int sizeX = 4;
   int sizeY = 8;
   int sizeZ = 8; 
@@ -394,7 +394,7 @@ vec4 calcDirectionalLight(int idx, Material mat, vec3 pos, vec3 normal)
   
   vec3  specular   = calcSpecularColor(lightDir, l.Base.SpecularColor, mat,pos,normal);
 
-  return vec4(diffuse* l.Base.Intensity + ambient* l.Base.Intensity + specular* l.Base.Intensity,1) ;
+  return vec4(diffuse* calcSpotShadowFactor(idx) * l.Base.Intensity + ambient* l.Base.Intensity + specular* l.Base.Intensity,1) ;
 }
 
 // pointLight calculation

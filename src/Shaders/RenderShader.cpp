@@ -46,13 +46,6 @@ void RenderShader::setProjectionMatrix( glm::mat4 projmatrix )
   setUniform("ProjectionMat",projmatrix);
   checkUniformError("set ProjectionMatrix");
 }
-void RenderShader::setNormalMatrix( glm::mat4 normalmatrix )
-{
-  bind();
-  setUniform("NormalMat",normalmatrix);
-  checkUniformError("set NormalMarix");
-}
-
 void RenderShader::setRenderPass(unsigned int pass)
 {
   checkUniformError("pre set Subroutine");
@@ -123,6 +116,7 @@ void RenderShader::setDirectionalLight(Light* light, unsigned int pos)
   ss << "DirectionalLights["<<pos<<"]";
   ssi << ss.str() <<".ShadowMapIndex";
   setUniform(ssi.str(), (int) pos);
+  ssi.str(""); ssi.clear();
 
   // base light
   ssi << ss.str() <<".Direction";
@@ -157,7 +151,6 @@ void RenderShader::setSpotLight(Light* light, unsigned int pos)
   ssi << ss.str() <<".ShadowMapIndex";
   setUniform(ssi.str(), (int)pos);
   ssi.str(""); ssi.clear();
-
 
 
   // point light 

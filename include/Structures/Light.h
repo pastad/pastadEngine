@@ -11,6 +11,8 @@
 #define MAX_NUM_SPOT_LIGHTS 10
 #define MAX_NUM_DIRECTIONAL_LIGHTS 3
 
+#define FAR_DIRECTIONAL_SHADOW_BOUND 50 // directional shadow size
+
 enum
 {
     LIGHT_DIRECTIONAL,
@@ -83,6 +85,9 @@ public:
 
   //returns true if shadow needs to be recalculated
   bool getShadowRefresh();
+
+  // called when shadow should be rerendered
+  void refresh();
 
 
 protected:

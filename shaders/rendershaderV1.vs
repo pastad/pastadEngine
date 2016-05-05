@@ -12,7 +12,6 @@ out vec4 ModelPos;
 out vec4 ShadowCoord;
 
 uniform mat4 ViewMat;
-uniform mat3 NormalMat;
 uniform mat4 ProjectionMat;
 
 uniform mat4 ShadowMat; //TEST
@@ -28,6 +27,9 @@ void main()
     Position = vec3(ModelMatrix * vec4(VertexPosition,1.0f)  );
     ModelPos = ModelMatrix * vec4(VertexPosition,1.0f);
     gl_Position =  MVP * vec4(VertexPosition, 1.0f);
+
+    mat3 NormalMatrix = mat3(ModelMatrix);
+    Normal   = normalize( NormalMatrix * VertexNormal);
   }
   else
   {
@@ -36,7 +38,7 @@ void main()
     gl_Position =  VP * vec4(VertexPosition, 1.0f);
 
   }
-  ShadowCoord = ShadowMat * vec4(VertexPosition,1.0); // test maybe model missing
-  Normal   = normalize(VertexNormal);
+  ShadowCoord = ShadowMat *  vec4(VertexPosition,1.0); // test maybe model missing
+
   TexCoord = VertexCoord;
 }

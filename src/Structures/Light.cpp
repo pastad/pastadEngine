@@ -1,12 +1,18 @@
 #include "Light.h"
 #include "Log.h"
 #include "Engine.h"
+#include "Scene.h"
+#include "Camera.h"
 
 #include "DirectionalShadowBuffer.h"
 #include "PointShadowBuffer.h"
 #include "ShadowShader.h"
 #include "PointShadowShader.h"
 #include "RenderShader.h"
+
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtx/transform.hpp>
+
 
 unsigned int Light::m_num_point_lights = 0;
 unsigned int Light::m_num_spot_lights = 0;
@@ -39,11 +45,14 @@ bool Light::setDirectional(glm::vec3 direction, glm::vec3 col_am ,glm::vec3 col_
     m_position = glm::vec3(0,0,0);
 
     m_directional_buffer = new DirectionalShadowBuffer();
-    if( !m_directional_buffer->initialize(Engine::getWindowWidth(), Engine::getWindowHeight()))
+    if( !m_directional_buffer->initialize(Engine::getWindowWidth() *4.0f,
+     Engine::getWindowHeight() *4.0f))
       return false;
+
 
     return true;
   }
+
   return false;
 }
 
@@ -90,7 +99,8 @@ bool Light::setSpot(glm::vec3 position, glm::vec3 col_am ,glm::vec3 col_dif, glm
     m_direction = direction;
     m_cutoff_angle = cutoffAngle;
     m_directional_buffer = new DirectionalShadowBuffer();
-    if( !m_directional_buffer->initialize(Engine::getWindowWidth(), Engine::getWindowHeight()))
+    if( !m_directional_buffer->initialize(Engine::getWindowWidth(),
+        Engine::getWindowHeight()  ) ) 
       return false;
     m_num_spot_lights++;
     m_refresh_shadow =true;
@@ -150,7 +160,7 @@ float Light::getCutoffAngle()
 
 void Light::bindForShadowRenderSpot(ShadowShader * shadow_shader)
 {
-  if( m_type == LIGHT_DIRECTIONAL)
+  if( m_type == LIGHT_SPOT)
   {    
     
     shadow_shader->use();
@@ -175,7 +185,7 @@ void Light::bindForShadowRenderSpot(ShadowShader * shadow_shader)
 
 void Light::bindForShadowRenderDirectional(ShadowShader * shadow_shader)
 {
-  if( m_type == LIGHT_SPOT)
+  if( m_type == LIGHT_DIRECTIONAL)
   {  
     
     shadow_shader->use();
@@ -252,8 +262,6 @@ void Light::bindForShadowRenderPoint( PointShadowShader * point_shadow_shader, i
   
 }
 
-
-
 void Light::unbindFromShadowRender()
 {
   if( m_type == LIGHT_SPOT)
@@ -318,7 +326,17 @@ void Light::bindForRender(RenderShader * render_shader)
 
 glm::mat4 Light::getView()
 {
-  return glm::lookAt(m_position, m_position +  m_direction, glm::vec3(0,1,0));
+  if(getType() != LIGHT_DIRECTIONAL)
+   return glm::lookAt(m_position, m_position +  m_direction, glm::vec3(0,1,0));
+  else
+  {
+   // glm::quat rot(m_direction);
+   // glm::mat4 m = glm::mat4_cast(rot);
+   // return m;
+    glm::vec3 cp = Engine::getScene()->getCamera()->getPosition();
+   // cp += glm::vec3(0,50,0);
+    return glm::lookAt(cp,cp +  m_direction, glm::vec3(0,1,0));
+  } 
 }
 glm::mat4 Light::getView(glm::vec3 dir, glm::vec3 up)
 {
@@ -331,7 +349,10 @@ glm::mat4 Light::getProjection()
   if( getType() == LIGHT_POINT )
     return glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 100.0f );
   if( getType() == LIGHT_DIRECTIONAL )
-    return glm::ortho(-10.0f,10.0f,-10.0f,10.0f,-10.0f,20.0f);
+  {  
+    float bound = FAR_DIRECTIONAL_SHADOW_BOUND;
+    return glm::ortho(-bound,bound,-bound,bound,-bound,FAR_CLIPPING_PLANE);
+  }
 }
 bool Light::getShadowRefresh()
 {
@@ -342,6 +363,12 @@ bool Light::getShadowRefresh()
   }
   return false;
 }
+
+void Light::refresh()
+{
+  m_refresh_shadow = true;
+}
+
 void Light::setPosition(glm::vec3 p )
 {
   m_position = p;

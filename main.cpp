@@ -37,8 +37,9 @@ int main(void)
 
 
   Light * light111 = scene.addLight();
-  light111->setPoint(glm::vec3(2,2,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),1.0f,1.0f,0.09f,0.032f);
-
+  //light111->setPoint(glm::vec3(2,2,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),1.0f,1.0f,0.09f,0.032f);
+  Light * world_light = scene.addLight();
+  world_light->setDirectional(glm::vec3(0,-1,1), glm::vec3(1,1,1) ,glm::vec3(1,1,1), glm::vec3(1,1,1),0.5f);
 
   
   scene.setSkybox("models/skybox1/sk1");
