@@ -40,6 +40,7 @@ void Transform::setPosition(glm::vec3 p)
 }
 void Transform::setRotation(glm::vec3 r)
 {
+	r = glm::vec3( glm::radians(r.x), glm::radians(r.y) , glm::radians(r.z) );
 	m_rotation = r;
 	recalculateMatrix();
 }

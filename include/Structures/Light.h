@@ -48,6 +48,9 @@ public:
   glm::vec3 getDirection();
   glm::vec3 getPosition();
 
+  // sets the position of the light
+  void setPosition(glm::vec3 p );
+
   // returns the individual color
   glm::vec3 getAmbientColor();
   glm::vec3 getDiffuseColor();
@@ -64,6 +67,7 @@ public:
 
   // binds the light for shadow rendering
   void bindForShadowRenderSpot(ShadowShader * shadow_shader);
+  void bindForShadowRenderDirectional(ShadowShader * shadow_shader);
   void bindForShadowRenderPoint( PointShadowShader * point_shadow_shader, int iteration);
 
   // unbinds the light from shadow rendering

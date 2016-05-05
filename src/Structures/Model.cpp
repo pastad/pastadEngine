@@ -103,6 +103,7 @@ void Model::processScene()
   {
     const aiMesh* mesh = m_scene->mMeshes[i];
     Mesh * n = NULL;
+  //  std::cout << std::string(mesh->mName.C_Str()) <<std::endl;
     n= new Mesh(mesh,mesh->mMaterialIndex);
     if(n == NULL)
       Engine::getLog()->log("Model","Mesh is null");

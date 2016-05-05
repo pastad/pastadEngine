@@ -61,9 +61,12 @@ Texture * RessourceManager::loadTexture(std::string path)
 	else
 	{
 		texture =  new Texture(path);
-		texture->load();
+		if(texture->load() )
+			Engine::getLog()->log("RessourceManager","loaded texture",path);
+		else
+			Engine::getLog()->log("RessourceManager","failed loading",path);
 		m_textures[path] = texture;
-		Engine::getLog()->log("RessourceManager","loaded texture",path);
+		
 	}
 
 	return texture;

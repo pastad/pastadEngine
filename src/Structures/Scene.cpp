@@ -15,7 +15,7 @@
 
 Scene::Scene()
 {
-  m_camera = new Camera(0,0,0);
+  m_camera = new Camera(0,2,0);
   m_skybox = nullptr;
   
 }

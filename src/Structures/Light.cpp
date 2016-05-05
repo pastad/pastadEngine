@@ -36,6 +36,12 @@ bool Light::setDirectional(glm::vec3 direction, glm::vec3 col_am ,glm::vec3 col_
     m_intensity = intensity;
     m_num_directional_lights++;
     m_refresh_shadow =true;
+    m_position = glm::vec3(0,0,0);
+
+    m_directional_buffer = new DirectionalShadowBuffer();
+    if( !m_directional_buffer->initialize(Engine::getWindowWidth(), Engine::getWindowHeight()))
+      return false;
+
     return true;
   }
   return false;
@@ -144,7 +150,7 @@ float Light::getCutoffAngle()
 
 void Light::bindForShadowRenderSpot(ShadowShader * shadow_shader)
 {
-  if( m_type == LIGHT_SPOT)
+  if( m_type == LIGHT_DIRECTIONAL)
   {    
     
     shadow_shader->use();
@@ -165,6 +171,31 @@ void Light::bindForShadowRenderSpot(ShadowShader * shadow_shader)
 
   }
 
+}
+
+void Light::bindForShadowRenderDirectional(ShadowShader * shadow_shader)
+{
+  if( m_type == LIGHT_SPOT)
+  {  
+    
+    shadow_shader->use();
+    m_directional_buffer->bindForInput();
+   
+    glEnable(GL_DEPTH_TEST);
+
+    glPolygonOffset(0.01f,0.01f);
+
+    shadow_shader->setProjectionMatrix(getProjection());    
+    shadow_shader->setViewMatrix(getView() ); 
+
+    glViewport(0,0, m_directional_buffer->getWidth() ,m_directional_buffer->getHeight());
+    glClearColor(1000,0,0,0);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+
+  }
 }
   
 void Light::bindForShadowRenderPoint( PointShadowShader * point_shadow_shader, int iteration)
@@ -187,12 +218,12 @@ void Light::bindForShadowRenderPoint( PointShadowShader * point_shadow_shader, i
     if( iteration == 2)
     {
       m_point_buffer->bindForInput(GL_TEXTURE_CUBE_MAP_POSITIVE_Y);
-      point_shadow_shader->setViewMatrix(getView(glm::vec3(0.0f,1.0f,0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));      
+      point_shadow_shader->setViewMatrix(getView(glm::vec3(0.0f,1.0f,0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));      
     }
     if( iteration == 3)
     {
       m_point_buffer->bindForInput(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y);
-      point_shadow_shader->setViewMatrix(getView(glm::vec3(0.0f,-1.0f,0.0f), glm::vec3(0.0f, 0.0f, 1.0f) ));      
+      point_shadow_shader->setViewMatrix(getView(glm::vec3(0.0f,-1.0f,0.0f), glm::vec3(0.0f, 0.0f, -1.0f) ));      
     }
     if( iteration == 4)
     {
@@ -221,9 +252,20 @@ void Light::bindForShadowRenderPoint( PointShadowShader * point_shadow_shader, i
   
 }
 
+
+
 void Light::unbindFromShadowRender()
 {
   if( m_type == LIGHT_SPOT)
+  {
+    glFlush();
+    glFinish();
+    glPolygonOffset(0.0f,0.0f);
+    glDisable(GL_CULL_FACE);
+    m_directional_buffer->unbindFromInput();
+    glViewport(0,0, Engine::getWindowWidth(),Engine::getWindowHeight());
+  }
+  if( m_type == LIGHT_DIRECTIONAL)
   {
     glFlush();
     glFinish();
@@ -256,6 +298,17 @@ void Light::bindForRender(RenderShader * render_shader)
     int num = render_shader->setShadowMap(biasMatrix * getProjection() * getView());
     m_directional_buffer->bindForOutput(num);
   }
+  if( getType() == LIGHT_DIRECTIONAL)
+  {
+    glm::mat4 biasMatrix(
+    0.5, 0.0, 0.0, 0.0,
+    0.0, 0.5, 0.0, 0.0,
+    0.0, 0.0, 0.5, 0.0,
+    0.5, 0.5, 0.5, 1.0
+    );
+    int num = render_shader->setShadowMap(biasMatrix * getProjection() * getView());
+    m_directional_buffer->bindForOutput(num);
+  }
   if( getType() == LIGHT_POINT)
   {
     int num = render_shader->setPointShadow();
@@ -277,6 +330,8 @@ glm::mat4 Light::getProjection()
     return glm::perspective( m_cutoff_angle* 2.0f, 1.0f, 0.1f, 100.0f );
   if( getType() == LIGHT_POINT )
     return glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 100.0f );
+  if( getType() == LIGHT_DIRECTIONAL )
+    return glm::ortho(-10.0f,10.0f,-10.0f,10.0f,-10.0f,20.0f);
 }
 bool Light::getShadowRefresh()
 {
@@ -286,4 +341,9 @@ bool Light::getShadowRefresh()
     return true;
   }
   return false;
+}
+void Light::setPosition(glm::vec3 p )
+{
+  m_position = p;
+  m_refresh_shadow = true;
 }

@@ -157,7 +157,7 @@ float calcDirShadowRandomSampling(vec3 pos,mat4 shadowMat,sampler2DShadow shadow
 {
   float sum = 0.0;
   float ergeb = 1.0;
-  float softness =  2.0 / 1024.0;
+  float softness =  2.0 / 1024.0; // 
   int sizeX = 4;
   int sizeY = 8;
   int sizeZ = 8; 
@@ -236,14 +236,23 @@ float calcSingleDirectionalShadow(vec3 pos,mat4 shadowMat,sampler2DShadow shadow
 float calcPointShadowPCF(vec3 lightPos,vec3 fragPos,samplerCube sam)
 {
   float shadow = 1.0;
-  vec3 lightDir = lightPos - fragPos ;
-  float lightDistance = length(lightDir);
-
-  float closestDepth = texture(sam, -lightDir).r; 
-  if(lightDistance+0.001 >= closestDepth)
-    shadow =0.5f;
-
-  return shadow;
+  float step = 0.01; // do not go higher 
+  for(float x = -step; x < step; x += step  )
+  {
+    for(float y = -step; y < step; y += step )
+    {
+      for(float z = -step; z < step; z += step )
+      {
+        vec3 lightDir = lightPos - (fragPos  + vec3(x,y,z)) ;
+        float lightDistance = length(lightDir);
+        float closestDepth = texture(sam, -lightDir).r; 
+        if(lightDistance+0.001 >= closestDepth)
+          shadow +=0.5f;
+      }
+    }
+  }
+  shadow /= 8;
+  return 1.0 - shadow;
 }
 
 float calcSinglePointShadow(vec3 lightPos,vec3 fragPos, samplerCube sam)

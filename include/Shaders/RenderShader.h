@@ -1,7 +1,7 @@
 #ifndef RENDER_SHADER_H
 #define RENDER_SHADER_H
 
-#define MAX_NUM_MATERIALS 20
+#define MAX_NUM_MATERIALS 100
 
 // the shader that renders
 

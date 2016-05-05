@@ -22,7 +22,7 @@ public:
 	// recalculates the ModelMatrix in case of changes
 	void recalculateMatrix();	
 
-	// setters for position, rotation and scale
+	// setters for position, rotation (takes degrees)  and scale
 	void setPosition(glm::vec3 p);
 	void setRotation(glm::vec3 r);
 	void setScale(glm::vec3 s);
