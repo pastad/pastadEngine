@@ -19,7 +19,7 @@ class Mesh;
 class AnimationMesh;
 class Material;
 class RenderShader;
-class ShadowShader;
+class RenderBaseShader;
 class PointShadowShader;
 
 class Model
@@ -38,14 +38,9 @@ public:
 	//loads the model
 	bool load();
 
-	// renders the model
-	void render(RenderShader * render_shader);
-
-	// renders the models handed over
-	void render(RenderShader * render_shader, std::vector<Object *> objects);
-
-	// renders the model without material
-	void renderWithoutMaterial(ShadowShader * sshader, PointShadowShader *psshader );
+	// render functions for the scene
+	void render(RenderBaseShader * render_shader, bool with_material);
+	void render(RenderBaseShader * render_shader, std::vector<Object *> objects, bool with_material);
 
 	// returns the assimp scene that the model belontgs
 	const aiScene * getAssimpScene();

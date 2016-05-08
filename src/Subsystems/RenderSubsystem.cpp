@@ -15,7 +15,7 @@
 #include "TextShader.h"
 #include "ImageShader.h"
 #include "PostProcessingShader.h"
-#include "ShadowShader.h"
+#include "RenderBaseShader.h"
 #include "PointShadowShader.h"
 #include "SkyboxShader.h"
 
@@ -65,8 +65,8 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 		m_text_shader = new TextShader();
 		m_image_shader = new ImageShader();
 		m_pp_shader = new PostProcessingShader();
-		m_shadow_shader = new ShadowShader();
-		m_point_shadow_shader = new PointShadowShader();
+		m_shadow_shader = new RenderBaseShader();
+		m_point_shadow_shader = new RenderBaseShader();
 		m_skybox_shader = new SkyboxShader();
 
 		m_gbuffer = new GBuffer();	

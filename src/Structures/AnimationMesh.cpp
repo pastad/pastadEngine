@@ -3,7 +3,7 @@
 #include "Helper.h"
 
 #include "RenderShader.h"
-#include "ShadowShader.h"
+#include "RenderBaseShader.h"
 #include "PointShadowShader.h"
 
 #include <iostream>
@@ -152,7 +152,7 @@ void AnimationMesh::applyTransform(std::string NodeName,glm::mat4 & global_inv, 
     m_bone_info[BoneIndex].m_transformation = t; 
   }
 }
-void AnimationMesh::updateTransforms(std::vector<glm::mat4> *  transforms, RenderShader * render_shader, ShadowShader *ssshader, PointShadowShader * psshader )
+void AnimationMesh::updateTransforms(std::vector<glm::mat4> *  transforms,  RenderBaseShader *shader)
 {
   std::vector<glm::mat4> ts;
   for (uint i = 0 ; i < m_num_bones ; i++)
@@ -160,11 +160,6 @@ void AnimationMesh::updateTransforms(std::vector<glm::mat4> *  transforms, Rende
     (*transforms)[i] = m_bone_info[i].m_transformation;
     ts.insert(ts.end(), m_bone_info[i].m_transformation );
   }
-  if(render_shader != nullptr)
-    render_shader->setBones(&ts);
-  if(ssshader != nullptr)
-    ssshader->setBones(&ts);
-  if(psshader != nullptr)
-    psshader->setBones(&ts);
+  shader->setBones(&ts);
 }
 

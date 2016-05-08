@@ -14,7 +14,7 @@
 #include "IndexedRepresentation.h"
 
 class RenderShader;
-class ShadowShader;
+class RenderBaseShader;
 class PointShadowShader;
 
 
@@ -37,7 +37,7 @@ public:
 
   glm::mat4 getGlobalInverse();
 
-  void updateTransforms(std::vector<glm::mat4>* transforms, RenderShader * render_shader, ShadowShader *ssshader, PointShadowShader * psshader );
+  void updateTransforms(std::vector<glm::mat4>* transforms,  RenderBaseShader *shader);
   void applyTransform(std::string NodeName,glm::mat4 & global_inv, glm::mat4 & trans);
 
 protected:

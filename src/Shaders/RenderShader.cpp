@@ -11,7 +11,7 @@
 #include <iostream>
 #include <sstream>
 
-RenderShader::RenderShader() : Shader()
+RenderShader::RenderShader() : RenderBaseShader()
 {
 }
 RenderShader::~RenderShader()
@@ -32,19 +32,6 @@ bool RenderShader::load(const std::string path)
   reset();
 
   return true;
-}
-
-void RenderShader::setViewMatrix( glm::mat4 mvmatrix )
-{
-  bind();
-  setUniform("ViewMat",mvmatrix);
-  checkUniformError("set ViewMarix"); 
-}
-void RenderShader::setProjectionMatrix( glm::mat4 projmatrix )
-{
-  bind();
-  setUniform("ProjectionMat",projmatrix);
-  checkUniformError("set ProjectionMatrix");
 }
 void RenderShader::setRenderPass(unsigned int pass)
 {
@@ -77,29 +64,6 @@ void RenderShader::setColorOnly(bool color_only)
   else
     setUniform("ColorOnly",0);
 }
-void RenderShader::setAnimation()
-{
-  bind();
-  setUniform("Animation",1);
-}
-void RenderShader::unsetAnimation()
-{
-  bind();
-  setUniform("Animation",0);
-}
-
-void RenderShader::setInstanced()
-{
-  bind();
-  setUniform("Instanced",1);
-}
-void RenderShader::setNotInstanced(glm::mat4 model_transform)
-{
-  bind();
-  setUniform("Instanced",0);
-  setUniform("SingleModelMatrix", model_transform);
-}
-
 
 void RenderShader::setLights(std::vector<Light*> * lights)
 {
@@ -389,14 +353,3 @@ void RenderShader::setShadows(ShadowTechniqueType tech)
   checkUniformError("set standard shadows");
 }
 
-void RenderShader::setBones(std::vector<glm::mat4> * transforms)
-{
-  int counter =0;
-  for(std::vector<glm::mat4>::iterator it = transforms->begin(); it != transforms->end(); it++)
-  {
-    std::stringstream ss;
-    ss << "Bones[" << counter << "]";
-    counter++;
-    setUniform(ss.str(), (*it) );
-  }
-}

@@ -13,7 +13,7 @@ class Model;
 class Object;
 class Camera;
 class RenderShader;
-class ShadowShader;
+class RenderBaseShader;
 class PointShadowShader;
 class Light;
 class Skybox;
@@ -38,7 +38,7 @@ public:
 	void render(RenderShader * render_shader, SkyboxShader * skybox_shader);
 
   // renders the scene for the shadow passes
-  void renderShadow(ShadowShader * shadow_shader, PointShadowShader* point_shadow_shader);
+  void renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* point_shadow_shader);
 
   // renders the skybox of the scene
   void renderSkybox(SkyboxShader * sybox_shader);

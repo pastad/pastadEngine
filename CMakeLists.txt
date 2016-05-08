@@ -14,10 +14,9 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Subsystems/PhysicSubsystem.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/Shader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/RenderShader.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/RenderBaseShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/TextShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/ImageShader.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/ShadowShader.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/PointShadowShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/SkyboxShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/PostProcessingShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Scene.cpp
@@ -60,10 +59,9 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems/PhysicSubsystem.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/Shader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/RenderShader.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/RenderBaseShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/TextShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/ImageShader.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/ShadowShader.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/PointShadowShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/SkyboxShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/PostProcessingShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Scene.h

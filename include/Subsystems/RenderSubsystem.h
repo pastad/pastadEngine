@@ -9,7 +9,7 @@ class RenderShader;
 class TextShader;
 class ImageShader;
 class PostProcessingShader;
-class ShadowShader;
+class RenderBaseShader;
 class PointShadowShader;
 class SkyboxShader;
 
@@ -82,10 +82,10 @@ private:
 	PostProcessingShader * m_pp_shader;
 
 	// the shadow shader
-	ShadowShader * m_shadow_shader;
+	RenderBaseShader * m_shadow_shader;
 
 	// the point shadow shader
-	PointShadowShader * m_point_shadow_shader;
+	RenderBaseShader * m_point_shadow_shader;
 
 	// the skybox shader
 	SkyboxShader * m_skybox_shader;

@@ -8,13 +8,13 @@
 #include <string>
 #include <vector>
 
-#include "Shader.h"
+#include "RenderBaseShader.h"
 #include "Material.h"
 #include "Engine.h"
 
 class Light;
 
-class RenderShader :  public Shader
+class RenderShader :  public RenderBaseShader
 {
 public:
 
@@ -31,8 +31,8 @@ public:
   // uniform setters -----------------------------------------------
 
   // setters for matrices
-  void setViewMatrix( glm::mat4 mvmatrix );
-  void setProjectionMatrix( glm::mat4 projmatrix );
+  using RenderBaseShader::setViewMatrix;
+  using RenderBaseShader::setProjectionMatrix;
 
   // sets the camera for rendering effects
   void setCameraPosition(glm::vec3 pos);
@@ -79,28 +79,11 @@ public:
     // enable shadows
   void setShadows(ShadowTechniqueType tech);
 
-  // animation setters -------------------------------------------
-
-  // enables animation
-  void setAnimation();
-
-  // diables animation
-  void unsetAnimation();
-
-  void setBones(std::vector<glm::mat4> * transforms);
-
-
-  // instanced setters -------------------------------------------
-
-  // enables instancing
-  void setInstanced();
-
-  // enables single render
-  void setNotInstanced(glm::mat4 model_transform);
-
-
-
- 
+  using RenderBaseShader::setAnimation;
+  using RenderBaseShader::unsetAnimation;
+  using RenderBaseShader::setBones;
+  using RenderBaseShader::setInstanced;
+  using RenderBaseShader::setNotInstanced; 
   
 private:
     // holds the materials set for rendering 

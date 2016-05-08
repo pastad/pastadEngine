@@ -8,7 +8,7 @@
 #include "Helper.h"
 #include "AnimationMesh.h"
 #include "RenderShader.h"
-#include "ShadowShader.h"
+#include "RenderBaseShader.h"
 #include "PointShadowShader.h"
 #include "RessourceManager.h"
 
@@ -51,12 +51,13 @@ Object * Model::getInstance()
 	return obj;
 }
 
-void Model::render(RenderShader * render_shader)
-{	
-  render(render_shader,m_instances);
+void Model::render(RenderBaseShader * render_shader, bool with_material)
+{
+  render(render_shader, m_instances, with_material);
 }
-void Model::render(RenderShader * render_shader, std::vector<Object *> objects)
-{ 
+
+void Model::render(RenderBaseShader * render_shader, std::vector<Object *> objects, bool with_material)
+{
   std::vector<glm::mat4> matrices;
   for(std::vector<Object *>::iterator it = objects.begin(); it != objects.end();it++)
       matrices.insert(matrices.end(),  (*it)->getModelMatrix()  );
@@ -68,7 +69,8 @@ void Model::render(RenderShader * render_shader, std::vector<Object *> objects)
       render_shader->setInstanced();
       for(std::vector<Mesh *>::iterator it = m_meshes.begin(); it != m_meshes.end(); it++)
       {
-        m_materials.at((*it)->getMaterialIndex())->bind(0, render_shader);
+        if( with_material )
+          m_materials.at((*it)->getMaterialIndex())->bind(0, (RenderShader *) render_shader);
         (*it)->bufferModelMatrices(&matrices);
         (*it)->render(matrices.size());
       }
@@ -77,7 +79,8 @@ void Model::render(RenderShader * render_shader, std::vector<Object *> objects)
     {
       for(std::vector<Mesh *>::iterator it = m_meshes.begin(); it != m_meshes.end(); it++)
       {
-        m_materials.at((*it)->getMaterialIndex())->bind(0, render_shader);     
+        if( with_material )
+          m_materials.at((*it)->getMaterialIndex())->bind(0, (RenderShader *) render_shader);     
         for( std::vector<glm::mat4>::iterator mat_it = matrices.begin(); mat_it != matrices.end();mat_it++ )
         {
           render_shader->setNotInstanced((*mat_it) );
@@ -100,132 +103,22 @@ void Model::render(RenderShader * render_shader, std::vector<Object *> objects)
       {
         render_shader->setNotInstanced((*it_objs)->getModelMatrix() );
 
-        // anim update begin ------------------------------------------------
         readNodeHeirarchy( (*it_objs)->getAnimationTime(), m_scene->mRootNode, Identity);
-
-        // std::cout <<(m_ameshes.at(0)->m_bone_Info[0]).transformation[2][1] <<std::endl;
+        
         for(std::vector<AnimationMesh *>::iterator it = m_animation_meshes.begin(); it != m_animation_meshes.end(); it++)
         {
           std::vector<glm::mat4> transforms;
           transforms.resize((*it)->getNumBones());
-          (*it)->updateTransforms(&transforms, render_shader, nullptr,nullptr);
+          (*it)->updateTransforms(&transforms, render_shader);
 
-          m_materials.at((*it)->getMaterialIndex())->bind(0, render_shader); 
+          if( with_material )
+            m_materials.at((*it)->getMaterialIndex())->bind(0, (RenderShader *) render_shader); 
 
           (*it)->render(); 
-        }
-        // anim update end ------------------- 
- 
+        } 
       }
     }
-
     render_shader->unsetAnimation();
-  }
-}
-
-
-void Model::renderWithoutMaterial(ShadowShader * sshader, PointShadowShader *psshader )
-{ 
-  std::vector<glm::mat4> matrices;
-  for(std::vector<Object *>::iterator it = m_instances.begin(); it != m_instances.end();it++)
-  {
-    if( (*it)->isVisible() )
-      matrices.insert(matrices.end(),  (*it)->getModelMatrix()  );
-  }
-  if( matrices.size() >0)
-  {
-    if( !m_animated )
-    {      
-      if(m_instanced)
-      {
-        if(sshader!= nullptr)
-          sshader->setInstanced();
-        else          
-          psshader->setInstanced();
-        for(std::vector<Mesh *>::iterator it = m_meshes.begin(); it != m_meshes.end(); it++)
-        {
-          (*it)->bufferModelMatrices(&matrices);
-          (*it)->render(matrices.size());
-        }
-      }
-      else
-      {
-        for(std::vector<Mesh *>::iterator it = m_meshes.begin(); it != m_meshes.end(); it++)
-        {    
-          for( std::vector<glm::mat4>::iterator mat_it = matrices.begin(); mat_it != matrices.end();mat_it++ )
-          {
-            if(sshader!= nullptr)
-              sshader->setNotInstanced((*mat_it) );
-            else          
-              psshader->setNotInstanced((*mat_it) );
-            (*it)->render();
-          }
-        }
-      }
-
-    }
-    else
-    {
-      // animated object
-      /*for(std::vector<AnimationMesh *>::iterator it = m_animation_meshes.begin(); it != m_animation_meshes.end(); it++)
-      {
-        for(std::vector<Object *>::iterator it_objs = m_instances.begin(); it_objs != m_instances.end();it_objs++)
-        {
-          if( (*it_objs)->isVisible() )
-          {
-
-            if(sshader!= nullptr)
-              sshader->setNotInstanced((*it_objs)->getModelMatrix() );
-            else          
-              psshader->setNotInstanced((*it_objs)->getModelMatrix() );
-            (*it)->render();
-          }
-        }
-      }*/
-          //animated object
-    
-      if(sshader!= nullptr)
-        sshader->setAnimation();
-      else          
-        psshader->setAnimation();
-
-      glm::mat4 Identity = glm::mat4();
-
-      for(std::vector<Object *>::iterator it_objs = m_instances.begin(); it_objs != m_instances.end();it_objs++)
-      {
-        if( (*it_objs)->isVisible() )
-        {
-          if(sshader!= nullptr)
-            sshader->setNotInstanced((*it_objs)->getModelMatrix() );
-          else          
-            psshader->setNotInstanced((*it_objs)->getModelMatrix() );
-         
-
-          // anim update begin ------------------------------------------------
-          readNodeHeirarchy( (*it_objs)->getAnimationTime(), m_scene->mRootNode, Identity);
-
-          // std::cout <<(m_ameshes.at(0)->m_bone_Info[0]).transformation[2][1] <<std::endl;
-          for(std::vector<AnimationMesh *>::iterator it = m_animation_meshes.begin(); it != m_animation_meshes.end(); it++)
-          {
-            std::vector<glm::mat4> transforms;
-            transforms.resize((*it)->getNumBones());
-            (*it)->updateTransforms(&transforms,nullptr, sshader , psshader);
-
-
-            (*it)->render(); 
-          }
-          // anim update end ------------------- 
-   
-        }
-      }
-      if(sshader!= nullptr)
-        sshader->unsetAnimation();
-      else          
-        psshader->unsetAnimation();
-
-
-      
-    }
   }
 }
 

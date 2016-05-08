@@ -23,7 +23,7 @@ enum
 
 class DirectionalShadowBuffer;
 class PointShadowBuffer;
-class ShadowShader;
+class RenderBaseShader;
 class PointShadowShader;
 class RenderShader;
 
@@ -68,9 +68,9 @@ public:
   float getCutoffAngle();
 
   // binds the light for shadow rendering
-  void bindForShadowRenderSpot(ShadowShader * shadow_shader);
-  void bindForShadowRenderDirectional(ShadowShader * shadow_shader);
-  void bindForShadowRenderPoint( PointShadowShader * point_shadow_shader, int iteration);
+  void bindForShadowRenderSpot(RenderBaseShader * shadow_shader);
+  void bindForShadowRenderDirectional(RenderBaseShader * shadow_shader);
+  void bindForShadowRenderPoint( RenderBaseShader * point_shadow_shader, int iteration);
 
   // unbinds the light from shadow rendering
   void unbindFromShadowRender();

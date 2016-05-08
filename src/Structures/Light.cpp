@@ -6,7 +6,7 @@
 
 #include "DirectionalShadowBuffer.h"
 #include "PointShadowBuffer.h"
-#include "ShadowShader.h"
+#include "RenderBaseShader.h"
 #include "PointShadowShader.h"
 #include "RenderShader.h"
 
@@ -158,7 +158,7 @@ float Light::getCutoffAngle()
   return m_cutoff_angle;
 }
 
-void Light::bindForShadowRenderSpot(ShadowShader * shadow_shader)
+void Light::bindForShadowRenderSpot(RenderBaseShader * shadow_shader)
 {
   if( m_type == LIGHT_SPOT)
   {    
@@ -183,7 +183,7 @@ void Light::bindForShadowRenderSpot(ShadowShader * shadow_shader)
 
 }
 
-void Light::bindForShadowRenderDirectional(ShadowShader * shadow_shader)
+void Light::bindForShadowRenderDirectional(RenderBaseShader * shadow_shader)
 {
   if( m_type == LIGHT_DIRECTIONAL)
   {  
@@ -208,7 +208,7 @@ void Light::bindForShadowRenderDirectional(ShadowShader * shadow_shader)
   }
 }
   
-void Light::bindForShadowRenderPoint( PointShadowShader * point_shadow_shader, int iteration)
+void Light::bindForShadowRenderPoint( RenderBaseShader * point_shadow_shader, int iteration)
 {
  
   if( m_type == LIGHT_POINT)
@@ -249,7 +249,7 @@ void Light::bindForShadowRenderPoint( PointShadowShader * point_shadow_shader, i
     glPolygonOffset(0.01f,0.01f);
 
     point_shadow_shader->setProjectionMatrix(getProjection());  
-    point_shadow_shader->setLightPosition(getPosition());  
+    point_shadow_shader->setUniform("LightPosition",getPosition());  
     glViewport(0,0, 1000 ,1000);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

@@ -2,7 +2,7 @@
 
 #include "RessourceManager.h"
 #include "RenderShader.h"
-#include "ShadowShader.h"
+#include "RenderBaseShader.h"
 #include "PointShadowShader.h"
 #include "Model.h"
 #include "Object.h"
@@ -72,14 +72,14 @@ void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader)
     if(objs !=  m_render_objects.end() )
     {
       if(objs->second.size() >0)
-        it->second->render(render_shader ,objs->second);
+        it->second->render((RenderBaseShader *)render_shader ,objs->second, true);
     }
   }
 
   renderSkybox(skybox_shader);
 
 }
-void Scene::renderShadow(ShadowShader * shadow_shader, PointShadowShader* point_shadow_shader)
+void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* point_shadow_shader)
 {  
   glClearColor(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);
   for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end();it++)
@@ -93,7 +93,7 @@ void Scene::renderShadow(ShadowShader * shadow_shader, PointShadowShader* point_
         (*it)->bindForShadowRenderSpot(shadow_shader);
 
         for(std::map<std::string, Model *>::iterator it = m_models.begin(); it != m_models.end();it++)
-          it->second->renderWithoutMaterial(shadow_shader,nullptr);
+          it->second->render(shadow_shader, false);
 
         (*it)->unbindFromShadowRender();
       }
@@ -103,7 +103,7 @@ void Scene::renderShadow(ShadowShader * shadow_shader, PointShadowShader* point_
         (*it)->bindForShadowRenderDirectional(shadow_shader);
 
         for(std::map<std::string, Model *>::iterator it = m_models.begin(); it != m_models.end();it++)
-          it->second->renderWithoutMaterial(shadow_shader,nullptr);
+          it->second->render(shadow_shader, false);
 
         (*it)->unbindFromShadowRender();
       }
@@ -114,7 +114,7 @@ void Scene::renderShadow(ShadowShader * shadow_shader, PointShadowShader* point_
         {
           (*it)->bindForShadowRenderPoint(point_shadow_shader,iteration);
           for(std::map<std::string, Model *>::iterator it = m_models.begin(); it != m_models.end();it++)
-            it->second->renderWithoutMaterial(nullptr,point_shadow_shader);
+            it->second->render((RenderBaseShader *)point_shadow_shader, false);
           (*it)->unbindFromShadowRender(); 
         }            
       }
