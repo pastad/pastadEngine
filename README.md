@@ -22,6 +22,7 @@ Structural:
 Graphical:
   - animation
   - water
+  - terrain
   - OIT
   - material refactor and improvement
 

@@ -54,17 +54,17 @@ void RenderShader::setRenderPass(unsigned int pass)
   if(pass == 1)
   {
     setRenderPassSubroutine("pass1");
-    setUniform("RenderThrew",0);
+    setUniform("ScreenSpaceRender",0);
   }
   if(pass == 2)
   {
     setRenderPassSubroutine("pass2");
-    setUniform("RenderThrew",1);
+    setUniform("ScreenSpaceRender",1);
   }
   if(pass == 3)
   {
     setRenderPassSubroutine("pass3");
-    setUniform("RenderThrew",1);
+    setUniform("ScreenSpaceRender",1);
   }
 
   checkUniformError("set Subroutine");
@@ -76,6 +76,28 @@ void RenderShader::setColorOnly(bool color_only)
     setUniform("ColorOnly",1);
   else
     setUniform("ColorOnly",0);
+}
+void RenderShader::setAnimation()
+{
+  bind();
+  setUniform("Animation",1);
+}
+void RenderShader::unsetAnimation()
+{
+  bind();
+  setUniform("Animation",0);
+}
+
+void RenderShader::setInstanced()
+{
+  bind();
+  setUniform("Instanced",1);
+}
+void RenderShader::setNotInstanced(glm::mat4 model_transform)
+{
+  bind();
+  setUniform("Instanced",0);
+  setUniform("SingleModelMatrix", model_transform);
 }
 
 
@@ -241,12 +263,14 @@ void RenderShader::setIdentityMatrices()
 
 void RenderShader::reset()
 {
+  // reset at begin of render
   m_materials.clear();
   m_materials_mapping.clear();
   m_material_number = 0;
 }
 void RenderShader::setMaterial(std::string name, MaterialColorSpecs specs)
 {
+  // store materials during gbuffer pass and only set index
   int idx;
   std::map<std::string,int>::iterator it = m_materials_mapping.find(name);
   if(it == m_materials_mapping.end())
@@ -263,17 +287,17 @@ void RenderShader::setMaterial(std::string name, MaterialColorSpecs specs)
   } 
   else
     idx = it->second;
+
+  //only set the id for now
   setMaterialIndex(idx);
 }
 void RenderShader::setMaterialIndex(int idx)
 {
    setUniform("MaterialIndex",idx);
-   //std::stringstream ss;
-   //ss <<idx;
-   //Engine::getLog()->log("RenderShader","set material index ", ss.str());
 }
 void RenderShader::setAllMaterialsForRenderPass()
 {
+  // set everything for lighting pass | we have the idx in the gbuffer
   for(std::map<std::string, int>::iterator it = m_materials_mapping.begin(); it != m_materials_mapping.end();it++)
   {
     int idx = it->second;
@@ -304,6 +328,7 @@ void RenderShader::setAllMaterialsForRenderPass()
       ssi.str(""); ssi.clear();
 
       checkUniformError("set material specs");
+ 
     }
     else
     {
@@ -362,4 +387,16 @@ void RenderShader::setShadows(ShadowTechniqueType tech)
     Engine::getLog()->log("RenderShader", "Enable Standard RandomSampling Shadows");     
   }
   checkUniformError("set standard shadows");
+}
+
+void RenderShader::setBones(std::vector<glm::mat4> * transforms)
+{
+  int counter =0;
+  for(std::vector<glm::mat4>::iterator it = transforms->begin(); it != transforms->end(); it++)
+  {
+    std::stringstream ss;
+    ss << "Bones[" << counter << "]";
+    counter++;
+    setUniform(ss.str(), (*it) );
+  }
 }

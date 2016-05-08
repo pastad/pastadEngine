@@ -24,6 +24,24 @@ public:
   void setProjectionMatrix( glm::mat4 projmatrix );
   void setNormalMatrix( glm::mat4 normalmatrix );
 
+  // enables instancing
+  void setInstanced();
+
+  // enables single render
+  void setNotInstanced(glm::mat4 model_transform);
+
+
+  // animation setters -------------------------------------------
+
+  // enables animation
+  void setAnimation();
+
+  // diables animation
+  void unsetAnimation();
+
+  void setBones(std::vector<glm::mat4> * transforms);
+
+
 
   // binds the shader
   void use();

@@ -79,6 +79,27 @@ public:
     // enable shadows
   void setShadows(ShadowTechniqueType tech);
 
+  // animation setters -------------------------------------------
+
+  // enables animation
+  void setAnimation();
+
+  // diables animation
+  void unsetAnimation();
+
+  void setBones(std::vector<glm::mat4> * transforms);
+
+
+  // instanced setters -------------------------------------------
+
+  // enables instancing
+  void setInstanced();
+
+  // enables single render
+  void setNotInstanced(glm::mat4 model_transform);
+
+
+
  
   
 private:

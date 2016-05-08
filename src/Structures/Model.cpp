@@ -5,6 +5,11 @@
 #include "Engine.h"
 #include "Log.h"
 #include "Mesh.h"
+#include "Helper.h"
+#include "AnimationMesh.h"
+#include "RenderShader.h"
+#include "ShadowShader.h"
+#include "PointShadowShader.h"
 #include "RessourceManager.h"
 
 #include <assimp/scene.h>
@@ -17,8 +22,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
 
-Model::Model(std::string path):m_path(path)
+Model::Model(std::string path, bool instanced):m_path(path), m_instanced(instanced)
 {	
 }
 
@@ -33,7 +39,13 @@ Model::~Model()
 
 Object * Model::getInstance()
 {
-	Object * obj = new Object();
+	Object * obj = new Object(m_path, this);
+
+  if(m_animated)
+  { 
+    
+  } 
+
 	m_instances.insert(m_instances.end(),obj);
   
 	return obj;
@@ -41,28 +53,179 @@ Object * Model::getInstance()
 
 void Model::render(RenderShader * render_shader)
 {	
+  render(render_shader,m_instances);
+}
+void Model::render(RenderShader * render_shader, std::vector<Object *> objects)
+{ 
   std::vector<glm::mat4> matrices;
-  for(std::vector<Object *>::iterator it = m_instances.begin(); it != m_instances.end();it++)
+  for(std::vector<Object *>::iterator it = objects.begin(); it != objects.end();it++)
       matrices.insert(matrices.end(),  (*it)->getModelMatrix()  );
 
-  for(std::vector<Mesh *>::iterator it = m_meshes.begin(); it != m_meshes.end(); it++)
+  if( !m_animated )
   {
-    m_materials.at((*it)->getMaterialIndex())->bind(0, render_shader);
-    //Engine::getLog()->log("Model", "set mat",m_path);
-    (*it)->bufferModelMatrices(&matrices);
-    (*it)->render(matrices.size());
+    if(m_instanced)
+    {
+      render_shader->setInstanced();
+      for(std::vector<Mesh *>::iterator it = m_meshes.begin(); it != m_meshes.end(); it++)
+      {
+        m_materials.at((*it)->getMaterialIndex())->bind(0, render_shader);
+        (*it)->bufferModelMatrices(&matrices);
+        (*it)->render(matrices.size());
+      }
+    }
+    else
+    {
+      for(std::vector<Mesh *>::iterator it = m_meshes.begin(); it != m_meshes.end(); it++)
+      {
+        m_materials.at((*it)->getMaterialIndex())->bind(0, render_shader);     
+        for( std::vector<glm::mat4>::iterator mat_it = matrices.begin(); mat_it != matrices.end();mat_it++ )
+        {
+          render_shader->setNotInstanced((*mat_it) );
+          (*it)->render();
+        }
+      }
+    }
+  }
+  else
+  {
+    //animated object
+    
+    render_shader->setAnimation(); 
+
+    glm::mat4 Identity = glm::mat4();
+
+    for(std::vector<Object *>::iterator it_objs = m_instances.begin(); it_objs != m_instances.end();it_objs++)
+    {
+      if( (*it_objs)->isVisible() )
+      {
+        render_shader->setNotInstanced((*it_objs)->getModelMatrix() );
+
+        // anim update begin ------------------------------------------------
+        readNodeHeirarchy( (*it_objs)->getAnimationTime(), m_scene->mRootNode, Identity);
+
+        // std::cout <<(m_ameshes.at(0)->m_bone_Info[0]).transformation[2][1] <<std::endl;
+        for(std::vector<AnimationMesh *>::iterator it = m_animation_meshes.begin(); it != m_animation_meshes.end(); it++)
+        {
+          std::vector<glm::mat4> transforms;
+          transforms.resize((*it)->getNumBones());
+          (*it)->updateTransforms(&transforms, render_shader, nullptr,nullptr);
+
+          m_materials.at((*it)->getMaterialIndex())->bind(0, render_shader); 
+
+          (*it)->render(); 
+        }
+        // anim update end ------------------- 
+ 
+      }
+    }
+
+    render_shader->unsetAnimation();
   }
 }
-void Model::renderWithoutMaterial()
+
+
+void Model::renderWithoutMaterial(ShadowShader * sshader, PointShadowShader *psshader )
 { 
   std::vector<glm::mat4> matrices;
   for(std::vector<Object *>::iterator it = m_instances.begin(); it != m_instances.end();it++)
-      matrices.insert(matrices.end(),  (*it)->getModelMatrix()  );
-
-  for(std::vector<Mesh *>::iterator it = m_meshes.begin(); it != m_meshes.end(); it++)
   {
-    (*it)->bufferModelMatrices(&matrices);
-    (*it)->render(matrices.size());
+    if( (*it)->isVisible() )
+      matrices.insert(matrices.end(),  (*it)->getModelMatrix()  );
+  }
+  if( matrices.size() >0)
+  {
+    if( !m_animated )
+    {      
+      if(m_instanced)
+      {
+        if(sshader!= nullptr)
+          sshader->setInstanced();
+        else          
+          psshader->setInstanced();
+        for(std::vector<Mesh *>::iterator it = m_meshes.begin(); it != m_meshes.end(); it++)
+        {
+          (*it)->bufferModelMatrices(&matrices);
+          (*it)->render(matrices.size());
+        }
+      }
+      else
+      {
+        for(std::vector<Mesh *>::iterator it = m_meshes.begin(); it != m_meshes.end(); it++)
+        {    
+          for( std::vector<glm::mat4>::iterator mat_it = matrices.begin(); mat_it != matrices.end();mat_it++ )
+          {
+            if(sshader!= nullptr)
+              sshader->setNotInstanced((*mat_it) );
+            else          
+              psshader->setNotInstanced((*mat_it) );
+            (*it)->render();
+          }
+        }
+      }
+
+    }
+    else
+    {
+      // animated object
+      /*for(std::vector<AnimationMesh *>::iterator it = m_animation_meshes.begin(); it != m_animation_meshes.end(); it++)
+      {
+        for(std::vector<Object *>::iterator it_objs = m_instances.begin(); it_objs != m_instances.end();it_objs++)
+        {
+          if( (*it_objs)->isVisible() )
+          {
+
+            if(sshader!= nullptr)
+              sshader->setNotInstanced((*it_objs)->getModelMatrix() );
+            else          
+              psshader->setNotInstanced((*it_objs)->getModelMatrix() );
+            (*it)->render();
+          }
+        }
+      }*/
+          //animated object
+    
+      if(sshader!= nullptr)
+        sshader->setAnimation();
+      else          
+        psshader->setAnimation();
+
+      glm::mat4 Identity = glm::mat4();
+
+      for(std::vector<Object *>::iterator it_objs = m_instances.begin(); it_objs != m_instances.end();it_objs++)
+      {
+        if( (*it_objs)->isVisible() )
+        {
+          if(sshader!= nullptr)
+            sshader->setNotInstanced((*it_objs)->getModelMatrix() );
+          else          
+            psshader->setNotInstanced((*it_objs)->getModelMatrix() );
+         
+
+          // anim update begin ------------------------------------------------
+          readNodeHeirarchy( (*it_objs)->getAnimationTime(), m_scene->mRootNode, Identity);
+
+          // std::cout <<(m_ameshes.at(0)->m_bone_Info[0]).transformation[2][1] <<std::endl;
+          for(std::vector<AnimationMesh *>::iterator it = m_animation_meshes.begin(); it != m_animation_meshes.end(); it++)
+          {
+            std::vector<glm::mat4> transforms;
+            transforms.resize((*it)->getNumBones());
+            (*it)->updateTransforms(&transforms,nullptr, sshader , psshader);
+
+
+            (*it)->render(); 
+          }
+          // anim update end ------------------- 
+   
+        }
+      }
+      if(sshader!= nullptr)
+        sshader->unsetAnimation();
+      else          
+        psshader->unsetAnimation();
+
+
+      
+    }
   }
 }
 
@@ -80,11 +243,12 @@ bool Model::load()
   }
 
   m_scene = m_importer.ReadFile( m_path, aiProcessPreset_TargetRealtime_Quality);
-  m_scene = m_importer.GetOrphanedScene();
+ // m_scene = m_importer.GetOrphanedScene();
 
+  
   if( !m_scene)
   {
-    Engine::getLog()->log("Model", m_importer.GetErrorString());
+    Engine::getLog()->log("Model","Loading error", m_importer.GetErrorString());
     return false;
   }
 
@@ -99,15 +263,35 @@ void Model::processScene()
 {
   int vertexes = 0;
   int indices =0;
-  for (unsigned int i = 0 ; i <m_scene->mNumMeshes ; i++)
+
+  if(m_scene->HasAnimations())
   {
-    const aiMesh* mesh = m_scene->mMeshes[i];
-    Mesh * n = NULL;
-  //  std::cout << std::string(mesh->mName.C_Str()) <<std::endl;
-    n= new Mesh(mesh,mesh->mMaterialIndex);
-    if(n == NULL)
-      Engine::getLog()->log("Model","Mesh is null");
-    m_meshes.push_back(n);      
+    Engine::getLog()->log("Model", " has animations"); 
+    for (unsigned int i = 0 ; i <m_scene->mNumMeshes ; i++)
+    {
+      const aiMesh* mesh = m_scene->mMeshes[i];
+      AnimationMesh * n = NULL;
+
+      n= new AnimationMesh(mesh,mesh->mMaterialIndex);
+      if(n == NULL)
+        Engine::getLog()->log("Model","AnimationMesh is null");
+      m_animation_meshes.push_back(n);   
+    }
+    m_animated = true;
+  }
+  else
+  {
+    for (unsigned int i = 0 ; i <m_scene->mNumMeshes ; i++)
+    {
+      const aiMesh* mesh = m_scene->mMeshes[i];
+      Mesh * n = NULL;
+
+      n= new Mesh(mesh,mesh->mMaterialIndex);
+      if(n == NULL)
+        Engine::getLog()->log("Model","Mesh is null");
+      m_meshes.push_back(n);      
+    }
+    m_animated = false;
   }
 
   std::string::size_type slashpos = m_path.find_last_of("/");
@@ -131,3 +315,177 @@ void Model::processMaterials(std::string directory)
     m_materials.insert(m_materials.begin(),std::pair<int ,Material*>(i,mat));
   }
 }
+
+const aiScene * Model::getAssimpScene()
+{
+  return m_scene;
+}
+
+bool Model::isAnimated()
+{
+  return m_animated;
+}
+
+
+void Model::readNodeHeirarchy(float animation_time, const aiNode* pNode, const glm::mat4& parentTransform)
+{
+  std::string NodeName(pNode->mName.data);
+
+  const aiAnimation* pAnimation = m_scene->mAnimations[0];
+
+  glm::mat4 NodeTransformation(Helper::toGlm(pNode->mTransformation));
+
+  const aiNodeAnim* pNodeAnim = findNodeAnim(pAnimation, NodeName);
+  if (pNodeAnim)
+  {
+    // Interpolate scaling and generate scaling transformation matrix
+    aiVector3D Scaling;
+    calcInterpolatedScaling(Scaling, animation_time, pNodeAnim);
+    glm::mat4 ScalingM (1.0)  ;
+    ScalingM[0].x =Scaling.x;ScalingM[1].y =  Scaling.y;ScalingM[2].z = Scaling.z;
+
+    // Interpolate rotation and generate rotation transformation matrix
+    aiQuaternion RotationQ;
+    calcInterpolatedRotation(RotationQ, animation_time, pNodeAnim);
+    glm::mat4 RotationM = Helper::toGlm(RotationQ.GetMatrix());
+    //std::cout<<glm::to_string(RotationM)<<std::endl;
+
+    // Interpolate translation and generate translation transformation matrix
+    aiVector3D Translation;
+    calcInterpolatedPosition(Translation, animation_time, pNodeAnim);
+    glm::mat4 TranslationM = glm::translate( glm::mat4( 1.0f ), glm::vec3( Translation.x,Translation.y,Translation.z ) );
+ 
+    // Combine the above transformations
+    NodeTransformation =   TranslationM * RotationM * ScalingM; 
+  }
+
+  glm::mat4   GlobalTransformation =    parentTransform   *NodeTransformation   ;
+  glm::mat4 inverse = Helper::toGlm(m_GlobalInverseTransform);
+
+  for(std::vector<AnimationMesh *>::iterator it = m_animation_meshes.begin(); it != m_animation_meshes.end(); ++it)
+  {
+    (*it)->applyTransform(NodeName,inverse,GlobalTransformation);
+  }
+
+  for (uint i = 0 ; i < pNode->mNumChildren ; i++)
+  {
+    readNodeHeirarchy(animation_time, pNode->mChildren[i], GlobalTransformation);
+  }
+
+}
+
+
+uint Model::findPosition(float animation_time, const aiNodeAnim* pNodeAnim)
+{
+  for (uint i = 0 ; i < pNodeAnim->mNumPositionKeys - 1 ; i++)
+  {
+    if (animation_time < (float)pNodeAnim->mPositionKeys[i + 1].mTime)
+      return i;
+    
+  }
+  assert(0);
+
+  return 0;
+}
+
+uint Model::findRotation(float animation_time, const aiNodeAnim* pNodeAnim)
+{
+  assert(pNodeAnim->mNumRotationKeys > 0);
+
+  for (uint i = 0 ; i < pNodeAnim->mNumRotationKeys - 1 ; i++)
+  {
+    if (animation_time < (float)pNodeAnim->mRotationKeys[i + 1].mTime)
+      return i;    
+  }
+  assert(0);
+
+  return 0;
+}
+
+uint Model::findScaling(float animation_time, const aiNodeAnim* pNodeAnim)
+{
+  assert(pNodeAnim->mNumScalingKeys > 0);
+
+  for (uint i = 0 ; i < pNodeAnim->mNumScalingKeys - 1 ; i++)
+  {
+    if (animation_time < (float)pNodeAnim->mScalingKeys[i + 1].mTime)
+      return i;    
+  }
+  assert(0);
+
+  return 0;
+}
+
+
+void Model::calcInterpolatedPosition(aiVector3D& out, float animation_time, const aiNodeAnim* pNodeAnim)
+{
+  if (pNodeAnim->mNumPositionKeys == 1)
+  {
+    out = pNodeAnim->mPositionKeys[0].mValue;
+    return;
+  }
+  uint PositionIndex = findPosition(animation_time, pNodeAnim);
+  uint NextPositionIndex = (PositionIndex + 1);
+  assert(NextPositionIndex < pNodeAnim->mNumPositionKeys);
+  float DeltaTime = (float)(pNodeAnim->mPositionKeys[NextPositionIndex].mTime - pNodeAnim->mPositionKeys[PositionIndex].mTime);
+  float Factor = (animation_time - (float)pNodeAnim->mPositionKeys[PositionIndex].mTime) / DeltaTime;
+  assert(Factor >= 0.0f && Factor <= 1.0f);
+  const aiVector3D& Start = pNodeAnim->mPositionKeys[PositionIndex].mValue;
+  const aiVector3D& End = pNodeAnim->mPositionKeys[NextPositionIndex].mValue;
+  aiVector3D Delta = End - Start;
+  out = Start + Factor * Delta;
+}
+void Model::calcInterpolatedRotation(aiQuaternion& out, float animation_time, const aiNodeAnim* pNodeAnim)
+{
+  // we need at least two values to interpolate...
+  if (pNodeAnim->mNumRotationKeys == 1)
+  {
+    out = pNodeAnim->mRotationKeys[0].mValue;
+    return;
+  }
+  uint RotationIndex = findRotation(animation_time, pNodeAnim);
+  uint NextRotationIndex = (RotationIndex + 1);
+  assert(NextRotationIndex < pNodeAnim->mNumRotationKeys);
+  float DeltaTime = (float)(pNodeAnim->mRotationKeys[NextRotationIndex].mTime - pNodeAnim->mRotationKeys[RotationIndex].mTime);
+  float Factor = (animation_time - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime) / DeltaTime;
+  assert(Factor >= 0.0f && Factor <= 1.0f);
+  const aiQuaternion& StartRotationQ = pNodeAnim->mRotationKeys[RotationIndex].mValue;
+  const aiQuaternion& EndRotationQ   = pNodeAnim->mRotationKeys[NextRotationIndex].mValue;
+  aiQuaternion::Interpolate(out, StartRotationQ, EndRotationQ, Factor);
+  out = out.Normalize();
+}
+void Model::calcInterpolatedScaling(aiVector3D& Out, float animation_time, const aiNodeAnim* pNodeAnim)
+{
+  if (pNodeAnim->mNumScalingKeys == 1)
+  {
+    Out = pNodeAnim->mScalingKeys[0].mValue;
+    return;
+  }
+  uint ScalingIndex = findScaling(animation_time, pNodeAnim);
+  uint NextScalingIndex = (ScalingIndex + 1);
+  assert(NextScalingIndex < pNodeAnim->mNumScalingKeys);
+  float DeltaTime = (float)(pNodeAnim->mScalingKeys[NextScalingIndex].mTime - pNodeAnim->mScalingKeys[ScalingIndex].mTime);
+  float Factor = (animation_time - (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime) / DeltaTime;
+  assert(Factor >= 0.0f && Factor <= 1.0f);
+  const aiVector3D& Start = pNodeAnim->mScalingKeys[ScalingIndex].mValue;
+  const aiVector3D& End   = pNodeAnim->mScalingKeys[NextScalingIndex].mValue;
+  aiVector3D Delta = End - Start;
+  Out = Start + Factor * Delta;
+}
+
+
+const aiNodeAnim* Model::findNodeAnim(const aiAnimation* pAnimation, const std::string nodeName)
+{
+  for (uint i = 0 ; i < pAnimation->mNumChannels ; i++)
+  {
+    const aiNodeAnim* pNodeAnim = pAnimation->mChannels[i];
+
+    if (std::string(pNodeAnim->mNodeName.data) == nodeName)
+    {
+      return pNodeAnim;
+    }
+  }
+
+  return NULL;
+}
+

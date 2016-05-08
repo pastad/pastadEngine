@@ -57,3 +57,34 @@ void ShadowShader::use()
   Shader::bind();
   checkUniformError("before binding ShadowShader");
 }
+
+void ShadowShader::setInstanced()
+{
+  setUniform("Instanced",1);
+}
+void ShadowShader::setNotInstanced(glm::mat4 model_transform)
+{
+  setUniform("Instanced",0);
+  setUniform("SingleModelMatrix", model_transform);
+}
+void ShadowShader::setBones(std::vector<glm::mat4> * transforms)
+{
+  int counter =0;
+  for(std::vector<glm::mat4>::iterator it = transforms->begin(); it != transforms->end(); it++)
+  {
+    std::stringstream ss;
+    ss << "Bones[" << counter << "]";
+    counter++;
+    setUniform(ss.str(), (*it) );
+  }
+}
+void ShadowShader::setAnimation()
+{
+  bind();
+  setUniform("Animation",1);
+}
+void ShadowShader::unsetAnimation()
+{
+  bind();
+  setUniform("Animation",0);
+}

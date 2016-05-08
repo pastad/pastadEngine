@@ -62,3 +62,34 @@ void PointShadowShader::use()
   Shader::bind();
   checkUniformError("before binding PointShadowShader");
 }
+
+void PointShadowShader::setInstanced()
+{
+  setUniform("Instanced",1);
+}
+void PointShadowShader::setNotInstanced(glm::mat4 model_transform)
+{
+  setUniform("Instanced",0);
+  setUniform("SingleModelMatrix", model_transform);
+}
+void PointShadowShader::setBones(std::vector<glm::mat4> * transforms)
+{
+  int counter =0;
+  for(std::vector<glm::mat4>::iterator it = transforms->begin(); it != transforms->end(); it++)
+  {
+    std::stringstream ss;
+    ss << "Bones[" << counter << "]";
+    counter++;
+    setUniform(ss.str(), (*it) );
+  }
+}
+void PointShadowShader::setAnimation()
+{
+  bind();
+  setUniform("Animation",1);
+}
+void PointShadowShader::unsetAnimation()
+{
+  bind();
+  setUniform("Animation",0);
+}

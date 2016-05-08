@@ -88,9 +88,9 @@ void Mesh::bufferModelMatrices(std::vector<glm::mat4> * matrices)
 
   for (unsigned int i = 0; i < 4 ; i++)
   {
-      glEnableVertexAttribArray(MODEL_VB + i);
-      glVertexAttribPointer(MODEL_VB + i, 4, GL_FLOAT, GL_FALSE, sizeof((*matrices)[0]), (const GLvoid*)(sizeof(glm::vec4) * i ));
-      glVertexAttribDivisor(MODEL_VB + i, 1);
+      glEnableVertexAttribArray(3 + i); // 3 because we skip the index buffer
+      glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof((*matrices)[0]), (const GLvoid*)(sizeof(glm::vec4) * i ));
+      glVertexAttribDivisor(3 + i, 1);
   }
 
   glBindVertexArray(0);
@@ -100,6 +100,13 @@ void Mesh::render(unsigned int num_instances)
 {
     glBindVertexArray(m_vertex_array_object);
     glDrawElementsInstanced(GL_TRIANGLES, m_draw_count, GL_UNSIGNED_INT,0, num_instances);
+    glBindVertexArray(0);
+}
+
+void Mesh::render()
+{
+    glBindVertexArray(m_vertex_array_object);
+    glDrawElements(GL_TRIANGLES, m_draw_count, GL_UNSIGNED_INT,0);
     glBindVertexArray(0);
 }
 

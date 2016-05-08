@@ -47,7 +47,6 @@ public:
 	void renderPassLight();
 	void renderPassPostProcess();
 	void renderPassShadow();
-	void renderPassTest();
 
 	// renders the ui set to the engine
 	void renderUI();

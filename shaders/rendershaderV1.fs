@@ -418,7 +418,7 @@ vec4 calcPointLights(int idx, Material mat, vec3 pos, vec3 normal)
   return vec4( (diffuse* l.Base.Intensity * calcPointShadowfactor(l.ShadowMapIndex,l.Position, pos.xyz) + ambient* 1* l.Base.Intensity + specular* l.Base.Intensity ) * attenuation,1) ;
 }
 
-// spotLight calculation
+// spotLight calculationds
 vec4 calcSpotLight(int idx, Material mat, vec3 pos, vec3 normal)
 {
   SpotLight l = SpotLights[idx];

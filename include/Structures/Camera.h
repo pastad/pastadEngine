@@ -28,6 +28,15 @@ public:
     //returns the current camera position
     glm::vec3 getPosition();
 
+    // returns the direction of the camera
+    glm::vec3 getDirection();
+
+    // returns the angle around the up axis
+    float getAngleAroundY();
+
+    // returns the fov
+    float getFOV();
+
     // rotates the camera
     void rotate(float deltax, float deltay);
 

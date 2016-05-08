@@ -7,6 +7,7 @@
 #include "Light.h"
 #include "IOSubsystem.h"
 
+#include "Helper.h"
 
 #include "GUI.h"
 #include "Text.h"
@@ -22,7 +23,7 @@ int main(void)
 {
   Engine engine;
 
-  engine.initialize(1240, 720, 0);
+  engine.initialize(1240, 720, PHYSIC_SUBSYSTEM);
 
   Scene scene;
 
@@ -43,24 +44,48 @@ int main(void)
 
   
   scene.setSkybox("models/skybox1/sk1");
+  
 
-
-  Object * ground = scene.addObject("game/models/test_ground.obj"); 
-
-  Object * fox = scene.addObject("game/models/Fox.dae"); 
-  fox->setPosition(glm::vec3(4,0,7));
+  Object * fox = scene.addObject("game/models/Fox.dae", glm::vec3(4,0,7)); 
   fox->setRotation(glm::vec3(0.0f,90.0f,90.0f));
   fox->setScale(glm::vec3(0.5f,0.5f,0.5f));
+  fox->applyPhysics();
 
-  Object * bush = scene.addObject("game/models/bush1.obj"); 
-  bush->setPosition(glm::vec3(-4,0,5));
+  Object * bush = scene.addObjectInstanced("game/models/bush1.obj",glm::vec3(-4,0,5) ); 
+
+  Object * bush2 = scene.addObjectInstanced("game/models/bush1.obj",glm::vec3(20,0,5) ); 
+
+  Object * tree = scene.addObject("game/models/tree1.obj",glm::vec3(2,0,10) ); 
+  Object * bridge = scene.addObject("game/models/bridge1.obj",glm::vec3(-2,0,15) ); 
+
+
+  Object * ground = scene.addObject("game/models/test_ground.obj", glm::vec3(0,0,0)); 
+
+  Object * test_roach = scene.addObject("models/rooster.dae", glm::vec3(0,1,7)); 
+  test_roach->setRotation(glm::vec3(0.0f,90.0f,90.0f));
+  test_roach->setScale(glm::vec3(0.1f,0.1f,0.1f));
+ 
+  Helper::m_debug_float = 0.0f;
 
   engine.setScene(&scene);
+
+  ground->setPriorityRender();
 
   // run the main loop
   while(engine.running())
   {
     // do stuff here
+    if(IOSubsystem::isKeyPressed('X') )
+    {
+      Helper::m_debug_float+=0.1f;
+    }
+    if(IOSubsystem::isKeyPressed('Z') )
+    {
+      Helper::m_debug_float-=0.1f;
+      if(Helper::m_debug_float<0.0f)
+        Helper::m_debug_float =0.0f;
+    }
+
     if(IOSubsystem::isKeyPressed('F') )
     {
       light111->setPosition( light111->getPosition() + glm::vec3(0.05f,0.0f,0.0f)  );
@@ -76,6 +101,13 @@ int main(void)
     if(IOSubsystem::isKeyPressed('B') )
     {
       light111->setPosition( light111->getPosition() - glm::vec3(0.0f,0.0f,0.05f)  );
+    }
+    if(IOSubsystem::isKeyPressed('N') )
+    {
+      if(fox->isVisible())
+        fox->setInvisible();
+      else
+        fox->setVisible();
     }
     engine.update();
   	engine.render();

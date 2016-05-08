@@ -11,6 +11,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Subsystems/Subsystem.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Subsystems/RenderSubsystem.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Subsystems/IOSubsystem.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Subsystems/PhysicSubsystem.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/Shader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/RenderShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/TextShader.cpp
@@ -25,11 +26,13 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Object.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Model.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Mesh.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/AnimationMesh.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Texture.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Material.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/IndexedRepresentation.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Light.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Skybox.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/SceneTreeElement.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RenderStructures/GBuffer.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RenderStructures/DirectionalShadowBuffer.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RenderStructures/PointShadowBuffer.cpp
@@ -42,6 +45,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/Image.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/Button.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RessourceManager.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Helper.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/external/gl_core_4_.c
    
 )
@@ -53,6 +57,7 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems/Subsystem.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems/RenderSubsystem.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems/IOSubsystem.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems/PhysicSubsystem.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/Shader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/RenderShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/TextShader.h
@@ -67,11 +72,13 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Object.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Model.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Mesh.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/AnimationMesh.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Texture.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Material.h 
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/IndexedRepresentation.h   
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Light.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Skybox.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/SceneTreeElement.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures/GBuffer.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures/DirectionalShadowBuffer.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures/PointShadowBuffer.h
@@ -84,6 +91,7 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/Image.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/Button.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RessourceManager.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Helper.h
    ${CMAKE_CURRENT_SOURCE_DIR}/external/gl_core_4_.h
 
 )

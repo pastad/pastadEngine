@@ -25,7 +25,7 @@ RessourceManager::~RessourceManager()
   
 }
 
-Model * RessourceManager::loadModel(std::string path)
+Model * RessourceManager::loadModel(std::string path, bool instanced)
 {	
 	Model * model;
 
@@ -38,10 +38,13 @@ Model * RessourceManager::loadModel(std::string path)
 	}
 	else
 	{
-		model =  new Model(path);
-		model->load();
+		model =  new Model(path, instanced);
+		bool success  = model->load();
 		m_models[path] = model;
-		Engine::getLog()->log("RessourceManager","loaded model",path);
+		if(success)
+			Engine::getLog()->log("RessourceManager","loaded model",path);
+		else
+			Engine::getLog()->log("RessourceManager","loading failed ",path);
 	}
 
 	return model;

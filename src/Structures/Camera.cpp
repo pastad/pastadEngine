@@ -6,6 +6,7 @@
 #include "IOSubsystem.h"
 
 #include "glm/ext.hpp"
+#include <glm/gtx/vector_angle.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -111,16 +112,37 @@ void Camera::rotate(float deltax,float deltay)
   {
     m_rot_1 +=deltax*m_rotation_speed;
     m_rot_2 -=deltay*m_rotation_speed;
+
+    // limit to range for better retrieval
+    if(m_rot_1 >360.0f)
+      m_rot_1 = 0.0f;
+    if(m_rot_1 <0.0f)
+      m_rot_1 = 360.0f;
+
+
     glm::vec3 front;
     front.x = cos(glm::radians(m_rot_1)) * cos(glm::radians(m_rot_2));
     front.y = sin(glm::radians(m_rot_2));
     front.z = sin(glm::radians(m_rot_1)) * cos(glm::radians(m_rot_2));
     m_forward = glm::normalize(front);
+    Engine::getScene()->cameraRotated();
   }
 }
 glm::vec3 Camera::getPosition()
 {
   return m_pos;
+}
+glm::vec3 Camera::getDirection()
+{
+  return m_forward;
+}
+float Camera::getAngleAroundY()
+{
+  return m_rot_1;
+}
+float Camera::getFOV()
+{
+  return m_fov;
 }
 
 void Camera::move(glm::vec3 step)

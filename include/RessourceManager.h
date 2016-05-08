@@ -28,7 +28,7 @@ public:
   static Texture * loadTexture(std::string path);
 
   // returns the requested model (and loads it if not loaded)
-  static Model * loadModel(std::string path);
+  static Model * loadModel(std::string path, bool instanced);
 
   // returns the materiall (and loads it if not loaded)
   static Material * loadMaterial(std::string dir, aiMaterial* mat);

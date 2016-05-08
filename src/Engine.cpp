@@ -8,6 +8,7 @@
 #include "GUI.h"
 #include "RenderSubsystem.h"
 #include "IOSubsystem.h"
+#include "PhysicSubsystem.h"
 #include "EngineGUI.h"
 
 // the statics
@@ -15,6 +16,7 @@ bool Engine::m_initialized;
 Log * Engine::m_log;
 RenderSubsystem * Engine::m_render_system;
 IOSubsystem * Engine::m_io_system;
+PhysicSubsystem * Engine::m_physic_system;
 GLFWwindow * Engine::m_window;
 unsigned int Engine::m_system_flags;
 Scene * Engine::m_scene;
@@ -51,6 +53,7 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 
 	m_render_system =  new RenderSubsystem();
 	m_io_system =  new IOSubsystem();
+	m_physic_system = new PhysicSubsystem();
 
 	// set minimal systems (Render,IO)
 	m_system_flags = system_flags;
@@ -194,7 +197,13 @@ void Engine::update()
 	if(m_initialized)
 	{
 		if(m_scene != nullptr)
+		{
 			m_scene->update(m_time_delta);
+
+			if( m_system_flags & PHYSIC_SUBSYSTEM )
+				m_physic_system->updateScene(m_scene, m_time_delta);
+
+		}
 
 		glfwPollEvents();
 
@@ -274,12 +283,22 @@ bool Engine::startUpSubsystems()
 		if(! m_render_system->startUp(m_window) )
 			return false;
 	}
+	if( m_system_flags & PHYSIC_SUBSYSTEM )
+	{
+		if(! m_physic_system->startUp() )
+			return false;
+	}
 
 	return true;
 }
 
 bool Engine::shutDownSubsystems()
 {	
+	if( m_system_flags & PHYSIC_SUBSYSTEM )
+	{
+		if(! m_physic_system->shutDown() )
+			return false;
+	}
 	if( m_system_flags & RENDER_SUBSYSTEM )
 	{
 		if(! m_render_system->shutDown() )

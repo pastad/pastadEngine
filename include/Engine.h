@@ -16,13 +16,15 @@ class Log;
 class Scene;
 class RenderSubsystem;
 class IOSubsystem;
+class PhysicSubsystem;
 class GUI;
 class EngineGUI;
 
 enum SubsystemType
 {
 	RENDER_SUBSYSTEM = 1,
-	IO_SUBSYSTEM = 2
+	IO_SUBSYSTEM = 2,
+	PHYSIC_SUBSYSTEM = 4
 };
 enum PostprocessType
 {
@@ -108,6 +110,7 @@ private:
 	// Subsystems
 	static RenderSubsystem * m_render_system;
 	static IOSubsystem  * m_io_system;
+	static PhysicSubsystem  * m_physic_system;
 
 	// gl context
 	static GLFWwindow * m_window;

@@ -149,9 +149,11 @@ void RenderSubsystem::renderPassGBuffer()
 
 	if(scene != nullptr)
 		scene->render(m_shader, m_skybox_shader);
+	
 	glFinish();
 	m_gbuffer->unbindFromInput();
 }
+
 void RenderSubsystem::renderPassShadow()
 {
 	m_shadow_shader->use();
@@ -206,31 +208,21 @@ void RenderSubsystem::renderPassPostProcess()
 
 	glFinish();
 }
-void RenderSubsystem::renderPassTest()
-{
-	m_shader->use();
-	m_shadow_buffer->bindForOutput(0);
-	//m_pp_buffer->bindForOutput();
-	m_shader->setRenderPass(2);
-	
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glDisable(GL_DEPTH_TEST);
-
-  m_shader->setIdentityMatrices();
-  m_shader->setAllMaterialsForRenderPass();
-
-
-  m_render_quad->render();	
-
-	glFinish();
-}
 
 void RenderSubsystem::renderUI()
 {
+	m_text_shader->use();
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);	
+	m_text_shader->setProjection();
+
 	std::vector<GUI* > * guis = Engine::getGUIs();
 	for( std::vector<GUI*>::iterator it = guis->begin(); it != guis->end();it++)
 		(*it)->render(m_text_shader,m_image_shader, m_render_quad);
 	Engine::getEngineGUI()->render(m_text_shader,m_image_shader, m_render_quad);
+
+	glDisable(GL_BLEND);
+	glFinish();
 }
 
 void RenderSubsystem::render()
@@ -241,14 +233,8 @@ void RenderSubsystem::render()
 		renderPassShadow();
 	renderPassLight();
 	renderPassPostProcess();
-	//renderPassTest();
-
-	m_text_shader->use();
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);	
-	m_text_shader->setProjection();
 	renderUI();
-	glDisable(GL_BLEND);
+
 	endRender();
 }
 
@@ -291,3 +277,4 @@ void RenderSubsystem::setShadowTechnique(ShadowTechniqueType type)
 	else
 		m_shadows_standard_enabled = true;
 }
+

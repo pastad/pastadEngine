@@ -7,6 +7,8 @@
 #include <string>
 #include <map>
 
+#include <glm/glm.hpp>
+
 class Model;
 class Object;
 class Camera;
@@ -16,6 +18,7 @@ class PointShadowShader;
 class Light;
 class Skybox;
 class SkyboxShader;
+class SceneTreeElement;
 
 class Scene
 {
@@ -23,8 +26,13 @@ public:
 	Scene();
 	~Scene();
 
+  Scene(const Scene& other) = delete;
+  Scene& operator=(const Scene& other) = delete;
+
+
   // update function | requires the time difference
   void update(float delta);
+
 
   //renders the scene
 	void render(RenderShader * render_shader, SkyboxShader * skybox_shader);
@@ -44,8 +52,19 @@ public:
   // function to be called when camera is moved
   void cameraMoved();
 
-  // adds an object to the scene
-  Object * addObject(std::string  path);
+  // function to be called when camera is rotated
+  void cameraRotated();
+
+  // refrehses the visual objects
+  void refreshRenderObjects(); 
+
+  // returns the root scene tree element
+  SceneTreeElement * getSceneRoot();
+
+
+  // adds an object to the scene | single or instanced
+  Object * addObject(std::string  path, glm::vec3 position);
+  Object * addObjectInstanced(std::string path, glm::vec3 position);
 
   // adds a light to the scene
   Light * addLight();
@@ -61,6 +80,9 @@ private:
   // stores the models of the scene for rendering purposes
   std::map<std::string, Model *> m_models;
 
+  // the objects to be rendered
+  std::map<std::string, std::vector<Object *>> m_render_objects;
+
   // stores the lights of the scene
   std::vector<Light *> m_lights;
 
@@ -69,6 +91,17 @@ private:
 
   // the skybox of the scene
   Skybox * m_skybox;
+
+  // the root of the scene tree
+  SceneTreeElement * m_tree_root = nullptr;
+
+  // internal addObject request handling function
+  Object * addObject(std::string  path, glm::vec3 position, bool instanced);
+
+  // updates the animated objects
+  void update(SceneTreeElement * element,  float delta);
+
+
 
 };
 

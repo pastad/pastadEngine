@@ -20,8 +20,9 @@ public:
   Mesh(const Mesh& other) = delete;
   Mesh& operator=(const Mesh& other)= delete ;
 
-  // renders the mesh 
+  // renders the mesh  | instanced or not
   void render(unsigned int num_indices) ;
+  void render();
 
   // returns the material index
   int getMaterialIndex();
