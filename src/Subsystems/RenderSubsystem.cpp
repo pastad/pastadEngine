@@ -16,7 +16,6 @@
 #include "ImageShader.h"
 #include "PostProcessingShader.h"
 #include "RenderBaseShader.h"
-#include "PointShadowShader.h"
 #include "SkyboxShader.h"
 
 #include "Quad.h"

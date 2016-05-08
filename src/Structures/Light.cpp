@@ -7,7 +7,6 @@
 #include "DirectionalShadowBuffer.h"
 #include "PointShadowBuffer.h"
 #include "RenderBaseShader.h"
-#include "PointShadowShader.h"
 #include "RenderShader.h"
 
 #include <glm/gtx/quaternion.hpp>
@@ -158,39 +157,13 @@ float Light::getCutoffAngle()
   return m_cutoff_angle;
 }
 
-void Light::bindForShadowRenderSpot(RenderBaseShader * shadow_shader)
-{
-  if( m_type == LIGHT_SPOT)
-  {    
-    
-    shadow_shader->use();
-    m_directional_buffer->bindForInput();
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
-
-    glPolygonOffset(0.01f,0.01f);
-
-    shadow_shader->setProjectionMatrix(getProjection());    
-    shadow_shader->setViewMatrix(getView() ); 
-
-    glViewport(0,0, m_directional_buffer->getWidth() ,m_directional_buffer->getHeight());
-    glClearColor(1000,0,0,0);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_FRONT);
-    
-
-  }
-
-}
-
 void Light::bindForShadowRenderDirectional(RenderBaseShader * shadow_shader)
 {
-  if( m_type == LIGHT_DIRECTIONAL)
-  {  
-    
+  if(  ( m_type == LIGHT_SPOT) || ( m_type == LIGHT_DIRECTIONAL) )
+  {     
     shadow_shader->use();
     m_directional_buffer->bindForInput();
-   
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
     glPolygonOffset(0.01f,0.01f);
@@ -201,13 +174,11 @@ void Light::bindForShadowRenderDirectional(RenderBaseShader * shadow_shader)
     glViewport(0,0, m_directional_buffer->getWidth() ,m_directional_buffer->getHeight());
     glClearColor(1000,0,0,0);
     glEnable(GL_CULL_FACE);
-    glCullFace(GL_FRONT);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+    glCullFace(GL_FRONT);    
 
   }
+
 }
-  
 void Light::bindForShadowRenderPoint( RenderBaseShader * point_shadow_shader, int iteration)
 {
  
@@ -264,7 +235,7 @@ void Light::bindForShadowRenderPoint( RenderBaseShader * point_shadow_shader, in
 
 void Light::unbindFromShadowRender()
 {
-  if( m_type == LIGHT_SPOT)
+  if( ( m_type == LIGHT_SPOT) || ( m_type == LIGHT_DIRECTIONAL) )
   {
     glFlush();
     glFinish();
@@ -272,16 +243,6 @@ void Light::unbindFromShadowRender()
     glDisable(GL_CULL_FACE);
     m_directional_buffer->unbindFromInput();
     glViewport(0,0, Engine::getWindowWidth(),Engine::getWindowHeight());
-  }
-  if( m_type == LIGHT_DIRECTIONAL)
-  {
-    glFlush();
-    glFinish();
-    glPolygonOffset(0.0f,0.0f);
-    glDisable(GL_CULL_FACE);
-    m_directional_buffer->unbindFromInput();
-    glViewport(0,0, Engine::getWindowWidth(),Engine::getWindowHeight());
-
   }
   if( m_type == LIGHT_POINT)
   {    
@@ -295,19 +256,7 @@ void Light::unbindFromShadowRender()
 }
 void Light::bindForRender(RenderShader * render_shader)
 {
-  if( getType() == LIGHT_SPOT)
-  {
-    glm::mat4 biasMatrix(
-    0.5, 0.0, 0.0, 0.0,
-    0.0, 0.5, 0.0, 0.0,
-    0.0, 0.0, 0.5, 0.0,
-    0.5, 0.5, 0.5, 1.0
-    );
-    int num = render_shader->setShadowMap(biasMatrix * getProjection() * getView());
-    m_shadow_index = num;
-    m_directional_buffer->bindForOutput(num);
-  }
-  if( getType() == LIGHT_DIRECTIONAL)
+  if( ( getType() == LIGHT_SPOT) || ( m_type == LIGHT_DIRECTIONAL) )
   {
     glm::mat4 biasMatrix(
     0.5, 0.0, 0.0, 0.0,
@@ -333,11 +282,7 @@ glm::mat4 Light::getView()
    return glm::lookAt(m_position, m_position +  m_direction, glm::vec3(0,1,0));
   else
   {
-   // glm::quat rot(m_direction);
-   // glm::mat4 m = glm::mat4_cast(rot);
-   // return m;
     glm::vec3 cp = Engine::getScene()->getCamera()->getPosition();
-   // cp += glm::vec3(0,50,0);
     return glm::lookAt(cp,cp +  m_direction, glm::vec3(0,1,0));
   } 
 }

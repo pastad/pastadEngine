@@ -3,7 +3,6 @@
 #include "RessourceManager.h"
 #include "RenderShader.h"
 #include "RenderBaseShader.h"
-#include "PointShadowShader.h"
 #include "Model.h"
 #include "Object.h"
 #include "Camera.h"
@@ -87,17 +86,17 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
     if( (*it)->getShadowRefresh() )
     {
       //Engine::getLog()->log("Scene", "re-render light");
-      if( ( (*it)->getType() == LIGHT_SPOT )  )
+      if( (*it)->getType() == LIGHT_SPOT )  
       {
         shadow_shader->use();
-        (*it)->bindForShadowRenderSpot(shadow_shader);
+        (*it)->bindForShadowRenderDirectional(shadow_shader);
 
         for(std::map<std::string, Model *>::iterator it = m_models.begin(); it != m_models.end();it++)
           it->second->render(shadow_shader, false);
 
         (*it)->unbindFromShadowRender();
       }
-       if( ( (*it)->getType() == LIGHT_DIRECTIONAL )  )
+      if( (*it)->getType() == LIGHT_DIRECTIONAL )  
       {
         shadow_shader->use();
         (*it)->bindForShadowRenderDirectional(shadow_shader);

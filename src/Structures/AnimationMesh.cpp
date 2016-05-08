@@ -4,7 +4,6 @@
 
 #include "RenderShader.h"
 #include "RenderBaseShader.h"
-#include "PointShadowShader.h"
 
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>

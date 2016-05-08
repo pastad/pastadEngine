@@ -9,7 +9,6 @@
 #include "AnimationMesh.h"
 #include "RenderShader.h"
 #include "RenderBaseShader.h"
-#include "PointShadowShader.h"
 #include "RessourceManager.h"
 
 #include <assimp/scene.h>
