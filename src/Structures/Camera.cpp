@@ -21,6 +21,7 @@ Camera::Camera(float x, float y, float z): m_pos(x,y,z),m_rotation_allowed(false
   m_rot_1 = 90.0f;
   m_speed = 10.0f;
   m_rotation_speed = 0.2f;  
+  m_exposure = 1.0f;
   recalculateMatrices();
 }
 
@@ -164,4 +165,12 @@ void Camera::setRotationAllowed()
 void Camera::setRotationNotAllowed()
 {
   m_rotation_allowed = false;
+}
+float Camera::getExposure()
+{
+  return m_exposure;
+}
+void Camera::setExposure(float v)
+{
+  m_exposure  = v;
 }

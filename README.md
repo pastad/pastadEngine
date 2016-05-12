@@ -20,8 +20,11 @@ Structural:
   - screen space culling
 
 Graphical:
-  - animation
   - water
+  - ambient oclusion
+  - bloom effect
+  - HDR
+  - 3d picking
   - terrain
   - OIT
   - material refactor and improvement

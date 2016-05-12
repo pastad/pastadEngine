@@ -95,3 +95,13 @@ void Object::advanceAnimation(float delta)
     //std::cout << m_animation_time<<std::endl;
   }
 }
+
+void Object::setId(int id)
+{
+  m_id = id;
+}
+
+int Object::getId()
+{
+  return m_id;
+}

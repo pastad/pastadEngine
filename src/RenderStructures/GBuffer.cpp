@@ -73,3 +73,27 @@ void GBuffer::bindForOutput()
   m_color_texture->bind(2);
   m_material_texture->bind(3);
 }
+
+int GBuffer::pickObjectAtCenter()
+{
+  glm::vec2 pos( Engine::getWindowWidth() / 2,Engine::getWindowHeight()/2);
+  return pickObjectAt(pos);
+}
+
+int GBuffer::pickObjectAt(glm::vec2 pos)
+{
+  int size = Engine::getWindowWidth() *  Engine::getWindowHeight();
+  GLfloat *texData = new GLfloat[ size*3];
+
+  int p  = pos.y * Engine::getWindowWidth() *3 ;
+  p+= pos.x * 3;
+  p+=1;
+
+  m_material_texture->bind(0);
+  glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_FLOAT, texData);
+  int ret = texData[p];
+
+  delete [] texData;
+  return ret;
+}
+

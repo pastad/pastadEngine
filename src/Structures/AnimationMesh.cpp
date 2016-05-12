@@ -72,7 +72,6 @@ AnimationMesh::AnimationMesh(const aiMesh*mesh, int mat_index)
       float Weight  = mesh->mBones[i]->mWeights[j].mWeight;
       model.m_bones[VertexID].addBoneData(idx, Weight);
     }
-    //std::cout <<i<<" Name:"<<std::string(mesh->mBones[i]->mName.data) <<" Weights: "<< mesh->mBones[i]->mNumWeights<<std::endl;
   }
 
   initMesh(model);  

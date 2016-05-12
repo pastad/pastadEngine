@@ -51,6 +51,9 @@ public:
   float getAnimationTime();
   void advanceAnimation(float delta);
 
+  // id getter setter
+  void setId(int id);
+  int getId();
 
   // returns the identifier of the belonging model
   std::string getIdentifier();
@@ -79,6 +82,9 @@ private:
 
   // the duration of the animation
   float m_animation_time = 0.0f;
+
+  // the identificator of the object
+  unsigned int m_id;
 
 };
 

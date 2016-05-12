@@ -47,6 +47,7 @@ public:
 	void renderPassLight();
 	void renderPassPostProcess();
 	void renderPassShadow();
+	void renderPassLightBlur();
 
 	// renders the ui set to the engine
 	void renderUI();
@@ -62,6 +63,15 @@ public:
 
 	// sets a shading technique property
 	void setShadowTechnique(ShadowTechniqueType type);
+
+	// reloads the shaders
+	bool refreshShaders();
+
+	// returns the object at the center
+	Object * pickObjectAtCenter();
+
+	// returns object at position
+	Object * pickObjectAt(glm::vec2 p);
 	
 
 private:
@@ -102,11 +112,20 @@ private:
 	// buffer for the fxaa step
 	RenderBuffer * m_pp_buffer;
 
+	// buffer for the light texture
+	RenderBuffer * m_light_buffer;
+
+	// buffer for the blurring texture
+	RenderBuffer * m_blur_buffer;
+
 	// the jitter texture to smooth shadows
 	JitterTexture * m_jitter;
 
 	// true if standard shadows are enabled
 	bool m_shadows_standard_enabled;
+
+	// true if hdr is set
+	bool m_enable_hdr;
 
 	// starts the rendering cycle
 	void startRender();

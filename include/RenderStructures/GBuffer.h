@@ -27,6 +27,9 @@ public:
     void unbindFromInput();
     void bindForOutput();
 
+    int pickObjectAt(glm::vec2 pos);
+    int pickObjectAtCenter();
+
 private:
 
     // the handle for the buffer

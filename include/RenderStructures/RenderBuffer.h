@@ -26,7 +26,10 @@ public:
   void bindForInput();
   void unbindFromInput();
   void bindForOutput();
+  void bindForOutput(unsigned int unit);
 
+  // computes the luminance for HDR
+  float getAverageLuminance();
 
 private:
 

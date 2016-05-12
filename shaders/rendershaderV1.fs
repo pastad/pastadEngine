@@ -60,6 +60,8 @@ uniform int NumPointLights;
 uniform vec3 CameraPosition;
 uniform int MaterialIndex;
 
+uniform int ObjectId;
+
 // MATERIAL -----------------------------------------------------------
 
 const int MAX_NUM_MATERIALS =  20;
@@ -137,14 +139,24 @@ float calcDirShadowPCF(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap)
   vec4 ShadowCoord = shadowMat * vec4(pos,1);  
   float sum = 1.0;
 
+  vec2 texelSize = 1.0 / textureSize(shadowMap, 0); 
+
   if(ShadowCoord.z  >= 0)
   {    
     sum = 0.0;
     sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(-1,-1));
     sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(1,-1));
     sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(-1,1));
-    sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(1,1));
+    sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(1,1));    
     sum *= 0.25; 
+   // float sum2 = 0.0;
+    //sum2 += textureProjOffset(shadowMap, ShadowCoord,ivec2(-2,-2)) *0.5;
+    //sum2 += textureProjOffset(shadowMap, ShadowCoord,ivec2(2,-2))*0.5;
+    //sum2 += textureProjOffset(shadowMap, ShadowCoord,ivec2(-2,2))*0.5;
+    //sum2 += textureProjOffset(shadowMap, ShadowCoord,ivec2(2,2))*0.5;    
+    //sum2 *= 0.25; 
+    //sum+= sum2;
+
     //if(sum < 1.0)
     //  sum = 0.5;
     //if(sum > 1.0)
@@ -157,7 +169,7 @@ float calcDirShadowRandomSampling(vec3 pos,mat4 shadowMat,sampler2DShadow shadow
 {
   float sum = 0.0;
   float ergeb = 1.0;
-  float softness =  2.0 / 2048.0; // lower ->lower radius
+  float softness =  2.0 / 4096.0; // lower ->lower radius
   int sizeX = 4;
   int sizeY = 8;
   int sizeZ = 8; 
@@ -220,11 +232,11 @@ float calcSingleDirectionalShadow(vec3 pos,mat4 shadowMat,sampler2DShadow shadow
       sum = calcDirShadowRandomSampling(pos,shadowMat, shadowMap);
     }
     if(EnableShadows == 1)
-    {
-      if(ShadowCoord.z + 0.001 >= 0)
+    { 
+      if(ShadowCoord.z  >= 0)
       { 
         vec4 ShadowCoord = shadowMat * vec4(pos,1);  
-        sum = textureProj(shadowMap, ShadowCoord);        
+        sum = textureProj(shadowMap, ShadowCoord );        
       }
     }
     
@@ -236,7 +248,7 @@ float calcSingleDirectionalShadow(vec3 pos,mat4 shadowMat,sampler2DShadow shadow
 float calcPointShadowPCF(vec3 lightPos,vec3 fragPos,samplerCube sam)
 {
   float shadow = 1.0;
-  float step = 0.01; // do not go higher 
+  float step = 0.005; // do not go higher 
   for(float x = -step; x < step; x += step  )
   {
     for(float y = -step; y < step; y += step )
@@ -474,7 +486,7 @@ void pass1()
   PositionData = Position;
   NormalData = normalize(Normal);
   ColorData = vec3(color);
-  MaterialData = vec3(MaterialIndex,0,0);
+  MaterialData = vec3(MaterialIndex,ObjectId,0);
 }
 // PASS 1 END    -----------------------------------------------------
 

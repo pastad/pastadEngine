@@ -21,6 +21,7 @@ public:
   using GUI::render;  
   using GUI::registerButtonPressedCallback;
   using GUI::checkButtonPressed;
+  using GUI::setInactive;
 
 private:
 
@@ -31,6 +32,9 @@ private:
   static Button * m_tb_fxaa;
   static Text * m_txt_fxaa;
 
+  static Button * m_tb_hdr;
+  static Text * m_txt_hdr;
+
   static Button * m_tb_shadow_pcf;
   static Text * m_txt_shadow_pcf;
 
@@ -39,6 +43,9 @@ private:
 
   static Button * m_tb_shadow_standard;
   static Text * m_txt_shadow_standard;
+
+  static Button * m_btn_refresh_shader;
+  static Text * m_txt_refresh_shader;
 
 
   // callback four mouse button press

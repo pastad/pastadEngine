@@ -36,11 +36,12 @@ void main()
     BoneTransform     += Bones[BoneIDs[3]] * Weights[3];
     BTrans =BoneTransform;
   }
+
     
 
   mat4 MVMatrix = ViewMat* ModelMat;
   mat4 MVP      = ProjectionMat * MVMatrix ;  
   vec4 Position =  MVP * BTrans* vec4(VertexPosition, 1.0f);
-  gl_Position =  Position;
+  gl_Position =  Position  ;
  
 }

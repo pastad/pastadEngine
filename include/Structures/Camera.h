@@ -52,6 +52,10 @@ public:
     // rotation setters
     void setRotationAllowed();
     void setRotationNotAllowed();
+
+    // getter setter for exposure
+    float getExposure();
+    void setExposure(float value);
    
 
 private:
@@ -79,6 +83,9 @@ private:
 
     // true if camera is allowed to rotate with mouse
     bool m_rotation_allowed;
+
+    // holds the exposure for the camera
+    float m_exposure;
 };
 
 #endif // CAMERA_H

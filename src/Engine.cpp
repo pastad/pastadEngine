@@ -29,6 +29,10 @@ float Engine::m_time_last;
 std::vector<GUI *> Engine::m_guis;
 unsigned int Engine::m_guis_id = 0;
 EngineGUI * Engine::m_engine_gui;
+bool Engine::m_debug_enabled;
+float Engine::m_time_last_render;
+float Engine::m_render_update_delta= 0.0f;
+bool Engine::m_render_update_needed;
 
 
 Engine::Engine()
@@ -40,10 +44,11 @@ Engine::~Engine()
 {		
 }
 
-bool Engine::initialize(unsigned int width, unsigned int height, unsigned int system_flags)
+bool Engine::initialize(unsigned int width, unsigned int height, unsigned int system_flags, bool debug)
 {
 	m_win_width = width;
-	m_win_height = height;
+	m_win_height = height;	
+	m_debug_enabled = debug;
 	m_current_time_sample = 0;
 	Engine::m_time_delta = 0.0f;
 	Engine::m_time_last = -1.0f;
@@ -128,6 +133,8 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
   m_engine_gui =  new EngineGUI();
   if(!m_engine_gui->initialize())
   	return false;
+  if(!m_debug_enabled)
+  	m_engine_gui->setInactive();
 
 	m_initialized = true;
 	m_log->log("Engine", "initialized");
@@ -217,29 +224,38 @@ void Engine::timeUpdate()
 	m_time_samples[m_current_time_sample] = now;
 
   if(m_time_last == -1.0f)
+  {
   	m_time_last = now;
+  	m_time_last_render = now;
+  }
   else
   {  	
   	m_time_delta = now - m_time_last;
   	m_time_last = now;
   }
 
-  // smooth the FPS for better representation
-  m_current_time_sample = (m_current_time_sample + 1) % NUM_TIME_SAMPLES;
+  if( (now - m_time_last_render ) > m_render_update_delta)
+  {  	
+  	m_render_update_needed = true;
+  	m_time_last_render = now;  
 
-  if( m_current_time_sample == 0 ) 
-  {
-    float sample_sum = 0.0f;
-    for( int i = 0; i < NUM_TIME_SAMPLES-1 ; i++ )
-      sample_sum += m_time_samples[i + 1] - m_time_samples[i];
-    float fps = NUM_TIME_SAMPLES / sample_sum;
+	  // smooth the FPS for better representation
+	  m_current_time_sample = (m_current_time_sample + 1) % NUM_TIME_SAMPLES;
 
-    std::stringstream ss;
-    
-    ss.precision(4);
-    ss<< "("<< m_win_width<< " x "<< m_win_height << ") FPS: " << fps << "  Delta: " <<m_time_delta;
-    glfwSetWindowTitle(m_window, ss.str().c_str());
-  }
+	  if( m_current_time_sample == 0 ) 
+	  {
+	    float sample_sum = 0.0f;
+	    for( int i = 0; i < NUM_TIME_SAMPLES-1 ; i++ )
+	      sample_sum += m_time_samples[i + 1] - m_time_samples[i];
+	    float fps = NUM_TIME_SAMPLES / sample_sum;
+
+	    std::stringstream ss;
+	    
+	    ss.precision(4);
+	    ss<< "("<< m_win_width<< " x "<< m_win_height << ") FPS: " << fps << "  Delta: " <<m_time_delta;
+	    glfwSetWindowTitle(m_window, ss.str().c_str());
+	  }
+	}
 }
 
 bool Engine::running()
@@ -261,7 +277,12 @@ void Engine::render()
 {
 	if(m_initialized)
 	{
-		m_render_system->render();
+		if(m_render_update_needed)
+		{
+			m_render_system->render();
+			m_render_update_needed = false;
+		}
+	
 	}
 }
 
@@ -398,3 +419,41 @@ void Engine::setShadowTechnique(ShadowTechniqueType type)
 {
 	m_render_system->setShadowTechnique(type);
 }	
+
+bool Engine::isDebugEnabled()
+{
+	return m_debug_enabled;
+}
+
+
+void Engine::refreshShaders()
+{
+	m_render_system->refreshShaders();
+}
+
+void Engine::setFPS(float fps)
+{
+	m_render_update_delta = 1.0f/fps;
+}
+
+float Engine::getTimeDelta()
+{
+	return m_time_delta;
+}
+
+
+
+// passers
+
+
+
+
+Object * Engine::pickObjectAtCenter()
+{
+	return m_render_system->pickObjectAtCenter();
+}
+
+Object * Engine::pickObjectAt(glm::vec2 p)
+{
+	return m_render_system->pickObjectAt(p);
+}

@@ -80,9 +80,10 @@ void Model::render(RenderBaseShader * render_shader, std::vector<Object *> objec
       {
         if( with_material )
           m_materials.at((*it)->getMaterialIndex())->bind(0, (RenderShader *) render_shader);     
-        for( std::vector<glm::mat4>::iterator mat_it = matrices.begin(); mat_it != matrices.end();mat_it++ )
+       for(std::vector<Object *>::iterator it2 = objects.begin(); it2 != objects.end();it2++)
         {
-          render_shader->setNotInstanced((*mat_it) );
+          render_shader->setNotInstanced( (*it2)->getModelMatrix() );
+          render_shader->setIndentifcation((*it2)->getId());
           (*it)->render();
         }
       }

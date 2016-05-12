@@ -19,6 +19,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/ImageShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/SkyboxShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/PostProcessingShader.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Terrain.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Scene.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Camera.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Transform.cpp
@@ -46,6 +47,10 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RessourceManager.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Helper.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/external/gl_core_4_.c
+
+
+   ${CMAKE_CURRENT_SOURCE_DIR}/game/src/Game.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/game/src/Player.cpp
    
 )
 set(HEADERS
@@ -64,6 +69,7 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/ImageShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/SkyboxShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/PostProcessingShader.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Terrain.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Scene.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Camera.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Transform.h
@@ -92,6 +98,9 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Helper.h
    ${CMAKE_CURRENT_SOURCE_DIR}/external/gl_core_4_.h
 
+   ${CMAKE_CURRENT_SOURCE_DIR}/game/include/Game.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/game/include/Player.h
+
 )
 
 find_package(OpenGL REQUIRED)
@@ -103,7 +112,11 @@ ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures
 ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures
 ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI
-${CMAKE_CURRENT_SOURCE_DIR}/external )
+${CMAKE_CURRENT_SOURCE_DIR}/external
+
+
+${CMAKE_CURRENT_SOURCE_DIR}/game/include
+ )
 
 LINK_DIRECTORIES(${GLFW_LIBRARY_DIR} ${FREETYPE_LIBRARY_DIRS} ${ASSIMP_LIBRARY_DIR} ${SOIL_LIBRARY_DIR})
 

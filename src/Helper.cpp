@@ -1,6 +1,7 @@
 #include "Helper.h"
 
 #include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
 #include "Engine.h"
 
 
@@ -44,4 +45,12 @@ glm::mat4 Helper::toGlm(aiMatrix3x3 a)
   to[0][3] = (GLfloat)0; to[1][3] = (GLfloat)0;
   to[2][3] = (GLfloat)0; to[3][3] = (GLfloat)1;
   return to;
+}
+
+
+float Helper::gauss(float x, float sigma2 )
+{
+  double coeff = 1.0 / (glm::two_pi<double>() * sigma2);
+    double expon = -(x*x) / (2.0 * sigma2);
+    return (float) (coeff*exp(expon));
 }

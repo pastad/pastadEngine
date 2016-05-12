@@ -26,11 +26,23 @@ public:
   // sets the scale to scale the texture in the shader
   void setTextureScaling(glm::vec2 scale);
 
+  // sets the average luminance for HDR
+  void setAverageLuminance(float value);
+
+  // sets the gauss size for bluring
+  void setGaussSize(unsigned int size);
+
+  // sets the exposure for HDR
+  void setExposure(float value);
+
   //sets the basic matrices
   void setIdentityMatrices();
 
   // pass true if fxaa should be enabled
   void setFXAA(bool enable);
+
+  // pass true if HDR should be enabled
+  void setHDR(bool enable);
 
   // binds the shader  
   void use();

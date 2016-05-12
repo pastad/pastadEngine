@@ -4,6 +4,7 @@
 #include "gl_core_4_.h"
 #include <GLFW/glfw3.h>
 #include <vector>
+#include <glm/glm.hpp>
 
 #define NUM_TIME_SAMPLES 40
 
@@ -19,6 +20,7 @@ class IOSubsystem;
 class PhysicSubsystem;
 class GUI;
 class EngineGUI;
+class Object;
 
 enum SubsystemType
 {
@@ -28,7 +30,8 @@ enum SubsystemType
 };
 enum PostprocessType
 {
-	PP_FXAA = 1
+	PP_FXAA = 1,
+	PP_HDR = 2
 };
 enum ShadowTechniqueType
 {	
@@ -47,7 +50,7 @@ public:
 	~Engine();
 
 	// Initializes Engine
-	static bool initialize(unsigned int width, unsigned int height, unsigned int types);
+	static bool initialize(unsigned int width, unsigned int height, unsigned int types, bool debug_enable);
 
 	// Shuts down Engine and it's components
 	static void shutDown();	
@@ -99,6 +102,28 @@ public:
 	// sets a shadow property
 	static void setShadowTechnique(ShadowTechniqueType type);
 
+	// returns true if debugging mode is enabled
+	static bool isDebugEnabled();
+
+	// refreshes the shaders
+	static void refreshShaders();
+
+	// sets the FPS that shoul be rendered
+	static void setFPS(float);
+
+	// returns the time difference between updates
+	static float getTimeDelta();
+
+
+	// passing from subsystems
+
+	// returns object at screen center
+	static Object * pickObjectAtCenter();
+
+	// returns object at screen po
+	static Object * pickObjectAt(glm::vec2 p);
+
+
 private:
 
 	// indicates if Engine is initialized
@@ -141,6 +166,18 @@ private:
 	// the time difference between two updates and the last time
 	static float m_time_delta;
 	static float m_time_last;
+
+	// the time of the last render;
+	static float m_time_last_render;
+
+	// true if rerender needed
+	static bool m_render_update_needed;
+
+	// the time between renders
+	static float m_render_update_delta ;
+
+	// true if debug should be enabled
+	static bool m_debug_enabled;
 
 	// starts the subsystems
 	static bool startUpSubsystems();

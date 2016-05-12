@@ -15,7 +15,6 @@
 
 class RenderShader;
 class RenderBaseShader;
-class PointShadowShader;
 
 
 class AnimationMesh

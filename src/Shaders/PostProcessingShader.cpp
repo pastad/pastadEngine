@@ -2,6 +2,7 @@
 
 #include "Engine.h"
 #include "Log.h"
+#include "Helper.h"
 
 #include "glm/gtx/string_cast.hpp"
 #include "glm/ext.hpp"
@@ -37,15 +38,19 @@ void PostProcessingShader::setRenderPass(unsigned int pass)
   bind();
   if(pass == 1)
   {
-    setRenderPassSubroutine("pass1");
+    setRenderPassSubroutine("passStandard");
   }
   if(pass == 2)
   {
-    setRenderPassSubroutine("pass2");
+    setRenderPassSubroutine("passBright");
   }
   if(pass == 3)
   {
-    setRenderPassSubroutine("pass3");
+    setRenderPassSubroutine("passBlur");
+  }
+  if(pass == 4)
+  {
+    setRenderPassSubroutine("passBlur2");
   }
 
   checkUniformError("set Subroutine");
@@ -79,4 +84,41 @@ void PostProcessingShader::setFXAA(bool enable)
     setUniform("EnableFXAA",1);
   else
     setUniform("EnableFXAA",0);
+}
+void PostProcessingShader::setHDR(bool enable)
+{
+  if(enable)
+    setUniform("EnableHDR",1);
+  else
+    setUniform("EnableHDR",0);
+}
+
+void PostProcessingShader::setAverageLuminance(float value)
+{
+  setUniform("AverageLuminance",value);    
+  checkUniformError("AverageLuminance set");
+}
+void PostProcessingShader::setExposure(float value)
+{
+  setUniform("Exposure",value);    
+  checkUniformError("Exposure set");
+}
+void PostProcessingShader::setGaussSize(unsigned int size)
+{
+  bind();
+  float weights[size];
+
+  float sum =0.0f;
+  for(int count = 1; count< size+1;count++)
+  {
+    weights[count-1] = Helper::gauss(float(count), 25.0f);
+    sum += 2 * weights[count-1];
+  }
+  for(int count = 1; count< size+1;count++)
+  {
+    std::stringstream ss, ssi;
+    ss << "GaussKernel["<<count -1<<"]";
+    setUniform(ss.str(), weights[count-1]/sum);    
+    checkUniformError("GaussKernel set");
+  }
 }

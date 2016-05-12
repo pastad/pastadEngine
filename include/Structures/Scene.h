@@ -14,11 +14,11 @@ class Object;
 class Camera;
 class RenderShader;
 class RenderBaseShader;
-class PointShadowShader;
 class Light;
 class Skybox;
 class SkyboxShader;
 class SceneTreeElement;
+class Terrain;
 
 class Scene
 {
@@ -32,7 +32,6 @@ public:
 
   // update function | requires the time difference
   void update(float delta);
-
 
   //renders the scene
 	void render(RenderShader * render_shader, SkyboxShader * skybox_shader);
@@ -66,11 +65,20 @@ public:
   Object * addObject(std::string  path, glm::vec3 position);
   Object * addObjectInstanced(std::string path, glm::vec3 position);
 
+  // adds a terrain to the scene
+  Terrain * addTerrain();
+
   // adds a light to the scene
   Light * addLight();
 
   // returns the set camera
   Camera * getCamera();
+
+  // retrieves the object with the id
+  Object * getObject(int id);
+
+
+  
 
 private:
 
@@ -95,11 +103,20 @@ private:
   // the root of the scene tree
   SceneTreeElement * m_tree_root = nullptr;
 
+  // holds a terrain set for the scene
+  Terrain * m_terrain;
+
+  // number of objects in the scene for the ids
+  int m_object_counter = 1;
+
   // internal addObject request handling function
   Object * addObject(std::string  path, glm::vec3 position, bool instanced);
 
   // updates the animated objects
   void update(SceneTreeElement * element,  float delta);
+
+  // returns a new object id
+  int getObjectIdentification();
 
 
 

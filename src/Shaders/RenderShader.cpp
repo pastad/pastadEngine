@@ -352,4 +352,3 @@ void RenderShader::setShadows(ShadowTechniqueType tech)
   }
   checkUniformError("set standard shadows");
 }
-

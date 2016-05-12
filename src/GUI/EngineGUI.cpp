@@ -16,6 +16,9 @@ Text * EngineGUI::m_txt_camera;
 Button * EngineGUI::m_tb_fxaa;
 Text * EngineGUI::m_txt_fxaa;
 
+Button * EngineGUI::m_tb_hdr;
+Text * EngineGUI::m_txt_hdr;
+
 Button * EngineGUI::m_tb_shadow_pcf;
 Text * EngineGUI::m_txt_shadow_pcf;
 
@@ -24,6 +27,9 @@ Text * EngineGUI::m_txt_shadow_standard;
 
 Button * EngineGUI::m_tb_shadow_rs;
 Text * EngineGUI::m_txt_shadow_rs;
+
+Button * EngineGUI::m_btn_refresh_shader;
+Text * EngineGUI::m_txt_refresh_shader;
 
 EngineGUI::EngineGUI() :GUI( 0 )
 {  
@@ -38,6 +44,19 @@ bool EngineGUI::initialize()
  
   bt->intitialize("resources/expand.png","",glm::vec2(0.0f,Engine::getWindowHeight()-40.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "expand");
+
+  m_btn_refresh_shader = GUI::getButton();
+  m_btn_refresh_shader->intitialize("resources/btn.png","",glm::vec2(20.0f,Engine::getWindowHeight()-70.0f),glm::vec2(0.5f,0.5f),
+    glm::vec3(0,0,0), "refresh_shaders");
+  m_btn_refresh_shader->setInactive();
+
+
+  m_txt_refresh_shader = GUI::getText();
+  m_txt_refresh_shader->setPosition(glm::vec2(40.0f,Engine::getWindowHeight()-70.0f));
+  m_txt_refresh_shader->setScale(0.2f);
+  m_txt_refresh_shader->setColor(glm::vec3(0,0,0));
+  m_txt_refresh_shader->setText("Reload Shaders");
+  m_txt_refresh_shader->setInactive();
 
   m_back_panel = GUI::getImage();
   m_back_panel->load("resources/panel.png");
@@ -70,6 +89,20 @@ bool EngineGUI::initialize()
   m_txt_fxaa->setColor(glm::vec3(0,0,0));
   m_txt_fxaa->setText("FXAA");
   m_txt_fxaa->setInactive();
+
+  m_tb_hdr = GUI::getButton();
+  m_tb_hdr->intitializeWithToggle("resources/toggle_on.png","resources/toggle_off.png",
+    glm::vec2(20.0f,Engine::getWindowHeight()-420.0f),glm::vec2(0.5f,0.5f),
+    "hdr", false);
+  m_tb_hdr->setInactive();
+
+  m_txt_hdr = GUI::getText();
+  m_txt_hdr->setPosition(glm::vec2(40.0f,Engine::getWindowHeight()-420.0f));
+  m_txt_hdr->setScale(0.2f);
+  m_txt_hdr->setColor(glm::vec3(0,0,0));
+  m_txt_hdr->setText("HDR");
+  m_txt_hdr->setInactive();
+
 
   m_tb_shadow_pcf = GUI::getButton();
   m_tb_shadow_pcf->intitializeWithToggle("resources/toggle_on.png","resources/toggle_off.png",
@@ -130,12 +163,16 @@ void EngineGUI::mouseButtonCallback(Button * btn)
     m_txt_camera->setActive();
     m_tb_fxaa->setActive();
     m_txt_fxaa->setActive();
+    m_tb_hdr->setActive();
+    m_txt_hdr->setActive();
     m_tb_shadow_pcf->setActive();
     m_txt_shadow_pcf->setActive();
     m_tb_shadow_standard->setActive();
     m_txt_shadow_standard->setActive();
     m_tb_shadow_rs->setActive();
     m_txt_shadow_rs->setActive();
+    m_btn_refresh_shader->setActive();
+    m_txt_refresh_shader->setActive();
   }
   else
   {
@@ -149,6 +186,8 @@ void EngineGUI::mouseButtonCallback(Button * btn)
       m_tb_camera->setInactive();
       m_txt_camera->setInactive();
       m_tb_fxaa->setInactive();
+      m_txt_hdr->setInactive();
+      m_tb_hdr->setInactive();
       m_txt_fxaa->setInactive();
       m_tb_shadow_pcf->setInactive();
       m_txt_shadow_pcf->setInactive();
@@ -156,7 +195,13 @@ void EngineGUI::mouseButtonCallback(Button * btn)
       m_txt_shadow_standard->setInactive();
       m_tb_shadow_rs->setInactive();
       m_txt_shadow_rs->setInactive();
+      m_btn_refresh_shader->setInactive();
+      m_txt_refresh_shader->setActive();
     }
+  }
+  if(btn->getDescriptor() == "refresh_shaders")
+  {
+    Engine::refreshShaders();
   }
   if(btn->getDescriptor() == "camera_toggle")
   {
@@ -181,6 +226,18 @@ void EngineGUI::mouseButtonCallback(Button * btn)
       Engine::setPostProcessing(PP_FXAA,false);
     }
   }
+  if(btn->getDescriptor() == "hdr")
+  {
+    if(btn->isToggled())
+    {
+      Engine::setPostProcessing(PP_HDR,true);
+    }
+    else
+    {
+      Engine::setPostProcessing(PP_HDR,false);
+    }
+  }
+
   if(btn->getDescriptor() == "shadowPCF")
   {
     if(btn->isToggled())

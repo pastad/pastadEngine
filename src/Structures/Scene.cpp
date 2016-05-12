@@ -11,12 +11,14 @@
 #include "Log.h"
 #include "Skybox.h"
 #include "SkyboxShader.h"
+#include "Terrain.h"
 #include "SceneTreeElement.h"
 
 #include <iostream>
 
 Scene::Scene()
 {
+  m_object_counter = 1;
   m_camera = new Camera(0,2,0);
   m_skybox = nullptr;
   m_tree_root= new SceneTreeElement(500, glm::vec3(0,0,0));
@@ -75,6 +77,9 @@ void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader)
     }
   }
 
+  if(m_terrain != nullptr)
+    m_terrain->render();
+
   renderSkybox(skybox_shader);
 
 }
@@ -94,6 +99,9 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
         for(std::map<std::string, Model *>::iterator it = m_models.begin(); it != m_models.end();it++)
           it->second->render(shadow_shader, false);
 
+        if(m_terrain != nullptr)
+          m_terrain->render();
+
         (*it)->unbindFromShadowRender();
       }
       if( (*it)->getType() == LIGHT_DIRECTIONAL )  
@@ -103,6 +111,9 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
 
         for(std::map<std::string, Model *>::iterator it = m_models.begin(); it != m_models.end();it++)
           it->second->render(shadow_shader, false);
+
+        if(m_terrain != nullptr)
+          m_terrain->render();
 
         (*it)->unbindFromShadowRender();
       }
@@ -114,6 +125,9 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
           (*it)->bindForShadowRenderPoint(point_shadow_shader,iteration);
           for(std::map<std::string, Model *>::iterator it = m_models.begin(); it != m_models.end();it++)
             it->second->render((RenderBaseShader *)point_shadow_shader, false);
+          if(m_terrain != nullptr)
+            m_terrain->render();
+
           (*it)->unbindFromShadowRender(); 
         }            
       }
@@ -174,6 +188,7 @@ Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced)
 {
   Model * m = RessourceManager::loadModel(path, instanced);
   Object * obj = m->getInstance();
+  obj->setId(getObjectIdentification());
   obj->setPosition(position);
   m_objects.insert(m_objects.end(),obj);
   m_models[path] = m;
@@ -183,6 +198,14 @@ Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced)
   refreshRenderObjects();
 
   return obj;
+}
+
+Terrain * Scene::addTerrain()
+{
+  if(m_terrain == nullptr)
+    m_terrain = new Terrain();
+
+  return m_terrain;
 }
 
 Light * Scene::addLight()
@@ -247,4 +270,21 @@ void Scene::refreshRenderObjects()
 SceneTreeElement * Scene::getSceneRoot()
 {
   return m_tree_root;
+}
+
+int Scene::getObjectIdentification()
+{
+  int id = m_object_counter;
+  m_object_counter++;
+  return id;
+}
+
+Object * Scene::getObject(int id)
+{
+  for(std::vector<Object *>::iterator it = m_objects.begin(); it != m_objects.end(); it++)
+  {
+    if( (*it)->getId() == id)
+      return (*it);
+  }
+  return nullptr;
 }
