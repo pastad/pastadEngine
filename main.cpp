@@ -68,9 +68,11 @@ int main(void)
 
 
     Light * light111 = scene.addLight();
-    light111->setPoint(glm::vec3(2,0,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),0.5f,0.1f,0.09f,0.032f);
-    Light * world_light = scene.addLight();
-    world_light->setDirectional(glm::vec3(0,-1,1), glm::vec3(1,0.95,0.9) ,glm::vec3(1,1,1), glm::vec3(1,1,1),0.3f);
+    light111->setPoint(glm::vec3(2,0,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),0.5f,0.1f,0.09f,0.032f,true);
+    Light * light112 = scene.addLight();
+    light112->setPoint(glm::vec3(2,4,0),glm::vec3(1,0,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),0.5f,0.1f,0.09f,0.032f,true);
+   // Light * world_light = scene.addLight();
+   // world_light->setDirectional(glm::vec3(0,-1,1), glm::vec3(1,0.95,0.9) ,glm::vec3(1,1,1), glm::vec3(1,1,1),0.3f);
 
     scene.setSkybox("models/skybox1/sk1");
 
@@ -88,7 +90,8 @@ int main(void)
     Object * bridge = scene.addObject("game/models/bridge1.obj",glm::vec3(-2,0,15) ); 
 
 
-    Object * ground = scene.addObject("game/models/test_ground.obj", glm::vec3(0,0,0)); 
+    Object * ground = scene.addObject("models/ground.obj", glm::vec3(0,0,0)); 
+    ground->setScale(glm::vec3(10.0f,10.f,10.0f));
 
     Object * gaz = scene.addObject("models/gaz.obj", glm::vec3(10,0,0)); 
 
@@ -96,13 +99,14 @@ int main(void)
     //test_roach->setRotation(glm::vec3(0.0f,90.0f,90.0f));
    // test_roach->setScale(glm::vec3(0.1f,0.1f,0.1f));
 
-    Terrain * terrain =  scene.addTerrain();
+    //Terrain * terrain =  scene.addTerrain();
+    //terrain->generate();
    
     Helper::m_debug_float = 0.0f;
 
     engine.setScene(&scene);
 
-    ground->setPriorityRender();  
+    //ground->setPriorityRender();  
 
     // run the main loop
     while(engine.running())
@@ -119,22 +123,7 @@ int main(void)
           Helper::m_debug_float =0.0f;
       }
 
-      if(IOSubsystem::isKeyPressed('F') )
-      {
-        light111->setPosition( light111->getPosition() + glm::vec3(0.05f,0.0f,0.0f)  );
-      }
-      if(IOSubsystem::isKeyPressed('H') )
-      {
-        light111->setPosition( light111->getPosition() - glm::vec3(0.05f,0.0f,0.0f)  );
-      }
-      if(IOSubsystem::isKeyPressed('T') )
-      {
-        light111->setPosition( light111->getPosition() + glm::vec3(0.0f,0.0f,0.05f)  );
-      }
-      if(IOSubsystem::isKeyPressed('B') )
-      {
-        light111->setPosition( light111->getPosition() - glm::vec3(0.0f,0.0f,0.05f)  );
-      }
+  
       if(IOSubsystem::isKeyPressed('N') )
       {
         if(fox->isVisible())
@@ -145,11 +134,16 @@ int main(void)
       if(IOSubsystem::isKeyPressed('Q') )
       {
         Object * o = Engine::pickObjectAtCenter();
+        Light * l = Engine::pickLightAt(glm::vec2(512,512) );
         if( o  != nullptr)
          std::cout << o->getIdentifier() <<std::endl;
         else
           std::cout << "no object picked" <<std::endl;
+        if( l  != nullptr)
+          std::cout << "light "<<l->getId()<<" picked" <<std::endl;
       }
+
+
       engine.update();
     	engine.render();
     }

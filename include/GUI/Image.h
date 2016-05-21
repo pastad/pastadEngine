@@ -35,9 +35,10 @@ public:
   // sets the scale
   void setScale(glm::vec2 scale);
 
-  // active setters
+  // active setters and getter
   void setActive();
   void setInactive();
+  bool isActive();
 
 protected:
 

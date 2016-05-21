@@ -80,6 +80,31 @@ void Object::move(glm::vec3 direction)
   setPosition( getPosition() + direction  );
 }
 
+void Object::rotate(glm::vec3 delta)
+{
+  glm::vec3 rot = getRotation();
+  rot = glm::vec3( glm::degrees(rot.x),glm::degrees(rot.y),glm::degrees(rot.z)  );
+  rot+=delta;
+  if(rot.x > 360.0f)  
+    rot.x -= 360.0f;
+  
+  if(rot.y > 360.0f)
+    rot.y -= 360.0f;
+  
+  if(rot.z > 360.0f)
+    rot.z -= 360.0f;
+
+  if(rot.x < 0.0f)  
+    rot.x += 360.0f;
+  if(rot.y < 0.0f)  
+    rot.y += 360.0f;
+  if(rot.z < 0.0f)  
+    rot.z += 360.0f;
+
+  setRotation( rot );
+  
+}
+
 float Object::getAnimationTime()
 {  
   return m_animation_time;
@@ -104,4 +129,9 @@ void Object::setId(int id)
 int Object::getId()
 {
   return m_id;
+}
+
+void Object::setModel(glm::mat4 model)
+{
+  m_model_matrix = model;
 }

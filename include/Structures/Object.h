@@ -32,6 +32,9 @@ public:
   // moves the object
   void move(glm::vec3 direction);
 
+  // rotates the object
+  void rotate(glm::vec3 delta);
+
   // priority render getter setters
   void setPriorityRender();
   void unsetPriorityRender();
@@ -54,6 +57,9 @@ public:
   // id getter setter
   void setId(int id);
   int getId();
+
+  // directly sets the model matrix
+  void setModel(glm::mat4 model);
 
   // returns the identifier of the belonging model
   std::string getIdentifier();

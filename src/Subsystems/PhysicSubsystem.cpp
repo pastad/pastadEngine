@@ -57,7 +57,7 @@ void PhysicSubsystem::updateScene(Scene * scene, float delta)
 {
   SceneTreeElement * root = scene->getSceneRoot();
   traverseScene(root, delta);
-  scene->cameraMoved();
+  //scene->cameraMoved();
 }
 
 void PhysicSubsystem::traverseScene( SceneTreeElement * element , float delta)

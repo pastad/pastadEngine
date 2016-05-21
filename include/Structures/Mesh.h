@@ -15,6 +15,7 @@ class Mesh
 {
 public:
   Mesh(const aiMesh*mesh, int mat_index);
+  Mesh(const  IndexedRepresentation& model, int mat_index);
   ~Mesh();
 
   Mesh(const Mesh& other) = delete;

@@ -62,3 +62,7 @@ void Image::setInactive()
 {
   m_active = false;
 }
+bool Image::isActive()
+{
+  return m_active;
+}

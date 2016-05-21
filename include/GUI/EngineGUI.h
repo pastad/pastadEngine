@@ -26,6 +26,7 @@ public:
 private:
 
   static Image * m_back_panel;
+  static Image * m_back_panel_edit;
   static Button * m_tb_camera;
   static Text * m_txt_camera;
 
@@ -46,7 +47,6 @@ private:
 
   static Button * m_btn_refresh_shader;
   static Text * m_txt_refresh_shader;
-
 
   // callback four mouse button press
   static void mouseButtonCallback(Button * btn);

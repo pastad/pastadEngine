@@ -33,6 +33,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Light.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Skybox.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/SceneTreeElement.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/SceneEditor.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RenderStructures/GBuffer.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RenderStructures/DirectionalShadowBuffer.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RenderStructures/PointShadowBuffer.cpp
@@ -51,6 +52,7 @@ set(SOURCE
 
    ${CMAKE_CURRENT_SOURCE_DIR}/game/src/Game.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/game/src/Player.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/game/src/Mob.cpp
    
 )
 set(HEADERS
@@ -83,6 +85,7 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Light.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Skybox.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/SceneTreeElement.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/SceneEditor.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures/GBuffer.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures/DirectionalShadowBuffer.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures/PointShadowBuffer.h
@@ -100,6 +103,7 @@ set(HEADERS
 
    ${CMAKE_CURRENT_SOURCE_DIR}/game/include/Game.h
    ${CMAKE_CURRENT_SOURCE_DIR}/game/include/Player.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/game/include/Mob.h
 
 )
 

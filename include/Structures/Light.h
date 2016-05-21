@@ -11,6 +11,10 @@
 #define MAX_NUM_SPOT_LIGHTS 10
 #define MAX_NUM_DIRECTIONAL_LIGHTS 3
 
+
+#define MAX_NUM_POINT_SHADOWS 10
+#define MAX_NUM_DIRECTIONAL_SHADOWS 10
+
 #define FAR_DIRECTIONAL_SHADOW_BOUND 50 // directional shadow size
 
 enum
@@ -25,6 +29,8 @@ class DirectionalShadowBuffer;
 class PointShadowBuffer;
 class RenderBaseShader;
 class RenderShader;
+class Model;
+class Object;
 
 class Light
 {
@@ -35,11 +41,11 @@ public:
   Light& operator=(const Light& other) = delete;
 
   // light setters        
-  bool setDirectional(glm::vec3 direction, glm::vec3 col_am ,glm::vec3 col_dif, glm::vec3 spec,float intensity);
+  bool setDirectional(glm::vec3 direction, glm::vec3 col_am ,glm::vec3 col_dif, glm::vec3 spec,float intensity, bool enable_shadow);
   bool setPoint(glm::vec3 position, glm::vec3 col_am ,glm::vec3 col_dif, glm::vec3 spec,float intensity,
-                float con ,float lin, float qua );
+                float con ,float lin, float qua , bool enable_shadow);
   bool setSpot(glm::vec3 position, glm::vec3 col_am ,glm::vec3 col_dif, glm::vec3 spec,float intensity,
-                float con ,float lin, float qua, float cutoffAngle, glm::vec3 direction );
+                float con ,float lin, float qua, float cutoffAngle, glm::vec2 rotation , bool enable_shadow);
 
 
   //returns the type of the light
@@ -51,6 +57,9 @@ public:
 
   // sets the position of the light
   void setPosition(glm::vec3 p );
+
+  // moves the light
+  void move(glm::vec3 delta);
 
   // returns the individual color
   glm::vec3 getAmbientColor();
@@ -91,6 +100,19 @@ public:
   void setShadowIndex( unsigned int idx);
   unsigned int getShadowIndex();
 
+  // renders the light as a sphere 
+  void editRender(RenderShader * render_shader);
+
+  // returns the id of the light
+  unsigned int getId();
+
+  // returns true if shadow casting is enabled
+  bool isShadowEnabled();
+
+  // rotation getter setter
+  glm::vec2 getRotation();
+  void rotate(glm::vec2 delta);
+
 
 protected:
 
@@ -99,9 +121,10 @@ private:
   // the ligth type
   unsigned int m_type;
 
-  // position and direction
+  // position and direction and the rotation 
   glm::vec3 m_position;
   glm::vec3 m_direction;
+  glm::vec2 m_rotation;
 
   // light colors
   glm::vec3 m_color_ambient;
@@ -124,6 +147,10 @@ private:
   static unsigned int m_num_point_lights;
   static unsigned int m_num_spot_lights;
   static unsigned int m_num_directional_lights;
+  static unsigned int m_light_index_counter;
+  static unsigned int m_num_directional_shadows;
+  static unsigned int m_num_point_shadows;
+
 
   // the shadow buffer for directional lights
   DirectionalShadowBuffer * m_directional_buffer = nullptr;
@@ -131,8 +158,23 @@ private:
   // the shadow buffer for point lights
   PointShadowBuffer * m_point_buffer = nullptr;
 
+  // true if shadow should be cast
+  bool m_shadow_enabled;
+
   // determines if light should be refreshed
   bool m_refresh_shadow;
+
+  // the id of the light
+  unsigned int m_id;
+
+  // the sphere model and its object
+  Model * m_model;
+  static Object * m_spot_object;
+  static Object * m_point_object;
+
+  // returns the next id of the light numbering
+  unsigned int getNextId();
+
 };
 
 

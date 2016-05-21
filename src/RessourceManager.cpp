@@ -96,3 +96,21 @@ Material * RessourceManager::loadMaterial(std::string dir, aiMaterial* mat)
 
 	return material;
 }
+/*Material * RessourceManager::loadMaterial(std::string dir, std::string name)
+{	
+	Material * material;
+
+	std::map<std::string, Material *>::iterator it = m_materials.find(name);
+	
+	if( it != m_materials.end() )
+	{
+		material = it->second;
+	}
+	else
+	{
+		material =  new Material(name,dir);
+		m_materials[n] = material;
+	}
+
+	return material;
+}*/

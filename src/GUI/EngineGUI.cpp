@@ -10,6 +10,8 @@
 #include "Log.h"
 
 Image * EngineGUI::m_back_panel;
+Image * EngineGUI::m_back_panel_edit;
+
 Button * EngineGUI::m_tb_camera;
 Text * EngineGUI::m_txt_camera;
 
@@ -31,6 +33,8 @@ Text * EngineGUI::m_txt_shadow_rs;
 Button * EngineGUI::m_btn_refresh_shader;
 Text * EngineGUI::m_txt_refresh_shader;
 
+
+
 EngineGUI::EngineGUI() :GUI( 0 )
 {  
 }
@@ -44,12 +48,12 @@ bool EngineGUI::initialize()
  
   bt->intitialize("resources/expand.png","",glm::vec2(0.0f,Engine::getWindowHeight()-40.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "expand");
+ 
 
   m_btn_refresh_shader = GUI::getButton();
   m_btn_refresh_shader->intitialize("resources/btn.png","",glm::vec2(20.0f,Engine::getWindowHeight()-70.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "refresh_shaders");
   m_btn_refresh_shader->setInactive();
-
 
   m_txt_refresh_shader = GUI::getText();
   m_txt_refresh_shader->setPosition(glm::vec2(40.0f,Engine::getWindowHeight()-70.0f));
@@ -62,7 +66,6 @@ bool EngineGUI::initialize()
   m_back_panel->load("resources/panel.png");
   m_back_panel->setPosition(glm::vec2(0,Engine::getWindowHeight() -540.0f));
   m_back_panel->setInactive();
-
 
   m_tb_camera = GUI::getButton();
   m_tb_camera->intitializeWithToggle("resources/toggle_on.png","resources/toggle_off.png",
@@ -196,9 +199,11 @@ void EngineGUI::mouseButtonCallback(Button * btn)
       m_tb_shadow_rs->setInactive();
       m_txt_shadow_rs->setInactive();
       m_btn_refresh_shader->setInactive();
-      m_txt_refresh_shader->setActive();
+      m_txt_refresh_shader->setInactive();
     }
   }
+ 
+
   if(btn->getDescriptor() == "refresh_shaders")
   {
     Engine::refreshShaders();
@@ -305,5 +310,6 @@ void EngineGUI::mouseButtonCallback(Button * btn)
         m_tb_shadow_rs->togglOff();
     }
   }
+ 
 }
 

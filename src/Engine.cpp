@@ -10,6 +10,8 @@
 #include "IOSubsystem.h"
 #include "PhysicSubsystem.h"
 #include "EngineGUI.h"
+#include "SceneEditor.h"
+#include "Light.h"
 
 // the statics
 bool Engine::m_initialized;
@@ -29,7 +31,8 @@ float Engine::m_time_last;
 std::vector<GUI *> Engine::m_guis;
 unsigned int Engine::m_guis_id = 0;
 EngineGUI * Engine::m_engine_gui;
-bool Engine::m_debug_enabled;
+SceneEditor * Engine::m_scene_editor = nullptr;
+bool Engine::m_edit_mode;
 float Engine::m_time_last_render;
 float Engine::m_render_update_delta= 0.0f;
 bool Engine::m_render_update_needed;
@@ -44,11 +47,11 @@ Engine::~Engine()
 {		
 }
 
-bool Engine::initialize(unsigned int width, unsigned int height, unsigned int system_flags, bool debug)
+bool Engine::initialize(unsigned int width, unsigned int height, unsigned int system_flags, bool edit)
 {
 	m_win_width = width;
 	m_win_height = height;	
-	m_debug_enabled = debug;
+	m_edit_mode = edit;
 	m_current_time_sample = 0;
 	Engine::m_time_delta = 0.0f;
 	Engine::m_time_last = -1.0f;
@@ -132,9 +135,16 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 
   m_engine_gui =  new EngineGUI();
   if(!m_engine_gui->initialize())
-  	return false;
-  if(!m_debug_enabled)
+  	return false;  
+  if(!m_edit_mode)
   	m_engine_gui->setInactive();
+
+  if(m_edit_mode)
+  {
+  	m_scene_editor =  new SceneEditor();
+  	if(!m_scene_editor->initialize())
+  		return false;
+	}
 
 	m_initialized = true;
 	m_log->log("Engine", "initialized");
@@ -150,6 +160,7 @@ void Engine::shutDown()
 		glfwTerminate();
 
 		m_log->log("Engine", "shut down");
+		delete m_scene_editor;
 		delete m_engine_gui;
 		delete m_log;
 		delete m_render_system;
@@ -211,6 +222,8 @@ void Engine::update()
 				m_physic_system->updateScene(m_scene, m_time_delta);
 
 		}
+		if(m_edit_mode)
+			m_scene_editor->update();
 
 		glfwPollEvents();
 
@@ -376,6 +389,10 @@ EngineGUI * Engine::getEngineGUI()
 {
 	return m_engine_gui;
 }
+SceneEditor * Engine::getSceneEditor()
+{
+	return m_scene_editor;
+}
 
 unsigned int Engine::getWindowWidth()
 {
@@ -407,6 +424,8 @@ bool Engine::checkGUIsForButtonPresses(float x, float y)
 	}
 	if(m_engine_gui->checkButtonPressed(x,y))
 		ret = true;
+	if(m_scene_editor->checkButtonPressed(x,y))
+		ret = true;
 
 	return ret;
 }
@@ -420,9 +439,9 @@ void Engine::setShadowTechnique(ShadowTechniqueType type)
 	m_render_system->setShadowTechnique(type);
 }	
 
-bool Engine::isDebugEnabled()
+bool Engine::isInEditMode()
 {
-	return m_debug_enabled;
+	return m_edit_mode;
 }
 
 
@@ -442,11 +461,7 @@ float Engine::getTimeDelta()
 }
 
 
-
 // passers
-
-
-
 
 Object * Engine::pickObjectAtCenter()
 {
@@ -455,5 +470,15 @@ Object * Engine::pickObjectAtCenter()
 
 Object * Engine::pickObjectAt(glm::vec2 p)
 {
-	return m_render_system->pickObjectAt(p);
+	// convert mouse pos to texture pos
+	glm::vec2 pos(p.x, getWindowHeight()-p.y);
+	return m_render_system->pickObjectAt(pos);
 }
+
+Light * Engine::pickLightAt(glm::vec2 p)
+{
+	// convert mouse pos to texture pos
+	glm::vec2 pos(p.x, getWindowHeight()-p.y);
+	return m_render_system->pickLightAt(pos);
+}
+

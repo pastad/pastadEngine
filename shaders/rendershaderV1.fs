@@ -84,6 +84,9 @@ const int MAX_DIRECTIONAL_LIGHTS =  3;
 const int MAX_POINT_LIGHTS =  10;
 const int MAX_SPOT_LIGHTS =  10;
 
+const int MAX_POINT_SHADOWS =  10;
+const int MAX_DIRECTIONAL_SHADOWS =  10;
+
 struct BaseLight
 {
     vec3  AmbientColor;
@@ -129,7 +132,7 @@ uniform SpotLight        SpotLights[MAX_SPOT_LIGHTS];
 
 // SHADOWS    --------------------------------------------------------
 
-uniform mat4 ShadowMatrices[MAX_SPOT_LIGHTS+MAX_POINT_LIGHTS*6]; 
+uniform mat4 ShadowMatrices[MAX_DIRECTIONAL_SHADOWS+MAX_POINT_SHADOWS*6]; 
 uniform int EnableShadows;
 
 layout(binding=19) uniform sampler3D JitterTex;
@@ -406,7 +409,11 @@ vec4 calcDirectionalLight(int idx, Material mat, vec3 pos, vec3 normal)
   
   vec3  specular   = calcSpecularColor(lightDir, l.Base.SpecularColor, mat,pos,normal);
 
-  return vec4(diffuse* calcSpotShadowFactor(l.ShadowMapIndex) * l.Base.Intensity + ambient* l.Base.Intensity + specular* l.Base.Intensity,1) ;
+ 
+  float shadowFactor = 1.0f;
+  //if(length( vec2(pos.x,pos.z) - vec2(CameraPosition.x,CameraPosition.z )) <10 )
+   shadowFactor = calcSpotShadowFactor(l.ShadowMapIndex);
+  return vec4(diffuse* shadowFactor * l.Base.Intensity + ambient* l.Base.Intensity + specular* l.Base.Intensity,1) ;
 }
 
 // pointLight calculation
@@ -499,6 +506,7 @@ void pass2()
   vec3 norm = vec3( texture( Tex2, TexCoord ) );
   vec3 diffColor = vec3( texture(Tex3, TexCoord) );
   vec3 materialIndex = vec3( texture(Tex4, TexCoord) );
+  int matIdx = int(materialIndex.x);
 
   vec4 color = vec4(diffColor,1.0);
   vec4 light = vec4(0,0,0,0);
@@ -508,7 +516,7 @@ void pass2()
    FragColor = vec4(0,0,0,0);
   else
   {
-    Material mat = Materials[int(materialIndex.x)];
+    Material mat = Materials[matIdx];
 
     for(int x=0; x< NumDirectionalLights; x++ )
       light += calcDirectionalLight(x,mat,pos,norm);
@@ -520,9 +528,8 @@ void pass2()
     FragColor = color * light ;
     //FragColor = vec4(0,shadow,0,1.0);
  }
- if(int(materialIndex.x) ==99999)
-  FragColor = color; 
-  
+ if(matIdx ==99999)
+  FragColor = color;  
 }
 // PASS 2 END    -----------------------------------------------------
 

@@ -20,7 +20,8 @@ Scene::Scene()
 {
   m_object_counter = 1;
   m_camera = new Camera(0,2,0);
-  m_skybox = nullptr;
+  m_skybox =  nullptr;
+  m_terrain = nullptr;
   m_tree_root= new SceneTreeElement(500, glm::vec3(0,0,0));
   
 }
@@ -59,7 +60,7 @@ void Scene::update(SceneTreeElement * element,  float delta)
   }
 }
 
-void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader)
+void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, RenderBaseShader * terrain_shader)
 {  
   render_shader->setLights(&m_lights);
   render_shader->setCameraPosition(m_camera->getPosition());
@@ -76,9 +77,13 @@ void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader)
         it->second->render((RenderBaseShader *)render_shader ,objs->second, true);
     }
   }
+  for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end();it++)
+  {
+    (*it)->editRender(render_shader);
+  }
 
   if(m_terrain != nullptr)
-    m_terrain->render();
+    m_terrain->render(terrain_shader);
 
   renderSkybox(skybox_shader);
 
@@ -88,9 +93,9 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
   glClearColor(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);
   for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end();it++)
   {
-    if( (*it)->getShadowRefresh() )
+    if( (*it)->getShadowRefresh() && (*it)->isShadowEnabled())
     {
-      //Engine::getLog()->log("Scene", "re-render light");
+      Engine::getLog()->log("Scene", "re-render light");
       if( (*it)->getType() == LIGHT_SPOT )  
       {
         shadow_shader->use();
@@ -100,7 +105,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
           it->second->render(shadow_shader, false);
 
         if(m_terrain != nullptr)
-          m_terrain->render();
+          m_terrain->renderWithoutMaterial(shadow_shader);
 
         (*it)->unbindFromShadowRender();
       }
@@ -113,7 +118,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
           it->second->render(shadow_shader, false);
 
         if(m_terrain != nullptr)
-          m_terrain->render();
+          m_terrain->renderWithoutMaterial(shadow_shader);
 
         (*it)->unbindFromShadowRender();
       }
@@ -125,8 +130,9 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
           (*it)->bindForShadowRenderPoint(point_shadow_shader,iteration);
           for(std::map<std::string, Model *>::iterator it = m_models.begin(); it != m_models.end();it++)
             it->second->render((RenderBaseShader *)point_shadow_shader, false);
+
           if(m_terrain != nullptr)
-            m_terrain->render();
+            m_terrain->renderWithoutMaterial(point_shadow_shader);
 
           (*it)->unbindFromShadowRender(); 
         }            
@@ -215,6 +221,21 @@ Light * Scene::addLight()
   return light; 
 }
 
+void Scene::removeLight(Light * l)
+{
+  int id = l->getId();
+  for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end();)
+  {
+    if(id == (*it)->getId())
+    {
+      delete (*it);
+      m_lights.erase(it);
+    }
+    else
+      it++;
+  }
+}
+
 Camera * Scene::getCamera()
 {
   return m_camera;
@@ -222,6 +243,7 @@ Camera * Scene::getCamera()
 
 void Scene::cameraMoved()
 {
+  std::cout << "refresh shadows "<<std::endl;
   for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end();it++)
   {
     if( (*it)->getType() == LIGHT_DIRECTIONAL )
@@ -229,6 +251,20 @@ void Scene::cameraMoved()
   }
   refreshRenderObjects();
 }
+
+void Scene::refreshLights()
+{
+  for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end();it++)
+  {
+    if( (*it)->getType() == LIGHT_DIRECTIONAL )
+      (*it)->refresh();
+    if( (*it)->getType() == LIGHT_SPOT )
+      (*it)->refresh();
+    if( (*it)->getType() == LIGHT_POINT )
+      (*it)->refresh();
+  }
+}
+
 void Scene::cameraRotated()
 {
   refreshRenderObjects();
@@ -282,6 +318,15 @@ int Scene::getObjectIdentification()
 Object * Scene::getObject(int id)
 {
   for(std::vector<Object *>::iterator it = m_objects.begin(); it != m_objects.end(); it++)
+  {
+    if( (*it)->getId() == id)
+      return (*it);
+  }
+  return nullptr;
+}
+Light * Scene::getLight(int id)
+{
+  for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end(); it++)
   {
     if( (*it)->getId() == id)
       return (*it);

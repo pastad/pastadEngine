@@ -40,10 +40,7 @@ Object * Model::getInstance()
 {
 	Object * obj = new Object(m_path, this);
 
-  if(m_animated)
-  { 
-    
-  } 
+
 
 	m_instances.insert(m_instances.end(),obj);
   

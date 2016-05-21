@@ -72,6 +72,9 @@ public:
 
 	// returns object at position
 	Object * pickObjectAt(glm::vec2 p);
+
+	// returns light at position
+	Light * pickLightAt(glm::vec2 p);
 	
 
 private:
@@ -99,6 +102,9 @@ private:
 
 	// the skybox shader
 	SkyboxShader * m_skybox_shader;
+
+	// the terrain shader
+	RenderBaseShader * m_terrain_shader;
 
 	// the gbuffer
 	GBuffer * m_gbuffer;

@@ -34,7 +34,7 @@ public:
   void update(float delta);
 
   //renders the scene
-	void render(RenderShader * render_shader, SkyboxShader * skybox_shader);
+	void render(RenderShader * render_shader, SkyboxShader * skybox_shader, RenderBaseShader * terrain_shader);
 
   // renders the scene for the shadow passes
   void renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* point_shadow_shader);
@@ -53,6 +53,9 @@ public:
 
   // function to be called when camera is rotated
   void cameraRotated();
+
+  // refreshes all lights
+  void refreshLights();
 
   // refrehses the visual objects
   void refreshRenderObjects(); 
@@ -74,10 +77,14 @@ public:
   // returns the set camera
   Camera * getCamera();
 
-  // retrieves the object with the id
+  // retrieves the object with the id | or nullptr
   Object * getObject(int id);
 
+  // retrieves the light with the id | or nullptr
+  Light * getLight(int id);
 
+  // removes the light from the scene
+  void removeLight(Light * l);
   
 
 private:
@@ -107,7 +114,7 @@ private:
   Terrain * m_terrain;
 
   // number of objects in the scene for the ids
-  int m_object_counter = 1;
+  int m_object_counter = 1000;
 
   // internal addObject request handling function
   Object * addObject(std::string  path, glm::vec3 position, bool instanced);

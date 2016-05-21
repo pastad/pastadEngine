@@ -49,6 +49,10 @@ void Transform::setScale(glm::vec3 s)
 	m_scale = s;
 	recalculateMatrix();
 }
+glm::vec3 Transform::getRotation()
+{
+	return m_rotation;
+}
 
 glm::vec3 Transform::getPosition()
 {

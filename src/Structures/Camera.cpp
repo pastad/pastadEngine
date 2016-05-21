@@ -3,6 +3,7 @@
 #include "Engine.h"
 #include "Log.h"
 #include "Scene.h"
+#include "Helper.h"
 #include "IOSubsystem.h"
 
 #include "glm/ext.hpp"
@@ -120,12 +121,7 @@ void Camera::rotate(float deltax,float deltay)
     if(m_rot_1 <0.0f)
       m_rot_1 = 360.0f;
 
-
-    glm::vec3 front;
-    front.x = cos(glm::radians(m_rot_1)) * cos(glm::radians(m_rot_2));
-    front.y = sin(glm::radians(m_rot_2));
-    front.z = sin(glm::radians(m_rot_1)) * cos(glm::radians(m_rot_2));
-    m_forward = glm::normalize(front);
+    m_forward = Helper::anglesToDirection(m_rot_1,m_rot_2);
     Engine::getScene()->cameraRotated();
   }
 }

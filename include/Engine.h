@@ -21,6 +21,8 @@ class PhysicSubsystem;
 class GUI;
 class EngineGUI;
 class Object;
+class Light;
+class SceneEditor;
 
 enum SubsystemType
 {
@@ -50,7 +52,7 @@ public:
 	~Engine();
 
 	// Initializes Engine
-	static bool initialize(unsigned int width, unsigned int height, unsigned int types, bool debug_enable);
+	static bool initialize(unsigned int width, unsigned int height, unsigned int types, bool edit_mode);
 
 	// Shuts down Engine and it's components
 	static void shutDown();	
@@ -85,6 +87,9 @@ public:
 	// returns engine gui
 	static EngineGUI * getEngineGUI();
 
+	//returns the scene editor
+	static SceneEditor * getSceneEditor();
+
 	// requiering and removing GUis
 	static std::vector< GUI *> * getGUIs();
 	static void removeGUI(GUI * gui);
@@ -102,8 +107,8 @@ public:
 	// sets a shadow property
 	static void setShadowTechnique(ShadowTechniqueType type);
 
-	// returns true if debugging mode is enabled
-	static bool isDebugEnabled();
+	// returns true if in edit mode
+	static bool isInEditMode();
 
 	// refreshes the shaders
 	static void refreshShaders();
@@ -122,6 +127,9 @@ public:
 
 	// returns object at screen po
 	static Object * pickObjectAt(glm::vec2 p);
+
+	// returns light at screen po
+	static Light * pickLightAt(glm::vec2 p);
 
 
 private:
@@ -176,8 +184,11 @@ private:
 	// the time between renders
 	static float m_render_update_delta ;
 
-	// true if debug should be enabled
-	static bool m_debug_enabled;
+	// true if engine is in editing mode
+	static bool m_edit_mode;
+
+	// the editor for the scene
+	static SceneEditor * m_scene_editor;
 
 	// starts the subsystems
 	static bool startUpSubsystems();
@@ -190,6 +201,7 @@ private:
 
 	// callbacks for opengl
 	static void windowSizeChangedCallback(GLFWwindow* window, int width, int height);
+
 
 };
 

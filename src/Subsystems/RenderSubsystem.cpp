@@ -23,6 +23,7 @@
 
 #include "GUI.h"
 #include "EngineGUI.h"
+#include "SceneEditor.h"
 
 RenderSubsystem::RenderSubsystem()
 {	
@@ -57,6 +58,8 @@ RenderSubsystem::~RenderSubsystem()
 		delete m_blur_buffer;
 	if(m_jitter != nullptr)
 		delete m_jitter;
+	if(m_terrain_shader != nullptr)
+		delete m_terrain_shader;
 }
 
 bool RenderSubsystem::startUp(GLFWwindow * window)
@@ -70,6 +73,7 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 		m_pp_shader = new PostProcessingShader();
 		m_shadow_shader = new RenderBaseShader();
 		m_point_shadow_shader = new RenderBaseShader();
+		m_terrain_shader = new RenderBaseShader();
 		m_skybox_shader = new SkyboxShader();
 
 		m_gbuffer = new GBuffer();	
@@ -92,6 +96,8 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 		if( ! m_point_shadow_shader->load("shaders/pointshadowshaderV1") )
 			return false;
 		if( ! m_skybox_shader->load("shaders/skyboxshaderV1") )
+			return false;
+		if( ! m_terrain_shader->load("shaders/terrainshaderV1") )
 			return false;
 		if( ! m_gbuffer->initialize() )
 			return false;
@@ -160,10 +166,15 @@ void RenderSubsystem::renderPassGBuffer()
  	m_shader->setProjectionMatrix(cam->getProjection());
  	m_shader->setViewMatrix(cam->getView());
 
+ 	m_terrain_shader->use();
+ 	m_terrain_shader->setProjectionMatrix(cam->getProjection());
+ 	m_terrain_shader->setViewMatrix(cam->getView());
+
+	m_shader->use();
  	Scene * scene = Engine::getScene();
 
 	if(scene != nullptr)
-		scene->render(m_shader, m_skybox_shader);
+		scene->render(m_shader, m_skybox_shader, m_terrain_shader);
 	
 	glFinish();
 	m_gbuffer->unbindFromInput();
@@ -195,6 +206,8 @@ bool RenderSubsystem::refreshShaders()
 		delete m_point_shadow_shader;
 	if(m_skybox_shader != nullptr)
 		delete m_skybox_shader;
+	if(m_terrain_shader != nullptr)
+		delete m_terrain_shader;
 	m_shader = new RenderShader();
 	m_text_shader = new TextShader();
 	m_image_shader = new ImageShader();
@@ -202,6 +215,7 @@ bool RenderSubsystem::refreshShaders()
 	m_shadow_shader = new RenderBaseShader();
 	m_point_shadow_shader = new RenderBaseShader();
 	m_skybox_shader = new SkyboxShader();
+	m_terrain_shader = new RenderBaseShader();
 	if( ! m_shader->load("shaders/rendershaderV1") )
 		return false;
 	if( ! m_text_shader->load("shaders/textshaderV1") )
@@ -215,6 +229,8 @@ bool RenderSubsystem::refreshShaders()
 	if( ! m_point_shadow_shader->load("shaders/pointshadowshaderV1") )
 		return false;
 	if( ! m_skybox_shader->load("shaders/skyboxshaderV1") )
+		return false;
+	if( ! m_terrain_shader->load("shaders/terrainshaderV1") )
 		return false;
 
 	m_pp_shader->setGaussSize(20);
@@ -340,7 +356,10 @@ void RenderSubsystem::renderUI()
 	for( std::vector<GUI*>::iterator it = guis->begin(); it != guis->end();it++)
 		(*it)->render(m_text_shader,m_image_shader, m_render_quad);
 
-	Engine::getEngineGUI()->render(m_text_shader,m_image_shader, m_render_quad);
+	if(Engine::getEngineGUI() != nullptr)
+		Engine::getEngineGUI()->render(m_text_shader,m_image_shader, m_render_quad);
+	if(Engine::getSceneEditor() != nullptr)
+		Engine::getSceneEditor()->render(m_text_shader,m_image_shader, m_render_quad);
 
 	glDisable(GL_BLEND);
 	glFinish();
@@ -419,4 +438,9 @@ Object * RenderSubsystem::pickObjectAt(glm::vec2 p)
 {
 	int id  = m_gbuffer->pickObjectAt(p);
 	return  Engine::getScene()->getObject(id);
+}
+Light * RenderSubsystem::pickLightAt(glm::vec2 p)
+{
+	int id  = m_gbuffer->pickObjectAt(p);
+	return  Engine::getScene()->getLight(id);
 }

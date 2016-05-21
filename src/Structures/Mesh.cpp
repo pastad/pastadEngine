@@ -41,6 +41,12 @@ Mesh::Mesh(const aiMesh*mesh, int mat_index)
 
   initMesh(model);
 }
+Mesh::Mesh(const  IndexedRepresentation& model, int mat_index)
+{
+  m_mat_index = mat_index;
+  initMesh(model);
+}
+
 
 Mesh::~Mesh()
 {

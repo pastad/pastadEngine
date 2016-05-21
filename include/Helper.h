@@ -20,6 +20,8 @@ public:
   // calculates the gauss values
   static float gauss(float x, float sigma);
 
+  // converts angles to a direction vector
+  static glm::vec3 anglesToDirection(float rot1, float rot2);
 
 
   static float m_debug_float;

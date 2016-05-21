@@ -32,6 +32,7 @@ public:
 
   // returns the materiall (and loads it if not loaded)
   static Material * loadMaterial(std::string dir, aiMaterial* mat);
+  //static Material * loadMaterial(std::string dir, std::string name)
 
 private:
 
