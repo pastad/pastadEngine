@@ -48,9 +48,9 @@ AnimationMesh::AnimationMesh(const aiMesh*mesh, int mat_index)
   m_bone_info.resize(mesh->mNumBones);
 
   //  for the bones
-  for (uint i = 0 ; i < mesh->mNumBones ; i++)
+  for (unsigned int i = 0 ; i < mesh->mNumBones ; i++)
   {
-    uint idx = 0;
+    unsigned int idx = 0;
 
     std::string BoneName(mesh->mBones[i]->mName.data);
 
@@ -66,9 +66,9 @@ AnimationMesh::AnimationMesh(const aiMesh*mesh, int mat_index)
       idx =  m_bone_mapping[BoneName];
     
 
-    for (uint j = 0 ; j < mesh->mBones[i]->mNumWeights ; j++)
+    for (unsigned int j = 0 ; j < mesh->mBones[i]->mNumWeights ; j++)
     {
-      uint VertexID = mesh->mBones[i]->mWeights[j].mVertexId;
+      unsigned int VertexID = mesh->mBones[i]->mWeights[j].mVertexId;
       float Weight  = mesh->mBones[i]->mWeights[j].mWeight;
       model.m_bones[VertexID].addBoneData(idx, Weight);
     }
@@ -153,7 +153,7 @@ void AnimationMesh::applyTransform(std::string NodeName,glm::mat4 & global_inv, 
 void AnimationMesh::updateTransforms(std::vector<glm::mat4> *  transforms,  RenderBaseShader *shader)
 {
   std::vector<glm::mat4> ts;
-  for (uint i = 0 ; i < m_num_bones ; i++)
+  for (unsigned int i = 0 ; i < m_num_bones ; i++)
   {
     (*transforms)[i] = m_bone_info[i].m_transformation;
     ts.insert(ts.end(), m_bone_info[i].m_transformation );

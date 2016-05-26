@@ -1,5 +1,5 @@
 #include "JitterTexture.h"
-
+#define M_PI 3.14159265358979323846
 // inspired by https://github.com/daw42/glslcookbook
 
 JitterTexture::JitterTexture()

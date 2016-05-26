@@ -3,7 +3,7 @@
 #include <vector>
 #include <sstream>
 
-#include <SOIL/SOIL.h>
+#include <SOIL.h>
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Engine.h"

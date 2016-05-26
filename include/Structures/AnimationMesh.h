@@ -72,7 +72,7 @@ private:
   unsigned int m_num_bones;
 
   // maps the bones to ids
-  std::map<std::string,uint> m_bone_mapping;
+  std::map<std::string,unsigned int> m_bone_mapping;
 
   // holds the info for the bones
   std::vector<BoneInfo> m_bone_info;

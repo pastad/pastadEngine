@@ -97,9 +97,9 @@ private:
 	void calcInterpolatedScaling(aiVector3D& Out, float animation_time, const aiNodeAnim* pNodeAnim);
 	void calcInterpolatedRotation(aiQuaternion& Out, float animation_time, const aiNodeAnim* pNodeAnim);
 	void calcInterpolatedPosition(aiVector3D& Out, float animation_time, const aiNodeAnim* pNodeAnim);
-	uint findScaling(float animation_time, const aiNodeAnim* pNodeAnim);
-	uint findRotation(float animation_time, const aiNodeAnim* pNodeAnim);
-	uint findPosition(float animation_time, const aiNodeAnim* pNodeAnim);
+	unsigned int findScaling(float animation_time, const aiNodeAnim* pNodeAnim);
+	unsigned int findRotation(float animation_time, const aiNodeAnim* pNodeAnim);
+	unsigned int findPosition(float animation_time, const aiNodeAnim* pNodeAnim);
 	const aiNodeAnim* findNodeAnim(const aiAnimation* pAnimation, const std::string NodeName);
 
 	glm::mat4 initScaleTransform(float ScaleX, float ScaleY, float ScaleZ);

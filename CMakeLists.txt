@@ -57,6 +57,8 @@ set(SOURCE
 )
 set(HEADERS
    ${HEADERS}
+
+   ${CMAKE_CURRENT_SOURCE_DIR}/external/include/SOIL.h
   
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Engine.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Log.h
@@ -116,16 +118,19 @@ ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures
 ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures
 ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI
+${CMAKE_CURRENT_SOURCE_DIR}/external/include
 ${CMAKE_CURRENT_SOURCE_DIR}/external
 
 
 ${CMAKE_CURRENT_SOURCE_DIR}/game/include
  )
 
-LINK_DIRECTORIES(${GLFW_LIBRARY_DIR} ${FREETYPE_LIBRARY_DIRS} ${ASSIMP_LIBRARY_DIR} ${SOIL_LIBRARY_DIR})
+LINK_DIRECTORIES(${GLFW_LIBRARY_DIR} ${FREETYPE_LIBRARY_DIRS} ${ASSIMP_LIBRARY_DIR} ${SOIL_LIBRARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/external/lib  )
 
 add_executable(Engine main.cpp ${SOURCE} ${HEADERS})
 
-target_link_libraries(Engine  GL glfw3 assimp SOIL freetype  ${GLFW_STATIC_LIBRARIES}  ${OPENGL_LIBRARIES} X11 Xcursor Xinerama Xxf86vm Xi Xrandr pthread dl  )
+set(LINK_LIBS "liba libb libc")
 
+target_link_libraries(Engine opengl32 freetype harfbuzz glib-2.0 bz2 z png  pcre intl iconv   ws2_32 winmm glfw3 assimp SOIL   ${GLFW_STATIC_LIBRARIES}  ${OPENGL_LIBRARIES} pthread  )
+#GL  X11 Xcursor Xinerama Xxf86vm Xi Xrandr dl 
 

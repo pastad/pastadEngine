@@ -257,7 +257,7 @@ void Model::readNodeHeirarchy(float animation_time, const aiNode* pNode, const g
     (*it)->applyTransform(NodeName,inverse,GlobalTransformation);
   }
 
-  for (uint i = 0 ; i < pNode->mNumChildren ; i++)
+  for (unsigned int i = 0 ; i < pNode->mNumChildren ; i++)
   {
     readNodeHeirarchy(animation_time, pNode->mChildren[i], GlobalTransformation);
   }
@@ -265,9 +265,9 @@ void Model::readNodeHeirarchy(float animation_time, const aiNode* pNode, const g
 }
 
 
-uint Model::findPosition(float animation_time, const aiNodeAnim* pNodeAnim)
+unsigned int Model::findPosition(float animation_time, const aiNodeAnim* pNodeAnim)
 {
-  for (uint i = 0 ; i < pNodeAnim->mNumPositionKeys - 1 ; i++)
+  for (unsigned int i = 0 ; i < pNodeAnim->mNumPositionKeys - 1 ; i++)
   {
     if (animation_time < (float)pNodeAnim->mPositionKeys[i + 1].mTime)
       return i;
@@ -278,11 +278,11 @@ uint Model::findPosition(float animation_time, const aiNodeAnim* pNodeAnim)
   return 0;
 }
 
-uint Model::findRotation(float animation_time, const aiNodeAnim* pNodeAnim)
+unsigned int Model::findRotation(float animation_time, const aiNodeAnim* pNodeAnim)
 {
   assert(pNodeAnim->mNumRotationKeys > 0);
 
-  for (uint i = 0 ; i < pNodeAnim->mNumRotationKeys - 1 ; i++)
+  for (unsigned int i = 0 ; i < pNodeAnim->mNumRotationKeys - 1 ; i++)
   {
     if (animation_time < (float)pNodeAnim->mRotationKeys[i + 1].mTime)
       return i;    
@@ -292,11 +292,11 @@ uint Model::findRotation(float animation_time, const aiNodeAnim* pNodeAnim)
   return 0;
 }
 
-uint Model::findScaling(float animation_time, const aiNodeAnim* pNodeAnim)
+unsigned int Model::findScaling(float animation_time, const aiNodeAnim* pNodeAnim)
 {
   assert(pNodeAnim->mNumScalingKeys > 0);
 
-  for (uint i = 0 ; i < pNodeAnim->mNumScalingKeys - 1 ; i++)
+  for (unsigned int i = 0 ; i < pNodeAnim->mNumScalingKeys - 1 ; i++)
   {
     if (animation_time < (float)pNodeAnim->mScalingKeys[i + 1].mTime)
       return i;    
@@ -314,8 +314,8 @@ void Model::calcInterpolatedPosition(aiVector3D& out, float animation_time, cons
     out = pNodeAnim->mPositionKeys[0].mValue;
     return;
   }
-  uint PositionIndex = findPosition(animation_time, pNodeAnim);
-  uint NextPositionIndex = (PositionIndex + 1);
+  unsigned int PositionIndex = findPosition(animation_time, pNodeAnim);
+  unsigned int NextPositionIndex = (PositionIndex + 1);
   assert(NextPositionIndex < pNodeAnim->mNumPositionKeys);
   float DeltaTime = (float)(pNodeAnim->mPositionKeys[NextPositionIndex].mTime - pNodeAnim->mPositionKeys[PositionIndex].mTime);
   float Factor = (animation_time - (float)pNodeAnim->mPositionKeys[PositionIndex].mTime) / DeltaTime;
@@ -333,8 +333,8 @@ void Model::calcInterpolatedRotation(aiQuaternion& out, float animation_time, co
     out = pNodeAnim->mRotationKeys[0].mValue;
     return;
   }
-  uint RotationIndex = findRotation(animation_time, pNodeAnim);
-  uint NextRotationIndex = (RotationIndex + 1);
+  unsigned int RotationIndex = findRotation(animation_time, pNodeAnim);
+  unsigned int NextRotationIndex = (RotationIndex + 1);
   assert(NextRotationIndex < pNodeAnim->mNumRotationKeys);
   float DeltaTime = (float)(pNodeAnim->mRotationKeys[NextRotationIndex].mTime - pNodeAnim->mRotationKeys[RotationIndex].mTime);
   float Factor = (animation_time - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime) / DeltaTime;
@@ -351,8 +351,8 @@ void Model::calcInterpolatedScaling(aiVector3D& Out, float animation_time, const
     Out = pNodeAnim->mScalingKeys[0].mValue;
     return;
   }
-  uint ScalingIndex = findScaling(animation_time, pNodeAnim);
-  uint NextScalingIndex = (ScalingIndex + 1);
+  unsigned int ScalingIndex = findScaling(animation_time, pNodeAnim);
+  unsigned int NextScalingIndex = (ScalingIndex + 1);
   assert(NextScalingIndex < pNodeAnim->mNumScalingKeys);
   float DeltaTime = (float)(pNodeAnim->mScalingKeys[NextScalingIndex].mTime - pNodeAnim->mScalingKeys[ScalingIndex].mTime);
   float Factor = (animation_time - (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime) / DeltaTime;
@@ -366,7 +366,7 @@ void Model::calcInterpolatedScaling(aiVector3D& Out, float animation_time, const
 
 const aiNodeAnim* Model::findNodeAnim(const aiAnimation* pAnimation, const std::string nodeName)
 {
-  for (uint i = 0 ; i < pAnimation->mNumChannels ; i++)
+  for (unsigned int i = 0 ; i < pAnimation->mNumChannels ; i++)
   {
     const aiNodeAnim* pNodeAnim = pAnimation->mChannels[i];
 

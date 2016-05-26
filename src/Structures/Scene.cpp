@@ -186,10 +186,12 @@ Object * Scene::addObject(std::string path, glm::vec3 position)
 {
   return addObject(path,position,false);
 }
+
 Object * Scene::addObjectInstanced(std::string path, glm::vec3 position)
 {
   return addObject(path,position,true);
 }
+
 Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced)
 {
   Model * m = RessourceManager::loadModel(path, instanced);
