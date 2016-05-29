@@ -66,3 +66,7 @@ bool Image::isActive()
 {
   return m_active;
 }
+glm::vec2 Image::getSize()
+{
+  return  m_texture->getSize();
+}

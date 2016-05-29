@@ -43,8 +43,10 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/GUI.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/EngineGUI.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/Text.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/EditText.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/Image.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/Button.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/FileChooser.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RessourceManager.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Helper.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/external/gl_core_4_.c
@@ -95,8 +97,10 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/GUI.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/EngineGUI.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/Text.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/EditText.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/Image.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/Button.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/FileChooser.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RessourceManager.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Helper.h
    ${CMAKE_CURRENT_SOURCE_DIR}/external/gl_core_4_.h
@@ -109,8 +113,9 @@ set(HEADERS
 
 find_package(OpenGL REQUIRED)
 find_package(Freetype REQUIRED)
+find_package(Boost REQUIRED)
 
-include_directories( ${OPENGL_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} {GLFW_INCLUDE_DIRS} {ASSIMP_INCLUDE_DIRS} {SOIL_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include
+include_directories( ${OPENGL_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} {GLFW_INCLUDE_DIRS} {ASSIMP_INCLUDE_DIRS} {SOIL_INCLUDE_DIRS} {BOOST_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures
@@ -122,10 +127,10 @@ ${CMAKE_CURRENT_SOURCE_DIR}/external
 ${CMAKE_CURRENT_SOURCE_DIR}/game/include
  )
 
-LINK_DIRECTORIES(${GLFW_LIBRARY_DIR} ${FREETYPE_LIBRARY_DIRS} ${ASSIMP_LIBRARY_DIR} ${SOIL_LIBRARY_DIR})
-
+LINK_DIRECTORIES(${GLFW_LIBRARY_DIR} ${FREETYPE_LIBRARY_DIRS} ${ASSIMP_LIBRARY_DIR} ${SOIL_LIBRARY_DIR} ${Boost_LIBRARY_DIR})
+ 
 add_executable(Engine main.cpp ${SOURCE} ${HEADERS})
 
-target_link_libraries(Engine  GL glfw3 assimp SOIL freetype  ${GLFW_STATIC_LIBRARIES}  ${OPENGL_LIBRARIES} X11 Xcursor Xinerama Xxf86vm Xi Xrandr pthread dl  )
+target_link_libraries(Engine  GL glfw3 assimp boost_system boost_filesystem SOIL freetype  ${GLFW_STATIC_LIBRARIES}  ${OPENGL_LIBRARIES} X11 Xcursor Xinerama Xxf86vm Xi Xrandr pthread dl  )
 
 

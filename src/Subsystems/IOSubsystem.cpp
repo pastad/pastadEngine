@@ -10,7 +10,11 @@
 #include <sstream>
 
 bool IOSubsystem::m_keys[GLFW_KEY_LAST + 1 ];
+bool IOSubsystem::m_keys_pressed_and_released[GLFW_KEY_LAST + 1 ];
+bool IOSubsystem::m_keys_released_and_pressed[GLFW_KEY_LAST + 1 ];
 bool IOSubsystem::m_mouse_buttons[GLFW_MOUSE_BUTTON_8 + 1 ];
+bool IOSubsystem::m_mouse_buttons_pressed_and_released[GLFW_MOUSE_BUTTON_8 + 1 ];
+bool IOSubsystem::m_mouse_buttons_released_and_pressed[GLFW_MOUSE_BUTTON_8 + 1 ];
 double IOSubsystem::m_mouse_x = -1;
 double IOSubsystem::m_mouse_y= -1;
 glm::vec2 IOSubsystem::m_mouse_delta;
@@ -88,9 +92,19 @@ void IOSubsystem::keyCallback(GLFWwindow* window, int key, int scancode, int act
   if(action == GLFW_PRESS)
   {
     m_keys[key] = true;
+    if( ! m_keys[key] )
+    {
+      m_keys_released_and_pressed[key] = true;
+    }
   }
   if(action == GLFW_RELEASE)
   {
+    if(  m_keys[key] )
+    {
+      m_keys_pressed_and_released[key] = true;
+      Engine::keyWasPressed(key);
+    }
+
     m_keys[key] = false;
   }
 }
@@ -121,12 +135,24 @@ void IOSubsystem::mouseButtonCallback(GLFWwindow * window, int button, int actio
   //Engine::getLog()->log("IOSubsystem","mouse pressed",ss.str());   
   if(action == GLFW_PRESS)
   {        
-    m_mouse_buttons[button] = true;
-    Engine::checkGUIsForButtonPresses(m_mouse_x, Engine::getWindowHeight() - m_mouse_y);
+    if(!m_mouse_buttons[button])  
+    {  
+      //Engine::getLog()->log("IOSubsystem","mouse pressed and released");   
+      m_mouse_buttons_released_and_pressed[button] = true;
+    }
+
+    m_mouse_buttons[button] = true; 
+    
   }
   if(action == GLFW_RELEASE)
   {
-   // Engine::getLog()->log("IOSubsystem", "mouse button released");
+    //Engine::getLog()->log("IOSubsystem", "mouse button released");
+    if(m_mouse_buttons[button])  
+    {  
+      m_mouse_buttons_pressed_and_released[button] = true;
+      Engine::checkGUIsForButtonPresses(m_mouse_x, Engine::getWindowHeight() - m_mouse_y);
+    }
+    
     m_mouse_buttons[button] = false;
   }
 
@@ -139,6 +165,20 @@ bool IOSubsystem::isKeyPressed(int key)
   else
     return false;
 }
+bool IOSubsystem::isKeyPressedAndReleased(int key)
+{
+  if(key <= GLFW_KEY_LAST)
+    return m_keys_pressed_and_released[key];
+  else
+    return false;
+}
+bool IOSubsystem::isKeyReleasedAndPressed(int key)
+{
+  if(key <= GLFW_KEY_LAST)
+    return m_keys_released_and_pressed[key];
+  else
+    return false;
+}
 bool IOSubsystem::isMouseButtonPressed(int key)
 {
   if(key <= GLFW_MOUSE_BUTTON_8)
@@ -146,6 +186,21 @@ bool IOSubsystem::isMouseButtonPressed(int key)
   else
     return false;
 }
+bool IOSubsystem::isMouseButtonPressedAndReleased(int key)
+{
+  if(key <= GLFW_MOUSE_BUTTON_8)
+    return m_mouse_buttons_pressed_and_released[key];
+  else
+    return false;
+}
+bool IOSubsystem::isMouseButtonReleasedAndPressed(int key)
+{
+  if(key <= GLFW_MOUSE_BUTTON_8)
+    return m_mouse_buttons_released_and_pressed[key];
+  else
+    return false;
+}
+
 glm::vec2 IOSubsystem::getMouseCoordinates()
 {
   return glm::vec2(m_mouse_x,m_mouse_y);
@@ -155,4 +210,18 @@ glm::vec2 IOSubsystem::getMouseDelta()
   glm::vec2 ret = m_mouse_delta; 
   m_mouse_delta = glm::vec2(0,0);
   return ret;
+}
+
+bool * IOSubsystem::getKeysPressedAndReleased()
+{
+  return m_keys_pressed_and_released;
+}
+
+void IOSubsystem::clearKeys()
+{
+  for(int x=0; x< GLFW_KEY_LAST;x++)
+    m_keys_pressed_and_released[x] = m_keys_released_and_pressed[x] = false;
+
+  for(int x=0; x< GLFW_MOUSE_BUTTON_8;x++)
+    m_mouse_buttons_pressed_and_released[x] = m_mouse_buttons_released_and_pressed[x] = false;
 }

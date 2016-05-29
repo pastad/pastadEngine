@@ -104,9 +104,7 @@ void TextShader::renderText(std::string text, glm::vec2 pos ,float scale, glm::v
 
   
   if(centered)
-    pos -= (approximateTextOffset(text) / 2.0f *scale);
-
-  
+    pos -= (approximateTextOffset(text) / 2.0f *scale);  
 
   std::string::const_iterator c;
   for (c = text.begin(); c != text.end(); c++)

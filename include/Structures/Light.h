@@ -66,6 +66,9 @@ public:
   glm::vec3 getDiffuseColor();
   glm::vec3 getSpecularColor();
 
+  // sets all light colors 
+  void setColor(glm::vec3 c);
+
   // returns attenuation specs
   float getIntensity();
   float getAttenuationConstant();
@@ -101,7 +104,7 @@ public:
   unsigned int getShadowIndex();
 
   // renders the light as a sphere 
-  void editRender(RenderShader * render_shader);
+  void editRender(RenderShader * render_shader, int c);
 
   // returns the id of the light
   unsigned int getId();
@@ -112,6 +115,7 @@ public:
   // rotation getter setter
   glm::vec2 getRotation();
   void rotate(glm::vec2 delta);
+  void setRotation(glm::vec2 delta);
 
 
 protected:
@@ -169,6 +173,7 @@ private:
 
   // the sphere model and its object
   Model * m_model;
+  static Object * m_directional_object;
   static Object * m_spot_object;
   static Object * m_point_object;
 

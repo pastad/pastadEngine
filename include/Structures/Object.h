@@ -66,6 +66,7 @@ public:
 
   using  Transform::setPosition;
   using  Transform::setRotation;
+  using  Transform::getRotationDegrees;
   using  Transform::setScale;
   using  Transform::getPosition;
 

@@ -40,6 +40,9 @@ public:
   void setInactive();
   bool isActive();
 
+  // returns the size of the image
+  glm::vec2 getSize();
+
 protected:
 
   // the id of the image

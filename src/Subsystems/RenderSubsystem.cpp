@@ -25,6 +25,8 @@
 #include "EngineGUI.h"
 #include "SceneEditor.h"
 
+#include <sstream>
+
 RenderSubsystem::RenderSubsystem()
 {	
 	m_initialized = false;	
@@ -145,6 +147,7 @@ bool RenderSubsystem::shutDown()
 
 void RenderSubsystem::startRender()
 {
+
 	if(m_initialized)
 	{
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -437,6 +440,9 @@ Object * RenderSubsystem::pickObjectAtCenter()
 Object * RenderSubsystem::pickObjectAt(glm::vec2 p)
 {
 	int id  = m_gbuffer->pickObjectAt(p);
+/*	std::stringstream ss;
+	ss << id;
+	Engine::getLog()->log("RenderSubsystem", "id", ss.str());*/
 	return  Engine::getScene()->getObject(id);
 }
 Light * RenderSubsystem::pickLightAt(glm::vec2 p)

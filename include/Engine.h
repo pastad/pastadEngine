@@ -52,7 +52,7 @@ public:
 	~Engine();
 
 	// Initializes Engine
-	static bool initialize(unsigned int width, unsigned int height, unsigned int types, bool edit_mode);
+	static bool initialize(unsigned int width, unsigned int height, unsigned int types, bool edit_mode, bool fullscreen);
 
 	// Shuts down Engine and it's components
 	static void shutDown();	
@@ -118,6 +118,16 @@ public:
 
 	// returns the time difference between updates
 	static float getTimeDelta();
+
+	// called by IO::Subsystem
+	static void keyWasPressed(unsigned int key_code);
+
+	// returns true if gui movement lock is set
+	static bool isGUIMovementLockSet();
+
+	// setter for GUIMovementLock
+	static void setGUIMovementLock();
+	static void unsetGUIMovementLock();
 
 
 	// passing from subsystems
@@ -190,6 +200,12 @@ private:
 	// the editor for the scene
 	static SceneEditor * m_scene_editor;
 
+	// true if fullscreen is set
+	static bool m_fullscreen;
+
+	// the lock for example when a edit box is edited
+	static bool m_gui_movement_lock;
+
 	// starts the subsystems
 	static bool startUpSubsystems();
 
@@ -202,7 +218,8 @@ private:
 	// callbacks for opengl
 	static void windowSizeChangedCallback(GLFWwindow* window, int width, int height);
 
-
+	// deletes windows if set and creates a new one
+	static void refreshWindow();
 };
 
 

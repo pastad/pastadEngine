@@ -2,12 +2,16 @@
 
 #include "Text.h"
 #include "Texture.h"
+#include "GUI.h"
 
 #include "Engine.h"
 #include "Log.h"
 
-Button::Button(unsigned int id): Image(id), m_toggl_enable(false),m_toggl(false)
+#include <iostream>
+
+Button::Button(unsigned int id, GUI * parent): Image(id), m_toggl_enable(false),m_toggl(false)
 { 
+  m_parent = parent;
   m_text = new Text(0);
   m_text->setCentered();
 }
@@ -46,8 +50,11 @@ bool Button::intitializeWithToggle(std::string path1,std::string path2,
 
 void Button::render(ImageShader * image_shader, TextShader * text_shader, Quad * quad)
 {
-  Image::render(image_shader, quad);
-  m_text->render(text_shader);
+  if(isActive() )
+  {
+    Image::render(image_shader, quad);
+    m_text->render(text_shader);
+  }
 }
 
 void Button::setPositionAndScale(glm::vec2 position, glm::vec2 scale)
@@ -55,7 +62,7 @@ void Button::setPositionAndScale(glm::vec2 position, glm::vec2 scale)
   Image::setScale(scale);
   Image::setPosition(position);
   m_text->setPosition(position + ( (m_texture->getSize() * scale) /2.0f) );
-  m_text->setScale(scale.x);
+  m_text->setScale(scale.x*0.5f);
 }
 void Button::setTextColor(glm::vec3 color)
 {  
@@ -118,4 +125,24 @@ bool Button::isToggled()
 bool Button::isTogglEnabled()
 {
   return m_toggl_enable;
+}
+GUI * Button::getParent()
+{
+  return m_parent;
+}
+
+void Button::setTextFloat(unsigned int f)
+{
+  m_text_float = f;
+  if(m_text_float == TEXT_FLOAT_CENTER)
+  {
+    m_text->setPosition(m_position + ( (m_texture->getSize() * m_scale) /2.0f) );
+    m_text->setCentered();
+  }
+  if(m_text_float == TEXT_FLOAT_LEFT)
+  {
+    m_text->setPosition(m_position +glm::vec2(20.0f,0.0f) );
+    m_text->setNotCentered();
+  }
+
 }

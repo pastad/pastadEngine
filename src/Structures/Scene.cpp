@@ -77,9 +77,12 @@ void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, R
         it->second->render((RenderBaseShader *)render_shader ,objs->second, true);
     }
   }
+  int c = 0;
   for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end();it++)
   {
-    (*it)->editRender(render_shader);
+    (*it)->editRender(render_shader,c);
+    if((*it)->getType()  == LIGHT_DIRECTIONAL)
+      c++;
   }
 
   if(m_terrain != nullptr)
@@ -243,7 +246,7 @@ Camera * Scene::getCamera()
 
 void Scene::cameraMoved()
 {
-  std::cout << "refresh shadows "<<std::endl;
+  //std::cout << "refresh shadows "<<std::endl;
   for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end();it++)
   {
     if( (*it)->getType() == LIGHT_DIRECTIONAL )
@@ -286,8 +289,8 @@ void Scene::refreshRenderObjects()
     if( ( ((*it)->getPriorityRender() ) || (angle_mid < m_camera->getFOV()) )  && ((*it)->isVisible())  ) //
     {
       //std::cout << angle_mid << std::endl;
-      //std::cout << (*it)->getIdentifier()<<std::endl;
-    */
+      //std::cout << (*it)->getIdentifier()<<std::endl;*/
+    
       std::map< std::string , std::vector<Object *> >::iterator entry = m_render_objects.find( (*it)->getIdentifier() );
       if(entry != m_render_objects.end())
       {
@@ -299,7 +302,7 @@ void Scene::refreshRenderObjects()
         ins_vec.insert(ins_vec.end(), (*it) );
         m_render_objects.insert(std::pair< std::string , std::vector<Object *> >((*it)->getIdentifier(), ins_vec) );
       }
-    //} tmp disable due to flickers 
+    //} //tmp disable due to flickers 
   }
 }
 

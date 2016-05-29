@@ -254,6 +254,8 @@ void RenderShader::setMaterial(std::string name, MaterialColorSpecs specs)
 
   //only set the id for now
   setMaterialIndex(idx);
+
+  //std::cout<< "Mat count:" << m_materials_mapping.size()<<std::endl;
 }
 void RenderShader::setMaterialIndex(int idx)
 {
@@ -261,6 +263,8 @@ void RenderShader::setMaterialIndex(int idx)
 }
 void RenderShader::setAllMaterialsForRenderPass()
 {
+
+  //std::cout<< "Mat count set:" << m_materials_mapping.size()<<std::endl;
   // set everything for lighting pass | we have the idx in the gbuffer
   for(std::map<std::string, int>::iterator it = m_materials_mapping.begin(); it != m_materials_mapping.end();it++)
   {

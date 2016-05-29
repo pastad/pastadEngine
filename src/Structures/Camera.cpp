@@ -32,69 +32,73 @@ Camera::~Camera()
 
 void Camera::update(float delta_time)
 {
-  float delta = delta_time;
-  glm::vec3 right = glm::normalize(glm::cross(m_forward, m_up));
+  if(! Engine::isGUIMovementLockSet())
+  {
+    float delta = delta_time;
+    glm::vec3 right = glm::normalize(glm::cross(m_forward, m_up));
 
-  float step = delta * m_speed;
-  bool moved = false;
-  //m_pos -= m_up * 0.000001f;
-  if(IOSubsystem::isKeyPressed('W'))
-  {
-    moved = true;
-    m_pos += m_forward * step;
+    float step = delta * m_speed;
+    bool moved = false;
+    //m_pos -= m_up * 0.000001f;
+
+    if(IOSubsystem::isKeyPressed('W'))
+    {
+      moved = true;
+      m_pos += m_forward * step;
+    }
+    if(IOSubsystem::isKeyPressed('S'))
+    {
+      moved = true;
+      m_pos -= m_forward * step;
+    }
+    if(IOSubsystem::isKeyPressed('A'))
+    {
+      moved = true;
+      m_pos -= right * step;
+    }
+    if(IOSubsystem::isKeyPressed('D'))
+    {
+      moved = true;
+      m_pos += right * step;
+    }
+    if(IOSubsystem::isKeyPressed(' '))
+    {
+      moved = true;
+      m_pos += m_up* step;
+    }
+    if(IOSubsystem::isKeyPressed('V'))
+    {
+      moved = true;
+      m_pos -= m_up* step;
+    }
+    if(IOSubsystem::isKeyPressed('L'))
+    {
+      moved = true;
+      rotate(5,0);
+    }
+    if(IOSubsystem::isKeyPressed('J'))
+    {
+      moved = true;
+      rotate(-5,0);
+    }
+    if(IOSubsystem::isKeyPressed('K'))
+    {
+      moved = true;
+      rotate(0,5);
+    }
+    if(IOSubsystem::isKeyPressed('I'))
+    {
+      moved = true;
+      rotate(0,-5);
+    }
+    if(moved)
+    {
+      Engine::getScene()->cameraMoved();  
+    }
+    glm::vec2 mouse_movement = IOSubsystem::getMouseDelta();
+    rotate(mouse_movement.x, mouse_movement.y);
+    recalculateMatrices();
   }
-  if(IOSubsystem::isKeyPressed('S'))
-  {
-    moved = true;
-    m_pos -= m_forward * step;
-  }
-  if(IOSubsystem::isKeyPressed('A'))
-  {
-    moved = true;
-    m_pos -= right * step;
-  }
-  if(IOSubsystem::isKeyPressed('D'))
-  {
-    moved = true;
-    m_pos += right * step;
-  }
-  if(IOSubsystem::isKeyPressed(' '))
-  {
-    moved = true;
-    m_pos += m_up* step;
-  }
-  if(IOSubsystem::isKeyPressed('V'))
-  {
-    moved = true;
-    m_pos -= m_up* step;
-  }
-  if(IOSubsystem::isKeyPressed('L'))
-  {
-    moved = true;
-    rotate(5,0);
-  }
-  if(IOSubsystem::isKeyPressed('J'))
-  {
-    moved = true;
-    rotate(-5,0);
-  }
-  if(IOSubsystem::isKeyPressed('K'))
-  {
-    moved = true;
-    rotate(0,5);
-  }
-  if(IOSubsystem::isKeyPressed('I'))
-  {
-    moved = true;
-    rotate(0,-5);
-  }
-  if(moved)
-  {
-    Engine::getScene()->cameraMoved();  
-  }
-  glm::vec2 mouse_movement = IOSubsystem::getMouseDelta();
-  rotate(mouse_movement.x, mouse_movement.y);
-  recalculateMatrices();
 }
 glm::mat4 Camera::getView()
 {

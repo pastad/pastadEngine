@@ -66,3 +66,7 @@ void Text::setInactive()
 {
   m_active = false;
 }
+std::string Text::getText()
+{
+  return m_text;
+}

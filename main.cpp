@@ -31,7 +31,7 @@ int main(void)
 
   Engine engine;
 
-  engine.initialize(1240, 720, PHYSIC_SUBSYSTEM, true);
+  engine.initialize(1240, 720, PHYSIC_SUBSYSTEM, true, false);
 
   bool launch_game = false;
 
@@ -95,6 +95,18 @@ int main(void)
 
     Object * gaz = scene.addObject("models/gaz.obj", glm::vec3(10,0,0)); 
 
+
+    Object * temp_tree;
+
+    for(int k=0; k< 20; k++)
+    {
+      for(int t=0; t< 20; t++)
+      {
+        temp_tree = scene.addObjectInstanced("game/models/tree1.obj",glm::vec3(t*4-10,0,k*4+10) ); 
+      }      
+    }
+
+
     //Object * test_roach = scene.addObject("models/rooster.dae", glm::vec3(0,1,7)); 
     //test_roach->setRotation(glm::vec3(0.0f,90.0f,90.0f));
    // test_roach->setScale(glm::vec3(0.1f,0.1f,0.1f));
@@ -124,8 +136,9 @@ int main(void)
       }
 
   
-      if(IOSubsystem::isKeyPressed('N') )
+      if(IOSubsystem::isKeyPressedAndReleased('N') )
       {
+        std::cout<< "N pressed:" <<std::endl;
         if(fox->isVisible())
           fox->setInvisible();
         else

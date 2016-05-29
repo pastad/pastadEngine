@@ -36,6 +36,8 @@ bool Engine::m_edit_mode;
 float Engine::m_time_last_render;
 float Engine::m_render_update_delta= 0.0f;
 bool Engine::m_render_update_needed;
+bool Engine::m_fullscreen;
+bool Engine::m_gui_movement_lock = false;
 
 
 Engine::Engine()
@@ -47,11 +49,12 @@ Engine::~Engine()
 {		
 }
 
-bool Engine::initialize(unsigned int width, unsigned int height, unsigned int system_flags, bool edit)
+bool Engine::initialize(unsigned int width, unsigned int height, unsigned int system_flags, bool edit, bool fullscreen)
 {
 	m_win_width = width;
 	m_win_height = height;	
 	m_edit_mode = edit;
+	m_fullscreen = fullscreen;
 	m_current_time_sample = 0;
 	Engine::m_time_delta = 0.0f;
 	Engine::m_time_last = -1.0f;
@@ -76,7 +79,7 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 	
 	// initialize opengl
 	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,4);
+	/*glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
 	glfwWindowHint(GLFW_DOUBLEBUFFER,GL_TRUE);
@@ -92,7 +95,14 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 	{
 		glfwTerminate();
   	return false;
-	}
+	}*/
+
+	refreshWindow();
+	if(m_window == nullptr)
+	{
+		glfwTerminate();
+  	return false;
+  }
 
 	// check opengl genderated headers
 	int loaded = ogl_LoadFunctions();
@@ -149,6 +159,35 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 	m_initialized = true;
 	m_log->log("Engine", "initialized");
 	return true;
+}
+
+void Engine::refreshWindow()
+{
+	if( m_window != nullptr)
+	{
+		glfwDestroyWindow(m_window);
+	}
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
+	glfwWindowHint(GLFW_DOUBLEBUFFER,GL_TRUE);
+	glfwWindowHint(GLFW_RESIZABLE,GL_FALSE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
+
+	// create gl context ..... -1 to fix black window bug
+	m_window = glfwCreateWindow(m_win_width-1, m_win_height-1, "Engine", m_fullscreen ? glfwGetPrimaryMonitor() :nullptr , nullptr);
+
+	// check window creation
+	if(m_window == nullptr)
+	{
+		glfwTerminate();
+	}
+	else
+	{
+		glfwMakeContextCurrent(m_window);	
+		glfwSetWindowSize(m_window,m_win_width,m_win_height);
+	}
+
 }
 
 void Engine::shutDown()
@@ -225,6 +264,8 @@ void Engine::update()
 		if(m_edit_mode)
 			m_scene_editor->update();
 
+		IOSubsystem::clearKeys();
+		
 		glfwPollEvents();
 
 		timeUpdate();
@@ -460,6 +501,21 @@ float Engine::getTimeDelta()
 	return m_time_delta;
 }
 
+void Engine::keyWasPressed(unsigned int key_code)
+{
+	for( std::vector<GUI*>::iterator it = m_guis.begin(); it != m_guis.end();it++)
+	{
+		if( (*it)->isActive() )
+		{
+			(*it)->keyWasPressed(key_code);
+		}
+	}
+	if(m_scene_editor != nullptr)
+	{
+		m_scene_editor->keyWasPressed(key_code);
+	}
+}
+
 
 // passers
 
@@ -482,3 +538,16 @@ Light * Engine::pickLightAt(glm::vec2 p)
 	return m_render_system->pickLightAt(pos);
 }
 
+bool Engine::isGUIMovementLockSet()
+{
+	return m_gui_movement_lock;
+}
+
+void Engine::setGUIMovementLock()
+{
+	m_gui_movement_lock = true;
+}
+void Engine::unsetGUIMovementLock()
+{
+	m_gui_movement_lock = false;
+}

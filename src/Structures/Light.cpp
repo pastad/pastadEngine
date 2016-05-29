@@ -30,6 +30,7 @@ unsigned int Light::m_light_index_counter = 1000;
 
 Object * Light::m_point_object = nullptr;
 Object * Light::m_spot_object = nullptr;
+Object * Light::m_directional_object = nullptr;
 
 Light::Light():m_type(LIGHT_NONE)
 {
@@ -94,7 +95,13 @@ bool Light::setDirectional(glm::vec3 direction, glm::vec3 col_am ,glm::vec3 col_
     else
         Engine::getLog()->log("Light", "Too many directional lights allready set");
 
-    m_model = RessourceManager::loadModel("resources/sphere.obj",false);
+    m_model = RessourceManager::loadModel("resources/cylinder.obj",false);
+    if(m_directional_object == nullptr)
+    {
+      m_directional_object = m_model->getInstance();
+      m_directional_object->setScale(glm::vec3(0.2f,0.2f,0.2f));
+    }
+   
 
     
     return true;
@@ -430,7 +437,7 @@ unsigned int Light::getShadowIndex()
 {
   return m_shadow_index;
 }
-void Light::editRender(RenderShader * render_shader)
+void Light::editRender(RenderShader * render_shader, int c)
 {
   if( getType() == LIGHT_POINT )
   {
@@ -447,6 +454,14 @@ void Light::editRender(RenderShader * render_shader)
     m_spot_object->setId(m_id);
     m_model->render(render_shader, false);
   }
+  if( getType() == LIGHT_DIRECTIONAL)
+  {
+    render_shader->use();
+    m_directional_object->setPosition( glm::vec3(0,10+c,0) );
+    //m_spot_object->setRotation( m_rotation);
+    m_directional_object->setId(m_id);
+    m_model->render(render_shader, false);
+  }
 }
 
 glm::vec2 Light::getRotation()
@@ -455,14 +470,24 @@ glm::vec2 Light::getRotation()
 }
 void Light::rotate(glm::vec2 delta)
 {
-  m_rotation.x += delta.x*0.1f;
-  m_rotation.y -= delta.y*0.1f;
+  m_rotation.x += delta.x;
+  m_rotation.y -= delta.y;
 
   if(m_rotation.x >360.0f)
     m_rotation.x = 0.0f;
+  if(m_rotation.y >360.0f)
+    m_rotation.y = 0.0f;
+  if(m_rotation.x <0.0f)
+    m_rotation.x = 360.0f;
   if(m_rotation.y <0.0f)
     m_rotation.y = 360.0f;
 
+  m_direction= Helper::anglesToDirection(m_rotation.x,m_rotation.y);
+  m_refresh_shadow = true;
+}
+void Light::setRotation(glm::vec2 rot)
+{
+  m_rotation = rot;
   m_direction= Helper::anglesToDirection(m_rotation.x,m_rotation.y);
   m_refresh_shadow = true;
 }
@@ -487,3 +512,7 @@ void Light::move(glm::vec3 delta)
 {
   setPosition( getPosition()+ delta);
 }
+void Light::setColor(glm::vec3 c)
+{
+  m_color_ambient = m_color_specular = m_color_diffuse = c;
+}  

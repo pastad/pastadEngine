@@ -53,6 +53,10 @@ glm::vec3 Transform::getRotation()
 {
 	return m_rotation;
 }
+glm::vec3 Transform::getRotationDegrees()
+{
+	return glm::vec3( glm::degrees(m_rotation.x), glm::degrees(m_rotation.y) , glm::degrees(m_rotation.z) );
+}
 
 glm::vec3 Transform::getPosition()
 {

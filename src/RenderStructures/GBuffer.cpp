@@ -4,6 +4,7 @@
 #include "Texture.h"
 
 #include <vector>
+#include <iostream>
 
 GBuffer::GBuffer()
 {
@@ -85,13 +86,14 @@ int GBuffer::pickObjectAt(glm::vec2 pos)
   int size = Engine::getWindowWidth() *  Engine::getWindowHeight();
   GLfloat *texData = new GLfloat[ size*3];
 
-  int p  = pos.y * Engine::getWindowWidth() *3 ;
-  p+= pos.x * 3;
+  int p  =(int)pos.y * Engine::getWindowWidth() *3 ;
+  p+= (int)pos.x * 3;
   p+=1;
 
   m_material_texture->bind(0);
   glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_FLOAT, texData);
   int ret = texData[p];
+  //std::cout << "chosen: "<<ret <<" left: "<< texData[p-1] <<" right: "<< texData[p+1]<<std::endl;
 
   delete [] texData;
   return ret;
