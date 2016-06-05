@@ -61,12 +61,14 @@ Skybox::Skybox()
 
 Skybox::~Skybox()
 {
+  glDeleteVertexArrays(1, &m_vao);
 }
 
 
 bool Skybox::load(const std::string basef)
 {
-  
+  m_base_file = basef;
+
   glGenVertexArrays(1, &m_vao);
   glGenBuffers(1, &m_vbo);
 
@@ -142,4 +144,20 @@ void Skybox::render()
 
   glDepthFunc(GL_LESS);
 
+}
+
+void Skybox::save(tinyxml2::XMLNode * parent, tinyxml2::XMLDocument* document)
+{
+  tinyxml2::XMLElement * element_skybox = document->NewElement("Skybox");
+  parent->InsertEndChild(element_skybox);
+  element_skybox->SetAttribute("Path", m_base_file.c_str());
+}
+bool Skybox::load( tinyxml2::XMLElement *  element)
+{
+  if( element != nullptr)
+  {
+    m_base_file =std::string( element->Attribute("Path") );
+    return load(m_base_file);
+  }
+  return false;
 }

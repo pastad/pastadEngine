@@ -110,7 +110,7 @@ bool EngineGUI::initialize()
   m_tb_shadow_pcf = GUI::getButton();
   m_tb_shadow_pcf->intitializeWithToggle("resources/toggle_on.png","resources/toggle_off.png",
     glm::vec2(30.0f,Engine::getWindowHeight()-320.0f),glm::vec2(0.5f,0.5f),
-    "shadowPCF", false);
+    "shadowPCF", true);
   m_tb_shadow_pcf->setInactive();
 
   m_txt_shadow_pcf = GUI::getText();
@@ -123,7 +123,7 @@ bool EngineGUI::initialize()
   m_tb_shadow_rs = GUI::getButton();
   m_tb_shadow_rs->intitializeWithToggle("resources/toggle_on.png","resources/toggle_off.png",
     glm::vec2(30.0f,Engine::getWindowHeight()-340.0f),glm::vec2(0.5f,0.5f),
-    "shadowRS", true);
+    "shadowRS", false);
   m_tb_shadow_rs->setInactive();
 
   m_txt_shadow_rs = GUI::getText();

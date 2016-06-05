@@ -44,7 +44,11 @@ Model * RessourceManager::loadModel(std::string path, bool instanced)
 		if(success)
 			Engine::getLog()->log("RessourceManager","loaded model",path);
 		else
+		{
 			Engine::getLog()->log("RessourceManager","loading failed ",path);
+			delete model;
+			model = nullptr;
+		}
 	}
 
 	return model;

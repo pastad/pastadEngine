@@ -5,6 +5,7 @@
 #include "Engine.h"
 #include "Log.h"
 #include "Mesh.h"
+#include "BoundingBox.h"
 #include "Helper.h"
 #include "AnimationMesh.h"
 #include "RenderShader.h"
@@ -39,8 +40,6 @@ Model::~Model()
 Object * Model::getInstance()
 {
 	Object * obj = new Object(m_path, this);
-
-
 
 	m_instances.insert(m_instances.end(),obj);
   
@@ -77,7 +76,7 @@ void Model::render(RenderBaseShader * render_shader, std::vector<Object *> objec
       {
         if( with_material )
           m_materials.at((*it)->getMaterialIndex())->bind(0, (RenderShader *) render_shader);     
-       for(std::vector<Object *>::iterator it2 = objects.begin(); it2 != objects.end();it2++)
+        for(std::vector<Object *>::iterator it2 = objects.begin(); it2 != objects.end();it2++)
         {
           render_shader->setNotInstanced( (*it2)->getModelMatrix() );
           render_shader->setIndentifcation((*it2)->getId());
@@ -99,6 +98,7 @@ void Model::render(RenderBaseShader * render_shader, std::vector<Object *> objec
       if( (*it_objs)->isVisible() )
       {
         render_shader->setNotInstanced((*it_objs)->getModelMatrix() );
+        render_shader->setIndentifcation((*it_objs)->getId());
 
         readNodeHeirarchy( (*it_objs)->getAnimationTime(), m_scene->mRootNode, Identity);
         
@@ -171,6 +171,7 @@ void Model::processScene()
   }
   else
   {
+    std::vector<BoundingBox *> bbs;
     for (unsigned int i = 0 ; i <m_scene->mNumMeshes ; i++)
     {
       const aiMesh* mesh = m_scene->mMeshes[i];
@@ -179,8 +180,13 @@ void Model::processScene()
       n= new Mesh(mesh,mesh->mMaterialIndex);
       if(n == NULL)
         Engine::getLog()->log("Model","Mesh is null");
-      m_meshes.push_back(n);      
+      else
+      {        
+        m_meshes.push_back(n);  
+        bbs.push_back(n->getBoundingBox());
+      }    
     }
+    m_bounding_box = new BoundingBox(bbs);
     m_animated = false;
   }
 
@@ -379,3 +385,12 @@ const aiNodeAnim* Model::findNodeAnim(const aiAnimation* pAnimation, const std::
   return NULL;
 }
 
+
+std::vector<Object *> Model::getObjects()
+{
+  return m_instances;
+}
+BoundingBox * Model::getBoundingBox()
+{
+  return m_bounding_box;
+}

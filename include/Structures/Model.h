@@ -21,6 +21,7 @@ class Material;
 class RenderShader;
 class RenderBaseShader;
 class PointShadowShader;
+class BoundingBox;
 
 class Model
 {
@@ -48,7 +49,11 @@ public:
 	// returns true if animated
 	bool isAnimated();
 
+	//returns the objects
+	std::vector<Object *> getObjects();
 
+	// returns the bb of the model
+	BoundingBox * getBoundingBox();
 
 private:
 
@@ -84,6 +89,9 @@ private:
 
 	// determines if instancation should be enabled
 	bool m_instanced;	
+
+	// the bounding box of the model
+	BoundingBox * m_bounding_box = nullptr;
 
 
 	// processes the scene

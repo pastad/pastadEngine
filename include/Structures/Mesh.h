@@ -10,6 +10,7 @@
 #include <vector>
 
 class IndexedRepresentation;
+class BoundingBox;
 
 class Mesh
 {
@@ -31,6 +32,9 @@ public:
   // buffers the matrices to a gml buffer
   void bufferModelMatrices(std::vector<glm::mat4> * matrices);
 
+  // returns the bb of the mesh
+  BoundingBox * getBoundingBox();
+  
 protected:
 
 private:
@@ -55,6 +59,9 @@ private:
 
   // holds the draw count
   unsigned int m_draw_count = 0;
+
+  // the bounding box of the mesh
+  BoundingBox * m_bounding_box;
 
   // inits the mesh
   void initMesh(const  IndexedRepresentation& model);

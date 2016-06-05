@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <future>
 
 #include "Log.h"
 #include "Scene.h"
@@ -22,6 +23,8 @@ PhysicSubsystem * Engine::m_physic_system;
 GLFWwindow * Engine::m_window;
 unsigned int Engine::m_system_flags;
 Scene * Engine::m_scene;
+Scene * Engine::m_scene_next = nullptr;
+bool Engine::m_scene_next_delete = false;
 unsigned int Engine::m_win_width;
 unsigned int Engine::m_win_height;
 float Engine::m_time_samples[NUM_TIME_SAMPLES];
@@ -265,10 +268,11 @@ void Engine::update()
 			m_scene_editor->update();
 
 		IOSubsystem::clearKeys();
-		
+
 		glfwPollEvents();
 
 		timeUpdate();
+		sceneSwitch();
 	}
 }
 
@@ -388,11 +392,29 @@ bool Engine::shutDownSubsystems()
 	return true;
 }
 
-void Engine::setScene(Scene * scene)
+void Engine::setScene(Scene * scene, bool delete_old)
 {
-	m_scene = scene;
+	m_scene_next = scene;
+	m_scene_next_delete = delete_old;
 	m_log->log("Engine", "scene was set");
 }
+
+void Engine::sceneSwitch()
+{
+	if(m_scene_next != nullptr)
+	{
+		Scene * t = m_scene;
+		if(t != nullptr && m_scene_next_delete)
+		{
+			m_log->log("Engine", "old scene is deleted");
+			delete t;
+		}
+		m_scene = m_scene_next;
+		m_scene_next = nullptr;
+		m_log->log("Engine", "scene switched");
+	}
+}
+
 
 Scene * Engine::getScene()
 {
@@ -451,22 +473,42 @@ void Engine::windowSizeChangedCallback(GLFWwindow* window, int width, int height
 	glViewport(0, 0, width, height);
 }
 
+bool Engine::buttonCheck(GUI *gui , float x, float y)
+{
+	if ( gui->checkButtonPressed(x,y))
+		return true;
+	return false;
+}
+
 bool Engine::checkGUIsForButtonPresses(float x, float y)
 {
 	bool ret = false;
+
+	std::vector<std::future<bool>> futures;
 
 	for( std::vector<GUI*>::iterator it = m_guis.begin(); it != m_guis.end();it++)
 	{
 		if( (*it)->isActive() )
 		{
-			if ( (*it)->checkButtonPressed(x,y))
-				ret = true;
+			futures.push_back (std::async(std::launch::async,buttonCheck,(*it), x,y));
+			//if ( (*it)->checkButtonPressed(x,y))
+			//	ret = true;
 		}
 	}
+	//futures.push_back (std::async(std::launch::async,buttonCheck,( (GUI *)m_engine_gui), x,y));
+	//futures.push_back (std::async(std::launch::async,buttonCheck,( (GUI *)m_scene_editor), x,y));
 	if(m_engine_gui->checkButtonPressed(x,y))
 		ret = true;
 	if(m_scene_editor->checkButtonPressed(x,y))
 		ret = true;
+	//std::cout << futures.size() << std::endl;
+	for(auto &e : futures) 
+	{
+		bool ergeb = e.get();
+		if(ergeb)
+			ret = true;
+  }
+	
 
 	return ret;
 }

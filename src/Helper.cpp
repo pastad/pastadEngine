@@ -7,9 +7,11 @@
 #include <glm/gtx/vector_angle.hpp>
 
 #include <iostream>
+#include <sstream>
 
 #include "Engine.h"
 
+#include "tinyxml2.h"
 
 float Helper::m_debug_float;
 
@@ -83,4 +85,37 @@ glm::vec3 Helper::anglesToDirection(float rot1, float rot2)
   front.y = sin(glm::radians(rot2));
   front.z = sin(glm::radians(rot1)) * cos(glm::radians(rot2));
   return glm::normalize(front);
+}
+
+std::vector<std::string> Helper::split(const std::string &stri, char seperator) 
+{
+  std::vector<std::string> parts;
+  std::stringstream ss(stri);
+  std::string line;
+  while (std::getline(ss, line, seperator))   
+    parts.push_back(line);
+  
+  return parts;
+}
+void Helper::insertToElement(tinyxml2::XMLElement * element, glm::vec3 v)
+{
+  element->SetAttribute("x", v.x);
+  element->SetAttribute("y", v.y);
+  element->SetAttribute("z", v.z);
+}
+void Helper::insertToElement(tinyxml2::XMLElement * element, glm::vec2 v)
+{
+  element->SetAttribute("x", v.x);
+  element->SetAttribute("y", v.y);
+}
+void Helper::readFromElement(tinyxml2::XMLElement * element,glm::vec3 * v)
+{
+  element->QueryFloatAttribute("x", &v->x);
+  element->QueryFloatAttribute("y", &v->y);
+  element->QueryFloatAttribute("z", &v->z);
+}
+void Helper::readFromElement(tinyxml2::XMLElement * element,glm::vec2 * v)
+{
+  element->QueryFloatAttribute("x", &v->x);
+  element->QueryFloatAttribute("y", &v->y);
 }

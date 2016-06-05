@@ -5,6 +5,9 @@
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 
+
+#include "tinyxml2.h"
+
 // class to represent a light (direcitonal, point or spot)
 
 #define MAX_NUM_POINT_LIGHTS 10
@@ -31,7 +34,6 @@ class RenderBaseShader;
 class RenderShader;
 class Model;
 class Object;
-
 class Light
 {
 public:
@@ -116,6 +118,15 @@ public:
   glm::vec2 getRotation();
   void rotate(glm::vec2 delta);
   void setRotation(glm::vec2 delta);
+  
+  // saves the light
+  void save(tinyxml2::XMLNode * parent, tinyxml2::XMLDocument * doc);
+
+  // loads the light
+  bool load(tinyxml2::XMLElement *  element);
+
+  // returns true if still in light range
+  bool isInRange(glm::vec3 p);
 
 
 protected:

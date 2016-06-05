@@ -3,6 +3,7 @@
 #include "IndexedRepresentation.h"
 #include "Engine.h"
 #include "Log.h"
+#include "BoundingBox.h"
 
 #include <iostream>
 
@@ -13,17 +14,39 @@ Mesh::Mesh(const aiMesh*mesh, int mat_index)
 
   aiVector3D zero(0.0f, 0.0f, 0.0f);
 
+  float min_x = -1;
+  float max_x = -1;
+  float min_y = -1;
+  float max_y = -1;
+  float min_z = -1;
+  float max_z = -1;
+
   for(unsigned int i = 0; i < mesh->mNumVertices; i++)
   {
     aiVector3D* pPos      = &(mesh->mVertices[i]);
     aiVector3D* pNormal   = &(mesh->mNormals[i]);
     aiVector3D* pTexCoord = mesh->HasTextureCoords(0) ? &(mesh->mTextureCoords[0][i]) : &zero;
 
+    if( (min_x == -1) || (min_x > pPos->x) ) 
+      min_x = pPos->x;
+    if( (min_y == -1) || (min_y > pPos->y) ) 
+      min_y = pPos->y;
+    if( (min_z == -1) || (min_z > pPos->z) ) 
+      min_z = pPos->z;
+
+    if( (max_x == -1) || (max_x < pPos->x) ) 
+      max_x = pPos->x;
+    if( (max_y == -1) || (max_y < pPos->y) ) 
+      max_y = pPos->y;
+    if( (max_z == -1) || (max_z < pPos->z) ) 
+      max_z = pPos->z;
+
+
     model.m_positions.push_back(glm::vec3(pPos->x,pPos->y,pPos->z )  );
     model.m_texCoords.push_back(glm::vec2(pTexCoord->x,1-pTexCoord->y)); // Flipp tex coords in y
     model.m_normals.push_back(glm::vec3(pNormal->x,pNormal->y,pNormal->z ));
   }
-
+  m_bounding_box = new BoundingBox(min_x,min_y,min_z,max_x,max_y,max_z);
 
   for (unsigned int i = 0 ; i < mesh->mNumFaces ; i++)
   {
@@ -51,6 +74,8 @@ Mesh::Mesh(const  IndexedRepresentation& model, int mat_index)
 Mesh::~Mesh()
 {
   glDeleteVertexArrays(1, &m_vertex_array_object);
+  if(m_bounding_box != nullptr)
+    delete m_bounding_box;
 }
 
 void  Mesh::initMesh(const  IndexedRepresentation& model)
@@ -94,30 +119,34 @@ void Mesh::bufferModelMatrices(std::vector<glm::mat4> * matrices)
 
   for (unsigned int i = 0; i < 4 ; i++)
   {
-      glEnableVertexAttribArray(3 + i); // 3 because we skip the index buffer
-      glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof((*matrices)[0]), (const GLvoid*)(sizeof(glm::vec4) * i ));
-      glVertexAttribDivisor(3 + i, 1);
+    glEnableVertexAttribArray(3 + i); // 3 because we skip the index buffer
+    glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof((*matrices)[0]), (const GLvoid*)(sizeof(glm::vec4) * i ));
+    glVertexAttribDivisor(3 + i, 1);
   }
 
   glBindVertexArray(0);
 }
 
 void Mesh::render(unsigned int num_instances)
-{
-  
-    glBindVertexArray(m_vertex_array_object);
-    glDrawElementsInstanced(GL_TRIANGLES, m_draw_count, GL_UNSIGNED_INT,0, num_instances);
-    glBindVertexArray(0);
+{  
+  glBindVertexArray(m_vertex_array_object);
+  glDrawElementsInstanced(GL_TRIANGLES, m_draw_count, GL_UNSIGNED_INT,0, num_instances);
+  glBindVertexArray(0);
 }
 
 void Mesh::render()
 {
-    glBindVertexArray(m_vertex_array_object);
-    glDrawElements(GL_TRIANGLES, m_draw_count, GL_UNSIGNED_INT,0);
-    glBindVertexArray(0);
+  glBindVertexArray(m_vertex_array_object);
+  glDrawElements(GL_TRIANGLES, m_draw_count, GL_UNSIGNED_INT,0);
+  glBindVertexArray(0);
 }
 
 int Mesh::getMaterialIndex()
 {
-    return m_mat_index;
+return m_mat_index;
+}
+
+BoundingBox * Mesh::getBoundingBox()
+{
+  return m_bounding_box;
 }

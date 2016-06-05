@@ -76,7 +76,7 @@ public:
 	static void render();
 	
 	// sets the scene 
-	static void setScene(Scene * scene);
+	static void setScene(Scene * scene, bool delete_old);
 
 	// returns the current set scene
 	static Scene * getScene();
@@ -163,6 +163,8 @@ private:
 
 	// the scene that should be used
 	static Scene * m_scene;
+	static Scene * m_scene_next; 
+	static bool m_scene_next_delete;
 
 	// the graphical user interfaces and the id
 	static std::vector<GUI *> m_guis;
@@ -220,6 +222,13 @@ private:
 
 	// deletes windows if set and creates a new one
 	static void refreshWindow();
+
+	//switches the scene at end of turn if requeseted
+	static void sceneSwitch();
+
+	// static for async button check
+	static bool buttonCheck(GUI *gui , float x, float y);
+
 };
 
 

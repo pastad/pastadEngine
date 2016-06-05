@@ -8,11 +8,14 @@
 
 #include <assimp/scene.h>
 
+#include "tinyxml2.h"
+
 // the representation of an Model to the user
 
 // the animation was inspired by the ogldev tutorial | the extent is not know due to adaption from previous project
 
 class Model;
+class Light;
 
 class Object : public Transform
 {
@@ -54,6 +57,9 @@ public:
   float getAnimationTime();
   void advanceAnimation(float delta);
 
+  // returns true if animated
+  bool isAnimated();
+
   // id getter setter
   void setId(int id);
   int getId();
@@ -64,12 +70,25 @@ public:
   // returns the identifier of the belonging model
   std::string getIdentifier();
 
-  using  Transform::setPosition;
+  // saves the object
+  void save(tinyxml2::XMLNode * parent, tinyxml2::XMLDocument * doc);
+
+  // loads the object
+  bool load(tinyxml2::XMLElement *  element);
+
+  // returns the min bb distant corner point in relation to ref
+  glm::vec3 getMinBBDistantPoint(glm::vec3 ref);
+
+  // returns the minimal angle to the camera
+  float getMinAngleToLight(Light * light);
+
+  using  Transform::setPosition;  
+  using  Transform::getPosition;
   using  Transform::setRotation;
   using  Transform::getRotationDegrees;
   using  Transform::setScale;
-  using  Transform::getPosition;
-
+  using  Transform::getScale;
+  
 private:
 
   // pointer to the "parent" model
@@ -92,6 +111,10 @@ private:
 
   // the identificator of the object
   unsigned int m_id;
+
+  // returns the angle to the camer 
+  float getAngleToLight(Light * light, glm::vec3 pos);
+
 
 };
 

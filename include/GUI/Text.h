@@ -38,6 +38,9 @@ public:
   void setActive();
   void setInactive();
 
+  // returns the vertical size of the text
+  int getSize();
+
 protected:
 
   // the text positon color and scale
@@ -54,6 +57,9 @@ protected:
 
   // determines if text is active
   bool m_active;
+
+  // the vertical length of the text
+  int  m_size_vert;
 
 };
 

@@ -4,10 +4,10 @@
 #include "TextShader.h"
 
 
-Text::Text(unsigned int id):m_id(id),m_text("DEFAULT TEXT"),m_position(0,0),m_scale(1.0f),m_color(1,1,1),m_centered(false),m_active(true)
+Text::Text(unsigned int id):m_id(id),m_text("DEFAULT TEXT"),m_position(0,0),m_scale(1.0f),m_color(1,1,1),m_centered(false),m_active(true),m_size_vert(-1)
 {  
 }
-Text::Text(unsigned int id, std::string txt, glm::vec2 pos, float scale, glm::vec3 color):m_id(id), m_text(txt),m_position(pos),m_scale(scale),m_color(color), m_centered(false),m_active(true)
+Text::Text(unsigned int id, std::string txt, glm::vec2 pos, float scale, glm::vec3 color):m_id(id), m_text(txt),m_position(pos),m_scale(scale),m_color(color), m_centered(false),m_active(true),m_size_vert(-1)
 {  
 }
 Text::~Text()
@@ -18,6 +18,8 @@ void Text::render(TextShader * text_shader)
 {
   if((text_shader != nullptr) && m_active )
   {
+    if(m_size_vert == -1)
+      m_size_vert = text_shader->approximateTextOffset(m_text).x;
     text_shader->setProjection();
     text_shader->renderText(m_text,m_position,m_scale,m_color, m_centered);
   }
@@ -69,4 +71,8 @@ void Text::setInactive()
 std::string Text::getText()
 {
   return m_text;
+}
+int Text::getSize()
+{
+  return m_size_vert * m_scale;
 }

@@ -67,7 +67,7 @@ bool PointShadowBuffer::initialize(  float width ,  float height)
 void PointShadowBuffer::bindForInput(GLenum face)
 {
   //m_buffers[iteration]->bindForInput(); 
-  glViewport(0, 0, m_width, m_height);
+  glViewport(0, 0, Engine::getWindowWidth(), Engine::getWindowHeight());
   //glBindFramebuffer(GL_FRAMEBUFFER, m_buffer_handle);
 
 

@@ -121,7 +121,7 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 
 
 		m_shader->use();
-		m_shader->setShadows(ST_STANDARD_RS);
+		m_shader->setShadows(ST_STANDARD_PCF);
 
 		m_shadows_standard_enabled = true;
 
@@ -153,6 +153,7 @@ void RenderSubsystem::startRender()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		m_shader->reset();
 	}
+	//Engine::getLog()->log("RenderSubsystem", "start render");
 }
 
 void RenderSubsystem::renderPassGBuffer()
@@ -181,6 +182,7 @@ void RenderSubsystem::renderPassGBuffer()
 	
 	glFinish();
 	m_gbuffer->unbindFromInput();
+	//Engine::getLog()->log("RenderSubsystem", "gbuffer passs");
 }
 
 void RenderSubsystem::renderPassShadow()
@@ -191,6 +193,7 @@ void RenderSubsystem::renderPassShadow()
 
 	if(scene != nullptr)
 		scene->renderShadow(m_shadow_shader,m_point_shadow_shader);
+	//Engine::getLog()->log("RenderSubsystem", "shadow pass");
 }
 
 bool RenderSubsystem::refreshShaders()
@@ -270,6 +273,7 @@ void RenderSubsystem::renderPassLight()
 	glFinish();
 
 	m_pp_buffer->unbindFromInput();
+	//Engine::getLog()->log("RenderSubsystem", "light pass");
 }
 void RenderSubsystem::renderPassPostProcess()
 {
@@ -294,6 +298,7 @@ void RenderSubsystem::renderPassPostProcess()
   m_render_quad->render();	
 
 	glFinish();
+	//Engine::getLog()->log("RenderSubsystem", "pp pass");
 }
 
 void RenderSubsystem::renderPassLightBlur()
@@ -366,6 +371,7 @@ void RenderSubsystem::renderUI()
 
 	glDisable(GL_BLEND);
 	glFinish();
+	//Engine::getLog()->log("RenderSubsystem", "ui pass");
 }
 
 void RenderSubsystem::render()
@@ -392,7 +398,9 @@ void RenderSubsystem::endRender()
 	if(m_initialized)
 	{		
 		glfwSwapBuffers(m_window);
+		m_shader->reset();
 	}
+	//Engine::getLog()->log("RenderSubsystem", "end render");
 }
 
 bool RenderSubsystem::systemCheck()

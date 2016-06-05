@@ -55,7 +55,7 @@ int main(void)
   else
   {
 
-    Scene scene;
+    Scene *  scene = new Scene();
 
     //Object * object5 = scene.addObject("models/sponza/sponza.obj"); 
     //Object * object6 = scene.addObject("models/table_medieval_trestle.obj"); 
@@ -67,17 +67,17 @@ int main(void)
     //  1.0f,1.0f,0.09f,0.032f, 45.0f, glm::vec3(1,0,1) );
 
 
-    Light * light111 = scene.addLight();
-    light111->setPoint(glm::vec3(2,0,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),0.5f,0.1f,0.09f,0.032f,true);
-    Light * light112 = scene.addLight();
-    light112->setPoint(glm::vec3(2,4,0),glm::vec3(1,0,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),0.5f,0.1f,0.09f,0.032f,true);
+//    Light * light111 = scene.addLight();
+//    light111->setPoint(glm::vec3(2,0,0),glm::vec3(1,1,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),0.5f,0.1f,0.09f,0.032f,true);
+//    Light * light112 = scene.addLight();
+//    light112->setPoint(glm::vec3(2,4,0),glm::vec3(1,0,1),glm::vec3(1.0,1.0,1.0),glm::vec3(1,1,1),0.5f,0.1f,0.09f,0.032f,true);
    // Light * world_light = scene.addLight();
    // world_light->setDirectional(glm::vec3(0,-1,1), glm::vec3(1,0.95,0.9) ,glm::vec3(1,1,1), glm::vec3(1,1,1),0.3f);
 
-    scene.setSkybox("models/skybox1/sk1");
+    //scene->setSkybox("models/skybox1/sk1");
 
 
-    Object * fox = scene.addObject("game/models/Fox.dae", glm::vec3(4,0,7)); 
+  /*  Object * fox = scene.addObject("game/models/Fox.dae", glm::vec3(4,0,7)); 
     fox->setRotation(glm::vec3(0.0f,90.0f,90.0f));
     fox->setScale(glm::vec3(0.5f,0.5f,0.5f));
     fox->applyPhysics();
@@ -104,7 +104,7 @@ int main(void)
       {
         temp_tree = scene.addObjectInstanced("game/models/tree1.obj",glm::vec3(t*4-10,0,k*4+10) ); 
       }      
-    }
+    }*/
 
 
     //Object * test_roach = scene.addObject("models/rooster.dae", glm::vec3(0,1,7)); 
@@ -113,11 +113,12 @@ int main(void)
 
     //Terrain * terrain =  scene.addTerrain();
     //terrain->generate();
-   
+    //scene.save("scene_save_test.xml");
+    scene->load("spolight-rangeT-test.xml");
+   // scene->save("scene_save_test.xml");
     Helper::m_debug_float = 0.0f;
 
-    engine.setScene(&scene);
-
+    engine.setScene(scene, false);
     //ground->setPriorityRender();  
 
     // run the main loop
@@ -139,10 +140,10 @@ int main(void)
       if(IOSubsystem::isKeyPressedAndReleased('N') )
       {
         std::cout<< "N pressed:" <<std::endl;
-        if(fox->isVisible())
-          fox->setInvisible();
-        else
-          fox->setVisible();
+        //if(fox->isVisible())
+        ///  fox->setInvisible();
+        //else
+        //  fox->setVisible();
       }
       if(IOSubsystem::isKeyPressed('Q') )
       {

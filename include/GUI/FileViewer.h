@@ -1,5 +1,5 @@
-#ifndef FILE_CHOOSER
-#define FILE_CHOOSER
+#ifndef FILE_VIEWER
+#define FILE_VIEWER
 
 #include "GUI.h"
 #include <boost/filesystem.hpp>
@@ -11,14 +11,14 @@
 #define FC_STATUS_DONE_OK 2
 #define FC_STATUS_DONE_CANCLED 3
 
-class FileChooser : GUI
+class FileViewer : GUI
 {
 public:
-  FileChooser();
-  ~FileChooser();
+  FileViewer();
+  ~FileViewer();
 
-  FileChooser(const FileChooser& FileChooser) = delete;
-  FileChooser& operator=(const FileChooser& other) = delete;
+  FileViewer(const FileViewer& FileViewer) = delete;
+  FileViewer& operator=(const FileViewer& other) = delete;
 
   // intializes the GUI
   bool initialize();
@@ -42,25 +42,40 @@ public:
   // jumps up a directory
   void chosenParentDirectory();
 
+  // altivates the ok button for file saving
+  void fileTyped();
+
   // sets the file in the current directory to chosen one
   void chosenFile(std::string filename);
 
   // resets the file chooser | ususally when status was read
   void reset();
 
+  // shifts the file view up or down
+  void shiftView(int delta);
+
   // returns the selected file name
   std::string getFileName();
 
-private:
+  // identifier getter setter
+  std::string getIdentifier();
+  void setIdentifier(std::string);
+
+protected:
 
   Image * m_back_panel; 
   Button *m_btn_close;
   Button *m_btn_ok;
-  Text * m_txt_selected;
+  Button *m_btn_up;
+  Button *m_btn_down; 
+  EditText * m_txt_selected;
   Text * m_txt_path;
 
   // callback four mouse button press
   static void mouseButtonCallback(Button * btn);
+
+  // calback fot edit text changed
+  static void editTextChangedCallback(EditText * edit_txt);
 
   using GUI::setActive;
   using GUI::setInactive;
@@ -78,10 +93,17 @@ private:
   boost::filesystem::path m_current_file;
   
   // the files in the cuurent path
-  std::vector<boost::filesystem::path> m_current_path_files;
-  std::vector<boost::filesystem::path> m_current_path_directories;
+  std::map<std::string,boost::filesystem::path> m_current_path_files;
+  std::map<std::string,boost::filesystem::path> m_current_path_directories;
 
+  // the dir/file offset
   unsigned int m_view_offset = 0;
+
+  // the identifier for the fc
+  std::string m_identifier;
+
+  // the path that will be returned
+  std::string m_return_path;
 
   // loads the files in m_current_path
   void loadPathFiles();
@@ -97,4 +119,4 @@ private:
 
 
 
-#endif // FILE_CHOOSER
+#endif // FILE_VIEWER

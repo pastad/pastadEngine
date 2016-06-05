@@ -14,7 +14,8 @@
 
 GUI::GUI(unsigned int id):m_id(id),m_text_ids(0),m_button_ids(0),m_active(true)
 {  
-  external_buttonPressedCallback = nullptr;
+  external_buttonPressedCallback =  nullptr;
+  external_editTextCallback = nullptr;
 }
 GUI::~GUI()
 {  
@@ -76,7 +77,7 @@ void GUI::removeText(Text * text)
 }
 EditText * GUI::getEditText()
 {
-  EditText * text = new EditText(m_edit_text_ids);
+  EditText * text = new EditText(m_edit_text_ids, this);
   m_edit_texts.insert(std::pair<int, EditText*>(m_edit_text_ids,text));
   m_edit_text_ids++;
   return text;
@@ -135,7 +136,7 @@ bool GUI::checkButtonPressed(float x, float y)
   bool ret = false;
   for( std::map<int,Button*>::iterator it = m_buttons.begin(); it != m_buttons.end();it++)
   {
-    if( it->second->wasPressed(x,y) )
+    if( it->second->wasPressed(x,y)  &&  it->second->isActive() )
     {
       ret = true;
       if( external_buttonPressedCallback != nullptr )
@@ -144,7 +145,7 @@ bool GUI::checkButtonPressed(float x, float y)
   }
   for( std::map<int,EditText*>::iterator it = m_edit_texts.begin(); it != m_edit_texts.end();it++)
   {
-    if( it->second->wasPressed(x,y) )
+    if( it->second->wasPressed(x,y)  )
     {
       ret = true;    
     }
@@ -152,7 +153,7 @@ bool GUI::checkButtonPressed(float x, float y)
 
   for( std::vector<GUI *>::iterator it = m_children.begin(); it != m_children.end();it++)
   {
-    if( (*it)->checkButtonPressed(x,y) )
+    if( (*it)->checkButtonPressed(x,y) &&  (*it)->isActive()  )
       ret = true;
   }
 

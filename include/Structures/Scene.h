@@ -64,9 +64,11 @@ public:
   SceneTreeElement * getSceneRoot();
 
 
-  // adds an object to the scene | single or instanced
+  // adds an object to the scene | single or instanced (with|without position)
   Object * addObject(std::string  path, glm::vec3 position);
   Object * addObjectInstanced(std::string path, glm::vec3 position);
+  Object * addObject(std::string  path);
+  Object * addObjectInstanced(std::string path);
 
   // adds a terrain to the scene
   Terrain * addTerrain();
@@ -80,11 +82,20 @@ public:
   // retrieves the object with the id | or nullptr
   Object * getObject(int id);
 
+  // removes the object from the scene | doesn't delete it
+  void removeObject(Object * obj);
+
   // retrieves the light with the id | or nullptr
   Light * getLight(int id);
 
   // removes the light from the scene
   void removeLight(Light * l);
+
+  // saves the scene to a path 
+  void save(std::string path);
+
+  // loads the scene specified by path
+  bool load(std::string path);
   
 
 private:
@@ -116,16 +127,15 @@ private:
   // number of objects in the scene for the ids
   int m_object_counter = 1000;
 
-  // internal addObject request handling function
+  // internal addObject request handling function ( with|without position)
   Object * addObject(std::string  path, glm::vec3 position, bool instanced);
+  Object * addObject(std::string  path, bool instanced);
 
   // updates the animated objects
   void update(SceneTreeElement * element,  float delta);
 
   // returns a new object id
   int getObjectIdentification();
-
-
 
 };
 

@@ -9,7 +9,7 @@
 
 class Light;
 class Object;
-class FileChooser;
+class FileViewer;
 
 class SceneEditor : GUI
 {
@@ -36,12 +36,28 @@ public:
   // starts adding an object
   void startObjectAdding();
 
+  // starts adding a skybox
+  void startSkyboxAdding();
+
+  // starts adding a scene
+  void startSceneOpening();
+
+  // starts saving the scene
+  void startSceneSaving();
+
 private:
   static Image * m_back_panel_edit;
+
+  static Button * m_btn_open_scene;
+  static Button * m_btn_save_scene;
 
   // btns and texts for adding deleting lights
   static Button * m_btn_del_light;
   static Text * m_txt_del_light;
+
+   static Button * m_btn_del_object;
+  static Text * m_txt_del_object;
+
 
   static Button * m_btn_add_light;
   static Text * m_txt_add_light;
@@ -55,6 +71,9 @@ private:
   static Button * m_btn_add_object;
   static Text * m_txt_add_object;
 
+  static Button * m_btn_add_skybox;
+  static Text * m_txt_add_skybox;
+
   static EditText * m_edittxt_x_coord;
   static EditText * m_edittxt_y_coord;
   static EditText * m_edittxt_z_coord;
@@ -63,7 +82,10 @@ private:
   static EditText * m_edittxt_y_rot;
   static EditText * m_edittxt_z_rot;
 
+  static EditText * m_edittxt_scale;
+
   static EditText * m_edittxt_light_color;
+  static Text * m_txt_light_color;
 
 
   // movement and rotation buttons
@@ -81,6 +103,9 @@ private:
   static Button * m_btn_rot_z_plus;
   static Button * m_btn_rot_z_minus;
 
+  static Button * m_btn_scale_plus;
+  static Button * m_btn_scale_minus;
+
   static Text * m_txt_coords;
   static Text * m_txt_rotation;
 
@@ -88,13 +113,16 @@ private:
   static bool m_expanded;
 
   // the file chooser for the editor
-  static FileChooser * m_file_chooser;
+  static FileViewer* m_file_chooser;
 
   // selected light for edit mode
   static Light * m_edit_selected_light;
 
   // selected object for edit mode
   static Object * m_edit_selected_object;
+
+  // true if editor was just extended
+  static bool m_just_activated;
 
   // callback four mouse button press
   static void mouseButtonCallback(Button * btn);

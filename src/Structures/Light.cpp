@@ -19,6 +19,9 @@
 
 #include  <iostream>
 
+#define MIN_LIGHT_THRESHOLD 0.1
+
+
 unsigned int Light::m_num_point_lights = 0;
 unsigned int Light::m_num_spot_lights = 0;
 unsigned int Light::m_num_directional_lights = 0;
@@ -516,3 +519,175 @@ void Light::setColor(glm::vec3 c)
 {
   m_color_ambient = m_color_specular = m_color_diffuse = c;
 }  
+
+
+void Light::save(tinyxml2::XMLNode * parent, tinyxml2::XMLDocument* document)
+{  
+  tinyxml2::XMLElement * element_light = document->NewElement("Light");
+  parent->InsertEndChild(element_light);
+  element_light->SetAttribute("Type", getType());
+
+
+  tinyxml2::XMLElement *  element = document->NewElement("Position");
+  element_light->InsertEndChild(element);;
+  Helper::insertToElement(element, getPosition() );
+
+  element = document->NewElement("Direction");
+  element_light->InsertEndChild(element);
+  Helper::insertToElement(element, getDirection() );
+
+  element = document->NewElement("Rotation");
+  element_light->InsertEndChild(element);
+  Helper::insertToElement(element, getRotation() );
+
+  element = document->NewElement("ColorAmbient");
+  element_light->InsertEndChild(element);
+  Helper::insertToElement(element, getAmbientColor() );
+
+  element = document->NewElement("ColorDiffuse");
+  element_light->InsertEndChild(element);
+  Helper::insertToElement(element, getDiffuseColor() );
+
+  element = document->NewElement("ColorSpecular");
+  element_light->InsertEndChild(element);
+  Helper::insertToElement(element, getSpecularColor() );
+
+  element = document->NewElement("Intensity");
+  element_light->InsertEndChild(element);
+  element->SetAttribute("value", getIntensity());
+
+  element = document->NewElement("AttenuationConstant");
+  element_light->InsertEndChild(element);
+  element->SetAttribute("value", getAttenuationConstant());
+
+  element = document->NewElement("AttenuationLinear");
+  element_light->InsertEndChild(element);
+  element->SetAttribute("value", getAttenuationLinear());
+
+  element = document->NewElement("AttenuationQuadratic");
+  element_light->InsertEndChild(element);
+  element->SetAttribute("value", getAttenuationQuadratic());
+
+  element = document->NewElement("CutoffAngle");
+  element_light->InsertEndChild(element);
+  element->SetAttribute("value", getCutoffAngle());
+
+  element = document->NewElement("ShadowEnabled");
+  element_light->InsertEndChild(element);
+  element->SetAttribute("value", isShadowEnabled());
+}
+bool Light::load( tinyxml2::XMLElement *  element)
+{
+  glm::vec3 position;
+  glm::vec3 direction;
+  glm::vec2 rotation;
+
+  glm::vec3 color_ambient;
+  glm::vec3 color_diffuse;
+  glm::vec3 color_specular;
+
+  float att_const;
+  float att_linear;
+  float att_quadratic;
+  float intensity;
+
+  float cutoff_angle;
+
+  bool shadow_enabled;
+
+  int type;
+
+   
+  element->QueryIntAttribute("Type", &type);  
+
+   tinyxml2::XMLElement * child = element->FirstChildElement("Position");
+  if( child != nullptr)
+    Helper::readFromElement(child, &position);
+
+  child = element->FirstChildElement("Direction");
+  if( child != nullptr)
+    Helper::readFromElement(child, &direction);
+
+  child = element->FirstChildElement("Rotation");
+  if( child != nullptr)
+    Helper::readFromElement(child, &rotation);
+
+  child = element->FirstChildElement("ColorSpecular");
+  if( child != nullptr)
+    Helper::readFromElement(child, &color_specular);
+
+  child = element->FirstChildElement("ColorDiffuse");
+  if( child != nullptr)
+    Helper::readFromElement(child, &color_diffuse);
+
+  child = element->FirstChildElement("ColorAmbient");
+  if( child != nullptr)
+    Helper::readFromElement(child, &color_ambient);
+
+  child = element->FirstChildElement("AttenuationConstant");
+  if( child != nullptr)
+  {    
+    child->QueryFloatAttribute("value", &att_const);
+  } 
+  child = element->FirstChildElement("AttenuationLinear");
+  if( child != nullptr)
+  {    
+    child->QueryFloatAttribute("value", &att_linear);
+  } 
+  child = element->FirstChildElement("AttenuationQuadratic");
+  if( child != nullptr)
+  {    
+    child->QueryFloatAttribute("value", &att_quadratic);
+  } 
+  child = element->FirstChildElement("Intensity");
+  if( child != nullptr)
+  {    
+    intensity = child->FloatAttribute("value");   
+  } 
+  child = element->FirstChildElement("CutoffAngle");
+  if( child != nullptr)
+  {    
+    child->QueryFloatAttribute("value", &cutoff_angle);
+  } 
+  child = element->FirstChildElement("ShadowEnabled");
+  if( child != nullptr)
+  {    
+    child->QueryBoolAttribute("value", &shadow_enabled);
+  } 
+
+  if( type == LIGHT_DIRECTIONAL)
+  {
+    if( ! setDirectional(direction,color_ambient ,color_diffuse, color_specular, intensity, shadow_enabled) )
+      return false;  
+  }
+
+  if( type == LIGHT_SPOT)
+  {
+    if( !setSpot(position,color_ambient ,color_diffuse, color_specular, intensity,
+                      att_const ,att_linear, att_quadratic, cutoff_angle, rotation , shadow_enabled) )
+      return false;
+  }
+
+  if(type == LIGHT_POINT)
+  {
+    if( !setPoint(position, color_ambient ,color_diffuse, color_specular, intensity,
+                      att_const ,att_linear, att_quadratic, shadow_enabled ) )
+      return false;
+  }
+
+  return true;
+} 
+
+bool Light::isInRange(glm::vec3 p)
+{
+  float real_dist = glm::distance(p, m_position);
+  float v =  1.0f /(  m_att_quadratic * real_dist *real_dist +  m_att_linear *real_dist + m_att_const);
+  if(v >MIN_LIGHT_THRESHOLD)
+  { 
+    //std::cout <<  v<<std::endl;
+    //Engine::getLog()->log("Light", "light in range");
+    return true;
+  }
+
+  return false;
+}
