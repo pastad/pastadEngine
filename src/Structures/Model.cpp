@@ -156,7 +156,8 @@ void Model::processScene()
 
   if(m_scene->HasAnimations())
   {
-    Engine::getLog()->log("Model", " has animations"); 
+    Engine::getLog()->log("Model", "is animated"); 
+    std::vector<BoundingBox *> bbs;
     for (unsigned int i = 0 ; i <m_scene->mNumMeshes ; i++)
     {
       const aiMesh* mesh = m_scene->mMeshes[i];
@@ -165,8 +166,13 @@ void Model::processScene()
       n= new AnimationMesh(mesh,mesh->mMaterialIndex);
       if(n == NULL)
         Engine::getLog()->log("Model","AnimationMesh is null");
-      m_animation_meshes.push_back(n);   
+      else
+      {        
+        m_animation_meshes.push_back(n);   
+        bbs.push_back(n->getBoundingBox());
+      }
     }
+    m_bounding_box = new BoundingBox(bbs);
     m_animated = true;
   }
   else

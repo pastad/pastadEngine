@@ -49,8 +49,7 @@ bool PointShadowBuffer::initialize(  float width ,  float height)
   glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border);
 
   for (GLuint i = 0; i < 6; ++i)
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_R32F, m_width, m_height, 0, GL_RED, GL_FLOAT, NULL);
-  
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_R32F, m_width, m_height, 0, GL_RED, GL_FLOAT, NULL);  
 
 
   glBindFramebuffer(GL_FRAMEBUFFER, m_buffer_handle);

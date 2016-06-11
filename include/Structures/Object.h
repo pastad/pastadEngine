@@ -16,6 +16,8 @@
 
 class Model;
 class Light;
+class Camera;
+class BoundingBox;
 
 class Object : public Transform
 {
@@ -79,15 +81,44 @@ public:
   // returns the min bb distant corner point in relation to ref
   glm::vec3 getMinBBDistantPoint(glm::vec3 ref);
 
-  // returns the minimal angle to the camera
+  // returns the minimal angle to the camera|light
   float getMinAngleToLight(Light * light);
+  float getMinAngleToCamera(Camera * cam);
 
-  using  Transform::setPosition;  
+  // returns the corners of the bb adjusted to the object position
+  std::vector<glm::vec3> getCorners();
+
+  // returns the corners of the aabb 
+  std::vector<glm::vec3> getAABBCorners();
+
+  // returns the aab of the object
+  BoundingBox * getAABB();
+
+  // refreshes the axisaligned bounding box
+  void refreshAABB();
+
+  // getter setter for extraction flagg for scene tree extraction | against multi extraction
+  void setExtractionFlag();
+  void unsetExtractionFlag();
+  bool isExtractionFlagSet();
+
+  // getter setter for static flag
+  void setStaticFlag();
+  void unsetStaticFlag();
+  bool isStaticFlagSet();
+
+
+  //using  Transform::setPosition;  
   using  Transform::getPosition;
-  using  Transform::setRotation;
+  //using  Transform::setRotation;
   using  Transform::getRotationDegrees;
-  using  Transform::setScale;
+  //using  Transform::setScale;
   using  Transform::getScale;
+
+  void setPosition(glm::vec3 p);
+  void setRotation(glm::vec3 r);
+  void setScale(glm::vec3 s);
+
   
 private:
 
@@ -112,9 +143,17 @@ private:
   // the identificator of the object
   unsigned int m_id;
 
-  // returns the angle to the camer 
-  float getAngleToLight(Light * light, glm::vec3 pos);
+  // the flag for static or dynamic rndering
+  bool m_static;
 
+  // a axis alinged bb for visibility etc...
+  BoundingBox * m_aabb = nullptr;
+
+  // a flag for better extraction from the scene tree  | against multi extraction
+  bool m_extraction_flag = false; 
+
+  // returns the angle to ...
+  float getAngleTo(glm::vec3 dir, glm::vec3 lp , glm::vec3 pos);
 
 };
 

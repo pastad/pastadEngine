@@ -27,7 +27,7 @@ RessourceManager::~RessourceManager()
 
 Model * RessourceManager::loadModel(std::string path, bool instanced)
 {	
-	Model * model;
+	Model * model = nullptr;
 
 	std::map<std::string, Model *>::iterator it = m_models.find(path);
 	

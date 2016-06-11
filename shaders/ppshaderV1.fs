@@ -121,7 +121,7 @@ void passStandard()
  
   color = gamma_correction(color);  
 
-  FragColor = color ;// + lightblur;
+  FragColor = color ;//+ lightblur;
 }
 
 subroutine (RenderPassType)
@@ -131,8 +131,8 @@ void passBright()
   
   float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
 
-  if(brightness > 1.0)
-    FragColor = color * 0.1; // 0.1 for brightness scaling
+  if(brightness > 0.3)
+    FragColor = vec4(brightness); // 0.1 for brightness scaling
   else
     FragColor = vec4(0,0,0,0);
 }
@@ -158,8 +158,8 @@ void passBlur2()
   vec2 off = 1.0 / textureSize(Tex1, 0); 
   for(int i = 1; i < 20; i++)
   {
-    color += texture2D(Tex1, TexCoord + vec2(0.0, off.y * 1.0)) * GaussKernel[i-1];
-    color += texture2D(Tex1, TexCoord - vec2(0.0, off.y * 1.0)) * GaussKernel[i-1];
+    color += texture2D(Tex1, TexCoord + vec2(0.0, off.y * i)) * GaussKernel[i-1];
+    color += texture2D(Tex1, TexCoord - vec2(0.0, off.y * i)) * GaussKernel[i-1];
   }
 
   FragColor = color ;

@@ -19,6 +19,7 @@
 
 #include "Game.h"
 
+#include "LuaScript.h"
 
 void test_callback(Button * b)
 {
@@ -56,6 +57,12 @@ int main(void)
   {
 
     Scene *  scene = new Scene();
+
+
+    LuaScript script;
+    script.loadFile("game/lua_scripts/test.lua");
+    script.executeMain();
+    script.callFunction("test");
 
     //Object * object5 = scene.addObject("models/sponza/sponza.obj"); 
     //Object * object6 = scene.addObject("models/table_medieval_trestle.obj"); 
@@ -114,7 +121,8 @@ int main(void)
     //Terrain * terrain =  scene.addTerrain();
     //terrain->generate();
     //scene.save("scene_save_test.xml");
-    scene->load("spolight-rangeT-test.xml");
+    scene->load("scene_save_test3.xml");
+    // scene->load("scene_save_test2.xml");
    // scene->save("scene_save_test.xml");
     Helper::m_debug_float = 0.0f;
 

@@ -4,6 +4,7 @@
 
 #include "RenderShader.h"
 #include "RenderBaseShader.h"
+#include "BoundingBox.h"
 
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
@@ -18,6 +19,14 @@ AnimationMesh::AnimationMesh(const aiMesh*mesh, int mat_index)
 
   IndexedRepresentation model;
 
+  float min_x = 0;
+  float max_x = 0;
+  float min_y = 0;
+  float max_y = 0;
+  float min_z = 0;
+  float max_z = 0;
+  bool f = true;
+
   aiVector3D zero(0.0f, 0.0f, 0.0f);
 
   for(unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -25,6 +34,22 @@ AnimationMesh::AnimationMesh(const aiMesh*mesh, int mat_index)
     aiVector3D* pPos      = &(mesh->mVertices[i]);
     aiVector3D* pNormal   = &(mesh->mNormals[i]);
     aiVector3D* pTexCoord = mesh->HasTextureCoords(0) ? &(mesh->mTextureCoords[0][i]) : &zero;
+
+    if( f|| (min_x > pPos->x) ) 
+      min_x = pPos->x;
+    if( f || (min_y > pPos->y) ) 
+      min_y = pPos->y;
+    if( f || (min_z > pPos->z) ) 
+      min_z = pPos->z;
+
+    if( f || (max_x < pPos->x) ) 
+      max_x = pPos->x;
+    if( f || (max_y < pPos->y) ) 
+      max_y = pPos->y;
+    if( f || (max_z < pPos->z) ) 
+      max_z = pPos->z;
+
+    f = false;
 
     model.m_positions.push_back(glm::vec3(pPos->x,pPos->y,pPos->z )  );
     model.m_texCoords.push_back(glm::vec2(pTexCoord->x,1-pTexCoord->y)); // Flipp tex coords in y
@@ -43,6 +68,8 @@ AnimationMesh::AnimationMesh(const aiMesh*mesh, int mat_index)
       model.m_indices.push_back(face.mIndices[2]);
     }
   }
+
+  m_bounding_box = new BoundingBox(min_x,max_x,min_y,max_y,min_z,max_z);
 
   model.m_bones.resize(mesh->mNumVertices);
   m_bone_info.resize(mesh->mNumBones);
@@ -160,4 +187,7 @@ void AnimationMesh::updateTransforms(std::vector<glm::mat4> *  transforms,  Rend
   }
   shader->setBones(&ts);
 }
-
+BoundingBox * AnimationMesh::getBoundingBox()
+{
+  return m_bounding_box;
+}

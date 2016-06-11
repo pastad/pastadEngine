@@ -35,6 +35,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/SceneTreeElement.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/SceneEditor.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/BoundingBox.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Structures/Plane.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RenderStructures/GBuffer.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RenderStructures/DirectionalShadowBuffer.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RenderStructures/PointShadowBuffer.cpp
@@ -50,6 +51,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/GUI/FileViewer.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RessourceManager.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Helper.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/LuaScript.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/external/gl_core_4_.c
 
 
@@ -90,6 +92,7 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/SceneTreeElement.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/SceneEditor.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/BoundingBox.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures/Plane.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures/GBuffer.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures/DirectionalShadowBuffer.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RenderStructures/PointShadowBuffer.h
@@ -105,6 +108,7 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI/FileViewer.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RessourceManager.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Helper.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/LuaScript.h
    ${CMAKE_CURRENT_SOURCE_DIR}/external/gl_core_4_.h
 
    ${CMAKE_CURRENT_SOURCE_DIR}/game/include/Game.h
@@ -116,8 +120,9 @@ set(HEADERS
 find_package(OpenGL REQUIRED)
 find_package(Freetype REQUIRED)
 find_package(Boost REQUIRED)
+find_package(Lua REQUIRED)
 
-include_directories( ${OPENGL_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} {GLFW_INCLUDE_DIRS} {ASSIMP_INCLUDE_DIRS} {SOIL_INCLUDE_DIRS} {BOOST_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include
+include_directories( ${OPENGL_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} {GLFW_INCLUDE_DIRS} {ASSIMP_INCLUDE_DIRS} {SOIL_INCLUDE_DIRS} {BOOST_INCLUDE_DIRS}  ${LUA_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures
@@ -130,10 +135,10 @@ ${CMAKE_CURRENT_SOURCE_DIR}/external/tinyxml2
 ${CMAKE_CURRENT_SOURCE_DIR}/game/include
  )
 
-LINK_DIRECTORIES(${GLFW_LIBRARY_DIR} ${FREETYPE_LIBRARY_DIRS} ${ASSIMP_LIBRARY_DIR} ${SOIL_LIBRARY_DIR} ${Boost_LIBRARY_DIR} ${tinyxml2_LIBRARY_DIR}) 
+LINK_DIRECTORIES(${GLFW_LIBRARY_DIR} ${FREETYPE_LIBRARY_DIRS} ${ASSIMP_LIBRARY_DIR} ${SOIL_LIBRARY_DIR} ${Boost_LIBRARY_DIR} ${tinyxml2_LIBRARY_DIR} ${LUA_LIBRARIES}) 
  
 add_executable(Engine main.cpp ${SOURCE} ${HEADERS})
 
-target_link_libraries(Engine tinyxml2  GL glfw3 assimp boost_system boost_filesystem SOIL freetype  ${GLFW_STATIC_LIBRARIES}  ${OPENGL_LIBRARIES} X11 Xcursor Xinerama Xxf86vm Xi Xrandr pthread dl  )
+target_link_libraries(Engine tinyxml2  GL glfw3 assimp boost_system boost_filesystem SOIL freetype   ${LUA_LIBRARIES}  ${GLFW_STATIC_LIBRARIES}   ${OPENGL_LIBRARIES} X11 Xcursor Xinerama Xxf86vm Xi Xrandr pthread dl  )
 
 

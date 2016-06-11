@@ -7,6 +7,7 @@
 #include "BoundingBox.h"
 
 #include "Light.h"
+#include "Camera.h"
 
 #include <iostream>
 
@@ -17,10 +18,13 @@
 Object::Object(std::string identifier, Model * parent):Transform(glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(1,1,1)),m_identifier(identifier)
 {	
   m_model = parent;
+  refreshAABB();
 }
 
 Object::~Object()
 {	
+  if(m_aabb != nullptr)
+    delete m_aabb;
 }
 
 glm::mat4 Object::getModelMatrix()
@@ -81,6 +85,7 @@ bool Object::isPhysicsApplied()
 void Object::move(glm::vec3 direction)
 {
   setPosition( getPosition() + direction  );
+  refreshAABB();
 }
 
 void Object::rotate(glm::vec3 delta)
@@ -105,7 +110,7 @@ void Object::rotate(glm::vec3 delta)
     rot.z += 360.0f;
 
   setRotation( rot );
-  
+  refreshAABB();
 }
 
 float Object::getAnimationTime()
@@ -116,11 +121,11 @@ void Object::advanceAnimation(float delta)
 {  
   if( m_model->isAnimated() )
   {  
-    m_animation_time += delta ; //4.0 speed up
+    m_animation_time += delta ; 
     if( m_animation_time > (float)m_model->getAssimpScene()->mAnimations[0]->mDuration )
       m_animation_time = 0.0f;
 
-    //std::cout << m_animation_time<<std::endl;
+   // std::cout << m_animation_time<<std::endl;
   }
 }
 
@@ -172,6 +177,10 @@ void Object::save(tinyxml2::XMLNode * parent, tinyxml2::XMLDocument* document)
   element = document->NewElement("Visibility");
   element_object->InsertEndChild(element);
   element->SetAttribute("value", isVisible());
+
+  element = document->NewElement("Static");
+  element_object->InsertEndChild(element);
+  element->SetAttribute("value", isStaticFlagSet());
 }
 
 bool Object::load( tinyxml2::XMLElement *  element)
@@ -182,6 +191,8 @@ bool Object::load( tinyxml2::XMLElement *  element)
 
   bool physics_enabled;
   bool visible;
+  bool static_flag;
+
 
   tinyxml2::XMLElement *child = element->FirstChildElement("Visibility");
   if( child != nullptr)
@@ -192,6 +203,11 @@ bool Object::load( tinyxml2::XMLElement *  element)
   if( child != nullptr)
   {    
     physics_enabled = child->BoolAttribute("value");   
+  } 
+  child = element->FirstChildElement("Static");
+  if( child != nullptr)
+  {    
+    static_flag = child->BoolAttribute("value");   
   } 
   child = element->FirstChildElement("Position");
   if( child != nullptr)
@@ -219,6 +235,11 @@ bool Object::load( tinyxml2::XMLElement *  element)
     setVisible();
   else
     setInvisible();
+
+  if(static_flag)
+    setStaticFlag();
+  else
+    unsetStaticFlag();
   
   return true;
 }
@@ -244,11 +265,11 @@ glm::vec3 Object::getMinBBDistantPoint(glm::vec3 ref)
   return p_min;
 }
 
-float Object::getAngleToLight(Light * light, glm::vec3 pos)
+float Object::getAngleTo(glm::vec3 dir, glm::vec3 lp , glm::vec3 pos)
 {
-  glm::vec3 v = light->getDirection();
+  glm::vec3 v = dir;
   v = glm::normalize(v);
-  glm::vec3 dir_to_object  = glm::normalize(pos - light->getPosition() );
+  glm::vec3 dir_to_object  = glm::normalize(pos - lp );
 
   float angle_mid = std::acos(glm::dot( glm::vec2(dir_to_object.x,dir_to_object.z), glm::vec2( v.x ,v.z) ) / ( glm::length(glm::vec2(dir_to_object.x,dir_to_object.z)) * glm::length(glm::vec2( v.x ,v.z) )  )); 
   return glm::degrees(angle_mid); 
@@ -261,11 +282,133 @@ float Object::getMinAngleToLight(Light * light)
   for(std::vector<glm::vec3>::iterator it = corners.begin(); it != corners.end();it++)
   {
     glm::vec4 p = glm::vec4((*it),1.0f);
+
+    //std::cout << "p"<< p.x<<","<< p.y<<","<<p.z<<std::endl;
     p = getModelMatrix() * p ;
-    float an = getAngleToLight(light, glm::vec3(p));
+    float an = getAngleTo(light->getDirection(), light->getPosition(), glm::vec3(p));
     if( (angle==-1) || an < angle )
       angle = an;
-    std::cout <<an <<std::endl;
+   // std::cout <<an <<std::endl;
   }
   return angle;
+}
+float Object::getMinAngleToCamera(Camera * cam)
+{
+  float angle = -1.0f;
+  std::vector<glm::vec3> corners = m_model->getBoundingBox()->getCorners();
+
+  for(std::vector<glm::vec3>::iterator it = corners.begin(); it != corners.end();it++)
+  {
+    glm::vec4 p = glm::vec4((*it),1.0f);
+
+    //std::cout << "p"<< p.x<<","<< p.y<<","<<p.z<<std::endl;
+    p = getModelMatrix() * p ;
+    float an = getAngleTo(cam->getDirection(),cam->getPosition(), glm::vec3(p));
+    if( (angle==-1) || an < angle )
+      angle = an;
+    //std::cout <<an <<std::endl;
+  }
+  return angle;
+}
+std::vector<glm::vec3> Object::getCorners()
+{
+  std::vector<glm::vec3> r2 = m_model->getBoundingBox()->getCorners();
+  std::vector<glm::vec3> r;
+  for(std::vector<glm::vec3>::iterator it = r2.begin(); it != r2.end();it++)
+  {
+    glm::vec4 p = glm::vec4((*it),1.0f);
+
+    //std::cout << "p"<< p.x<<","<< p.y<<","<<p.z<<std::endl;
+    p = getModelMatrix() * p ;
+    r.push_back( glm::vec3(p) );
+  }
+  return r;
+}
+void Object::refreshAABB()
+{
+  std::vector<glm::vec3> corners = getCorners();
+
+  float min_x = 0;
+  float max_x = 0;
+  float min_y = 0;
+  float max_y = 0;
+  float min_z = 0;
+  float max_z = 0;
+  bool f = true;
+
+
+  for( std::vector<glm::vec3>::iterator it = corners.begin(); it != corners.end();it++)
+  {
+    glm::vec3 p_1 = (*it);
+
+    if( f|| (min_x > p_1.x) ) 
+      min_x = p_1.x;
+    if( f|| (min_y > p_1.y) ) 
+      min_y = p_1.y;
+    if( f|| (min_z > p_1.z) ) 
+      min_z = p_1.z;
+
+    if( f || (max_x < p_1.x) ) 
+      max_x = p_1.x;
+    if( f || (max_y < p_1.y) ) 
+      max_y = p_1.y;
+    if( f|| (max_z < p_1.z) ) 
+      max_z = p_1.z;
+
+    f= false;
+  }
+  //std::cout << "aabb"<<min_x<<std::endl;
+
+  if(m_aabb == nullptr)
+    m_aabb =  new BoundingBox(min_x,max_x,min_y,max_y,min_z,max_z);
+  else
+    m_aabb->setBoundingPoints(min_x,max_x,min_y,max_y,min_z,max_z);
+
+}
+std::vector<glm::vec3> Object::getAABBCorners()
+{
+  return m_aabb->getCorners();
+}
+BoundingBox * Object::getAABB()
+{
+  return m_aabb;
+}
+void Object::setExtractionFlag()
+{
+  m_extraction_flag = true;
+}
+void Object::unsetExtractionFlag()
+{
+  m_extraction_flag = false;
+}
+bool Object::isExtractionFlagSet()
+{
+  return m_extraction_flag;
+}
+void Object::setStaticFlag()
+{
+  m_static = true;
+}
+void Object::unsetStaticFlag()
+{
+  m_static  = false;
+}
+bool Object::isStaticFlagSet()
+{
+  return m_static;
+}
+void Object::setPosition(glm::vec3 p)
+{
+  Transform::setPosition(p);
+  refreshAABB();
+}
+void Object::setRotation(glm::vec3 r)
+{
+  Transform::setRotation(r);
+  refreshAABB();
+}
+void Object::setScale(glm::vec3 s)
+{
+  Transform::setScale(s);
+  refreshAABB();  
 }

@@ -15,6 +15,7 @@
 
 class RenderShader;
 class RenderBaseShader;
+class BoundingBox;
 
 
 class AnimationMesh
@@ -32,12 +33,18 @@ public:
   // returns the material index
   int getMaterialIndex();
 
+  // returns the number of bones
   unsigned int getNumBones();
 
+  // retturns the global invers matrix
   glm::mat4 getGlobalInverse();
 
+  // updates and applies the transforms
   void updateTransforms(std::vector<glm::mat4>* transforms,  RenderBaseShader *shader);
   void applyTransform(std::string NodeName,glm::mat4 & global_inv, glm::mat4 & trans);
+
+    // returns the bb of the mesh
+  BoundingBox * getBoundingBox();
 
 protected:
 
@@ -79,6 +86,9 @@ private:
 
   // the global inverse matrix
   glm::mat4  m_global_inv;
+
+  // the bounding box of the mesh
+  BoundingBox * m_bounding_box;
 
 
 

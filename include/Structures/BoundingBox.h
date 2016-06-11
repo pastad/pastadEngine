@@ -25,6 +25,15 @@ public:
   // getter for corner points of bb
   std::vector<glm::vec3> getCorners();
 
+  // sets the bb corner points
+  void setBoundingPoints(float x_min,float x_max, float y_min, float y_max, float z_min, float z_max);
+
+  // returns true if aabbs intersect
+  bool intersectAABBs(BoundingBox * bb);
+
+  // returns true if bb is inside this bb
+  bool contains(BoundingBox * bb);
+
 private:
 
   // holds the anchor where x,y,z is at min

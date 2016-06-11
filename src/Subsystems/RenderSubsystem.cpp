@@ -349,8 +349,6 @@ void RenderSubsystem::renderPassLightBlur()
 	glFinish();
 	m_light_buffer->unbindFromInput();
 
-
-
 }
 
 void RenderSubsystem::renderUI()
@@ -384,7 +382,7 @@ void RenderSubsystem::render()
 		if(m_shadows_standard_enabled)
 			renderPassShadow();
 		renderPassLight();
-		renderPassLightBlur();
+		//renderPassLightBlur();
 		renderPassPostProcess();
 	}
 	renderUI();
@@ -405,7 +403,6 @@ void RenderSubsystem::endRender()
 
 bool RenderSubsystem::systemCheck()
 {
-	m_skybox_shader->use();
 	return m_initialized;
 }
 

@@ -34,7 +34,7 @@ public:
   using GUI::keyWasPressed;
 
   // starts adding an object
-  void startObjectAdding();
+  void startObjectAdding( bool static_object );
 
   // starts adding a skybox
   void startSkyboxAdding();
@@ -70,6 +70,9 @@ private:
 
   static Button * m_btn_add_object;
   static Text * m_txt_add_object;
+
+  static Button * m_btn_add_object_static;
+  static Text * m_txt_add_object_static;
 
   static Button * m_btn_add_skybox;
   static Text * m_txt_add_skybox;

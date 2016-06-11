@@ -471,7 +471,7 @@ vec4 calcSpotLight(int idx, Material mat, vec3 pos, vec3 normal)
   }
   else
   {
-    return vec4(ambient,1.0) *l.Pointlight.Base.Intensity * attenuation;
+    return vec4(ambient,1.0) *0.1*l.Pointlight.Base.Intensity * attenuation; // 0.1 just to scale down
   }
 }
 // LIGHT CALCULATION END ---------------------------------------------

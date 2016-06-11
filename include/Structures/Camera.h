@@ -7,6 +7,17 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+enum 
+{ 
+  FRUSTRUM_NO_INTERSECTION,
+  FRUSTRUM_INTERSECTION,
+  FRUSTRUM_INCLUTION 
+};
+
+class Plane;
+class Object;
+class BoundingBox;
+
 class Camera
 {
 public:
@@ -56,6 +67,10 @@ public:
     // getter setter for exposure
     float getExposure();
     void setExposure(float value);
+
+    // returns specifier according to  obj|bb - frustrum intersection
+    unsigned int insideFrustrum(Object * obj);
+    unsigned int insideFrustrum(BoundingBox * bb);
    
 
 private:
@@ -86,6 +101,24 @@ private:
 
     // holds the exposure for the camera
     float m_exposure;
+
+    // the heights and widths of the near and far plane
+    float m_near_plane_height;
+    float m_near_plane_width;
+    float m_far_plane_height;
+    float m_far_plane_width;
+
+    // the planes of the frustrum
+    Plane * m_plane_top;
+    Plane * m_plane_bottom;
+    Plane * m_plane_left;
+    Plane * m_plane_right;
+    Plane * m_plane_front;
+    Plane * m_plane_back;
+
+    // recalculates the frustrum planes
+    void recalculatePlanes();
+
 };
 
 #endif // CAMERA_H

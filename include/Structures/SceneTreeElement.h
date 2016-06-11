@@ -16,6 +16,8 @@
 
 class Model;
 class Object;
+class BoundingBox;
+class Camera;
 
 class SceneTreeElement
 {
@@ -43,6 +45,12 @@ public:
   // returns all objects
   std::vector<Object *> getObjects();
 
+  // returns the bb of the scene tree element
+  BoundingBox * getBoundingBox();
+
+  // retrieves the objects in the frustrum
+  void getObjectsInFrustrum(Camera* cam, std::map<std::string, std::vector<Object *>> * objects, bool fully_inside);
+
 private:
 
   // the size of the cube
@@ -60,6 +68,12 @@ private:
   SceneTreeElement * m_bottom_front_right = nullptr;
   SceneTreeElement * m_bottom_back_left = nullptr;
   SceneTreeElement * m_bottom_back_right = nullptr;
+
+  // contains the aabb for the containment
+  BoundingBox * m_aabb = nullptr;
+
+  // true if it is the last leaf
+  bool m_last_element = false;
 
 
   // the objects of the scene tree element

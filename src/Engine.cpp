@@ -202,7 +202,8 @@ void Engine::shutDown()
 		glfwTerminate();
 
 		m_log->log("Engine", "shut down");
-		delete m_scene_editor;
+		if(m_scene_editor != nullptr)
+			delete m_scene_editor;
 		delete m_engine_gui;
 		delete m_log;
 		delete m_render_system;
@@ -499,8 +500,11 @@ bool Engine::checkGUIsForButtonPresses(float x, float y)
 	//futures.push_back (std::async(std::launch::async,buttonCheck,( (GUI *)m_scene_editor), x,y));
 	if(m_engine_gui->checkButtonPressed(x,y))
 		ret = true;
-	if(m_scene_editor->checkButtonPressed(x,y))
-		ret = true;
+	if(m_edit_mode)
+	{
+		if(m_scene_editor->checkButtonPressed(x,y))
+			ret = true;
+	}
 	//std::cout << futures.size() << std::endl;
 	for(auto &e : futures) 
 	{

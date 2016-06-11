@@ -60,15 +60,18 @@ public:
   // refrehses the visual objects
   void refreshRenderObjects(); 
 
+  //  refrehses the visual objects using the scene tree
+  void refreshRenderObjectsSceneTree();
+
   // returns the root scene tree element
   SceneTreeElement * getSceneRoot();
 
 
   // adds an object to the scene | single or instanced (with|without position)
-  Object * addObject(std::string  path, glm::vec3 position);
-  Object * addObjectInstanced(std::string path, glm::vec3 position);
-  Object * addObject(std::string  path);
-  Object * addObjectInstanced(std::string path);
+  Object * addObject(std::string  path, glm::vec3 position, bool static_object);
+  Object * addObjectInstanced(std::string path, glm::vec3 position, bool static_object);
+  Object * addObject(std::string  path, bool static_object);
+  Object * addObjectInstanced(std::string path, bool static_object);
 
   // adds a terrain to the scene
   Terrain * addTerrain();
@@ -101,7 +104,8 @@ public:
 private:
 
   // holds pointers to the objects
-  std::vector<Object *> m_objects;
+  std::vector<Object *> m_objects_static;
+  std::vector<Object *> m_objects_dynamic;
 
   // stores the models of the scene for rendering purposes
   std::map<std::string, Model *> m_models;
@@ -127,15 +131,25 @@ private:
   // number of objects in the scene for the ids
   int m_object_counter = 1000;
 
+  // the current scene time and the time advance
+  float m_time_line_seconds = 0.0f;
+  float m_time_advance = 1.0f;
+
   // internal addObject request handling function ( with|without position)
-  Object * addObject(std::string  path, glm::vec3 position, bool instanced);
-  Object * addObject(std::string  path, bool instanced);
+  Object * addObject(std::string  path, glm::vec3 position, bool instanced, bool insert_in_tree, bool static_object);
+  Object * addObject(std::string  path, bool instanced, bool static_object);
 
   // updates the animated objects
   void update(SceneTreeElement * element,  float delta);
 
   // returns a new object id
   int getObjectIdentification();
+
+  // updates the time by delta
+  void timeUpdate(float delta);
+
+  // returns a string of the current scene time
+  std::string getTimeString();
 
 };
 

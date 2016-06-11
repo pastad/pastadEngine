@@ -228,9 +228,9 @@ void RenderShader::setIdentityMatrices()
 void RenderShader::reset()
 {
   // reset at begin of render
-  m_materials.clear();
-  m_materials_mapping.clear();
-  m_material_number = 0;
+ // m_materials.clear();
+//  m_materials_mapping.clear();
+  //m_material_number = 0;
 }
 void RenderShader::setMaterial(std::string name, MaterialColorSpecs specs)
 {
@@ -254,8 +254,10 @@ void RenderShader::setMaterial(std::string name, MaterialColorSpecs specs)
 
   //only set the id for now
   setMaterialIndex(idx);
+  if(idx >= m_material_number)
+    assert(0);
 
-  //std::cout<< "Mat count:" << m_materials_mapping.size()<<std::endl;
+  //==std::cout<< "Mat count:" << m_materials_mapping.size()<<std::endl;
 }
 void RenderShader::setMaterialIndex(int idx)
 {

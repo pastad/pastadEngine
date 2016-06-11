@@ -43,6 +43,9 @@ Text * SceneEditor::m_txt_add_directional_light;
 Button * SceneEditor::m_btn_add_object;
 Text * SceneEditor::m_txt_add_object;
 
+Button * SceneEditor::m_btn_add_object_static;
+Text * SceneEditor::m_txt_add_object_static;
+
 
 
 
@@ -180,11 +183,25 @@ bool SceneEditor::initialize()
     glm::vec3(0,0,0), "add_spot_light");
   m_btn_add_spot_light->setInactive();
 
+
+  m_txt_add_object_static = GUI::getText();
+  m_txt_add_object_static->setPosition(glm::vec2(Engine::getWindowWidth() -170.0f,Engine::getWindowHeight()-365.0f));
+  m_txt_add_object_static->setScale(0.22f);
+  m_txt_add_object_static->setColor(glm::vec3(0,0,0));
+  m_txt_add_object_static->setText("Add static  Object");
+  m_txt_add_object_static->setInactive();
+
+  m_btn_add_object_static = GUI::getButton();
+  m_btn_add_object_static->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -190.0f,Engine::getWindowHeight()-365.0f),glm::vec2(0.5f,0.5f),
+    glm::vec3(0,0,0), "add_object_static");
+  m_btn_add_object_static->setInactive();
+
+
   m_txt_add_object = GUI::getText();
   m_txt_add_object->setPosition(glm::vec2(Engine::getWindowWidth() -170.0f,Engine::getWindowHeight()-385.0f));
   m_txt_add_object->setScale(0.22f);
   m_txt_add_object->setColor(glm::vec3(0,0,0));
-  m_txt_add_object->setText("Add Object");
+  m_txt_add_object->setText("Add dynamic Object");
   m_txt_add_object->setInactive();
 
   m_btn_add_object = GUI::getButton();
@@ -718,6 +735,8 @@ void SceneEditor::mouseButtonCallback(Button * btn)
     m_txt_rotation->setActive();
     m_btn_add_object->setActive();
     m_txt_add_object->setActive();
+    m_btn_add_object_static->setActive();
+    m_txt_add_object_static->setActive();
     m_btn_del_object->setActive();
     m_txt_del_object->setActive();
     m_btn_add_skybox->setActive();
@@ -772,6 +791,8 @@ void SceneEditor::mouseButtonCallback(Button * btn)
       m_txt_rotation->setInactive();
       m_btn_add_object->setInactive();
       m_txt_add_object->setInactive();
+      m_btn_add_object_static->setInactive();
+      m_txt_add_object_static->setInactive();
       m_btn_del_object->setInactive();
       m_txt_del_object->setInactive();
       m_btn_add_skybox->setInactive();
@@ -910,7 +931,11 @@ void SceneEditor::mouseButtonCallback(Button * btn)
   
   if(btn->getDescriptor() == "add_object")
   {
-    ( (SceneEditor* ) btn->getParent()  )->startObjectAdding();
+    ( (SceneEditor* ) btn->getParent()  )->startObjectAdding(false);
+  }
+  if(btn->getDescriptor() == "add_object_static")
+  {
+    ( (SceneEditor* ) btn->getParent()  )->startObjectAdding(true);
   }
   if(btn->getDescriptor() == "add_skybox")
   {
@@ -926,10 +951,13 @@ void SceneEditor::mouseButtonCallback(Button * btn)
   }
 }
 
-void SceneEditor::startObjectAdding()
+void SceneEditor::startObjectAdding(bool static_object )
 {
   m_file_chooser->start();
-  m_file_chooser->setIdentifier("object_chooser");
+  if(!static_object)
+    m_file_chooser->setIdentifier("object_chooser");
+  else
+    m_file_chooser->setIdentifier("object_chooser_static");
 }
 void SceneEditor::startSceneOpening()
 {
@@ -1023,7 +1051,12 @@ void SceneEditor::update()
       if(m_file_chooser->getIdentifier() == "object_chooser")
       {
         std::string file = m_file_chooser->getFileName();
-        Object * new_object= Engine::getScene()->addObject(file,glm::vec3(0,0,0) ); 
+        Object * new_object= Engine::getScene()->addObject(file,glm::vec3(0,0,0), false );  // TODO : change static flag accordingly      
+      }
+      if(m_file_chooser->getIdentifier() == "object_chooser_static")
+      {
+        std::string file = m_file_chooser->getFileName();
+        Object * new_object= Engine::getScene()->addObject(file,glm::vec3(0,0,0), true );  // TODO : change static flag accordingly
 
       
       }
