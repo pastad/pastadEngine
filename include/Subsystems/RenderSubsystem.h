@@ -75,7 +75,6 @@ public:
 
 	// returns light at position
 	Light * pickLightAt(glm::vec2 p);
-	
 
 private:
 
@@ -132,6 +131,9 @@ private:
 
 	// true if hdr is set
 	bool m_enable_hdr;
+
+	// true if bloom is set
+	bool m_enable_bloom;
 
 	// starts the rendering cycle
 	void startRender();

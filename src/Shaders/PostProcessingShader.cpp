@@ -92,6 +92,18 @@ void PostProcessingShader::setHDR(bool enable)
   else
     setUniform("EnableHDR",0);
 }
+void PostProcessingShader::setBloom(bool enable)
+{
+  if(enable)
+    setUniform("EnableBloom",1);
+  else
+    setUniform("EnableBloom",0);
+}
+
+void PostProcessingShader::setBloomThreshold(float val)
+{
+  setUniform("BloomThreshold", val);
+}
 
 void PostProcessingShader::setAverageLuminance(float value)
 {

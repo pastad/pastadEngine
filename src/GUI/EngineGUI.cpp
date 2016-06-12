@@ -21,6 +21,9 @@ Text * EngineGUI::m_txt_fxaa;
 Button * EngineGUI::m_tb_hdr;
 Text * EngineGUI::m_txt_hdr;
 
+Button * EngineGUI::m_tb_bloom;
+Text * EngineGUI::m_txt_bloom;
+
 Button * EngineGUI::m_tb_shadow_pcf;
 Text * EngineGUI::m_txt_shadow_pcf;
 
@@ -96,7 +99,7 @@ bool EngineGUI::initialize()
   m_tb_hdr = GUI::getButton();
   m_tb_hdr->intitializeWithToggle("resources/toggle_on.png","resources/toggle_off.png",
     glm::vec2(20.0f,Engine::getWindowHeight()-420.0f),glm::vec2(0.5f,0.5f),
-    "hdr", false);
+    "hdr", true);
   m_tb_hdr->setInactive();
 
   m_txt_hdr = GUI::getText();
@@ -105,6 +108,20 @@ bool EngineGUI::initialize()
   m_txt_hdr->setColor(glm::vec3(0,0,0));
   m_txt_hdr->setText("HDR");
   m_txt_hdr->setInactive();
+
+  m_tb_bloom = GUI::getButton();
+  m_tb_bloom->intitializeWithToggle("resources/toggle_on.png","resources/toggle_off.png",
+    glm::vec2(20.0f,Engine::getWindowHeight()-440.0f),glm::vec2(0.5f,0.5f),
+    "bloom", true);
+  m_tb_bloom->setInactive();
+
+  m_txt_bloom = GUI::getText();
+  m_txt_bloom->setPosition(glm::vec2(40.0f,Engine::getWindowHeight()-440.0f));
+  m_txt_bloom->setScale(0.2f);
+  m_txt_bloom->setColor(glm::vec3(0,0,0));
+  m_txt_bloom->setText("Bloom");
+  m_txt_bloom->setInactive();
+
 
 
   m_tb_shadow_pcf = GUI::getButton();
@@ -168,6 +185,8 @@ void EngineGUI::mouseButtonCallback(Button * btn)
     m_txt_fxaa->setActive();
     m_tb_hdr->setActive();
     m_txt_hdr->setActive();
+    m_tb_bloom->setActive();
+    m_txt_bloom->setActive();
     m_tb_shadow_pcf->setActive();
     m_txt_shadow_pcf->setActive();
     m_tb_shadow_standard->setActive();
@@ -191,6 +210,8 @@ void EngineGUI::mouseButtonCallback(Button * btn)
       m_tb_fxaa->setInactive();
       m_txt_hdr->setInactive();
       m_tb_hdr->setInactive();
+      m_tb_bloom->setInactive();
+      m_txt_bloom->setInactive();
       m_txt_fxaa->setInactive();
       m_tb_shadow_pcf->setInactive();
       m_txt_shadow_pcf->setInactive();
@@ -240,6 +261,17 @@ void EngineGUI::mouseButtonCallback(Button * btn)
     else
     {
       Engine::setPostProcessing(PP_HDR,false);
+    }
+  }
+  if(btn->getDescriptor() == "bloom")
+  {
+    if(btn->isToggled())
+    {
+      Engine::setPostProcessing(PP_BLOOM,true);
+    }
+    else
+    {
+      Engine::setPostProcessing(PP_BLOOM,false);
     }
   }
 

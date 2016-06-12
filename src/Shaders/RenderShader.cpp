@@ -211,6 +211,7 @@ void RenderShader::setCameraPosition(glm::vec3 pos)
   setUniform("CameraPosition", pos);
 }
 
+
 void RenderShader::use()
 {
   checkUniformError("at binding"); 

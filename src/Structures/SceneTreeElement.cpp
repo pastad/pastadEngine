@@ -11,8 +11,7 @@
 #include <iostream>
 
 SceneTreeElement::SceneTreeElement(unsigned int size, glm::vec3 center):m_size(size),m_center(center)
-{  
-  std::cout << m_center.x <<std::endl;
+{   
   glm::vec3 min = center - glm::vec3((float)size/2.0,(float)size/2.0,(float)size/2.0);
   glm::vec3 max = center + glm::vec3((float)size/2.0,(float)size/2.0,(float)size/2.0);
   m_aabb = new BoundingBox(min.x,max.x,min.y,max.y,min.z,max.z);
@@ -54,7 +53,7 @@ void SceneTreeElement::insert( Object * obj)
   if( (m_size <= STOP_SIZE)  )
   {
     m_objects.insert(m_objects.end(), obj);
-    Engine::getLog()->log("SceneTreeElement", "inserted object");
+    //Engine::getLog()->log("SceneTreeElement", "inserted object");
   //  std::cout << m_center.x << ","<<m_center.y<<","<<m_center.z <<std::endl;
   //  std::cout << obj->getPosition().x << ","<<obj->getPosition().y<<","<<obj->getPosition().z <<std::endl;
     m_last_element = true;

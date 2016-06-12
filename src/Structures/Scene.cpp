@@ -274,15 +274,11 @@ Object * Scene::addObjectInstanced(std::string path, bool static_object)
 // privates
 Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, bool insert_in_tree, bool static_object)
 {
-  Engine::getLog()->log("Scene", "adding Object ef");
   Model * m = RessourceManager::loadModel(path, instanced);
   Object * obj = nullptr;
   if(m != nullptr)
   {
-
-    Engine::getLog()->log("Scene", "en");
-    obj = m->getInstance();
-     Engine::getLog()->log("Scene", "ainst");
+    obj = m->getInstance();;
     obj->setId(getObjectIdentification());
     obj->setPosition(position);
 
@@ -295,8 +291,7 @@ Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, 
     }
     else
       m_objects_dynamic.push_back(obj);
-    m_models[path] = m;    
-         Engine::getLog()->log("Scene", "ref");
+    m_models[path] = m;             
     refreshRenderObjects();
   }
   else    
@@ -306,12 +301,11 @@ Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, 
 }
 Object * Scene::addObject(std::string path,  bool instanced ,  bool static_object)
 {
-  Engine::getLog()->log("Scene", "adding Object");
+ // Engine::getLog()->log("Scene", "adding Object");
   Model * m = RessourceManager::loadModel(path, instanced);
   Object * obj  = nullptr;
   if( m != nullptr)
   {
-      Engine::getLog()->log("Scene", "gi");
     obj = m->getInstance();
     obj->setId(getObjectIdentification());
     if(static_object && (! Engine::isInEditMode()) && (!obj->isAnimated()) )
@@ -477,7 +471,7 @@ int Scene::getObjectIdentification()
 {
   int id = m_object_counter;
   m_object_counter++;
-  std::cout << id <<std::endl;
+  //std::cout << id <<std::endl;
   return id;
 }
 

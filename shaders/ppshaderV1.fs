@@ -16,11 +16,13 @@ layout(binding=1) uniform sampler2D Tex2;
 uniform vec2 TextureScale;
 uniform float AverageLuminance;
 uniform float Exposure;
+uniform float BloomThreshold;
 
 uniform float GaussKernel[10];
 
 uniform int EnableFXAA;
 uniform int EnableHDR;
+uniform int EnableBloom;
 
 // inspired by https://www.youtube.com/watch?v=Z9bYzpwVINA
 
@@ -78,13 +80,14 @@ uniform mat3 xyz2rgb = mat3(
 vec4 hdr(vec4 color)
 { 
   float White = 0.928;
+  float exp  =0.1; // Exposure
 
   vec3 xyzCol = rgb2xyz * vec3(color);
 
   float xyzSum = xyzCol.x + xyzCol.y + xyzCol.z;
   vec3 xyYCol = vec3( xyzCol.x / xyzSum, xyzCol.y / xyzSum, xyzCol.y);
 
-  float L = (Exposure * xyYCol.z) / AverageLuminance;
+  float L = (exp * xyYCol.z) / AverageLuminance;
   L = (L * ( 1 + L / (White * White) )) / ( 1 + L );
 
   xyzCol.x = (L * xyYCol.x) / (xyYCol.y);
@@ -95,7 +98,8 @@ vec4 hdr(vec4 color)
 }
 vec4 hdr_exposure(vec4 color)
 {
-  return ( vec4(1.0) - exp(-color * Exposure)  ); 
+  float exp_val = Exposure;
+  return ( vec4(1.0) - exp(-color * exp_val)  ); 
 }
 vec4 hdr_reinhard(vec4 color)
 {
@@ -116,23 +120,27 @@ void passStandard()
   if( EnableFXAA == 1 )
    color = fxaa();
 
-  if( EnableHDR == 1 )
-    color = hdr_reinhard(color);
+  if( (EnableHDR == 1) )
+   color = hdr_exposure(color);
  
   color = gamma_correction(color);  
 
-  FragColor = color ;//+ lightblur;
+  if( EnableBloom == 1 )
+    FragColor = color + lightblur;//
+  else
+    FragColor = color ;//
 }
 
 subroutine (RenderPassType)
 void passBright()
 {
   vec4 color = texture2D(Tex1, TexCoord );
-  
+  if(EnableHDR == 1)
+    color = hdr_exposure(color);
   float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
 
-  if(brightness > 0.3)
-    FragColor = vec4(brightness); // 0.1 for brightness scaling
+  if(brightness > BloomThreshold)
+    FragColor = vec4(brightness)*0.1; // 0.1 for brightness scaling
   else
     FragColor = vec4(0,0,0,0);
 }
@@ -143,7 +151,7 @@ void passBlur()
 {
   vec4 color = texture2D(Tex1, TexCoord );
   vec2 off = 1.0 / textureSize(Tex1, 0); 
-  for(int i = 1; i < 20; i++)
+  for(int i = 1; i < 10; i++)
   {
     color += texture2D(Tex1, TexCoord + vec2(off.x * i, 0.0)) * GaussKernel[i-1];
     color += texture2D(Tex1, TexCoord - vec2(off.x * i, 0.0)) * GaussKernel[i-1];
@@ -156,7 +164,7 @@ void passBlur2()
 {
   vec4 color = texture2D(Tex1, TexCoord );
   vec2 off = 1.0 / textureSize(Tex1, 0); 
-  for(int i = 1; i < 20; i++)
+  for(int i = 1; i < 10; i++)
   {
     color += texture2D(Tex1, TexCoord + vec2(0.0, off.y * i)) * GaussKernel[i-1];
     color += texture2D(Tex1, TexCoord - vec2(0.0, off.y * i)) * GaussKernel[i-1];

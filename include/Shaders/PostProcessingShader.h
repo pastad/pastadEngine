@@ -44,6 +44,12 @@ public:
   // pass true if HDR should be enabled
   void setHDR(bool enable);
 
+   // pass true if Bloom should be enabled
+  void setBloom(bool enable);
+
+  // sets the minimal bloom lum value
+  void setBloomThreshold(float val);
+
   // binds the shader  
   void use();
   

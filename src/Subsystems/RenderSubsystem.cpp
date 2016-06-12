@@ -116,8 +116,8 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 		
 		m_pp_shader->use();
 		m_pp_shader->setFXAA(true);		
-		m_pp_shader->setHDR(false);		
-		m_enable_hdr = false;
+		m_pp_shader->setHDR(true);	
+		m_pp_shader->setBloom(true);		
 
 
 		m_shader->use();
@@ -125,7 +125,9 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 
 		m_shadows_standard_enabled = true;
 
-		m_pp_shader->setGaussSize(20);
+		m_pp_shader->setGaussSize(10);
+		m_pp_shader->setBloomThreshold(0.6f);
+
 
 		//glEnable(GL_FRAMEBUFFER_SRGB); 
 
@@ -279,15 +281,16 @@ void RenderSubsystem::renderPassPostProcess()
 {
 	m_pp_shader->use();
 	m_pp_shader->setRenderPass(1);
+
 	m_pp_buffer->bindForOutput();
-	m_blur_buffer->bindForOutput(1);
+	m_light_buffer->bindForOutput(1);
 	m_pp_shader->setExposure(Engine::getScene()->getCamera()->getExposure());
-	if(m_enable_hdr)
-	{
+//	if(m_enable_hdr)
+//	{
 		//float average_luminance = m_pp_buffer->getAverageLuminance();
 		//m_pp_shader->setAverageLuminance(average_luminance);
 		//m_pp_shader->setExposure(Engine::getScene()->getCamera()->getExposure());
-	}
+//	}
 
 	m_pp_shader->setIdentityMatrices();
 	m_pp_shader->setTextureScaling( glm::vec2(1.0f /Engine::getWindowWidth(),1.0f /Engine::getWindowHeight()) );
@@ -305,6 +308,7 @@ void RenderSubsystem::renderPassLightBlur()
 {
 	// light 
 	m_pp_shader->use();
+	m_pp_shader->setExposure(Engine::getScene()->getCamera()->getExposure());
 	m_pp_shader->setRenderPass(2);
 	m_pp_buffer->bindForOutput();
 	m_light_buffer->bindForInput();
@@ -313,6 +317,8 @@ void RenderSubsystem::renderPassLightBlur()
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glDisable(GL_DEPTH_TEST);
+
+  // render the bright regions
 
   m_render_quad->render();	
 
@@ -382,7 +388,8 @@ void RenderSubsystem::render()
 		if(m_shadows_standard_enabled)
 			renderPassShadow();
 		renderPassLight();
-		//renderPassLightBlur();
+		if(m_enable_bloom)
+			renderPassLightBlur();
 		renderPassPostProcess();
 	}
 	renderUI();
@@ -425,6 +432,11 @@ void RenderSubsystem::setPostProcessing(PostprocessType type, bool enable)
 	{
 		m_pp_shader->setHDR(enable);
 		m_enable_hdr = enable;
+	}
+	if( type == PP_BLOOM)
+	{
+		m_pp_shader->setBloom(enable);
+		m_enable_bloom = enable;
 	}
 }
 void RenderSubsystem::setShadowTechnique(ShadowTechniqueType type)

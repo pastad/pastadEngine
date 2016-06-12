@@ -33,7 +33,8 @@ enum SubsystemType
 enum PostprocessType
 {
 	PP_FXAA = 1,
-	PP_HDR = 2
+	PP_HDR = 2,
+	PP_BLOOM = 3
 };
 enum ShadowTechniqueType
 {	
