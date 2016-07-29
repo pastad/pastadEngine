@@ -21,9 +21,11 @@
 FileViewer::FileViewer(): GUI( 0 )
 {}
 
-
 FileViewer::~FileViewer()
 {}
+
+
+// initialization/close -------------------------------------------------
 
 bool FileViewer::initialize()
 {
@@ -48,7 +50,6 @@ bool FileViewer::initialize()
   m_btn_down = GUI::getButton();
   m_btn_down->intitialize("resources/btn_down.png","",pos+ glm::vec2(10,40),glm::vec2(0.6f,0.6f),
     glm::vec3(0,0,0), "down");
-
 
   m_txt_selected = GUI::getEditText();
   m_txt_selected->set( "default_file", pos +glm::vec2(20,20), 0.22f, glm::vec3(0,0,0));
@@ -77,26 +78,10 @@ bool FileViewer::initialize()
  
   setInactive(); 
 
-
   GUI::registerButtonPressedCallback(mouseButtonCallback);
   GUI::registerEditTextCallback(editTextChangedCallback);
 
-
   return true;
-}
-
-unsigned int FileViewer::getStatus()
-{
-  return m_status;
-}
-void FileViewer::reset()
-{
-  m_status = FC_STATUS_NOTACTIVE;
-}
-std::string  FileViewer::getFileName()
-{
-  return m_return_path;
- // return m_current_file.string();
 }
 
 void FileViewer::start()
@@ -111,6 +96,7 @@ void FileViewer::start()
   m_btn_ok->setInactive();
   m_status = FC_STATUS_ACTIVE;
 }
+
 void FileViewer::close(bool positive)
 {  
   std::cout << "closing FileViewer ok:"<<positive <<std::endl;
@@ -126,6 +112,81 @@ void FileViewer::close(bool positive)
   else
     m_status = FC_STATUS_DONE_CANCLED;
 }
+
+
+// refreshs -------------------------------------------------
+
+void FileViewer::refreshButtons()
+{
+
+  std::map<std::string,boost::filesystem::path>::iterator it = m_current_path_directories.begin();
+  std::map<std::string,boost::filesystem::path>::iterator it2 = m_current_path_files.begin();
+
+  for(int x=0; x<m_view_offset;x++)
+  {
+    if(x <m_current_path_directories.size())
+      it++;
+    it2++;
+  }
+  for(unsigned int c=1; c < FILE_AMOUNT ; c++)
+  {
+    unsigned int idx = m_view_offset + c-1;
+    Button * btn = m_files[c];
+
+    if( idx  < m_current_path_directories.size())
+    {
+      std::string file_name = it->second.filename().string() ;
+
+      btn->setText("/"+file_name);
+      btn->setDescriptor("/"+file_name);
+      Engine::getLog()->log("FileViewer", "set dir ",file_name);
+      it++;
+    }
+    else
+    {
+      if(m_current_path_files.size() > idx- m_current_path_directories.size())
+      {
+        std::string file_name = it2->second.filename().string() ;
+
+        btn->setText(file_name);
+        btn->setDescriptor(file_name);
+        it2++;
+      }
+      else
+      {
+        btn->setText("");
+        btn->setDescriptor("");
+      }
+    } 
+  }
+}
+
+void FileViewer::loadPathFiles()
+{
+  m_current_path_files.clear();
+  m_current_path_directories.clear();
+  if (!m_current_path.empty())
+  {
+    namespace fs = boost::filesystem;
+
+    fs::path apk_path(m_current_path);
+    fs::directory_iterator end;
+
+    for (fs::directory_iterator i(apk_path); i != end; ++i)
+    {
+      const fs::path cp = (*i);
+
+      //std::cout << cp.filename().string() <<std::endl;
+      if( ! fs::is_directory(cp))
+        m_current_path_files.insert(std::pair<std::string,boost::filesystem::path>( cp.filename().string(),  cp) );
+      else
+        m_current_path_directories.insert(std::pair<std::string,boost::filesystem::path>( cp.filename().string(),  cp) );
+    }
+  }
+}
+
+
+// callbacks -------------------------------------------------
 
 void FileViewer::mouseButtonCallback(Button * btn)
 {
@@ -176,6 +237,7 @@ void FileViewer::mouseButtonCallback(Button * btn)
     }  
   }
 }
+
 void FileViewer::editTextChangedCallback(EditText * edit_txt)
 {
   if( edit_txt->getDescriptor() == "path_chosen"  )
@@ -189,6 +251,7 @@ void FileViewer::fileTyped()
 {
   m_btn_ok->setActive();
 }
+
 void FileViewer::shiftView(int delta)
 {  
   int s = m_current_path_directories.size() + m_current_path_files.size();
@@ -227,78 +290,30 @@ void FileViewer::chosenFile(std::string file_name)
   m_btn_ok->setActive();
 }
 
-void FileViewer::loadPathFiles()
-{
-  m_current_path_files.clear();
-  m_current_path_directories.clear();
-  if (!m_current_path.empty())
-  {
-    namespace fs = boost::filesystem;
 
-    fs::path apk_path(m_current_path);
-    fs::directory_iterator end;
+// getters/setters -------------------------------------------------
 
-    for (fs::directory_iterator i(apk_path); i != end; ++i)
-    {
-      const fs::path cp = (*i);
-
-      //std::cout << cp.filename().string() <<std::endl;
-      if( ! fs::is_directory(cp))
-        m_current_path_files.insert(std::pair<std::string,boost::filesystem::path>( cp.filename().string(),  cp) );
-      else
-        m_current_path_directories.insert(std::pair<std::string,boost::filesystem::path>( cp.filename().string(),  cp) );
-    }
-  }
-}
-void FileViewer::refreshButtons()
-{
-
-  std::map<std::string,boost::filesystem::path>::iterator it = m_current_path_directories.begin();
-  std::map<std::string,boost::filesystem::path>::iterator it2 = m_current_path_files.begin();
-
-  for(int x=0; x<m_view_offset;x++)
-  {
-    if(x <m_current_path_directories.size())
-      it++;
-    it2++;
-  }
-  for(unsigned int c=1; c < FILE_AMOUNT ; c++)
-  {
-    unsigned int idx = m_view_offset + c-1;
-    Button * btn = m_files[c];
-
-    if( idx  < m_current_path_directories.size())
-    {
-      std::string file_name = it->second.filename().string() ;
-
-      btn->setText("/"+file_name);
-      btn->setDescriptor("/"+file_name);
-      Engine::getLog()->log("FileViewer", "set dir ",file_name);
-      it++;
-    }
-    else
-    {
-      if(m_current_path_files.size() > idx- m_current_path_directories.size())
-      {
-        std::string file_name = it2->second.filename().string() ;
-
-        btn->setText(file_name);
-        btn->setDescriptor(file_name);
-        it2++;
-      }
-      else
-      {
-        btn->setText("");
-        btn->setDescriptor("");
-      }
-    } 
-  }
-}
 std::string FileViewer::getIdentifier()
 {
   return m_identifier;
 }
+
 void FileViewer::setIdentifier(std::string idf)
 {
   m_identifier = idf;
+}
+
+unsigned int FileViewer::getStatus()
+{
+  return m_status;
+}
+
+void FileViewer::reset()
+{
+  m_status = FC_STATUS_NOTACTIVE;
+}
+
+std::string  FileViewer::getFileName()
+{
+  return m_return_path;
 }

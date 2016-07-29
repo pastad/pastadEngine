@@ -1,4 +1,4 @@
-#version 440
+#version 430
 
 
 subroutine void RenderPassType();
@@ -151,7 +151,7 @@ float calcDirShadowPCF(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap)
     sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(1,-1));
     sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(-1,1));
     sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(1,1));    
-    sum *= 0.25; 
+    sum *= 0.1; 
    // float sum2 = 0.0;
     //sum2 += textureProjOffset(shadowMap, ShadowCoord,ivec2(-2,-2)) *0.5;
     //sum2 += textureProjOffset(shadowMap, ShadowCoord,ivec2(2,-2))*0.5;
@@ -244,7 +244,7 @@ float calcSingleDirectionalShadow(vec3 pos,mat4 shadowMat,sampler2DShadow shadow
     }
     
   }  
-   
+  
   return sum;
 }
 
@@ -376,7 +376,7 @@ float calcSpotShadowFactor(int idx)
   }
   else
     ret =1.0;
-
+  
   return ret;
 }
 
@@ -411,8 +411,9 @@ vec4 calcDirectionalLight(int idx, Material mat, vec3 pos, vec3 normal)
 
  
   float shadowFactor = 1.0f;
-  //if(length( vec2(pos.x,pos.z) - vec2(CameraPosition.x,CameraPosition.z )) <10 )
+ // if(length( vec2(pos.x,pos.z) - vec2(CameraPosition.x,CameraPosition.z )) <10 )
    shadowFactor = calcSpotShadowFactor(l.ShadowMapIndex);
+
   return vec4(diffuse* shadowFactor * l.Base.Intensity + ambient* l.Base.Intensity + specular* l.Base.Intensity,1) ;
 }
 
@@ -441,42 +442,55 @@ vec4 calcPointLights(int idx, Material mat, vec3 pos, vec3 normal)
 vec4 calcSpotLight(int idx, Material mat, vec3 pos, vec3 normal)
 {
   SpotLight l = SpotLights[idx];
+
   vec3 lightToPixel = normalize( l.Pointlight.Position - pos.xyz);
   float angle = acos(dot(-lightToPixel,l.Direction));
   float cutoff = radians (clamp (l.CutoffAngle, 0.0 ,90.0));
-  float spotFactor =pow (dot( -lightToPixel, l.Direction),0.1);
+  float spotFactor =pow (dot( -lightToPixel, l.Direction),0.1); 
 
   float distance   = length(l.Pointlight.Position - pos.xyz);
 
   vec3 ambient = l.Pointlight.Base.AmbientColor * mat.AmbientColor;
   float attenuation = 1.0f / (l.Pointlight.Attenuation.Constant + l.Pointlight.Attenuation.Linear * distance + l.Pointlight.Attenuation.Quadratic * (distance * distance));
 
+
   if (angle < cutoff)
   {
     vec4 color;
-    vec3 norm = normalize(normal);
-    vec3 lightDir = normalize(l.Pointlight.Position - pos.xyz);   
+    vec3 norm = normalize(normal);       
 
-    float diff = max(dot(lightToPixel, norm), 0.0);
-    vec3 diffuse = diff * l.Pointlight.Base.DiffuseColor * mat.DiffuseColor ;
+    vec3 diffuse =  spotFactor* l.Pointlight.Base.DiffuseColor * mat.DiffuseColor ; 
 
     vec3 v = normalize( vec3(-pos.xyz));
     vec3 h = normalize( v +lightToPixel );
     float spec = pow(max(dot(h, norm), 0.0), mat.Shininess);
 
     vec3 specular =    l.Pointlight.Base.SpecularColor * spec * mat.SpecularColor;
+    float shadowFactor = calcSpotShadowFactor(l.ShadowMapIndex);
 
-    color =vec4( (diffuse* l.Pointlight.Base.Intensity *calcSpotShadowFactor(l.ShadowMapIndex) * spotFactor + ambient* l.Pointlight.Base.Intensity + specular* l.Pointlight.Base.Intensity  * spotFactor ) * attenuation,1) ;
+    float delta = cutoff - angle; // maybe use different smoothing
+
+    color = vec4( (diffuse* l.Pointlight.Base.Intensity*shadowFactor  * delta + ambient* l.Pointlight.Base.Intensity * spotFactor + specular* delta* l.Pointlight.Base.Intensity  * spotFactor ) *attenuation,1) ;
+    
     return color;
   }
   else
   {
-    return vec4(ambient,1.0) *0.1*l.Pointlight.Base.Intensity * attenuation; // 0.1 just to scale down
+    return vec4( ambient,1.0) *0.1*l.Pointlight.Base.Intensity * attenuation; // 0.1 just to scale down
   }
 }
 // LIGHT CALCULATION END ---------------------------------------------
 
 // PASS 1     --------------------------------------------------------
+float LinearizeDepth(float depth)
+{
+  float far_plane_dist = 1000.0f;
+  float near_plane_dist = 0.1f;
+  float z = depth *2.0 -1.0; 
+  return (2.0 * near_plane_dist * far_plane_dist) / (far_plane_dist + near_plane_dist - z * (far_plane_dist - near_plane_dist));  
+}
+
+
 
 subroutine (RenderPassType)
 void pass1()
@@ -493,7 +507,7 @@ void pass1()
   PositionData = Position;
   NormalData = normalize(Normal);
   ColorData = vec3(color);
-  MaterialData = vec3(MaterialIndex,ObjectId,0);
+  MaterialData = vec3(MaterialIndex,ObjectId,  LinearizeDepth(gl_FragCoord.z)); // if there is a /1000 delete it , just for testing
 }
 // PASS 1 END    -----------------------------------------------------
 
@@ -530,6 +544,7 @@ void pass2()
  }
  if(matIdx ==99999)
   FragColor = color;  
+  FragColor.a =0.5;
 }
 // PASS 2 END    -----------------------------------------------------
 
@@ -546,7 +561,7 @@ void pass3()
 
 void main()
 {
-  RenderPass();  
+  RenderPass(); 
 }
 
 // MAIN END ----------------------------------------------------------

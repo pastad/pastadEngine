@@ -13,47 +13,22 @@ EditText::EditText(unsigned int id, GUI * parent):Text(id)
 {  
   m_parent = parent;
 }
+
 EditText::EditText(unsigned int id, std::string txt, glm::vec2 pos, float scale, glm::vec3 color, GUI * parent):Text(id,txt,pos,scale,color)
 {  
   m_parent = parent;
 }
+
 EditText::~EditText()
 {  
 }
 
-bool EditText::wasPressed(float x, float y)
-{
-  if( ! m_active)
-    return false;
-  
-  m_size.x = Text::getSize();
-  if (  ( x < (m_position.x +Text::getSize()+TOLERANCE ) ) && ( x > m_position.x - TOLERANCE)  &&
-          ( y < (m_position.y +m_size.y) ) && ( y > m_position.y )      ) 
-  {
-    Engine::getLog()->log("EditText" ,"was pressed"); 
-    Engine::setGUIMovementLock();
-    m_input_mode = true; 
 
-   // std::cout <<m_position.x <<std::endl;    
-    //std::cout <<m_size.x <<std::endl;
-    //std::cout <<x <<std::endl;
-    //std::cout <<m_size_vert <<std::endl;
+// refresh/handle -------------------------------------------------
 
-    return true;
-  }
-  else
-  { 
-    return false;
-  }
-}
 
 void EditText::refreshSize()
 {
-  Text::m_size_vert =-1;
-}
-void EditText::setText(std::string txt)
-{
-  Text::setText(txt);
   Text::m_size_vert =-1;
 }
 
@@ -112,14 +87,44 @@ bool EditText::handleInput(unsigned int key)
   }
   return false;
 }
+
+
+// query -------------------------------------------------
+
+bool EditText::wasPressed(float x, float y)
+{
+  if( ! m_active)
+    return false;
+  
+  m_size.x = Text::getSize();
+  if (  ( x < (m_position.x +Text::getSize()+TOLERANCE ) ) && ( x > m_position.x - TOLERANCE)  &&
+          ( y < (m_position.y +m_size.y) ) && ( y > m_position.y )      ) 
+  {
+    Engine::getLog()->log("EditText" ,"was pressed"); 
+    Engine::setGUIMovementLock();
+    m_input_mode = true; 
+
+    return true;
+  }
+  else
+  { 
+    return false;
+  }
+}
+
+
+// getter/setters -------------------------------------------------
+
 bool EditText::isInInputMode()
 {
   return m_input_mode;
 }
+
 void EditText::setDescriptor(std::string descriptor)
 {
   m_descriptor = descriptor;
 }
+
 std::string EditText::getDescriptor()
 {
   return m_descriptor;
@@ -128,4 +133,10 @@ std::string EditText::getDescriptor()
 GUI * EditText::getParent()
 {
   return m_parent;
+}
+
+void EditText::setText(std::string txt)
+{
+  Text::setText(txt);
+  Text::m_size_vert =-1;
 }

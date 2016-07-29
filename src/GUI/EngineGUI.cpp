@@ -41,9 +41,13 @@ Text * EngineGUI::m_txt_refresh_shader;
 EngineGUI::EngineGUI() :GUI( 0 )
 {  
 }
+
 EngineGUI::~EngineGUI()
 {  
 }
+
+
+// initialization -------------------------------------------------
 
 bool EngineGUI::initialize()
 {
@@ -123,7 +127,6 @@ bool EngineGUI::initialize()
   m_txt_bloom->setInactive();
 
 
-
   m_tb_shadow_pcf = GUI::getButton();
   m_tb_shadow_pcf->intitializeWithToggle("resources/toggle_on.png","resources/toggle_off.png",
     glm::vec2(30.0f,Engine::getWindowHeight()-320.0f),glm::vec2(0.5f,0.5f),
@@ -168,6 +171,9 @@ bool EngineGUI::initialize()
   Engine::getLog()->log("EngineGUI", "initialized");
   return true;
 }
+
+
+// callbacks -------------------------------------------------
 
 void EngineGUI::mouseButtonCallback(Button * btn)
 {

@@ -7,6 +7,7 @@ Transform::Transform()
 {	
 	recalculateMatrix();
 }
+
 Transform::~Transform()
 {	
 }
@@ -16,10 +17,8 @@ Transform::Transform(glm::vec3 p,glm::vec3 r,glm::vec3 s ):m_position(p),m_rotat
 	recalculateMatrix();
 }
 
-glm::mat4 Transform::getModelMatrix()
-{
-	return m_model_matrix;
-}
+
+//  recalculation -------------------------------------------------
 
 void Transform::recalculateMatrix()
 {
@@ -33,17 +32,40 @@ void Transform::recalculateMatrix()
 	m_model_matrix = mat_trans * mat_rot * mat_scale;
 }
 
+
+//  getters/setters -------------------------------------------------
+
+// position
+
 void Transform::setPosition(glm::vec3 p)
 {
 	m_position = p;
 	recalculateMatrix();
 }
+glm::vec3 Transform::getPosition()
+{
+  return m_position;
+}
+
+//rotation
+
 void Transform::setRotation(glm::vec3 r)
 {
 	r = glm::vec3( glm::radians(r.x), glm::radians(r.y) , glm::radians(r.z) );
 	m_rotation = r;
 	recalculateMatrix();
 }
+glm::vec3 Transform::getRotation()
+{
+  return m_rotation;
+}
+glm::vec3 Transform::getRotationDegrees()
+{
+  return glm::vec3( glm::degrees(m_rotation.x), glm::degrees(m_rotation.y) , glm::degrees(m_rotation.z) );
+}
+
+//scale
+
 void Transform::setScale(glm::vec3 s)
 {
 	m_scale = s;
@@ -53,16 +75,10 @@ glm::vec3 Transform::getScale()
 {
 	return m_scale;
 }
-glm::vec3 Transform::getRotation()
-{
-	return m_rotation;
-}
-glm::vec3 Transform::getRotationDegrees()
-{
-	return glm::vec3( glm::degrees(m_rotation.x), glm::degrees(m_rotation.y) , glm::degrees(m_rotation.z) );
-}
 
-glm::vec3 Transform::getPosition()
+// model matrix
+
+glm::mat4 Transform::getModelMatrix()
 {
-	return m_position;
+	return m_model_matrix;
 }

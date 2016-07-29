@@ -1,7 +1,14 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+
 class Camera;
+class Scene;
+class Object;
+class Inventory;
+class GUI;
 
 // the player character
 
@@ -16,17 +23,34 @@ public:
 
 
   // initializes the player
-  bool init(Camera * camera);
+  static bool init( Scene * scene);
 
   // updates the player
-  void update();
+  static void update();
 
+  // returns the weapon object
+  Object * getWeapon();
+
+  // returns the position
+  glm::vec3 getPosition();
 
 private:
 
   // holds the camera pointer for the camera
-  Camera * m_camera;
+  static Camera * m_camera;
 
+  // the players inventory
+  static Inventory * m_inventory;
+
+  // the callback called by the camera
+  static void cameraMovedCallback();
+
+  //  the stats of the player
+  static float m_health;
+  static float m_hunger;
+
+  // the player gui
+  static GUI * m_gui;
 };
 
 #endif

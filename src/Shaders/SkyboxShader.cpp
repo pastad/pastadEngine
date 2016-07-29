@@ -8,9 +8,13 @@
 SkyboxShader::SkyboxShader()
 {  
 }
+
 SkyboxShader::~SkyboxShader()
 {  
 }
+
+
+//  load -------------------------------------------------
 
 bool SkyboxShader::load(const std::string path)
 {
@@ -27,6 +31,9 @@ bool SkyboxShader::load(const std::string path)
   return true;
 }
 
+
+//  getter/setter -------------------------------------------------
+
 void SkyboxShader::setView(glm::mat4 view)
 {
   setUniform("ViewMat",view);
@@ -39,6 +46,8 @@ void SkyboxShader::setProjection(glm::mat4 projection)
 
   checkUniformError("set projectionMarix"); 
 }
+
+//  use -------------------------------------------------
 
 void SkyboxShader::use()
 {

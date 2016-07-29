@@ -19,7 +19,7 @@ double IOSubsystem::m_mouse_x = -1;
 double IOSubsystem::m_mouse_y= -1;
 glm::vec2 IOSubsystem::m_mouse_delta;
 
-IOSubsystem::IOSubsystem()
+IOSubsystem::IOSubsystem():Subsystem("IOSubsystem")
 {
 	m_initialized = false;
 }
@@ -31,39 +31,110 @@ IOSubsystem::~IOSubsystem()
 
 bool IOSubsystem::startUp(GLFWwindow * window)
 {
-	if(! m_initialized)
+	if(!m_initialized)
 	{
 		// init system here
     glfwSetKeyCallback(window, keyCallback);
     glfwSetCursorPosCallback(window, mouseMoveCallback);
     glfwSetMouseButtonCallback(window, mouseButtonCallback);
-		m_initialized = true;
 		Engine::getLog()->log("IOSubsystem", "started");
-		return true;
+		
+    m_initialized = true;
+    return true;
 	}
 	return false;
 }
 
-bool IOSubsystem::shutDown()
-{
-	if(m_initialized)
-	{
 
-		m_initialized = false;
-		Engine::getLog()->log("IOSubsystem", "shut down");
-		return true;
-	}
-	return false;
+
+// helpers ------------------------------------------
+
+void IOSubsystem::clearKeys()
+{
+  for(int x=0; x< GLFW_KEY_LAST;x++)
+    m_keys_pressed_and_released[x] = m_keys_released_and_pressed[x] = false;
+
+  for(int x=0; x< GLFW_MOUSE_BUTTON_8;x++)
+    m_mouse_buttons_pressed_and_released[x] = m_mouse_buttons_released_and_pressed[x] = false;
 }
 
-bool IOSubsystem::systemCheck()
+
+// queries ------------------------------------------
+
+// keys
+
+bool IOSubsystem::isKeyPressed(int key)
 {
-	return m_initialized;
+  if(key <= GLFW_KEY_LAST)
+    return m_keys[key];
+  else
+    return false;
 }
+
+bool IOSubsystem::isKeyPressedAndReleased(int key)
+{
+  if(key <= GLFW_KEY_LAST)
+    return m_keys_pressed_and_released[key];
+  else
+    return false;
+}
+
+bool IOSubsystem::isKeyReleasedAndPressed(int key)
+{
+  if(key <= GLFW_KEY_LAST)
+    return m_keys_released_and_pressed[key];
+  else
+    return false;
+}
+
+bool * IOSubsystem::getKeysPressedAndReleased()
+{
+  return m_keys_pressed_and_released;
+}
+
+//mouse
+
+bool IOSubsystem::isMouseButtonPressed(int key)
+{
+  if(key <= GLFW_MOUSE_BUTTON_8)
+    return m_mouse_buttons[key];
+  else
+    return false;
+}
+
+bool IOSubsystem::isMouseButtonPressedAndReleased(int key)
+{
+  if(key <= GLFW_MOUSE_BUTTON_8)
+    return m_mouse_buttons_pressed_and_released[key];
+  else
+    return false;
+}
+
+bool IOSubsystem::isMouseButtonReleasedAndPressed(int key)
+{
+  if(key <= GLFW_MOUSE_BUTTON_8)
+    return m_mouse_buttons_released_and_pressed[key];
+  else
+    return false;
+}
+
+glm::vec2 IOSubsystem::getMouseCoordinates()
+{
+  return glm::vec2(m_mouse_x,m_mouse_y);
+}
+
+glm::vec2 IOSubsystem::getMouseDelta()
+{
+  glm::vec2 ret = m_mouse_delta; 
+  m_mouse_delta = glm::vec2(0,0);
+  return ret;
+}
+
+// file system
 
 std::string IOSubsystem::readFile(std::string path)
 {
-	std::ifstream file;
+  std::ifstream file;
   file.open((path).c_str());
   std::string output;
  
@@ -84,6 +155,12 @@ std::string IOSubsystem::readFile(std::string path)
 
   return output;
 }
+
+
+
+
+// callbacks ------------------------------------------
+
 void IOSubsystem::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -91,11 +168,11 @@ void IOSubsystem::keyCallback(GLFWwindow* window, int key, int scancode, int act
 
   if(action == GLFW_PRESS)
   {
-    m_keys[key] = true;
     if( ! m_keys[key] )
     {
       m_keys_released_and_pressed[key] = true;
-    }
+    }    
+    m_keys[key] = true;
   }
   if(action == GLFW_RELEASE)
   {
@@ -108,12 +185,9 @@ void IOSubsystem::keyCallback(GLFWwindow* window, int key, int scancode, int act
     m_keys[key] = false;
   }
 }
+
 void IOSubsystem::mouseMoveCallback(GLFWwindow* window, double x, double y )
 {
- // std::stringstream ss;
- // ss << x<<" "<<y;
-  //Engine::getLog()->log("IOSubsystem","mouse move",ss.str());   
-
   if(m_mouse_x == -1)
   {
     m_mouse_x =x;
@@ -128,12 +202,10 @@ void IOSubsystem::mouseMoveCallback(GLFWwindow* window, double x, double y )
     m_mouse_y =y;
   }
 }
+
 void IOSubsystem::mouseButtonCallback(GLFWwindow * window, int button, int action, int mods)
 { 
-  // std::stringstream ss;
- //ss <<m_mouse_x<<" "<< Engine::getWindowHeight() - m_mouse_y;
-  //Engine::getLog()->log("IOSubsystem","mouse pressed",ss.str());   
-  if(action == GLFW_PRESS)
+ if(action == GLFW_PRESS)
   {        
     if(!m_mouse_buttons[button])  
     {  
@@ -156,72 +228,4 @@ void IOSubsystem::mouseButtonCallback(GLFWwindow * window, int button, int actio
     m_mouse_buttons[button] = false;
   }
 
-}
-
-bool IOSubsystem::isKeyPressed(int key)
-{
-  if(key <= GLFW_KEY_LAST)
-    return m_keys[key];
-  else
-    return false;
-}
-bool IOSubsystem::isKeyPressedAndReleased(int key)
-{
-  if(key <= GLFW_KEY_LAST)
-    return m_keys_pressed_and_released[key];
-  else
-    return false;
-}
-bool IOSubsystem::isKeyReleasedAndPressed(int key)
-{
-  if(key <= GLFW_KEY_LAST)
-    return m_keys_released_and_pressed[key];
-  else
-    return false;
-}
-bool IOSubsystem::isMouseButtonPressed(int key)
-{
-  if(key <= GLFW_MOUSE_BUTTON_8)
-    return m_mouse_buttons[key];
-  else
-    return false;
-}
-bool IOSubsystem::isMouseButtonPressedAndReleased(int key)
-{
-  if(key <= GLFW_MOUSE_BUTTON_8)
-    return m_mouse_buttons_pressed_and_released[key];
-  else
-    return false;
-}
-bool IOSubsystem::isMouseButtonReleasedAndPressed(int key)
-{
-  if(key <= GLFW_MOUSE_BUTTON_8)
-    return m_mouse_buttons_released_and_pressed[key];
-  else
-    return false;
-}
-
-glm::vec2 IOSubsystem::getMouseCoordinates()
-{
-  return glm::vec2(m_mouse_x,m_mouse_y);
-}
-glm::vec2 IOSubsystem::getMouseDelta()
-{
-  glm::vec2 ret = m_mouse_delta; 
-  m_mouse_delta = glm::vec2(0,0);
-  return ret;
-}
-
-bool * IOSubsystem::getKeysPressedAndReleased()
-{
-  return m_keys_pressed_and_released;
-}
-
-void IOSubsystem::clearKeys()
-{
-  for(int x=0; x< GLFW_KEY_LAST;x++)
-    m_keys_pressed_and_released[x] = m_keys_released_and_pressed[x] = false;
-
-  for(int x=0; x< GLFW_MOUSE_BUTTON_8;x++)
-    m_mouse_buttons_pressed_and_released[x] = m_mouse_buttons_released_and_pressed[x] = false;
 }

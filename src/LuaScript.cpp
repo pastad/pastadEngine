@@ -6,7 +6,7 @@
 
 LuaScript::LuaScript()
 {  
-  // create the environemtn and open the standard libs
+  // create the environment and open the standard libs
   m_state =  luaL_newstate();
   luaL_openlibs(m_state);
 }
@@ -15,6 +15,8 @@ LuaScript::~LuaScript()
 { 
  lua_close(m_state); 
 }
+
+// load ------------------------------------------
 
 bool LuaScript::loadFile(std::string file_name)
 {
@@ -30,6 +32,10 @@ bool LuaScript::loadFile(std::string file_name)
 
   return true;
 }
+
+
+// function execution ------------------------------------------
+
 bool LuaScript::executeMain()
 {
   int res = lua_pcall(m_state, 0, LUA_MULTRET, 0);
@@ -41,6 +47,7 @@ bool LuaScript::executeMain()
   }
   return true;
 }
+
 bool LuaScript::callFunction(std::string name)
 {
   lua_getglobal(m_state, name.c_str());

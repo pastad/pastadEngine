@@ -48,9 +48,13 @@ Engine::Engine()
 	Engine::m_initialized = false;
 	
 }
+
 Engine::~Engine()
 {		
 }
+
+
+// start-up/shut-down functions ---------------------------------------------------------------------------------------
 
 bool Engine::initialize(unsigned int width, unsigned int height, unsigned int system_flags, bool edit, bool fullscreen)
 {
@@ -142,6 +146,11 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 	// set callback for resize
 	glfwSetWindowSizeCallback(m_window, windowSizeChangedCallback);
 
+  // if in edit mode bind the cursor
+  if( ! isInEditMode() )
+    glfwSetInputMode(m_window,GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+
 	glDepthFunc(GL_LEQUAL);
   glCullFace(GL_BACK);
   glEnable(GL_MULTISAMPLE);
@@ -162,35 +171,6 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 	m_initialized = true;
 	m_log->log("Engine", "initialized");
 	return true;
-}
-
-void Engine::refreshWindow()
-{
-	if( m_window != nullptr)
-	{
-		glfwDestroyWindow(m_window);
-	}
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
-	glfwWindowHint(GLFW_DOUBLEBUFFER,GL_TRUE);
-	glfwWindowHint(GLFW_RESIZABLE,GL_FALSE);
-	glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
-
-	// create gl context ..... -1 to fix black window bug
-	m_window = glfwCreateWindow(m_win_width-1, m_win_height-1, "Engine", m_fullscreen ? glfwGetPrimaryMonitor() :nullptr , nullptr);
-
-	// check window creation
-	if(m_window == nullptr)
-	{
-		glfwTerminate();
-	}
-	else
-	{
-		glfwMakeContextCurrent(m_window);	
-		glfwSetWindowSize(m_window,m_win_width,m_win_height);
-	}
-
 }
 
 void Engine::shutDown()
@@ -221,36 +201,86 @@ void Engine::shutDown()
 	}
 }
 
-Log * Engine::getLog()
+bool Engine::startUpSubsystems()
 {
-	return m_log;
+  if( m_system_flags & IO_SUBSYSTEM )
+  {
+    if(! m_io_system->startUp(m_window) )
+      return false;
+  }
+  if( m_system_flags & RENDER_SUBSYSTEM )
+  {
+    if(! m_render_system->startUp(m_window) )
+      return false;
+  }
+  if( m_system_flags & PHYSIC_SUBSYSTEM )
+  {
+    if(! m_physic_system->startUp() )
+      return false;
+  }
+
+  return true;
 }
 
-bool Engine::checkVersionSupport(unsigned int version_major, unsigned int version_minor )
+bool Engine::shutDownSubsystems()
+{ 
+  if( m_system_flags & PHYSIC_SUBSYSTEM )
+  {
+    if(! m_physic_system->shutDown() )
+      return false;
+  }
+  if( m_system_flags & RENDER_SUBSYSTEM )
+  {
+    if(! m_render_system->shutDown() )
+      return false;
+  }
+  if( m_system_flags & IO_SUBSYSTEM )
+  {
+    if(! m_io_system->shutDown() )
+      return false;
+  }
+
+  return true;
+}
+
+void Engine::errorShutDown()
 {
-	const GLubyte * glsl_version =  glGetString(GL_SHADING_LANGUAGE_VERSION);
-	const GLubyte * renderer =  glGetString(GL_RENDERER);
-	const GLubyte * vendor =  glGetString(GL_VENDOR);
+  m_log->log("Engine", "shut down due to request");
+  glfwSetWindowShouldClose(m_window, GL_TRUE);
+}
 
-	GLint vers_major;
-	GLint vers_minor;
-	glGetIntegerv(GL_MAJOR_VERSION,&vers_minor); 
-	glGetIntegerv(GL_MAJOR_VERSION,&vers_major);
 
-	std::cout<<"OpenGL version: "<<vers_major<<"." <<version_minor<<std::endl;
-	std::cout<<"GLSL   version: "<<glsl_version<<std::endl;
-	//std::cout<<"Vendor        :"<<<vendor<<std::endl;
-	//std::cout<<"Renderer      :"<<renderer<<std::endl;
 
-	if(vers_major >= version_major)
-	{
-		if(vers_minor < version_minor)
-			return false;
-	}
-	else
-		return false;
+// update functions -------------------------------------------------------------------------------------------------
 
-	return true;
+void Engine::refreshWindow()
+{
+  if( m_window != nullptr)
+  {
+    glfwDestroyWindow(m_window);
+  }
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
+  glfwWindowHint(GLFW_DOUBLEBUFFER,GL_TRUE);
+  glfwWindowHint(GLFW_RESIZABLE,GL_FALSE);
+  glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
+
+  // create gl context ..... -1 to fix black window bug
+  m_window = glfwCreateWindow(m_win_width-1, m_win_height-1, "Engine", m_fullscreen ? glfwGetPrimaryMonitor() :nullptr , nullptr);
+  
+
+  // check window creation
+  if(m_window == nullptr)
+  {
+    glfwTerminate();
+  }
+  else
+  {
+    glfwMakeContextCurrent(m_window); 
+    glfwSetWindowSize(m_window,m_win_width,m_win_height);
+  }
+
 }
 
 void Engine::update()
@@ -271,7 +301,6 @@ void Engine::update()
 		IOSubsystem::clearKeys();
 
 		glfwPollEvents();
-
 		timeUpdate();
 		sceneSwitch();
 	}
@@ -317,6 +346,10 @@ void Engine::timeUpdate()
 	}
 }
 
+
+
+// running/render/checks functions -----------------------------------------------------------------------------------------
+
 bool Engine::running()
 {
 	if(glfwWindowShouldClose(m_window))
@@ -331,7 +364,6 @@ bool Engine::running()
 	return true;
 }
 
-
 void Engine::render()
 {
 	if(m_initialized)
@@ -345,52 +377,54 @@ void Engine::render()
 	}
 }
 
-void Engine::errorShutDown()
+bool Engine::checkVersionSupport(unsigned int version_major, unsigned int version_minor )
 {
-	m_log->log("Engine", "shut down due to request");
-	glfwSetWindowShouldClose(m_window, GL_TRUE);
+  const GLubyte * glsl_version =  glGetString(GL_SHADING_LANGUAGE_VERSION);
+  const GLubyte * renderer =  glGetString(GL_RENDERER);
+  const GLubyte * vendor =  glGetString(GL_VENDOR);
+
+  GLint vers_major;
+  GLint vers_minor;
+  glGetIntegerv(GL_MAJOR_VERSION,&vers_minor); 
+  glGetIntegerv(GL_MAJOR_VERSION,&vers_major);
+
+  std::cout<<"OpenGL version: "<<vers_major<<"." <<version_minor<<std::endl;
+  std::cout<<"GLSL   version: "<<glsl_version<<std::endl;
+  //std::cout<<"Vendor        :"<<<vendor<<std::endl;
+  //std::cout<<"Renderer      :"<<renderer<<std::endl;
+
+  if(vers_major >= version_major)
+  {
+    if(vers_minor < version_minor)
+      return false;
+  }
+  else
+    return false;
+
+  return true;
 }
 
-bool Engine::startUpSubsystems()
+void Engine::refreshShaders()
 {
-	if( m_system_flags & IO_SUBSYSTEM )
-	{
-		if(! m_io_system->startUp(m_window) )
-			return false;
-	}
-	if( m_system_flags & RENDER_SUBSYSTEM )
-	{
-		if(! m_render_system->startUp(m_window) )
-			return false;
-	}
-	if( m_system_flags & PHYSIC_SUBSYSTEM )
-	{
-		if(! m_physic_system->startUp() )
-			return false;
-	}
-
-	return true;
+  m_render_system->refreshShaders();
 }
 
-bool Engine::shutDownSubsystems()
-{	
-	if( m_system_flags & PHYSIC_SUBSYSTEM )
-	{
-		if(! m_physic_system->shutDown() )
-			return false;
-	}
-	if( m_system_flags & RENDER_SUBSYSTEM )
-	{
-		if(! m_render_system->shutDown() )
-			return false;
-	}
-	if( m_system_flags & IO_SUBSYSTEM )
-	{
-		if(! m_io_system->shutDown() )
-			return false;
-	}
 
-	return true;
+
+// getter/setters functions -----------------------------------------------------------------------------------------
+
+// log
+
+Log * Engine::getLog()
+{
+  return m_log;
+}
+
+// scene
+
+Scene * Engine::getScene()
+{
+  return m_scene;
 }
 
 void Engine::setScene(Scene * scene, bool delete_old)
@@ -416,12 +450,9 @@ void Engine::sceneSwitch()
 	}
 }
 
+// gui
 
-Scene * Engine::getScene()
-{
-	return m_scene;
-}
-GUI * Engine::getGUI()
+GUI * Engine::addGUI()
 {
 	GUI * gui = new GUI(m_guis_id);
 	m_guis.insert(m_guis.end(), gui);
@@ -430,7 +461,6 @@ GUI * Engine::getGUI()
 
 	return gui;
 }
-
 
 void Engine::removeGUI(GUI * gui)
 {
@@ -447,25 +477,76 @@ void Engine::removeGUI(GUI * gui)
 
 std::vector<GUI *> * Engine::getGUIs()
 {
-	return &m_guis;
+  return &m_guis;
 }
+
 EngineGUI * Engine::getEngineGUI()
 {
-	return m_engine_gui;
+  return m_engine_gui;
 }
+
+//editor
+
 SceneEditor * Engine::getSceneEditor()
 {
 	return m_scene_editor;
 }
 
+// width/height
 unsigned int Engine::getWindowWidth()
 {
 	return m_win_width;
 }
+
 unsigned int Engine::getWindowHeight()
 {
 	return m_win_height;
 }
+
+
+// subsystem
+PhysicSubsystem * Engine::getPhysicSubsystem()
+{
+  if(m_physic_system->systemCheck())
+    return m_physic_system;
+
+  return nullptr;
+}
+
+
+// fps/time
+
+void Engine::setFPS(float fps)
+{
+  m_render_update_delta = 1.0f/fps;
+}
+
+float Engine::getTimeDelta()
+{
+  return m_time_delta;
+}
+
+
+// techniques
+
+void Engine::setPostProcessing(PostprocessType type, bool enable)
+{
+  m_render_system->setPostProcessing(type,enable);
+}
+
+void Engine::setShadowTechnique(ShadowTechniqueType type)
+{
+  m_render_system->setShadowTechnique(type);
+} 
+
+bool Engine::isInEditMode()
+{
+  return m_edit_mode;
+}
+
+
+
+// internal callback functions -----------------------------------------------------------------------------------------
 
 void Engine::windowSizeChangedCallback(GLFWwindow* window, int width, int height)
 {
@@ -474,78 +555,9 @@ void Engine::windowSizeChangedCallback(GLFWwindow* window, int width, int height
 	glViewport(0, 0, width, height);
 }
 
-bool Engine::buttonCheck(GUI *gui , float x, float y)
-{
-	if ( gui->checkButtonPressed(x,y))
-		return true;
-	return false;
-}
-
-bool Engine::checkGUIsForButtonPresses(float x, float y)
-{
-	bool ret = false;
-
-	std::vector<std::future<bool>> futures;
-
-	for( std::vector<GUI*>::iterator it = m_guis.begin(); it != m_guis.end();it++)
-	{
-		if( (*it)->isActive() )
-		{
-			futures.push_back (std::async(std::launch::async,buttonCheck,(*it), x,y));
-			//if ( (*it)->checkButtonPressed(x,y))
-			//	ret = true;
-		}
-	}
-	//futures.push_back (std::async(std::launch::async,buttonCheck,( (GUI *)m_engine_gui), x,y));
-	//futures.push_back (std::async(std::launch::async,buttonCheck,( (GUI *)m_scene_editor), x,y));
-	if(m_engine_gui->checkButtonPressed(x,y))
-		ret = true;
-	if(m_edit_mode)
-	{
-		if(m_scene_editor->checkButtonPressed(x,y))
-			ret = true;
-	}
-	//std::cout << futures.size() << std::endl;
-	for(auto &e : futures) 
-	{
-		bool ergeb = e.get();
-		if(ergeb)
-			ret = true;
-  }
-	
-
-	return ret;
-}
-
-void Engine::setPostProcessing(PostprocessType type, bool enable)
-{
-	m_render_system->setPostProcessing(type,enable);
-}	
-void Engine::setShadowTechnique(ShadowTechniqueType type)
-{
-	m_render_system->setShadowTechnique(type);
-}	
-
-bool Engine::isInEditMode()
-{
-	return m_edit_mode;
-}
 
 
-void Engine::refreshShaders()
-{
-	m_render_system->refreshShaders();
-}
-
-void Engine::setFPS(float fps)
-{
-	m_render_update_delta = 1.0f/fps;
-}
-
-float Engine::getTimeDelta()
-{
-	return m_time_delta;
-}
+// request functions -----------------------------------------------------------------------------------------
 
 void Engine::keyWasPressed(unsigned int key_code)
 {
@@ -562,8 +574,51 @@ void Engine::keyWasPressed(unsigned int key_code)
 	}
 }
 
+bool Engine::checkGUIsForButtonPresses(float x, float y)
+{
+  bool ret = false;
 
-// passers
+  std::vector<std::future<bool>> futures;
+
+  for( std::vector<GUI*>::iterator it = m_guis.begin(); it != m_guis.end();it++)
+  {
+    if( (*it)->isActive() )
+    {
+      futures.push_back (std::async(std::launch::async,buttonCheck,(*it), x,y));
+      //if ( (*it)->checkButtonPressed(x,y))
+      //  ret = true;
+    }
+  }
+  //futures.push_back (std::async(std::launch::async,buttonCheck,( (GUI *)m_engine_gui), x,y));
+  //futures.push_back (std::async(std::launch::async,buttonCheck,( (GUI *)m_scene_editor), x,y));
+  if(m_engine_gui->checkButtonPressed(x,y))
+    ret = true;
+  if(m_edit_mode)
+  {
+    if(m_scene_editor->checkButtonPressed(x,y))
+      ret = true;
+  }
+  //std::cout << futures.size() << std::endl;
+  for(auto &e : futures) 
+  {
+    bool ergeb = e.get();
+    if(ergeb)
+      ret = true;
+  } 
+
+  return ret;
+}
+
+bool Engine::buttonCheck(GUI *gui , float x, float y)
+{
+  if ( gui->checkButtonPressed(x,y))
+    return true;
+  return false;
+}
+
+
+
+// passers functions -----------------------------------------------------------------------------------------
 
 Object * Engine::pickObjectAtCenter()
 {
@@ -584,11 +639,19 @@ Light * Engine::pickLightAt(glm::vec2 p)
 	return m_render_system->pickLightAt(pos);
 }
 
+bool Engine::isKeyReleasedAndPressed(int key_code)
+{
+  return m_io_system->isKeyReleasedAndPressed(key_code);
+}
+
+
+
+// gui-lock getter setter  -----------------------------------------------------------------------------------------
+
 bool Engine::isGUIMovementLockSet()
 {
 	return m_gui_movement_lock;
 }
-
 void Engine::setGUIMovementLock()
 {
 	m_gui_movement_lock = true;

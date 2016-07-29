@@ -6,6 +6,8 @@
 #include "Object.h"
 #include "Terrain.h"
 #include "Light.h"
+#include "Wave.h"
+#include "Water.h"
 #include "IOSubsystem.h"
 
 #include "Helper.h"
@@ -32,21 +34,22 @@ int main(void)
 
   Engine engine;
 
-  engine.initialize(1240, 720, PHYSIC_SUBSYSTEM, true, false);
 
-  bool launch_game = false;
+
+  bool launch_game = true;
 
   if(launch_game)
   {
+    engine.initialize(1240, 720, PHYSIC_SUBSYSTEM, false, false);
     Game * game = new Game();
 
     if(game->initialize())
     {
 
       while(engine.running())
-      {       
+      {        
         engine.update();
-        game->update();
+        game->update();   
         engine.render();
       }
     }
@@ -55,14 +58,14 @@ int main(void)
   }
   else
   {
-
+    engine.initialize(1240, 720, PHYSIC_SUBSYSTEM, true, false);
     Scene *  scene = new Scene();
 
 
-    LuaScript script;
-    script.loadFile("game/lua_scripts/test.lua");
-    script.executeMain();
-    script.callFunction("test");
+   // LuaScript script;
+   // script.loadFile("game/lua_scripts/test.lua");
+   // script.executeMain();
+   // script.callFunction("test");
 
     //Object * object5 = scene.addObject("models/sponza/sponza.obj"); 
     //Object * object6 = scene.addObject("models/table_medieval_trestle.obj"); 
@@ -112,6 +115,9 @@ int main(void)
         temp_tree = scene.addObjectInstanced("game/models/tree1.obj",glm::vec3(t*4-10,0,k*4+10) ); 
       }      
     }*/
+    Water * water_1  = scene->addWaterEffect(glm::vec3(0,1,0),6);
+    Wave * wave_1 = water_1->addWave(glm::vec2(1,1),1.0f,0.001,0.1);
+    Wave * wave_2 = water_1->addWave(glm::vec2(0,1),1.0f,0.001,0.1);
 
 
     //Object * test_roach = scene.addObject("models/rooster.dae", glm::vec3(0,1,7)); 
@@ -121,7 +127,7 @@ int main(void)
     //Terrain * terrain =  scene.addTerrain();
     //terrain->generate();
     //scene.save("scene_save_test.xml");
-    scene->load("scene_save_test3.xml");
+    scene->load("island-scene.xml");
     // scene->load("scene_save_test2.xml");
    // scene->save("scene_save_test.xml");
     Helper::m_debug_float = 0.0f;

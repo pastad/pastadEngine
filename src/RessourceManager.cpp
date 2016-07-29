@@ -25,6 +25,9 @@ RessourceManager::~RessourceManager()
   
 }
 
+
+// loading functions ------------------------------------------
+
 Model * RessourceManager::loadModel(std::string path, bool instanced)
 {	
 	Model * model = nullptr;

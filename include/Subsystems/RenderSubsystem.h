@@ -30,11 +30,9 @@ public:
 	// starts up the render system
 	bool startUp( GLFWwindow * window );
 
-	// shuts down the render system
-	bool shutDown();
-
-	// returns true if everything is up and running
-	bool systemCheck();
+	// from base class
+	using Subsystem::systemCheck;
+	using Subsystem::shutDown;
 
 
 	// --- Additionals ---
@@ -42,15 +40,6 @@ public:
 	// Renders the scene currently set in the Engine
 	void render();
 
-	// the render passess
-	void renderPassGBuffer();
-	void renderPassLight();
-	void renderPassPostProcess();
-	void renderPassShadow();
-	void renderPassLightBlur();
-
-	// renders the ui set to the engine
-	void renderUI();
 
 	// returns the shader used for standard rendering
 	RenderShader * getRenderShader();
@@ -105,6 +94,9 @@ private:
 	// the terrain shader
 	RenderBaseShader * m_terrain_shader;
 
+	// the water shader
+	RenderBaseShader * m_water_shader;
+
 	// the gbuffer
 	GBuffer * m_gbuffer;
 
@@ -123,6 +115,9 @@ private:
 	// buffer for the blurring texture
 	RenderBuffer * m_blur_buffer;
 
+	// buffer for the ssao texture
+	RenderBuffer * m_ssao_buffer;
+
 	// the jitter texture to smooth shadows
 	JitterTexture * m_jitter;
 
@@ -140,6 +135,19 @@ private:
 
 	// ends the rendering cycle
 	void endRender();
+
+	// the render passess
+	void renderPassGBuffer();
+	void renderPassLight();
+
+	// postprocessing passes
+	void renderPassPostProcess();
+	void renderPassShadow();
+	void renderPassLightBlur();
+	void renderSSAO();
+
+	// renders the ui set to the engine
+	void renderUI();
 
 	
 };

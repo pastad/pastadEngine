@@ -14,9 +14,13 @@
 RenderShader::RenderShader() : RenderBaseShader()
 {
 }
+
 RenderShader::~RenderShader()
 {
 }
+
+
+//  load -------------------------------------------------
 
 bool RenderShader::load(const std::string path)
 {  
@@ -33,6 +37,10 @@ bool RenderShader::load(const std::string path)
 
   return true;
 }
+
+
+//  getter/setter -------------------------------------------------
+
 void RenderShader::setRenderPass(unsigned int pass)
 {
   checkUniformError("pre set Subroutine");
@@ -57,6 +65,7 @@ void RenderShader::setRenderPass(unsigned int pass)
   checkUniformError("set Subroutine");
   //printUniforms();
 }
+
 void RenderShader::setColorOnly(bool color_only)
 {
   if(color_only)
@@ -96,6 +105,7 @@ void RenderShader::setLights(std::vector<Light*> * lights)
   setUniform("NumPointLights", num_point_lights);
 
 }
+
 void RenderShader::setDirectionalLight(Light* light, unsigned int pos)
 {
   std::stringstream ss, ssi;
@@ -121,6 +131,7 @@ void RenderShader::setDirectionalLight(Light* light, unsigned int pos)
   setUniform(ssi.str(), light->getIntensity());
   ssi.str(""); ssi.clear();
 }
+
 void RenderShader::setSpotLight(Light* light, unsigned int pos)
 {
   std::stringstream ss, ssi;
@@ -169,6 +180,7 @@ void RenderShader::setSpotLight(Light* light, unsigned int pos)
   setUniform(ssi.str(), light->getIntensity());
   ssi.str(""); ssi.clear();
 }
+
 void RenderShader::setPointLight(Light* light, unsigned int pos)
 {
   std::stringstream ss, ssi;
@@ -206,16 +218,10 @@ void RenderShader::setPointLight(Light* light, unsigned int pos)
   setUniform(ssi.str(), light->getIntensity());
   ssi.str(""); ssi.clear();
 }
+
 void RenderShader::setCameraPosition(glm::vec3 pos)
 {
   setUniform("CameraPosition", pos);
-}
-
-
-void RenderShader::use()
-{
-  checkUniformError("at binding"); 
-  Shader::bind();
 }
 
 void RenderShader::setIdentityMatrices()
@@ -226,13 +232,6 @@ void RenderShader::setIdentityMatrices()
   setProjectionMatrix(projection);
 }
 
-void RenderShader::reset()
-{
-  // reset at begin of render
- // m_materials.clear();
-//  m_materials_mapping.clear();
-  //m_material_number = 0;
-}
 void RenderShader::setMaterial(std::string name, MaterialColorSpecs specs)
 {
   // store materials during gbuffer pass and only set index
@@ -260,10 +259,12 @@ void RenderShader::setMaterial(std::string name, MaterialColorSpecs specs)
 
   //==std::cout<< "Mat count:" << m_materials_mapping.size()<<std::endl;
 }
+
 void RenderShader::setMaterialIndex(int idx)
 {
    setUniform("MaterialIndex",idx);
 }
+
 void RenderShader::setAllMaterialsForRenderPass()
 {
   //std::cout<< "Mat count set:" << m_materials_mapping.size()<<std::endl;
@@ -318,6 +319,7 @@ int RenderShader::setShadowMap(glm::mat4 shadow_mat)
  // Engine::getLog()->log("RenderShader",ss.str(), " shadow maps set");
   return c;
 }
+
 void RenderShader::resetShadowMapping()
 {
   m_shadow_map_count =m_cube_shadow_map_count = 0;
@@ -331,7 +333,6 @@ int RenderShader::setPointShadow()
 
   return ret;
 }
-
 
 void RenderShader::setShadows(ShadowTechniqueType tech)
 {
@@ -357,4 +358,19 @@ void RenderShader::setShadows(ShadowTechniqueType tech)
     Engine::getLog()->log("RenderShader", "Enable Standard RandomSampling Shadows");     
   }
   checkUniformError("set standard shadows");
+}
+
+//  use/reset -------------------------------------------------
+
+void RenderShader::use()
+{
+  checkUniformError("at binding"); 
+  Shader::bind();
+}
+void RenderShader::reset()
+{
+  // reset at begin of render
+ // m_materials.clear();
+//  m_materials_mapping.clear();
+  //m_material_number = 0;
 }

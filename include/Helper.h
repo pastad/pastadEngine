@@ -2,7 +2,9 @@
 #define HELPER_H
 
 #include <assimp/scene.h>
+#include "gl_core_4_.h"
 #include <glm/glm.hpp>
+#include <GLFW/glfw3.h>
 
 #include "tinyxml2.h"
 
@@ -37,7 +39,8 @@ public:
   static void readFromElement(tinyxml2::XMLElement * element,glm::vec3 * v);
   static void readFromElement(tinyxml2::XMLElement * element,glm::vec2 * v);
 
-
+  // interolation function
+  static GLfloat lerp(GLfloat a, GLfloat b, GLfloat c);
 
   static float m_debug_float;
 

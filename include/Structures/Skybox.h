@@ -3,6 +3,8 @@
 
 #include "Engine.h"
 #include <string>
+
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
 #include "tinyxml2.h"

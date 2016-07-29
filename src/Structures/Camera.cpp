@@ -1,13 +1,19 @@
 #include "Camera.h"
 
 #include "Engine.h"
-#include "Log.h"
-#include "Scene.h"
-#include "Helper.h"
 #include "IOSubsystem.h"
+#include "PhysicSubsystem.h"
+
+#include "Log.h"
+#include "Helper.h"
+
+#include "Scene.h"
+#include "Object.h"
+
 #include "Plane.h"
 #include "BoundingBox.h"
-#include "Object.h"
+#include "Ray.h"
+
 
 #include "glm/ext.hpp"
 #include <glm/gtx/vector_angle.hpp>
@@ -33,6 +39,9 @@ Camera::Camera(float x, float y, float z): m_pos(x,y,z),m_rotation_allowed(false
   m_plane_front = new Plane();
   m_plane_back = new Plane();
 
+  m_bottom_offset = 0.0f;
+  m_surrounding_offset =0.0f;
+
   float ratio = (float)Engine::getWindowHeight() / (float)Engine::getWindowWidth();
   float tan = std::tan( glm::radians(m_fov) *1.5f   );
   m_near_plane_height = NEAR_CLIPPING_PLANE * tan;
@@ -40,7 +49,7 @@ Camera::Camera(float x, float y, float z): m_pos(x,y,z),m_rotation_allowed(false
   m_far_plane_height = FAR_CLIPPING_PLANE * tan;
   m_far_plane_width = m_far_plane_height *ratio;
 
-  //std::cout << m_far_plane_height << ","<<m_far_plane_width<<std::endl;
+  m_vertical_movement_allowed = true;
 
   recalculateMatrices();
 }
@@ -55,12 +64,106 @@ Camera::~Camera()
   delete m_plane_bottom;
 }
 
+
+//  movement-------------------------------------------------
+
+void Camera::movementWithCollisionCheck(glm::vec3 dir, float step)
+{
+  PhysicSubsystem * physics_system = Engine::getPhysicSubsystem();
+  Scene * scene = Engine::getScene();
+
+  float bottom_off_halfed = 0.01f;
+  if( m_bottom_offset > 0.0f)
+    bottom_off_halfed = m_bottom_offset /2.0f;
+
+  glm::vec3 npos =  m_pos + dir * step;
+  if( (physics_system != nullptr) && (scene != nullptr) )
+  {
+    Ray r(m_pos-glm::vec3(0,m_bottom_offset-0.1f,0), dir);
+    float distance;
+    if( ! physics_system->collisionRayScene(scene, &r, &distance))
+    {        
+      // if no collision update  
+      m_pos = npos;
+      std::cout << "no col"<< dir.x<<" , "<< dir.y<<" , "<< dir.z<<" , " <<std::endl;
+    }
+    else
+    {
+      // .. also update if there is enough space in front
+      if(distance -step > 0.0f)
+        m_pos = npos;
+      else
+      {
+        Ray r2(m_pos-glm::vec3(0,bottom_off_halfed,0), dir, 0.0f, m_surrounding_offset);
+        float distance2;
+        bool res = physics_system->collisionRayScene(scene, &r2, &distance2);
+
+        // otherwise check if we can make a step forward an upwards
+        if( !res || (distance2 > m_surrounding_offset) )
+        {
+          Ray r3(m_pos-glm::vec3(0,bottom_off_halfed,0)+dir*step ,glm::vec3(0,-1,0));
+          float distance3;
+
+          // how far we need to step upward ?? -> distance3
+          if(  physics_system->collisionRayScene(scene, &r3, &distance3))
+          {
+            if((bottom_off_halfed- distance3) < 0.2f)
+            m_pos += glm::vec3(0,  (bottom_off_halfed- distance3),0);
+          }
+        }     
+      }
+      std::cout << distance<<std::endl;
+    }
+  }
+  else
+  {
+  /*  if(scene == nullptr)
+      std::cout << "no scene"<<std::endl;
+    if(physics_system == nullptr)
+      std::cout << "no phy sys"<<std::endl;*/
+    m_pos = npos;
+  }
+}
+
+void Camera::rotate(float deltax,float deltay)
+{
+  if(m_rotation_allowed)
+  {
+    m_rot_1 +=deltax*m_rotation_speed;
+    m_rot_2 -=deltay*m_rotation_speed;
+
+    // limit to range for better retrieval
+    if(m_rot_1 >360.0f)
+      m_rot_1 = 0.0f;
+    if(m_rot_1 <0.0f)
+      m_rot_1 = 360.0f;
+
+    m_forward = Helper::anglesToDirection(m_rot_1,m_rot_2);
+    Engine::getScene()->cameraRotated();
+    external_cameraMovedCallback();
+  }
+}
+
+void Camera::move(glm::vec3 step)
+{
+  m_pos+=step;
+  recalculateMatrices();
+  //Engine::getLog()->log("Camera", "moved camera ");
+  external_cameraMovedCallback();
+}
+
+
+//  update/recalc -------------------------------------------------
+
 void Camera::update(float delta_time)
 {
   if(! Engine::isGUIMovementLockSet())
   {
     float delta = delta_time;
-    glm::vec3 right = glm::normalize(glm::cross(m_forward, m_up));
+    m_right = glm::normalize(glm::cross(m_forward, m_up));
+
+    PhysicSubsystem * physics_system = Engine::getPhysicSubsystem();
+    Scene * scene = Engine::getScene();
 
     float step = delta * m_speed;
     bool moved = false;
@@ -68,23 +171,79 @@ void Camera::update(float delta_time)
 
     if(IOSubsystem::isKeyPressed('W'))
     {
-      moved = true;
-      m_pos += m_forward * step;
+      
+      glm::vec3 f = m_forward;
+      if( !isUpDownTranslationAllowed()) // dont allow running upwards ...
+        f.y = 0.0f;
+      if(physics_system != nullptr)
+      {
+        glm::vec3 npos;
+        if(physics_system->collisionMovement(scene, m_pos, f , step, m_surrounding_offset, m_bottom_offset, &npos))
+          m_pos = npos;
+        moved = true;
+      }
+      else
+      {
+        moved = true;
+        m_pos =  m_pos + f * step;
+      }
+     // movementWithCollisionCheck(m_forward, step);
     }
     if(IOSubsystem::isKeyPressed('S'))
     {
-      moved = true;
-      m_pos -= m_forward * step;
+      
+      glm::vec3 f = -m_forward;
+      if( !isUpDownTranslationAllowed()) // or downwards
+        f.y = 0.0f;
+     // movementWithCollisionCheck(-m_forward, step);
+      if(physics_system != nullptr)
+      {
+        glm::vec3 npos;
+        if(physics_system->collisionMovement(scene, m_pos, f , step, m_surrounding_offset, m_bottom_offset, &npos))
+          m_pos = npos;
+        moved = true;
+      }
+      else
+      {
+        moved = true;
+        m_pos =  m_pos + f * step;
+      }
     }
     if(IOSubsystem::isKeyPressed('A'))
     {
-      moved = true;
-      m_pos -= right * step;
+     // movementWithCollisionCheck(-right, step);
+      if(physics_system != nullptr)
+      {
+        glm::vec3 npos;
+        if(physics_system->collisionMovement(scene, m_pos, -m_right , step, m_surrounding_offset, m_bottom_offset, &npos))
+          m_pos = npos;
+
+        moved = true;
+      }
+      else
+      {
+        moved = true;
+        m_pos =  m_pos + -m_right * step;
+      }
+
+      //m_pos -= right * step;
     }
     if(IOSubsystem::isKeyPressed('D'))
     {
-      moved = true;
-      m_pos += right * step;
+      //movementWithCollisionCheck(right, step);
+      if(physics_system != nullptr)
+      {
+        glm::vec3 npos;
+        if(physics_system->collisionMovement(scene, m_pos, m_right , step, m_surrounding_offset, m_bottom_offset, &npos))
+          m_pos = npos;
+
+        moved = true;
+      }
+      else
+      {
+        moved = true;
+        m_pos =  m_pos + m_right * step;
+      }
     }
     if(IOSubsystem::isKeyPressed(' '))
     {
@@ -125,58 +284,7 @@ void Camera::update(float delta_time)
     recalculateMatrices();
   }
 }
-glm::mat4 Camera::getView()
-{
-  return  m_view;
-}
-glm::mat4 Camera::getViewWithoutTranslation()
-{
-  return  m_view_wt;
-}
-glm::mat4 Camera::getProjection()
-{
-  return m_projection;
-}
-void Camera::rotate(float deltax,float deltay)
-{
-  if(m_rotation_allowed)
-  {
-    m_rot_1 +=deltax*m_rotation_speed;
-    m_rot_2 -=deltay*m_rotation_speed;
 
-    // limit to range for better retrieval
-    if(m_rot_1 >360.0f)
-      m_rot_1 = 0.0f;
-    if(m_rot_1 <0.0f)
-      m_rot_1 = 360.0f;
-
-    m_forward = Helper::anglesToDirection(m_rot_1,m_rot_2);
-    Engine::getScene()->cameraRotated();
-  }
-}
-glm::vec3 Camera::getPosition()
-{
-  return m_pos;
-}
-glm::vec3 Camera::getDirection()
-{
-  return m_forward;
-}
-float Camera::getAngleAroundY()
-{
-  return m_rot_1;
-}
-float Camera::getFOV()
-{
-  return m_fov;
-}
-
-void Camera::move(glm::vec3 step)
-{
-  m_pos+=step;
-  recalculateMatrices();
-  Engine::getLog()->log("Camera", "moved camera ");
-}
 void Camera::recalculateMatrices()
 {
   m_view = glm::lookAt(m_pos, m_pos +  m_forward, m_up);
@@ -184,22 +292,7 @@ void Camera::recalculateMatrices()
   m_projection =glm::perspective(m_fov, (float)Engine::getWindowWidth()/(float)Engine::getWindowHeight(), NEAR_CLIPPING_PLANE, FAR_CLIPPING_PLANE);
   recalculatePlanes();
 }
-void Camera::setRotationAllowed()
-{
-  m_rotation_allowed = true;
-}
-void Camera::setRotationNotAllowed()
-{
-  m_rotation_allowed = false;
-}
-float Camera::getExposure()
-{
-  return m_exposure;
-}
-void Camera::setExposure(float v)
-{
-  m_exposure  = v;
-}
+
 void Camera::recalculatePlanes()
 {
  glm::vec3 look_inv = m_forward * -1.0f;
@@ -234,6 +327,146 @@ void Camera::recalculatePlanes()
  m_plane_top->setPoints(near_plane_top_right,near_plane_top_left,far_plane_top_left);
 
 }
+
+
+//  getter/setter -------------------------------------------------
+
+glm::mat4 Camera::getView()
+{
+  return  m_view;
+}
+
+glm::mat4 Camera::getViewWithoutTranslation()
+{
+  return  m_view_wt;
+}
+
+glm::mat4 Camera::getProjection()
+{
+  return m_projection;
+}
+
+glm::vec3 Camera::getPosition()
+{
+  return m_pos;
+}
+
+glm::vec3 Camera::getDirection()
+{
+  return m_forward;
+}
+
+glm::vec3 Camera::getRight()
+{
+  return m_right;
+}
+
+glm::vec3 Camera::getUp()
+{
+  return m_up;
+}
+
+float Camera::getPitch()
+{
+  return m_rot_1;
+}
+
+float Camera::getYaw()
+{
+  return m_rot_2;
+}
+
+float Camera::getFOV()
+{
+  return m_fov;
+}
+
+void Camera::setRotationAllowed()
+{
+  m_rotation_allowed = true;
+}
+
+void Camera::setRotationNotAllowed()
+{
+  m_rotation_allowed = false;
+}
+
+float Camera::getExposure()
+{
+  return m_exposure;
+}
+
+void Camera::setExposure(float v)
+{
+  m_exposure  = v; 
+}
+
+void Camera::applyPhysicsDrop(float offset)
+{
+  m_apply_physics = true;
+  m_bottom_offset = offset;
+}
+
+void Camera::dontApplyPhysicsDrop()
+{
+  m_apply_physics = false;
+}
+
+bool Camera::isPhysicsApplied()
+{
+  return m_apply_physics;
+}
+
+float Camera::getBottomOffset()
+{
+  return m_bottom_offset;
+}
+
+void Camera::applyDrop(glm::vec3 delta)
+{
+  m_fall_vector+=delta;
+  move(m_fall_vector);  
+}
+
+void Camera::allowUpDownTranslation()
+{
+  m_vertical_movement_allowed = true;
+}
+
+void Camera::dontAllowUpDownTranslation()
+{
+  m_vertical_movement_allowed = false;
+}
+
+bool Camera::isUpDownTranslationAllowed()
+{
+  return m_vertical_movement_allowed;
+}
+
+glm::vec3 Camera::getFallVector()
+{
+  return m_fall_vector;
+}
+
+void Camera::setFallVector(glm::vec3 val)
+{ 
+  m_fall_vector = val;
+}
+
+float Camera::getSurrouningOffset()
+{
+  return m_surrounding_offset;
+}
+
+void Camera::setSurroundingOffset(float val)
+{
+  if(val >=0.0f)
+    m_surrounding_offset = val;
+}
+
+
+//  inside frustrum check -------------------------------------------------
+
 unsigned int  Camera::insideFrustrum(Object * obj)
 {
   unsigned int ret = FRUSTRUM_INCLUTION;
@@ -278,6 +511,7 @@ unsigned int  Camera::insideFrustrum(Object * obj)
   }
   return ret;
 }
+
 unsigned int Camera::insideFrustrum(BoundingBox * bb)
 {
   unsigned int ret = FRUSTRUM_INCLUTION;
@@ -321,4 +555,12 @@ unsigned int Camera::insideFrustrum(BoundingBox * bb)
 
   }
   return ret;
+}
+
+
+//  callback register -------------------------------------------------
+
+void Camera::registerMovedCallback( void  (*callback)(void)   )
+{
+  external_cameraMovedCallback = callback;
 }

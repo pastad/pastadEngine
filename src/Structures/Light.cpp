@@ -65,6 +65,35 @@ Light::~Light()
   }
 }
 
+
+//  movement-------------------------------------------------
+
+void Light::rotate(glm::vec2 delta)
+{
+  m_rotation.x += delta.x;
+  m_rotation.y -= delta.y;
+
+  if(m_rotation.x >360.0f)
+    m_rotation.x = 0.0f;
+  if(m_rotation.y >360.0f)
+    m_rotation.y = 0.0f;
+  if(m_rotation.x <0.0f)
+    m_rotation.x = 360.0f;
+  if(m_rotation.y <0.0f)
+    m_rotation.y = 360.0f;
+
+  m_direction= Helper::anglesToDirection(m_rotation.x,m_rotation.y);
+  m_refresh_shadow = true;
+}
+
+void Light::move(glm::vec3 delta)
+{
+  setPosition( getPosition()+ delta);
+}
+
+
+//  major setters-------------------------------------------------
+
 bool Light::setDirectional(glm::vec3 direction, glm::vec3 col_am ,glm::vec3 col_dif, glm::vec3 col_spec,float intensity, bool enable_shadow )
 {
 
@@ -88,8 +117,8 @@ bool Light::setDirectional(glm::vec3 direction, glm::vec3 col_am ,glm::vec3 col_
       {
         m_directional_buffer = new DirectionalShadowBuffer();        
         m_num_directional_shadows++;
-        if( !m_directional_buffer->initialize(Engine::getWindowWidth() *4.0f,
-         Engine::getWindowHeight() *4.0f))
+        if( !m_directional_buffer->initialize(Engine::getWindowWidth() *10.0f,
+         Engine::getWindowHeight() *10.0f))
           return false;
       }
       else
@@ -98,18 +127,18 @@ bool Light::setDirectional(glm::vec3 direction, glm::vec3 col_am ,glm::vec3 col_
     else
         Engine::getLog()->log("Light", "Too many directional lights allready set");
 
-    m_model = RessourceManager::loadModel("resources/cylinder.obj",false);
-    if(m_directional_object == nullptr)
+    if(Engine::isInEditMode())
     {
-      m_directional_object = m_model->getInstance();
-      m_directional_object->setScale(glm::vec3(0.2f,0.2f,0.2f));
-    }
-   
-
+      m_model = RessourceManager::loadModel("resources/cylinder.obj",false);
     
+      if(m_directional_object == nullptr)
+      {
+        m_directional_object = m_model->getInstance();
+        m_directional_object->setScale(glm::vec3(0.2f,0.2f,0.2f));
+      }
+    }    
     return true;
   }
-
   return false;
 }
 
@@ -147,12 +176,15 @@ bool Light::setPoint(glm::vec3 positon, glm::vec3 col_am ,glm::vec3 col_dif, glm
     }
     m_refresh_shadow =true;
 
-    m_model = RessourceManager::loadModel("resources/sphere.obj",false);
-
-    if(m_point_object == nullptr)
+    if(Engine::isInEditMode())
     {
-      m_point_object = m_model->getInstance();
-      m_point_object->setScale(glm::vec3(0.2f,0.2f,0.2f));
+      m_model = RessourceManager::loadModel("resources/sphere.obj",false);
+    
+      if(m_point_object == nullptr)
+      {
+        m_point_object = m_model->getInstance();
+        m_point_object->setScale(glm::vec3(0.2f,0.2f,0.2f));
+      }
     }
     return true;
   }
@@ -198,13 +230,17 @@ bool Light::setSpot(glm::vec3 position, glm::vec3 col_am ,glm::vec3 col_dif, glm
         Engine::getLog()->log("Light", "Too many directional shadows allready enabled");
     }
     m_refresh_shadow =true;
-    m_model = RessourceManager::loadModel("resources/cone.obj",false);
-    if(m_spot_object == nullptr)
+
+    if(Engine::isInEditMode())
     {
-      m_spot_object = m_model->getInstance();
-      m_spot_object->setScale(glm::vec3(0.2f,0.2f,0.2f));
-    }
-   
+      m_model = RessourceManager::loadModel("resources/cone.obj",false);
+    
+      if(m_spot_object == nullptr)
+      {
+        m_spot_object = m_model->getInstance();
+        m_spot_object->setScale(glm::vec3(0.2f,0.2f,0.2f));
+      }
+    }   
 
     return true;
   }
@@ -214,6 +250,9 @@ bool Light::setSpot(glm::vec3 position, glm::vec3 col_am ,glm::vec3 col_dif, glm
 }
 
 
+//  getters/setters-------------------------------------------------
+
+// major specs
 
 unsigned int Light::getType()
 {
@@ -229,161 +268,59 @@ glm::vec3 Light::getAmbientColor()
 {
     return m_color_ambient;
 }
+
 glm::vec3 Light::getDiffuseColor()
 {
     return m_color_diffuse;
 }
+
 glm::vec3 Light::getSpecularColor()
 {
     return m_color_specular;
 }
+
 float Light::getIntensity()
 {
     return m_intensity;
 }
+
 float Light::getAttenuationConstant()
 {
     return m_att_const;
 }
+
 float Light::getAttenuationLinear()
 {
     return m_att_linear;
 }
+
 float Light::getAttenuationQuadratic()
 {
     return m_att_quadratic;
 }
+
 glm::vec3 Light::getPosition()
 {
     return m_position;
 }
+
 float Light::getCutoffAngle()
 {
   return m_cutoff_angle;
 }
 
-void Light::bindForShadowRenderDirectional(RenderBaseShader * shadow_shader)
+void Light::setPosition(glm::vec3 p )
 {
-  if(  ( m_type == LIGHT_SPOT) || ( m_type == LIGHT_DIRECTIONAL) )
-  {     
-    shadow_shader->use();
-    m_directional_buffer->bindForInput();
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
-
-    glPolygonOffset(0.01f,0.01f);
-
-    shadow_shader->setProjectionMatrix(getProjection());    
-    shadow_shader->setViewMatrix(getView() ); 
-
-    glViewport(0,0, m_directional_buffer->getWidth() ,m_directional_buffer->getHeight());
-    glClearColor(1000,0,0,0);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_FRONT);    
-
-  }
-
-}
-void Light::bindForShadowRenderPoint( RenderBaseShader * point_shadow_shader, int iteration)
-{
- 
-  if( m_type == LIGHT_POINT)
-  { 
-     
-    point_shadow_shader->use();
-    if( iteration == 0)
-    {
-      m_point_buffer->bindForInput(GL_TEXTURE_CUBE_MAP_POSITIVE_X);
-      point_shadow_shader->setViewMatrix(getView(glm::vec3(1.0f,0.0f,0.0f), glm::vec3(0.0f, -1.0f, 0.0f)  ));      
-    }
-    if( iteration == 1)
-    {
-      m_point_buffer->bindForInput(GL_TEXTURE_CUBE_MAP_NEGATIVE_X);
-      point_shadow_shader->setViewMatrix(getView(glm::vec3(-1.0f,0.0f,0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));      
-    }
-    if( iteration == 2)
-    {
-      m_point_buffer->bindForInput(GL_TEXTURE_CUBE_MAP_POSITIVE_Y);
-      point_shadow_shader->setViewMatrix(getView(glm::vec3(0.0f,1.0f,0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));      
-    }
-    if( iteration == 3)
-    {
-      m_point_buffer->bindForInput(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y);
-      point_shadow_shader->setViewMatrix(getView(glm::vec3(0.0f,-1.0f,0.0f), glm::vec3(0.0f, 0.0f, -1.0f) ));      
-    }
-    if( iteration == 4)
-    {
-      m_point_buffer->bindForInput(GL_TEXTURE_CUBE_MAP_POSITIVE_Z);
-      point_shadow_shader->setViewMatrix(getView(glm::vec3(0.0f,0.0f,1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));      
-    }
-    if( iteration == 5)
-    {
-      m_point_buffer->bindForInput(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
-      point_shadow_shader->setViewMatrix(getView(glm::vec3(0.0f,0.0f,-1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));      
-    }  
-   
-    glPolygonOffset(0.01f,0.01f);
-
-    point_shadow_shader->setProjectionMatrix(getProjection());  
-    point_shadow_shader->setUniform("LightPosition",getPosition());  
-    glViewport(0,0, 1000 ,1000);
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
-
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_FRONT);
-    
-  }
-  
+  m_position = p;
+  m_refresh_shadow = true;
 }
 
-void Light::unbindFromShadowRender()
+void Light::setColor(glm::vec3 c)
 {
+  m_color_ambient = m_color_specular = m_color_diffuse = c;
+} 
 
-  if( ( getType() == LIGHT_SPOT) || ( getType() == LIGHT_DIRECTIONAL) )
-  {
-    glFlush();
-    glFinish();
-    glPolygonOffset(0.0f,0.0f);
-    glDisable(GL_CULL_FACE);
-    m_directional_buffer->unbindFromInput();
-    glViewport(0,0, Engine::getWindowWidth(),Engine::getWindowHeight());
-  }
-  if( getType() == LIGHT_POINT)
-  {    
-    glFlush();
-    glFinish();
-    glPolygonOffset(0.0f,0.0f);
-    glDisable(GL_CULL_FACE);
-    m_point_buffer->unbindFromInput();
-    glViewport(0,0, Engine::getWindowWidth(),Engine::getWindowHeight());
-  }  
-}
-void Light::bindForRender(RenderShader * render_shader)
-{
-  if( isShadowEnabled() )
-  {
-    if( ( getType() == LIGHT_SPOT) || ( getType() == LIGHT_DIRECTIONAL) )
-    {
-      glm::mat4 biasMatrix(
-      0.5, 0.0, 0.0, 0.0,
-      0.0, 0.5, 0.0, 0.0,
-      0.0, 0.0, 0.5, 0.0,
-      0.5, 0.5, 0.5, 1.0
-      );
-      int num = render_shader->setShadowMap(biasMatrix * getProjection() * getView());
-      m_shadow_index = num;
-      m_directional_buffer->bindForOutput(num);
-    }
-    if( getType() == LIGHT_POINT)
-    {
-      int num = render_shader->setPointShadow();
-      m_shadow_index = num;
-      m_point_buffer->bindForOutput(num);    
-    }
-  }
-}
+// matrices
 
 glm::mat4 Light::getView()
 {
@@ -395,10 +332,12 @@ glm::mat4 Light::getView()
     return glm::lookAt(cp,cp +  m_direction, glm::vec3(0,1,0));
   } 
 }
+
 glm::mat4 Light::getView(glm::vec3 dir, glm::vec3 up)
 {
   return glm::lookAt(m_position, m_position +  dir, up);
 }
+
 glm::mat4 Light::getProjection()
 {
   if( getType() == LIGHT_SPOT )
@@ -411,6 +350,21 @@ glm::mat4 Light::getProjection()
     return glm::ortho(-bound,bound,-bound,bound,-bound,FAR_CLIPPING_PLANE);
   }
 }
+
+// shadow
+
+void Light::setShadowIndex( unsigned int idx)
+{
+  m_shadow_index = idx;
+}
+unsigned int Light::getShadowIndex()
+{
+  return m_shadow_index;
+}
+bool Light::isShadowEnabled()
+{
+  return m_shadow_enabled;
+}
 bool Light::getShadowRefresh()
 {
   if(m_refresh_shadow)
@@ -421,25 +375,59 @@ bool Light::getShadowRefresh()
   return false;
 }
 
+
+// rotation
+
+glm::vec2 Light::getRotation()
+{
+  return m_rotation;
+}
+void Light::setRotation(glm::vec2 rot)
+{
+  m_rotation = rot;
+  m_direction= Helper::anglesToDirection(m_rotation.x,m_rotation.y);
+  m_refresh_shadow = true;
+}
+
+// id
+
+unsigned int Light::getNextId()
+{
+  int c = m_light_index_counter;
+  m_light_index_counter++;
+  return c;
+}
+unsigned int Light::getId()
+{
+  return m_id;
+}
+
+
+//  checks-------------------------------------------------
+
+bool Light::isInRange(glm::vec3 p)
+{
+  float real_dist = glm::distance(p, m_position);
+  float v =  1.0f /(  m_att_quadratic * real_dist *real_dist +  m_att_linear *real_dist + m_att_const);
+  if(v >MIN_LIGHT_THRESHOLD)
+  { 
+    //std::cout <<  v<<std::endl;
+    //Engine::getLog()->log("Light", "light in range");
+    return true;
+  }
+
+  return false;
+}
+
+
+//  refresh/render-------------------------------------------------
+
 void Light::refresh()
 {
+
   m_refresh_shadow = true;
 }
 
-void Light::setPosition(glm::vec3 p )
-{
-  m_position = p;
-  m_refresh_shadow = true;
-}
-
-void Light::setShadowIndex( unsigned int idx)
-{
-  m_shadow_index = idx;
-}
-unsigned int Light::getShadowIndex()
-{
-  return m_shadow_index;
-}
 void Light::editRender(RenderShader * render_shader, int c)
 {
   if( getType() == LIGHT_POINT )
@@ -467,59 +455,8 @@ void Light::editRender(RenderShader * render_shader, int c)
   }
 }
 
-glm::vec2 Light::getRotation()
-{
-  return m_rotation;
-}
-void Light::rotate(glm::vec2 delta)
-{
-  m_rotation.x += delta.x;
-  m_rotation.y -= delta.y;
 
-  if(m_rotation.x >360.0f)
-    m_rotation.x = 0.0f;
-  if(m_rotation.y >360.0f)
-    m_rotation.y = 0.0f;
-  if(m_rotation.x <0.0f)
-    m_rotation.x = 360.0f;
-  if(m_rotation.y <0.0f)
-    m_rotation.y = 360.0f;
-
-  m_direction= Helper::anglesToDirection(m_rotation.x,m_rotation.y);
-  m_refresh_shadow = true;
-}
-void Light::setRotation(glm::vec2 rot)
-{
-  m_rotation = rot;
-  m_direction= Helper::anglesToDirection(m_rotation.x,m_rotation.y);
-  m_refresh_shadow = true;
-}
-
-
-unsigned int Light::getNextId()
-{
-  int c = m_light_index_counter;
-  m_light_index_counter++;
-  return c;
-}
-unsigned int Light::getId()
-{
-  return m_id;
-}
-bool Light::isShadowEnabled()
-{
-  return m_shadow_enabled;
-}
-
-void Light::move(glm::vec3 delta)
-{
-  setPosition( getPosition()+ delta);
-}
-void Light::setColor(glm::vec3 c)
-{
-  m_color_ambient = m_color_specular = m_color_diffuse = c;
-}  
-
+//  load/save -------------------------------------------------
 
 void Light::save(tinyxml2::XMLNode * parent, tinyxml2::XMLDocument* document)
 {  
@@ -576,6 +513,7 @@ void Light::save(tinyxml2::XMLNode * parent, tinyxml2::XMLDocument* document)
   element_light->InsertEndChild(element);
   element->SetAttribute("value", isShadowEnabled());
 }
+
 bool Light::load( tinyxml2::XMLElement *  element)
 {
   glm::vec3 position;
@@ -678,16 +616,131 @@ bool Light::load( tinyxml2::XMLElement *  element)
   return true;
 } 
 
-bool Light::isInRange(glm::vec3 p)
+
+//  bind/unbind-------------------------------------------------
+
+void Light::bindForShadowRenderDirectional(RenderBaseShader * shadow_shader)
 {
-  float real_dist = glm::distance(p, m_position);
-  float v =  1.0f /(  m_att_quadratic * real_dist *real_dist +  m_att_linear *real_dist + m_att_const);
-  if(v >MIN_LIGHT_THRESHOLD)
-  { 
-    //std::cout <<  v<<std::endl;
-    //Engine::getLog()->log("Light", "light in range");
-    return true;
+  if(  ( m_type == LIGHT_SPOT) || ( m_type == LIGHT_DIRECTIONAL) )
+  {     
+    shadow_shader->use();
+    m_directional_buffer->bindForInput();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+
+    glPolygonOffset(0.01f,0.01f);
+
+    shadow_shader->setProjectionMatrix(getProjection());    
+    shadow_shader->setViewMatrix(getView() ); 
+
+    glViewport(0,0, m_directional_buffer->getWidth() ,m_directional_buffer->getHeight());
+    glClearColor(1000,0,0,0);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);    
+
   }
 
-  return false;
+}
+
+void Light::bindForShadowRenderPoint( RenderBaseShader * point_shadow_shader, int iteration)
+{
+  //std::cout<< "rerender light"<<std::endl;
+  if( m_type == LIGHT_POINT)
+  { 
+     
+    point_shadow_shader->use();
+    if( iteration == 0)
+    {
+      m_point_buffer->bindForInput(GL_TEXTURE_CUBE_MAP_POSITIVE_X);
+      point_shadow_shader->setViewMatrix(getView(glm::vec3(1.0f,0.0f,0.0f), glm::vec3(0.0f, -1.0f, 0.0f)  ));      
+    }
+    if( iteration == 1)
+    {
+      m_point_buffer->bindForInput(GL_TEXTURE_CUBE_MAP_NEGATIVE_X);
+      point_shadow_shader->setViewMatrix(getView(glm::vec3(-1.0f,0.0f,0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));      
+    }
+    if( iteration == 2)
+    {
+      m_point_buffer->bindForInput(GL_TEXTURE_CUBE_MAP_POSITIVE_Y);
+      point_shadow_shader->setViewMatrix(getView(glm::vec3(0.0f,1.0f,0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));      
+    }
+    if( iteration == 3)
+    {
+      m_point_buffer->bindForInput(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y);
+      point_shadow_shader->setViewMatrix(getView(glm::vec3(0.0f,-1.0f,0.0f), glm::vec3(0.0f, 0.0f, -1.0f) ));      
+    }
+    if( iteration == 4)
+    {
+      m_point_buffer->bindForInput(GL_TEXTURE_CUBE_MAP_POSITIVE_Z);
+      point_shadow_shader->setViewMatrix(getView(glm::vec3(0.0f,0.0f,1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));      
+    }
+    if( iteration == 5)
+    {
+      m_point_buffer->bindForInput(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
+      point_shadow_shader->setViewMatrix(getView(glm::vec3(0.0f,0.0f,-1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));      
+    }  
+   
+    glPolygonOffset(0.01f,0.01f);
+
+    point_shadow_shader->setProjectionMatrix(getProjection());  
+    point_shadow_shader->setUniform("LightPosition",getPosition());  
+    glViewport(0,0, 1000 ,1000);
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
+    
+  }
+  
+}
+
+void Light::unbindFromShadowRender()
+{
+
+  if( ( getType() == LIGHT_SPOT) || ( getType() == LIGHT_DIRECTIONAL) )
+  {
+    glFlush();
+    glFinish();
+    glPolygonOffset(0.0f,0.0f);
+    glDisable(GL_CULL_FACE);
+    m_directional_buffer->unbindFromInput();
+    glViewport(0,0, Engine::getWindowWidth(),Engine::getWindowHeight());
+  }
+  if( getType() == LIGHT_POINT)
+  {    
+    glFlush();
+    glFinish();
+    glPolygonOffset(0.0f,0.0f);
+    glDisable(GL_CULL_FACE);
+    m_point_buffer->unbindFromInput();
+    glViewport(0,0, Engine::getWindowWidth(),Engine::getWindowHeight());
+  }  
+}
+
+void Light::bindForRender(RenderShader * render_shader)
+{
+  if( isShadowEnabled() )
+  {
+    if( ( getType() == LIGHT_SPOT) || ( getType() == LIGHT_DIRECTIONAL) )
+    {
+      glm::mat4 biasMatrix(
+      0.5, 0.0, 0.0, 0.0,
+      0.0, 0.5, 0.0, 0.0,
+      0.0, 0.0, 0.5, 0.0,
+      0.5, 0.5, 0.5, 1.0
+      );
+      int num = render_shader->setShadowMap(biasMatrix * getProjection() * getView());
+     // std::cout << num <<std::endl;
+      m_shadow_index = num;
+      m_directional_buffer->bindForOutput(num);
+    }
+    if( getType() == LIGHT_POINT)
+    {
+      int num = render_shader->setPointShadow();
+      m_shadow_index = num;
+      m_point_buffer->bindForOutput(num);    
+    }
+  }
 }

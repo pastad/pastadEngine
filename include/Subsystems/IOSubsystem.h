@@ -21,11 +21,9 @@ public:
 	// starts up the render system
 	bool startUp(GLFWwindow * window);
 
-	// shuts down the render system
-	bool shutDown();
-
-	// returns true if everything is up and running
-	bool systemCheck();
+	// from base class
+	using Subsystem::systemCheck;
+	using Subsystem::shutDown;
 
 
 	// --- Additionals ---

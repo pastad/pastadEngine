@@ -3,6 +3,7 @@
 
 #include <string>
 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -39,11 +40,16 @@ public:
     //returns the current camera position
     glm::vec3 getPosition();
 
-    // returns the direction of the camera
+    // returns the directions of the camera
     glm::vec3 getDirection();
+    glm::vec3 getRight();
+    glm::vec3 getUp();
 
-    // returns the angle around the up axis
-    float getAngleAroundY();
+    // returns the angle around the up axis (Yaw)
+    float getYaw();
+
+    // returns the pitch of the camera
+    float getPitch();
 
     // returns the fov
     float getFOV();
@@ -72,13 +78,39 @@ public:
     unsigned int insideFrustrum(Object * obj);
     unsigned int insideFrustrum(BoundingBox * bb);
    
+    // applies physics drop 
+    void applyPhysicsDrop(float offset);
+    void dontApplyPhysicsDrop();
+    bool isPhysicsApplied();
+    void applyDrop(glm::vec3 delta);
 
+    // up down translation allowance
+    void allowUpDownTranslation();
+    void dontAllowUpDownTranslation();
+    bool isUpDownTranslationAllowed();
+
+    // returns the bottom offset of the camera
+    float getBottomOffset();
+
+    // getter setter surrounding offset for collision purposes | if less distance than this at bottom_offset /2 don't step forward
+    float getSurrouningOffset();
+    void setSurroundingOffset(float val);
+
+    // fall vector getter setter
+    glm::vec3 getFallVector();
+    void setFallVector(glm::vec3 val);
+
+    // registers the moved callback function
+    void registerMovedCallback( void  (*callback)()   );
+
+ 
 private:
 
     // orientation and position vectors
     glm::vec3 m_pos;
     glm::vec3 m_forward;
     glm::vec3 m_up;
+    glm::vec3 m_right;
 
     // rotation of the camera  
     float m_rot_1;
@@ -99,6 +131,9 @@ private:
     // true if camera is allowed to rotate with mouse
     bool m_rotation_allowed;
 
+    // true if camera is allowed to move up/down in Y 
+    bool m_vertical_movement_allowed;
+
     // holds the exposure for the camera
     float m_exposure;
 
@@ -116,8 +151,20 @@ private:
     Plane * m_plane_front;
     Plane * m_plane_back;
 
-    // recalculates the frustrum planes
+    // the offset for falling, colliding and if falling is applied
+    float m_bottom_offset;
+    float m_surrounding_offset;
+    bool m_apply_physics;
+    glm::vec3 m_fall_vector;
+
+    // stores the callback function for movement
+    void (*external_cameraMovedCallback)();
+
+       // recalculates the frustrum planes
     void recalculatePlanes();
+
+    // moves in the direction and additionally checks collision
+    void movementWithCollisionCheck(glm::vec3 dir, float step);
 
 };
 

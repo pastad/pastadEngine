@@ -3,6 +3,7 @@
 
 #include <Shader.h>
 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
 // shader to render the skybox

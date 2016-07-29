@@ -2,6 +2,7 @@
 #define ENGINE_H
 
 #include "gl_core_4_.h"
+#define GLM_FORCE_RADIANS
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <glm/glm.hpp>
@@ -83,7 +84,7 @@ public:
 	static Scene * getScene();
 
 	// function to request a GUI
-	static GUI * getGUI();
+	static GUI * addGUI();
 
 	// returns engine gui
 	static EngineGUI * getEngineGUI();
@@ -130,6 +131,10 @@ public:
 	static void setGUIMovementLock();
 	static void unsetGUIMovementLock();
 
+	// returns the physics,io subsystem or nullptr if not running
+	static PhysicSubsystem * getPhysicSubsystem();
+	static IOSubsystem * getIOSubsystem();
+
 
 	// passing from subsystems
 
@@ -142,6 +147,8 @@ public:
 	// returns light at screen po
 	static Light * pickLightAt(glm::vec2 p);
 
+	// returns true if key is released and now pressed
+	static bool isKeyReleasedAndPressed(int key_code);
 
 private:
 
