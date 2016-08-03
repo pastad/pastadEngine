@@ -495,6 +495,10 @@ Light * Scene::getLight(int id)
   }
   return nullptr;
 }
+std::vector<Light *> Scene::getLights()
+{
+  return m_lights;
+}
 
 //object
 
@@ -592,7 +596,7 @@ void Scene::removeObject(Object * obj)
       it++; 
   }
   m_tree_root->remove(obj);
-  obj->getModel()->removeInstance(obj);
+  obj->getModel()->removeInstance(obj); 
   refreshRenderObjects();
 }
 

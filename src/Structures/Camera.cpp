@@ -85,7 +85,7 @@ void Camera::movementWithCollisionCheck(glm::vec3 dir, float step)
     {        
       // if no collision update  
       m_pos = npos;
-      std::cout << "no col"<< dir.x<<" , "<< dir.y<<" , "<< dir.z<<" , " <<std::endl;
+      //std::cout << "no col"<< dir.x<<" , "<< dir.y<<" , "<< dir.z<<" , " <<std::endl;
     }
     else
     {
@@ -112,7 +112,7 @@ void Camera::movementWithCollisionCheck(glm::vec3 dir, float step)
           }
         }     
       }
-      std::cout << distance<<std::endl;
+      //std::cout << distance<<std::endl;
     }
   }
   else
@@ -140,7 +140,8 @@ void Camera::rotate(float deltax,float deltay)
 
     m_forward = Helper::anglesToDirection(m_rot_1,m_rot_2);
     Engine::getScene()->cameraRotated();
-    external_cameraMovedCallback();
+    if(external_cameraMovedCallback != nullptr)
+      external_cameraMovedCallback();
   }
 }
 
@@ -149,7 +150,8 @@ void Camera::move(glm::vec3 step)
   m_pos+=step;
   recalculateMatrices();
   //Engine::getLog()->log("Camera", "moved camera ");
-  external_cameraMovedCallback();
+  if(external_cameraMovedCallback != nullptr)
+    external_cameraMovedCallback();
 }
 
 
@@ -309,27 +311,62 @@ void Camera::recalculatePlanes()
  glm::vec3 far_plane_center = m_pos - look_inv * FAR_CLIPPING_PLANE;
 
 
- glm::vec3 near_plane_top_left = near_plane_center + y_dir * m_near_plane_height - x_dir * m_near_plane_width;
- glm::vec3 near_plane_top_right = near_plane_center + y_dir * m_near_plane_height + x_dir * m_near_plane_width;
- glm::vec3 near_plane_bottom_left = near_plane_center - y_dir * m_near_plane_height - x_dir * m_near_plane_width;
- glm::vec3 near_plane_bottom_right = near_plane_center - y_dir * m_near_plane_height + x_dir * m_near_plane_width;
+ m_near_plane_top_left = near_plane_center + y_dir * m_near_plane_height - x_dir * m_near_plane_width;
+ m_near_plane_top_right = near_plane_center + y_dir * m_near_plane_height + x_dir * m_near_plane_width;
+ m_near_plane_bottom_left = near_plane_center - y_dir * m_near_plane_height - x_dir * m_near_plane_width;
+ m_near_plane_bottom_right = near_plane_center - y_dir * m_near_plane_height + x_dir * m_near_plane_width;
 
- glm::vec3 far_plane_top_left = far_plane_center + y_dir * m_far_plane_height - x_dir * m_far_plane_width;
- glm::vec3 far_plane_top_right = far_plane_center + y_dir * m_far_plane_height + x_dir * m_far_plane_width;
- glm::vec3 far_plane_bottom_left = far_plane_center - y_dir * m_far_plane_height - x_dir * m_far_plane_width;
- glm::vec3 far_plane_bottom_right = far_plane_center - y_dir * m_far_plane_height + x_dir * m_far_plane_width;
+ m_far_plane_top_left = far_plane_center + y_dir * m_far_plane_height - x_dir * m_far_plane_width;
+ m_far_plane_top_right = far_plane_center + y_dir * m_far_plane_height + x_dir * m_far_plane_width;
+ m_far_plane_bottom_left = far_plane_center - y_dir * m_far_plane_height - x_dir * m_far_plane_width;
+ m_far_plane_bottom_right = far_plane_center - y_dir * m_far_plane_height + x_dir * m_far_plane_width;
 
- m_plane_front->setPoints(far_plane_top_right,far_plane_top_left,far_plane_bottom_left);
- m_plane_back->setPoints(near_plane_top_left, near_plane_top_right, near_plane_bottom_right);
- m_plane_right->setPoints(near_plane_bottom_right,near_plane_top_right,far_plane_bottom_right);
- m_plane_bottom->setPoints(near_plane_bottom_left,near_plane_bottom_right,far_plane_bottom_right);
- m_plane_left->setPoints(near_plane_top_left,near_plane_bottom_left,far_plane_bottom_left);
- m_plane_top->setPoints(near_plane_top_right,near_plane_top_left,far_plane_top_left);
+ m_plane_front->setPoints(m_far_plane_top_right,m_far_plane_top_left,m_far_plane_bottom_left);
+ m_plane_back->setPoints(m_near_plane_top_left, m_near_plane_top_right, m_near_plane_bottom_right);
+ m_plane_right->setPoints(m_near_plane_bottom_right,m_near_plane_top_right,m_far_plane_bottom_right);
+ m_plane_bottom->setPoints(m_near_plane_bottom_left,m_near_plane_bottom_right,m_far_plane_bottom_right);
+ m_plane_left->setPoints(m_near_plane_top_left,m_near_plane_bottom_left,m_far_plane_bottom_left);
+ m_plane_top->setPoints(m_near_plane_top_right,m_near_plane_top_left,m_far_plane_top_left);
 
 }
 
 
+
 //  getter/setter -------------------------------------------------
+
+
+std::vector<glm::vec3> Camera::getFrustrumCorners(float min_bound, float max_bound)
+{ 
+
+  float near_adjustment = (min_bound/ FAR_CLIPPING_PLANE );
+  float far_adjustment = (max_bound/ FAR_CLIPPING_PLANE );
+
+  std::vector<glm::vec3> points;
+
+  glm::vec3 v1 = (m_far_plane_top_left -m_near_plane_top_left) * near_adjustment + m_near_plane_top_left; 
+  glm::vec3 v2 = (m_far_plane_top_right -m_near_plane_top_right) * near_adjustment + m_near_plane_top_right;
+  glm::vec3 v3 = (m_far_plane_bottom_left -m_near_plane_bottom_left) * near_adjustment + m_near_plane_bottom_left;
+  glm::vec3 v4 = (m_far_plane_bottom_right -m_near_plane_bottom_right) * near_adjustment + m_near_plane_bottom_right;
+
+
+  points.push_back(v1);
+  points.push_back(v2);
+  points.push_back(v3);
+  points.push_back(v4);
+
+  v1 = (m_far_plane_top_left -m_near_plane_top_left) * far_adjustment + m_near_plane_top_left; 
+  v2 = (m_far_plane_top_right -m_near_plane_top_right) * far_adjustment + m_near_plane_top_right;
+  v3 = (m_far_plane_bottom_left -m_near_plane_bottom_left) * far_adjustment + m_near_plane_bottom_left;
+  v4 = (m_far_plane_bottom_right -m_near_plane_bottom_right) * far_adjustment + m_near_plane_bottom_right;
+
+  points.push_back( v1 );
+  points.push_back(v2);
+  points.push_back(v3);
+  points.push_back(v4);
+
+  return points;
+}
+
 
 glm::mat4 Camera::getView()
 {
@@ -383,11 +420,13 @@ float Camera::getFOV()
 
 void Camera::setRotationAllowed()
 {
+  Engine::getLog()->log("Camera","rotation allowed");
   m_rotation_allowed = true;
 }
 
 void Camera::setRotationNotAllowed()
 {
+  Engine::getLog()->log("Camera","rotation not allowed");
   m_rotation_allowed = false;
 }
 
@@ -426,6 +465,8 @@ void Camera::applyDrop(glm::vec3 delta)
 {
   m_fall_vector+=delta;
   move(m_fall_vector);  
+  if(Engine::getScene()!= nullptr)
+  Engine::getScene()->cameraMoved();
 }
 
 void Camera::allowUpDownTranslation()

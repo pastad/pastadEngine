@@ -24,7 +24,7 @@ public:
 
 	// setters for position, rotation (takes degrees)  and scale
 	void setPosition(glm::vec3 p);
-	void setRotation(glm::vec3 r);
+	void setRotation(glm::vec3 r);	
 	void setScale(glm::vec3 s);
 
 	// getter for position and degrees

@@ -1,23 +1,10 @@
 <Scene>
-    <Light Type="2">
-        <Position x="-5.2000017" y="5.0500021" z="1.4999996"/>
-        <Direction x="0.37157238" y="0.91354549" z="0.16543469"/>
-        <Rotation x="24" y="66"/>
-        <ColorAmbient x="1" y="1" z="1"/>
-        <ColorDiffuse x="1" y="1" z="1"/>
-        <ColorSpecular x="1" y="1" z="1"/>
-        <Intensity value="1"/>
-        <AttenuationConstant value="1"/>
-        <AttenuationLinear value="0.090000004"/>
-        <AttenuationQuadratic value="0.032000002"/>
-        <CutoffAngle value="45"/>
-        <ShadowEnabled value="1"/>
-    </Light>
+ 
     <Light Type="0">
         <Position x="0" y="0" z="0"/>
-        <Direction x="0.26684317" y="-0.75470972" z="0.5993396"/>
+        <Direction x="0" y="-1" z="1"/>
         <Rotation x="0" y="0"/>
-        <ColorAmbient x="0" y="0" z="0"/>
+        <ColorAmbient x="0.01" y="0.01" z="0.01"/>
         <ColorDiffuse x="1" y="1" z="1"/>
         <ColorSpecular x="1" y="1" z="1"/>
         <Intensity value="0.30000001"/>

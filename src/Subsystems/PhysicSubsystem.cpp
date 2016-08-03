@@ -268,6 +268,7 @@ bool PhysicSubsystem::collisionObjectObject(Object * object1, Object * object2)
     
 }
 
+
 bool PhysicSubsystem::collisionMovement(Scene * scene, glm::vec3 pos, glm::vec3 dir , float step, float surrounding_offset, float bottom_offset, glm::vec3 * new_pos)
 {  
 
@@ -284,7 +285,7 @@ bool PhysicSubsystem::collisionMovement(Scene * scene, glm::vec3 pos, glm::vec3 
     {        
       // if no collision update  
       *new_pos = npos;      
-      std::cout << "no col"<< dir.x<<" , "<< dir.y<<" , "<< dir.z<<" , " <<std::endl;
+      //std::cout << "no col"<< dir.x<<" , "<< dir.y<<" , "<< dir.z<<" , " <<std::endl;
       return true;
     }
     else
@@ -315,8 +316,8 @@ bool PhysicSubsystem::collisionMovement(Scene * scene, glm::vec3 pos, glm::vec3 
               *new_pos = pos +  glm::vec3(0,  (bottom_off_halfed- distance3),0);
               return true;
             }
-            else
-              std::cout <<distance3<<std::endl;
+            //else
+           //   std::cout <<distance3<<std::endl;
           }
         }
         return false;     

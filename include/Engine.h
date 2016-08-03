@@ -149,6 +149,7 @@ public:
 
 	// returns true if key is released and now pressed
 	static bool isKeyReleasedAndPressed(int key_code);
+	static bool isMouseButtonReleasedAndPressed(int key_code);
 
 private:
 

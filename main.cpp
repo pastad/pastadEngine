@@ -128,7 +128,7 @@ int main(void)
     //terrain->generate();
     //scene.save("scene_save_test.xml");
     scene->load("island-scene.xml");
-    // scene->load("scene_save_test2.xml");
+  //scene->load("scene2.xml");
    // scene->save("scene_save_test.xml");
     Helper::m_debug_float = 0.0f;
 

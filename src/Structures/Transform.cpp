@@ -2,6 +2,9 @@
 
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/transform.hpp>
+#include <glm/gtx/vector_angle.hpp> 
+
+#include <iostream>
 
 Transform::Transform()
 {	
@@ -55,6 +58,8 @@ void Transform::setRotation(glm::vec3 r)
 	m_rotation = r;
 	recalculateMatrix();
 }
+
+
 glm::vec3 Transform::getRotation()
 {
   return m_rotation;

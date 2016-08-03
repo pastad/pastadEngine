@@ -117,8 +117,8 @@ bool Light::setDirectional(glm::vec3 direction, glm::vec3 col_am ,glm::vec3 col_
       {
         m_directional_buffer = new DirectionalShadowBuffer();        
         m_num_directional_shadows++;
-        if( !m_directional_buffer->initialize(Engine::getWindowWidth() *10.0f,
-         Engine::getWindowHeight() *10.0f))
+        if( !m_directional_buffer->initialize(Engine::getWindowWidth() *4.0f,
+         Engine::getWindowHeight() *4.0f))
           return false;
       }
       else
@@ -322,6 +322,16 @@ void Light::setColor(glm::vec3 c)
 
 // matrices
 
+glm::mat4 Light::getModel()
+{
+  glm::mat4 mat_trans =  glm::translate(m_position);
+
+  glm::quat rot(m_direction);
+  glm::mat4 mat_rot = glm::mat4_cast(rot);
+
+  return  mat_trans * mat_rot ;
+}
+
 glm::mat4 Light::getView()
 {
   if(getType() != LIGHT_DIRECTIONAL)
@@ -347,6 +357,48 @@ glm::mat4 Light::getProjection()
   if( getType() == LIGHT_DIRECTIONAL )
   {  
     float bound = FAR_DIRECTIONAL_SHADOW_BOUND;
+
+   // glm::mat4 mv = getView() * getModel() ;
+    std::vector<glm::vec3> corners = Engine::getScene()->getCamera()->getFrustrumCorners(0.1f,10.0f);
+   // std::cout << corners[0].x<<" "<< corners[0].y<<" "<< corners[0].z<<std::endl;
+   // for(int x=0; x <corners.size();x++)    
+    //  corners[x] =  glm::vec3( mv * glm::vec4(corners[x],0.0f) );
+    //std::cout << corners[0].x<<" "<< corners[0].y<<" "<< corners[0].z<<std::endl;
+    
+    glm::vec3 x_min,x_max,z_min,z_max;
+    bool f= true;
+
+    for(int x=0; x <corners.size();x++) 
+    {
+      glm::vec3 p = corners[x];
+      if( f )
+      {
+        x_min =x_max =z_min=z_max = p;
+        f = false;
+      }
+      if( p.x < x_min.x  )
+        x_min = p;    
+      if( p.x > x_max.x  )
+        x_max = p;    
+
+      if( p.z < z_min.z  )
+        z_min = p;    
+      if( p.z > z_max.z  )
+        z_max = p;    
+    }   
+
+    glm::vec3 cam_pos = Engine::getScene()->getCamera()->getPosition();
+
+    float xmi = (  cam_pos.x -x_min.x);
+    float xma = x_max.x - cam_pos.x;
+
+    float zmi = -1.0f*(  cam_pos.z -z_min.z);
+    float zma = z_max.z - cam_pos.z;
+
+   // std::cout << -1.0f*xma <<"  "<<xmi<<std::endl;
+    //std::cout << zmi <<"  "<<zma<<std::endl;
+   // return glm::ortho(-1.0f*xma,xmi, zmi,zma,-bound,FAR_CLIPPING_PLANE);
+  //  return glm::ortho(-1.0f,1.0f, -5.0f,5.0f,-bound,FAR_CLIPPING_PLANE);
     return glm::ortho(-bound,bound,-bound,bound,-bound,FAR_CLIPPING_PLANE);
   }
 }
@@ -402,6 +454,12 @@ unsigned int Light::getId()
   return m_id;
 }
 
+// direction 
+void Light::setDirection(glm::vec3 dir)
+{
+  m_direction = dir;
+  m_refresh_shadow = true;
+}
 
 //  checks-------------------------------------------------
 

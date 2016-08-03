@@ -5,24 +5,26 @@
 #include "Object.h"
 #include "Inventory.h"
 #include "Item.h"
-#include "GUI.h"
+
 #include "Engine.h"
 
+#include "GUI.h"
+#include "Text.h"
 
 #include <iostream>
+#include <sstream>
 
 Camera * Player::m_camera;
 Inventory * Player::m_inventory;
 
-float Player::m_health;
-float Player::m_hunger;
+float Player::m_energy;
 
 GUI * Player::m_gui;
+Text * Player::m_lower_text;
 
 Player::Player()
 {  
-  m_health = 100.0f;
-  m_hunger = 0.0f;
+  m_energy = 100.0f;
 }
 
 Player::~Player()
@@ -38,7 +40,7 @@ bool Player::init(Scene * scene)
 
   m_inventory = new Inventory();
 
-  Object * spear_obj = scene->addObject("game/models/spear.obj",glm::vec3(0,0,0), false);
+ /* Object * spear_obj = scene->addObject("game/models/spear.obj",glm::vec3(0,0,0), false);
   Item * spear_item = new Item(spear_obj,true);
   spear_item->setInactive();
   m_inventory->addItem(spear_item);
@@ -46,27 +48,46 @@ bool Player::init(Scene * scene)
   Object * hatchet_obj = scene->addObject("game/models/hatchet.obj",glm::vec3(0,0,0), false);
   Item * hatchet_item = new Item(hatchet_obj,true);
   hatchet_item->setInactive();
-  m_inventory->addItem(hatchet_item);
+  m_inventory->addItem(hatchet_item);*/
 
-  m_gui =  Engine::addGUI();
+  Object * plant_harvest_obj = scene->addObject("game/models/hand.obj",glm::vec3(0,0,0), false);
+  Item * plant_harvest_item = new Item(plant_harvest_obj,true, ITEM_HARVEST_TOOL);
+  plant_harvest_item->setInactive();
+  m_inventory->addItem(plant_harvest_item);
+
+  Object * plant_tool_obj = scene->addObject("game/models/energy_tool.obj",glm::vec3(0,0,0), false);
+  Item * plant_tool_item = new Item(plant_tool_obj,true, ITEM_PLANT_TOOL);
+  plant_tool_item->setInactive();
+  m_inventory->addItem(plant_tool_item);
+
+
+  setupGUI();
 
  // m_inventory->selectItem(0);
 
   return true;
 }
 
+
+void Player::setupGUI()
+{
+  m_gui =  Engine::addGUI();
+
+  m_lower_text = m_gui->getText();
+  m_lower_text->setPosition(glm::vec2(40.0f,10.0f));
+  m_lower_text->setScale(0.25f);
+  m_lower_text->setColor(glm::vec3(255,255,255));
+  m_lower_text->setText("Health");
+}
+
 void Player::update()
 {
   m_inventory->update();
 
-  m_hunger+= 0.01f;
-  if(m_hunger > 100.0f)
-    m_hunger = 100.0f;
 
-  if(m_health >100.0f)
-    m_health = 100.0f;
-  if(m_health <0.0f)
-    m_health = 0.0f;
+  std::stringstream ss;
+  ss << "   Energy: "<<m_energy ;
+  m_lower_text->setText(ss.str());
 }
 
 void Player::cameraMovedCallback()
@@ -102,4 +123,33 @@ Object * Player::getWeapon()
 glm::vec3 Player::getPosition()
 {
 	return m_camera->getPosition();
+}
+
+void Player::gainEngery(float val)
+{
+  m_energy += val;
+}
+
+void Player::checkAction(Environment * environment)
+{
+  if(m_inventory->getSelectedItem() != nullptr)
+    m_inventory->getSelectedItem()->doAction(environment);
+}
+void Player::checkSecondaryAction(Environment * environment)
+{
+  if(m_inventory->getSelectedItem() != nullptr)
+    m_inventory->getSelectedItem()->doSecondaryAction(environment);
+}
+
+void Player::drainEnergy(float val)
+{
+  m_energy-=val;
+  if(m_energy<0.0f)
+    m_energy = 0.0f;
+  
+}
+
+float Player::getEnergy()
+{
+  return m_energy;
 }

@@ -102,6 +102,9 @@ public:
   // retrieves the light with the id | or nullptr
   Light * getLight(int id);
 
+  // retrieves all lights from the scene
+  std::vector<Light *> getLights();
+
   // removes the light from the scene
   void removeLight(Light * l);
 

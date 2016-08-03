@@ -27,7 +27,6 @@ void Inventory::selectItem(unsigned int idx)
 {
   if(m_items.size() >idx)
   {
-    std::cout << m_selected_item <<std::endl;
     if( m_selected_item != -1)
       m_items[m_selected_item]->setInactive();  
     m_selected_item = idx;
@@ -48,4 +47,6 @@ void Inventory::update()
     selectItem(0);
   if( Engine::isKeyReleasedAndPressed('2'))
     selectItem(1);
+  if( Engine::isKeyReleasedAndPressed('3'))
+    selectItem(2);
 }

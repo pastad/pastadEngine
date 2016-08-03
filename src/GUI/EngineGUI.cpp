@@ -177,7 +177,7 @@ bool EngineGUI::initialize()
 
 void EngineGUI::mouseButtonCallback(Button * btn)
 {
-  //Engine::getLog()->log("EngineUI",btn->getDescriptor());
+  //::getLog()->log("EngineUI",btn->getDescriptor());
   if(btn->getDescriptor() == "expand")
   {
     Engine::getLog()->log("EngineGUI", "expanding ui");

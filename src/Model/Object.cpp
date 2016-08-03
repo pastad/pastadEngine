@@ -364,12 +364,17 @@ void Object::setRotation(glm::vec3 r)
 {
   Transform::setRotation(r);
   refreshAABB();
+  if(Engine::getScene() != nullptr)
+    Engine::getScene()->refreshLights();
 }
+
 
 void Object::setScale(glm::vec3 s)
 {
   Transform::setScale(s);
   refreshAABB();  
+  if(Engine::getScene() != nullptr)
+    Engine::getScene()->refreshLights();
 }
 
 glm::mat4 Object::getModelMatrix()

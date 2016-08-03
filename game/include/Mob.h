@@ -7,6 +7,8 @@
 class Object;
 class Scene;
 
+class Player;
+
 // represents a mobile in the game
 
 class Mob
@@ -22,7 +24,7 @@ public:
   bool initialize(Scene * scene);
 
   // updates the mobile
-  void update();
+  void update(Player * player, float delta);
 
   // returns the object of the mob
   Object * getObject();

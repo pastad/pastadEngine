@@ -8,6 +8,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <vector>
+
 enum 
 { 
   FRUSTRUM_NO_INTERSECTION,
@@ -100,6 +102,9 @@ public:
     glm::vec3 getFallVector();
     void setFallVector(glm::vec3 val);
 
+    // returns the corner points of the frustrum
+    std::vector<glm::vec3> getFrustrumCorners(float min_bound, float max_bound);
+
     // registers the moved callback function
     void registerMovedCallback( void  (*callback)()   );
 
@@ -142,6 +147,16 @@ private:
     float m_near_plane_width;
     float m_far_plane_height;
     float m_far_plane_width;
+
+    // the frustrum corners 
+    glm::vec3 m_near_plane_top_left ;
+    glm::vec3 m_near_plane_top_right;
+    glm::vec3 m_near_plane_bottom_left ;
+    glm::vec3 m_near_plane_bottom_right;
+    glm::vec3 m_far_plane_top_left ;
+    glm::vec3 m_far_plane_top_right ;
+    glm::vec3 m_far_plane_bottom_left ;
+    glm::vec3 m_far_plane_bottom_right ;
 
     // the planes of the frustrum
     Plane * m_plane_top;

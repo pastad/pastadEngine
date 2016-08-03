@@ -57,8 +57,9 @@ public:
   glm::vec3 getDirection();
   glm::vec3 getPosition();
 
-  // sets the position of the light
-  void setPosition(glm::vec3 p );
+  // sets the position or direction of the light
+  void setPosition(glm::vec3 p );  
+  void setDirection(glm::vec3 dir);
 
   // moves the light
   void move(glm::vec3 delta);
@@ -91,6 +92,7 @@ public:
   void bindForRender(RenderShader * render_shader);
 
   // returns the view and projection mat
+  glm::mat4 getModel();
   glm::mat4 getView();
   glm::mat4 getView(glm::vec3 dir, glm::vec3 up);
   glm::mat4 getProjection();
@@ -118,6 +120,8 @@ public:
   glm::vec2 getRotation();
   void rotate(glm::vec2 delta);
   void setRotation(glm::vec2 delta);
+
+
   
   // saves the light
   void save(tinyxml2::XMLNode * parent, tinyxml2::XMLDocument * doc);

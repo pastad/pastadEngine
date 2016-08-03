@@ -643,6 +643,10 @@ bool Engine::isKeyReleasedAndPressed(int key_code)
 {
   return m_io_system->isKeyReleasedAndPressed(key_code);
 }
+bool Engine::isMouseButtonReleasedAndPressed(int key_code)
+{
+  return m_io_system->isMouseButtonReleasedAndPressed(key_code);
+}
 
 
 

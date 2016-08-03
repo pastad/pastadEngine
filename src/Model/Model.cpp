@@ -59,11 +59,11 @@ void Model::render(RenderBaseShader * render_shader, std::vector<Object *> objec
     {
       render_shader->setInstanced();
       for(std::vector<Mesh *>::iterator it = m_meshes.begin(); it != m_meshes.end(); it++)
-      {
+      {       
         if( with_material )
           m_materials.at((*it)->getMaterialIndex())->bind(0, (RenderShader *) render_shader);
         (*it)->bufferModelMatrices(&matrices);
-        (*it)->render(matrices.size());
+        (*it)->render(matrices.size()); 
       }
     }
     else

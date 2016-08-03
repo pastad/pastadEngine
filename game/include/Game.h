@@ -6,6 +6,9 @@
 class Player;
 class Scene;
 class Mobs;
+class Environment;
+
+class Light;
 
 // the main class of the game
 
@@ -25,6 +28,8 @@ public:
   // updates the game
   void update();
 
+  // spawns the next wave
+  void waveSpawn();
 
 private:
 
@@ -33,6 +38,17 @@ private:
   Scene * m_scene;
 
   Mobs * m_mobs;
+
+  Environment * m_environment;
+
+  Light * m_sun;
+
+  // day time 
+  float m_game_time;
+
+  // if the spawn this round was executed
+  bool m_spawn_done;
+
 
 };
 

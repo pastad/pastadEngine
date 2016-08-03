@@ -8,7 +8,10 @@ class Camera;
 class Scene;
 class Object;
 class Inventory;
+
 class GUI;
+class Text;
+class Environment;
 
 // the player character
 
@@ -29,10 +32,21 @@ public:
   static void update();
 
   // returns the weapon object
-  Object * getWeapon();
+  static Object * getWeapon();
 
   // returns the position
-  glm::vec3 getPosition();
+  static glm::vec3 getPosition();
+
+  // adds/ removes energy to the player
+  static void gainEngery(float val);
+  static void drainEnergy(float val);
+
+  // returns the energy stored by the player
+  static float getEnergy();
+
+  // checks the players actions
+  static void checkAction(Environment * environment);
+  static void checkSecondaryAction(Environment * environment);
 
 private:
 
@@ -42,15 +56,18 @@ private:
   // the players inventory
   static Inventory * m_inventory;
 
-  // the callback called by the camera
-  static void cameraMovedCallback();
-
   //  the stats of the player
-  static float m_health;
-  static float m_hunger;
+  static float m_energy;
 
   // the player gui
   static GUI * m_gui;
+  static Text * m_lower_text;
+
+  // the callback called by the camera
+  static void cameraMovedCallback();
+
+  // sets up the gui
+  static void setupGUI();
 };
 
 #endif
