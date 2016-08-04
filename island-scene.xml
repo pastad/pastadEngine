@@ -1,0 +1,116 @@
+<Scene>
+    <Light Type="0">
+        <Position x="0" y="0" z="0"/>
+        <Direction x="0" y="-1" z="1"/>
+        <Rotation x="0" y="0"/>
+        <ColorAmbient x="0.0099999998" y="0.0099999998" z="0.0099999998"/>
+        <ColorDiffuse x="1" y="1" z="1"/>
+        <ColorSpecular x="1" y="1" z="1"/>
+        <Intensity value="0.30000001"/>
+        <AttenuationConstant value="4.2038954e-45"/>
+        <AttenuationLinear value="5.6051939e-45"/>
+        <AttenuationQuadratic value="1.821688e-44"/>
+        <CutoffAngle value="5.6051939e-45"/>
+        <ShadowEnabled value="1"/>
+    </Light>
+    <Object>
+        <Position x="0" y="0" z="0"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/island.obj"/>
+        <PhysicsEnabled value="1"/>
+        <PhysicsStatic value="1"/>
+        <Visibility value="1"/>
+        <Static value="1"/>
+    </Object>
+    <Object>
+        <Position x="1.8499993" y="-0.14999999" z="22.099949"/>
+        <Rotation x="2" y="80.000008" z="358"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="1"/>
+        <PhysicsStatic value="1"/>
+        <Visibility value="1"/>
+        <Static value="1"/>
+    </Object>
+    <Object>
+        <Position x="19.949982" y="-0.2" z="18.849998"/>
+        <Rotation x="6" y="37" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="1"/>
+        <PhysicsStatic value="1"/>
+        <Visibility value="1"/>
+        <Static value="1"/>
+    </Object>
+    <Object>
+        <Position x="5.6500034" y="-0.2" z="23.99992"/>
+        <Rotation x="360" y="59" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="1"/>
+        <PhysicsStatic value="1"/>
+        <Visibility value="1"/>
+        <Static value="1"/>
+    </Object>
+    <Object>
+        <Position x="2.9499984" y="0" z="16.900028"/>
+        <Rotation x="3" y="64.000008" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/bush1.obj"/>
+        <PhysicsEnabled value="1"/>
+        <PhysicsStatic value="1"/>
+        <Visibility value="1"/>
+        <Static value="1"/>
+    </Object>
+    <Object>
+        <Position x="38.999691" y="-0.65000004" z="0.50000006"/>
+        <Rotation x="358" y="26" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="/home/pastad/repos/pastadEngine/game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <PhysicsStatic value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="32.699787" y="0" z="5.3500023"/>
+        <Rotation x="0" y="37" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="/home/pastad/repos/pastadEngine/game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <PhysicsStatic value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-11.650026" y="0" z="26.249886"/>
+        <Rotation x="0" y="123.00003" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="/home/pastad/repos/pastadEngine/game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <PhysicsStatic value="0"/>
+        <Visibility value="1"/>
+        <Static value="1"/>
+    </Object>
+    <Object>
+        <Position x="-19.049995" y="0" z="28.249855"/>
+        <Rotation x="352" y="27" z="355"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="/home/pastad/repos/pastadEngine/game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <PhysicsStatic value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="28.399853" y="0" z="8.1000128"/>
+        <Rotation x="0" y="80.000008" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="/home/pastad/repos/pastadEngine/game/models/bush1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <PhysicsStatic value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+</Scene>

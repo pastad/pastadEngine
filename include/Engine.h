@@ -2,6 +2,7 @@
 #define ENGINE_H
 
 #include "gl_core_4_.h"
+#define GLM_FORCE_RADIANS
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <glm/glm.hpp>
@@ -33,7 +34,8 @@ enum SubsystemType
 enum PostprocessType
 {
 	PP_FXAA = 1,
-	PP_HDR = 2
+	PP_HDR = 2,
+	PP_BLOOM = 3
 };
 enum ShadowTechniqueType
 {	
@@ -52,7 +54,7 @@ public:
 	~Engine();
 
 	// Initializes Engine
-	static bool initialize(unsigned int width, unsigned int height, unsigned int types, bool edit_mode);
+	static bool initialize(unsigned int width, unsigned int height, unsigned int types, bool edit_mode, bool fullscreen);
 
 	// Shuts down Engine and it's components
 	static void shutDown();	
@@ -76,13 +78,13 @@ public:
 	static void render();
 	
 	// sets the scene 
-	static void setScene(Scene * scene);
+	static void setScene(Scene * scene, bool delete_old);
 
 	// returns the current set scene
 	static Scene * getScene();
 
 	// function to request a GUI
-	static GUI * getGUI();
+	static GUI * addGUI();
 
 	// returns engine gui
 	static EngineGUI * getEngineGUI();
@@ -119,6 +121,20 @@ public:
 	// returns the time difference between updates
 	static float getTimeDelta();
 
+	// called by IO::Subsystem
+	static void keyWasPressed(unsigned int key_code);
+
+	// returns true if gui movement lock is set
+	static bool isGUIMovementLockSet();
+
+	// setter for GUIMovementLock
+	static void setGUIMovementLock();
+	static void unsetGUIMovementLock();
+
+	// returns the physics,io subsystem or nullptr if not running
+	static PhysicSubsystem * getPhysicSubsystem();
+	static IOSubsystem * getIOSubsystem();
+
 
 	// passing from subsystems
 
@@ -131,6 +147,9 @@ public:
 	// returns light at screen po
 	static Light * pickLightAt(glm::vec2 p);
 
+	// returns true if key is released and now pressed
+	static bool isKeyReleasedAndPressed(int key_code);
+	static bool isMouseButtonReleasedAndPressed(int key_code);
 
 private:
 
@@ -153,6 +172,8 @@ private:
 
 	// the scene that should be used
 	static Scene * m_scene;
+	static Scene * m_scene_next; 
+	static bool m_scene_next_delete;
 
 	// the graphical user interfaces and the id
 	static std::vector<GUI *> m_guis;
@@ -190,6 +211,12 @@ private:
 	// the editor for the scene
 	static SceneEditor * m_scene_editor;
 
+	// true if fullscreen is set
+	static bool m_fullscreen;
+
+	// the lock for example when a edit box is edited
+	static bool m_gui_movement_lock;
+
 	// starts the subsystems
 	static bool startUpSubsystems();
 
@@ -202,6 +229,14 @@ private:
 	// callbacks for opengl
 	static void windowSizeChangedCallback(GLFWwindow* window, int width, int height);
 
+	// deletes windows if set and creates a new one
+	static void refreshWindow();
+
+	//switches the scene at end of turn if requeseted
+	static void sceneSwitch();
+
+	// static for async button check
+	static bool buttonCheck(GUI *gui , float x, float y);
 
 };
 

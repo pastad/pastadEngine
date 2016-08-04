@@ -1,5 +1,7 @@
 #include "Helper.h"
 
+#define GLM_FORCE_RADIANS
+
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -7,19 +9,24 @@
 #include <glm/gtx/vector_angle.hpp>
 
 #include <iostream>
+#include <sstream>
 
 #include "Engine.h"
 
+#include "tinyxml2.h"
 
 float Helper::m_debug_float;
 
 Helper::Helper()
 {  
 }
+
 Helper::~Helper()
 {  
 }
 
+
+// to glms ------------------------------------------
 
 glm::mat4 Helper::toGlm(aiMatrix4x4 a)
 {
@@ -37,6 +44,7 @@ glm::mat4 Helper::toGlm(aiMatrix4x4 a)
 
   return to;
 }
+
 glm::mat4 Helper::toGlm(aiMatrix3x3 a)
 {
   glm::mat4 m;  
@@ -54,12 +62,7 @@ glm::mat4 Helper::toGlm(aiMatrix3x3 a)
 }
 
 
-float Helper::gauss(float x, float sigma2 )
-{
-  double coeff = 1.0 / (glm::two_pi<double>() * sigma2);
-    double expon = -(x*x) / (2.0 * sigma2);
-    return (float) (coeff*exp(expon));
-}
+
 /*
 glm::vec3 Helper::directionToAngle(glm::vec3 dir)
 {
@@ -76,6 +79,16 @@ glm::vec3 Helper::directionToAngle(glm::vec3 dir)
   std::cout << angle_x <<","<< angle_y <<","<< angle_z<<std::endl;
   return rot;
 }*/
+
+// this and that ------------------------------------------
+
+float Helper::gauss(float x, float sigma2 )
+{
+  double coeff = 1.0 / (glm::pi<double>() *2.0f * sigma2);
+    double expon = -(x*x) / (2.0 * sigma2);
+    return (float) (coeff*exp(expon));
+} 
+
 glm::vec3 Helper::anglesToDirection(float rot1, float rot2)
 {
   glm::vec3 front;
@@ -83,4 +96,49 @@ glm::vec3 Helper::anglesToDirection(float rot1, float rot2)
   front.y = sin(glm::radians(rot2));
   front.z = sin(glm::radians(rot1)) * cos(glm::radians(rot2));
   return glm::normalize(front);
+}
+
+std::vector<std::string> Helper::split(const std::string &stri, char seperator) 
+{
+  std::vector<std::string> parts;
+  std::stringstream ss(stri);
+  std::string line;
+  while (std::getline(ss, line, seperator))   
+    parts.push_back(line);
+  
+  return parts;
+}
+
+GLfloat Helper::lerp(GLfloat a, GLfloat b, GLfloat c)
+{
+  return  c * (b -a) + a;
+}  
+
+
+// tinyxml read/write  ------------------------------------------
+
+void Helper::insertToElement(tinyxml2::XMLElement * element, glm::vec3 v)
+{
+  element->SetAttribute("x", v.x);
+  element->SetAttribute("y", v.y);
+  element->SetAttribute("z", v.z);
+}
+
+void Helper::insertToElement(tinyxml2::XMLElement * element, glm::vec2 v)
+{
+  element->SetAttribute("x", v.x);
+  element->SetAttribute("y", v.y);
+}
+
+void Helper::readFromElement(tinyxml2::XMLElement * element,glm::vec3 * v)
+{
+  element->QueryFloatAttribute("x", &v->x);
+  element->QueryFloatAttribute("y", &v->y);
+  element->QueryFloatAttribute("z", &v->z);
+}
+
+void Helper::readFromElement(tinyxml2::XMLElement * element,glm::vec2 * v)
+{
+  element->QueryFloatAttribute("x", &v->x);
+  element->QueryFloatAttribute("y", &v->y);
 }

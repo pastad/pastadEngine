@@ -16,14 +16,13 @@ Image::Image(unsigned int id):m_id(id), m_active(true)
   setScale(glm::vec2(1.0f,1.0f));
   m_texture = nullptr;
 }
+
 Image::~Image()
 {  
 }
 
-unsigned int Image::getId()
-{
-  return m_id;
-}
+
+// load/render -------------------------------------------------
 
 bool Image::load(std::string path)
 {
@@ -43,7 +42,12 @@ void Image::render(ImageShader * image_shader, Quad * quad)
     quad->render();
   }
 }
- 
+
+
+// getter/setters -------------------------------------------------
+
+// pos/scale/size/id
+
 void Image::setPosition(glm::vec2 position)
 {
   m_position = position;
@@ -54,14 +58,28 @@ void Image::setScale(glm::vec2 scale)
   m_scale = scale;
 }
 
+glm::vec2 Image::getSize()
+{
+  return  m_texture->getSize();
+}
+
+unsigned int Image::getId()
+{
+  return m_id;
+}
+
+// active
+
 void Image::setActive()
 {
   m_active = true;
 }
+
 void Image::setInactive()
 {
   m_active = false;
 }
+
 bool Image::isActive()
 {
   return m_active;

@@ -1,4 +1,4 @@
-#version 440
+#version 430
 
 
 subroutine void RenderPassType();
@@ -12,15 +12,26 @@ layout(location = 1 ) out vec3 PositionData;
 
 layout(binding=0) uniform sampler2D Tex1; 
 layout(binding=1) uniform sampler2D Tex2; 
+layout(binding=2) uniform sampler2D Tex3; 
+layout(binding=3) uniform sampler2D Tex4; 
+
+layout(binding=10) uniform sampler2D TexJitter;
 
 uniform vec2 TextureScale;
 uniform float AverageLuminance;
 uniform float Exposure;
+uniform float BloomThreshold;
 
 uniform float GaussKernel[10];
 
+uniform vec3 SSAOSamples[64];
+
 uniform int EnableFXAA;
 uniform int EnableHDR;
+uniform int EnableBloom;
+
+uniform mat4 CameraProjection;
+uniform mat4 CameraView;
 
 // inspired by https://www.youtube.com/watch?v=Z9bYzpwVINA
 
@@ -78,13 +89,14 @@ uniform mat3 xyz2rgb = mat3(
 vec4 hdr(vec4 color)
 { 
   float White = 0.928;
+  float exp  =0.1; // Exposure
 
   vec3 xyzCol = rgb2xyz * vec3(color);
 
   float xyzSum = xyzCol.x + xyzCol.y + xyzCol.z;
   vec3 xyYCol = vec3( xyzCol.x / xyzSum, xyzCol.y / xyzSum, xyzCol.y);
 
-  float L = (Exposure * xyYCol.z) / AverageLuminance;
+  float L = (exp * xyYCol.z) / AverageLuminance;
   L = (L * ( 1 + L / (White * White) )) / ( 1 + L );
 
   xyzCol.x = (L * xyYCol.x) / (xyYCol.y);
@@ -95,7 +107,8 @@ vec4 hdr(vec4 color)
 }
 vec4 hdr_exposure(vec4 color)
 {
-  return ( vec4(1.0) - exp(-color * Exposure)  ); 
+  float exp_val = Exposure;
+  return ( vec4(1.0) - exp(-color * exp_val)  ); 
 }
 vec4 hdr_reinhard(vec4 color)
 {
@@ -112,27 +125,35 @@ void passStandard()
 {
   vec4 color = texture2D(Tex1, TexCoord );
   vec4 lightblur = texture2D(Tex2, TexCoord );
-
+  vec4 ssao = texture2D(Tex3, TexCoord );
+  FragColor = color;
   if( EnableFXAA == 1 )
    color = fxaa();
 
-  if( EnableHDR == 1 )
-    color = hdr_reinhard(color);
+  if( (EnableHDR == 1) )
+   color = hdr_exposure(color);
  
   color = gamma_correction(color);  
 
-  FragColor = color ;// + lightblur;
+  if( EnableBloom == 1 )
+    FragColor = color + lightblur;//
+  else
+    FragColor = color ;//
+
+  //FragColor = ssao;
+ 
 }
 
 subroutine (RenderPassType)
 void passBright()
 {
   vec4 color = texture2D(Tex1, TexCoord );
-  
+  if(EnableHDR == 1)
+    color = hdr_exposure(color);
   float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
 
-  if(brightness > 1.0)
-    FragColor = color * 0.1; // 0.1 for brightness scaling
+  if(brightness > BloomThreshold)
+    FragColor = vec4(brightness)*0.1; // 0.1 for brightness scaling
   else
     FragColor = vec4(0,0,0,0);
 }
@@ -143,7 +164,7 @@ void passBlur()
 {
   vec4 color = texture2D(Tex1, TexCoord );
   vec2 off = 1.0 / textureSize(Tex1, 0); 
-  for(int i = 1; i < 20; i++)
+  for(int i = 1; i < 10; i++)
   {
     color += texture2D(Tex1, TexCoord + vec2(off.x * i, 0.0)) * GaussKernel[i-1];
     color += texture2D(Tex1, TexCoord - vec2(off.x * i, 0.0)) * GaussKernel[i-1];
@@ -156,15 +177,73 @@ void passBlur2()
 {
   vec4 color = texture2D(Tex1, TexCoord );
   vec2 off = 1.0 / textureSize(Tex1, 0); 
-  for(int i = 1; i < 20; i++)
+  for(int i = 1; i < 10; i++)
   {
-    color += texture2D(Tex1, TexCoord + vec2(0.0, off.y * 1.0)) * GaussKernel[i-1];
-    color += texture2D(Tex1, TexCoord - vec2(0.0, off.y * 1.0)) * GaussKernel[i-1];
+    color += texture2D(Tex1, TexCoord + vec2(0.0, off.y * i)) * GaussKernel[i-1];
+    color += texture2D(Tex1, TexCoord - vec2(0.0, off.y * i)) * GaussKernel[i-1];
   }
 
-  FragColor = color ;
 }
 
+subroutine (RenderPassType)
+void passSSAO()
+{
+  vec3 pos = vec3( texture( Tex1, TexCoord ) );
+  vec3 normal = vec3( texture( Tex2, TexCoord ) );
+  vec3 diffColor = vec3( texture(Tex3, TexCoord) );
+  vec3 material = vec3( texture(Tex4, TexCoord) );
+  float rad  = 0.1;
+  vec3 randVec = vec3(0,1,0);
+
+  vec3 t2 = normal;
+  t2.y = - normal.z;
+  t2.z = normal.y;
+
+  vec3 tangent = normalize(randVec - normal * dot(randVec, normal));
+  tangent = t2;
+  vec3 bitangent = cross(normal, tangent);
+  mat3 tangent_to_view = mat3(tangent, bitangent, normal);
+
+  float occlusion = 0.0;
+
+  for(int c = 0; c < 64; c++)
+  {
+    vec3 one_sample =   ( SSAOSamples[c]  );
+    one_sample = pos + one_sample * rad; // 1.0 is the radius 
+
+   
+    vec4 off = vec4(one_sample, 1.0);
+    vec3 oc = vec3(CameraView * off);
+    off = CameraProjection * CameraView  * off; 
+    off.xyz /= off.w;
+    off.xyz = off.xyz * 0.5 + 0.5;    
+
+    float one_sample_depth = vec3( texture(Tex4, off.xy) ).z;    
+  
+    float range = smoothstep(0.0, 1.0, rad / abs(material.z - one_sample_depth )); // 1.0 / ...  is radius
+     // FragColor = vec4(one_sample_depth,one_sample_depth,one_sample_depth,1);
+    occlusion += ( one_sample_depth > material.z ? 1.0 : 0.0);// *range;  
+      //FragColor = vec4(one_sample_depth/1000,0,one_sample_depth/1000,1);        
+  }
+ // occlusion = 1.0 -  (occlusion / 64.0);// 
+
+
+  vec3 ts =  tangent_to_view * SSAOSamples[1];
+  ts = pos + ts * 1.0; // 1.0 is the radius 
+  
+  vec4 test = vec4( vec3(texture( Tex1, TexCoord )), 1.0) ;
+  test =  CameraProjection *CameraView * vec4(ts,1.0);
+  test.xyz /= test.w;
+  test.xyz = test.xyz* 0.5 + 0.5;  
+  vec3 diffColor2 = vec3( texture(Tex3, test.xy) );
+  //FragColor = vec4(diffColor.x,diffColor.y,diffColor.z,1);
+
+
+  FragColor = vec4(occlusion,occlusion,occlusion,1.0) ;
+  //FragColor = vec4(material.z/1000,0,material.z/1000,1);
+  if( (normal.x==0) && (normal.y==0) && (normal.z==0) )
+   FragColor = vec4(0,0,0,0);
+}
 
 void main()
 {

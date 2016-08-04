@@ -1,8 +1,7 @@
 #version 440
 
 
-subroutine void RenderPassType();
-subroutine uniform RenderPassType RenderPass;
+
 
 in vec3 Position;
 in vec3 Normal;

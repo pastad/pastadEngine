@@ -5,6 +5,9 @@
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 
+
+#include "tinyxml2.h"
+
 // class to represent a light (direcitonal, point or spot)
 
 #define MAX_NUM_POINT_LIGHTS 10
@@ -31,7 +34,6 @@ class RenderBaseShader;
 class RenderShader;
 class Model;
 class Object;
-
 class Light
 {
 public:
@@ -55,8 +57,9 @@ public:
   glm::vec3 getDirection();
   glm::vec3 getPosition();
 
-  // sets the position of the light
-  void setPosition(glm::vec3 p );
+  // sets the position or direction of the light
+  void setPosition(glm::vec3 p );  
+  void setDirection(glm::vec3 dir);
 
   // moves the light
   void move(glm::vec3 delta);
@@ -65,6 +68,9 @@ public:
   glm::vec3 getAmbientColor();
   glm::vec3 getDiffuseColor();
   glm::vec3 getSpecularColor();
+
+  // sets all light colors 
+  void setColor(glm::vec3 c);
 
   // returns attenuation specs
   float getIntensity();
@@ -86,6 +92,7 @@ public:
   void bindForRender(RenderShader * render_shader);
 
   // returns the view and projection mat
+  glm::mat4 getModel();
   glm::mat4 getView();
   glm::mat4 getView(glm::vec3 dir, glm::vec3 up);
   glm::mat4 getProjection();
@@ -101,7 +108,7 @@ public:
   unsigned int getShadowIndex();
 
   // renders the light as a sphere 
-  void editRender(RenderShader * render_shader);
+  void editRender(RenderShader * render_shader, int c);
 
   // returns the id of the light
   unsigned int getId();
@@ -112,6 +119,18 @@ public:
   // rotation getter setter
   glm::vec2 getRotation();
   void rotate(glm::vec2 delta);
+  void setRotation(glm::vec2 delta);
+
+
+  
+  // saves the light
+  void save(tinyxml2::XMLNode * parent, tinyxml2::XMLDocument * doc);
+
+  // loads the light
+  bool load(tinyxml2::XMLElement *  element);
+
+  // returns true if still in light range
+  bool isInRange(glm::vec3 p);
 
 
 protected:
@@ -169,6 +188,7 @@ private:
 
   // the sphere model and its object
   Model * m_model;
+  static Object * m_directional_object;
   static Object * m_spot_object;
   static Object * m_point_object;
 

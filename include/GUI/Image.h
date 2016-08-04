@@ -3,6 +3,7 @@
 
 #include <string>
 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
 // class represents a image (texture rendered on quad)
@@ -39,6 +40,9 @@ public:
   void setActive();
   void setInactive();
   bool isActive();
+
+  // returns the size of the image
+  glm::vec2 getSize();
 
 protected:
 

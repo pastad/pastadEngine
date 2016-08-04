@@ -26,9 +26,10 @@ public:
   // returns the id of the text
   unsigned int getId();
 
-  // setters
+  // getter and setters
   void set( std::string txt, glm::vec2 pos, float scale, glm::vec3 color);
   void setText(std::string txt);
+  std::string getText();
   void setPosition(glm::vec2 p);
   void setColor(glm::vec3 c);
   void setScale(float x);
@@ -36,6 +37,9 @@ public:
   void setNotCentered();
   void setActive();
   void setInactive();
+
+  // returns the vertical size of the text
+  int getSize();
 
 protected:
 
@@ -53,6 +57,9 @@ protected:
 
   // determines if text is active
   bool m_active;
+
+  // the vertical length of the text
+  int  m_size_vert;
 
 };
 

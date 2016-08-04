@@ -8,5 +8,5 @@ in vec4 FragPos;
 void main()
 { 
   //= 1.0 /gl_FragCoord.z ;
-  FragColor = gl_FragCoord.z ; 
+  FragColor = gl_FragCoord.z; 
 }

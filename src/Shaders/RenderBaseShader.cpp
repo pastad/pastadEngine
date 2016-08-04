@@ -8,9 +8,13 @@
 RenderBaseShader::RenderBaseShader():Shader()
 {
 }
+
 RenderBaseShader::~RenderBaseShader()
 {  
 }
+
+
+//  load -------------------------------------------------
 
 bool RenderBaseShader::load(const std::string path)
 {  
@@ -26,11 +30,14 @@ bool RenderBaseShader::load(const std::string path)
   return true;
 }
 
+//  getter/setter -------------------------------------------------
+
 void RenderBaseShader::setAnimation()
 {
   bind();
   setUniform("Animation",1);
 }
+
 void RenderBaseShader::unsetAnimation()
 {
   bind();
@@ -42,12 +49,14 @@ void RenderBaseShader::setInstanced()
   bind();
   setUniform("Instanced",1);
 }
+
 void RenderBaseShader::setNotInstanced(glm::mat4 model_transform)
 {
   bind();
   setUniform("Instanced",0);
   setUniform("SingleModelMatrix", model_transform);
 }
+
 void RenderBaseShader::setBones(std::vector<glm::mat4> * transforms)
 {
   int counter =0;
@@ -59,6 +68,7 @@ void RenderBaseShader::setBones(std::vector<glm::mat4> * transforms)
     setUniform(ss.str(), (*it) );
   }
 }
+
 void RenderBaseShader::setViewMatrix( glm::mat4 mvmatrix )
 {
   bind();
@@ -72,6 +82,7 @@ void RenderBaseShader::setProjectionMatrix( glm::mat4 projmatrix )
   setUniform("ProjectionMat",projmatrix);
   checkUniformError("set ProjectionMatrix ShadowShader");
 }
+
 void RenderBaseShader::setNormalMatrix( glm::mat4 normalmatrix )
 {
   bind();
@@ -84,6 +95,8 @@ void RenderBaseShader::setIndentifcation(int idx)
   bind();
   setUniform("ObjectId", idx );
 }
+
+//  use -------------------------------------------------
 
 void RenderBaseShader::use()
 {

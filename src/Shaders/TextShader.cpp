@@ -15,6 +15,8 @@ TextShader::~TextShader()
 {
 }
 
+// load -------------------------------------------------
+
 // modified version of http://learnopengl.com/code_viewer.php?code=in-practice/text_rendering
 bool  TextShader::load(const std::string path)
 {
@@ -94,6 +96,9 @@ bool  TextShader::load(const std::string path)
   return true;
 }
 
+
+//  render -------------------------------------------------
+
 // modified from http://learnopengl.com/code_viewer.php?code=in-practice/text_rendering (19.03.2016)
 void TextShader::renderText(std::string text, glm::vec2 pos ,float scale, glm::vec3 color, bool centered)
 {
@@ -104,9 +109,7 @@ void TextShader::renderText(std::string text, glm::vec2 pos ,float scale, glm::v
 
   
   if(centered)
-    pos -= (approximateTextOffset(text) / 2.0f *scale);
-
-  
+    pos -= (approximateTextOffset(text) / 2.0f *scale);  
 
   std::string::const_iterator c;
   for (c = text.begin(); c != text.end(); c++)
@@ -145,12 +148,19 @@ void TextShader::renderText(std::string text, glm::vec2 pos ,float scale, glm::v
   checkUniformError("end textshader render");
 }
 
+
+//  getter/setter -------------------------------------------------
+
 void TextShader::setProjection()
 {
   bind();
   glm::mat4 projection = glm::ortho(0.0f,(float) Engine::getWindowWidth(), 0.0f, (float)Engine::getWindowHeight());
   setUniform("ProjectionMat", projection);
 }
+
+
+//  approx -------------------------------------------------
+
 glm::vec2 TextShader::approximateTextOffset(std::string text)
 {
   float ret = 0.0f;
@@ -165,6 +175,10 @@ glm::vec2 TextShader::approximateTextOffset(std::string text)
   }
   return glm::vec2(ret,ret_y);
 }
+
+
+//  use -------------------------------------------------
+
 void TextShader::use()
 {
   bind();

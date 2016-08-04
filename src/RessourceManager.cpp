@@ -25,16 +25,19 @@ RessourceManager::~RessourceManager()
   
 }
 
+
+// loading functions ------------------------------------------
+
 Model * RessourceManager::loadModel(std::string path, bool instanced)
 {	
-	Model * model;
+	Model * model = nullptr;
 
 	std::map<std::string, Model *>::iterator it = m_models.find(path);
 	
 	if( it != m_models.end() )
 	{
 		model = it->second;
-		Engine::getLog()->log("RessourceManager","found model",path);
+		//Engine::getLog()->log("RessourceManager","found model",path);
 	}
 	else
 	{
@@ -44,7 +47,11 @@ Model * RessourceManager::loadModel(std::string path, bool instanced)
 		if(success)
 			Engine::getLog()->log("RessourceManager","loaded model",path);
 		else
+		{
 			Engine::getLog()->log("RessourceManager","loading failed ",path);
+			delete model;
+			model = nullptr;
+		}
 	}
 
 	return model;

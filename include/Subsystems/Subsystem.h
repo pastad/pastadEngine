@@ -1,28 +1,33 @@
 #ifndef SUBSYSTEM_H
 #define SUBSYSTEM_H
 
+#include <string>
+
 // Represents the basic subsystem
 
 class Subsystem
 {
 
 public:
-	Subsystem();
-	virtual ~Subsystem();
+	Subsystem(std::string name);
+	~Subsystem();
 
 	// starts the system
-	virtual bool startUp();
+	bool startUp();
 
 	// shuts down the system
-	virtual bool shutDown();
+	bool shutDown();
 
 	// returns true if everything is up and running
-	virtual bool systemCheck();
+	bool systemCheck();
 
 protected:
 
 	// indicates initialization
 	bool m_initialized;
+
+	// name of the subsystem
+	std::string m_name;
 	
 };
 

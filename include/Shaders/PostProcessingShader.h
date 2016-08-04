@@ -8,6 +8,16 @@
 
 #include "Shader.h"
 
+enum
+{
+  PASS_STANDARD = 1,
+  PASS_BRIGHT = 2,
+  PASS_BLUR_1 = 3,
+  PASS_BLUR_2 = 4,
+  PASS_SSAO = 5
+
+};
+
 
 
 class PostProcessingShader :  public Shader
@@ -38,11 +48,26 @@ public:
   //sets the basic matrices
   void setIdentityMatrices();
 
+  // sets the projection matrix
+  void setProjectionMatrix(glm::mat4 proj);
+
+  // sets the view matrix
+  void setViewMatrix(glm::mat4 view);
+
   // pass true if fxaa should be enabled
   void setFXAA(bool enable);
 
   // pass true if HDR should be enabled
   void setHDR(bool enable);
+
+   // pass true if Bloom should be enabled
+  void setBloom(bool enable);
+
+  // sets the minimal bloom lum value
+  void setBloomThreshold(float val);
+
+  // sets the ssao sample array
+  void setSSAOSamples();
 
   // binds the shader  
   void use();

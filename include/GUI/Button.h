@@ -7,15 +7,19 @@
 
 #include "Image.h"
 
+#define TEXT_FLOAT_LEFT 1
+#define TEXT_FLOAT_CENTER 2
+
 // class to represent a button (image + text + functionallity)
 
 class Text;
 class TextShader;
+class GUI;
 
 class Button : public Image
 {
 public:
-  Button(unsigned int id);
+  Button(unsigned int id, GUI * parent);
   ~Button();
 
   Button(const Button& other) = delete;
@@ -65,6 +69,12 @@ public:
   void togglOn();
   void togglOff();
 
+  // returns the parent gui
+  GUI * getParent();
+
+  // sets the text float
+  void setTextFloat(unsigned int f);
+
 private:
 
   // the text of the button
@@ -82,6 +92,11 @@ private:
   // the paths in case of toggle
   std::string m_path_image_on;
   std::string m_path_image_off;
+
+  // holds the pointer to the parent gui
+  GUI * m_parent;
+
+  unsigned int m_text_float = TEXT_FLOAT_CENTER;
 
   
 };

@@ -14,9 +14,13 @@
 PostProcessingShader::PostProcessingShader() : Shader()
 {
 }
+
 PostProcessingShader::~PostProcessingShader()
 {
 }
+
+
+//  load -------------------------------------------------
 
 bool PostProcessingShader::load(const std::string path)
 {  
@@ -33,33 +37,35 @@ bool PostProcessingShader::load(const std::string path)
   return true;
 }
 
+
+//  getter/setter -------------------------------------------------
+
 void PostProcessingShader::setRenderPass(unsigned int pass)
 {
   bind();
-  if(pass == 1)
+  if(pass == PASS_STANDARD)
   {
     setRenderPassSubroutine("passStandard");
   }
-  if(pass == 2)
+  if(pass == PASS_BRIGHT)
   {
     setRenderPassSubroutine("passBright");
   }
-  if(pass == 3)
+  if(pass == PASS_BLUR_1)
   {
     setRenderPassSubroutine("passBlur");
   }
-  if(pass == 4)
+  if(pass == PASS_BLUR_2)
   {
     setRenderPassSubroutine("passBlur2");
+  }
+  if(pass == PASS_SSAO)
+  {
+    setRenderPassSubroutine("passSSAO");
   }
 
   checkUniformError("set Subroutine");
   //printUniforms();
-}
-
-void PostProcessingShader::use()
-{
-  Shader::bind();
 }
 
 void PostProcessingShader::setIdentityMatrices()
@@ -71,6 +77,15 @@ void PostProcessingShader::setIdentityMatrices()
   checkUniformError("pp view projection set");
 }
 
+void PostProcessingShader::setProjectionMatrix(glm::mat4 proj)
+{
+   setUniform("CameraProjection",proj);
+}
+
+void PostProcessingShader::setViewMatrix(glm::mat4 view)
+{
+  setUniform("CameraView",view);
+}
 
 void PostProcessingShader::setTextureScaling(glm::vec2 scale)
 {
@@ -85,6 +100,7 @@ void PostProcessingShader::setFXAA(bool enable)
   else
     setUniform("EnableFXAA",0);
 }
+
 void PostProcessingShader::setHDR(bool enable)
 {
   if(enable)
@@ -93,16 +109,31 @@ void PostProcessingShader::setHDR(bool enable)
     setUniform("EnableHDR",0);
 }
 
+void PostProcessingShader::setBloom(bool enable)
+{
+  if(enable)
+    setUniform("EnableBloom",1);
+  else
+    setUniform("EnableBloom",0);
+}
+
+void PostProcessingShader::setBloomThreshold(float val)
+{
+  setUniform("BloomThreshold", val);
+}
+
 void PostProcessingShader::setAverageLuminance(float value)
 {
   setUniform("AverageLuminance",value);    
   checkUniformError("AverageLuminance set");
 }
+
 void PostProcessingShader::setExposure(float value)
 {
   setUniform("Exposure",value);    
   checkUniformError("Exposure set");
 }
+
 void PostProcessingShader::setGaussSize(unsigned int size)
 {
   bind();
@@ -121,4 +152,38 @@ void PostProcessingShader::setGaussSize(unsigned int size)
     setUniform(ss.str(), weights[count-1]/sum);    
     checkUniformError("GaussKernel set");
   }
+}
+
+void PostProcessingShader::setSSAOSamples()
+{
+  std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0);
+  std::default_random_engine gen;
+  for (GLuint i = 0; i < 64; ++i)
+  {
+    std::stringstream ss;
+    float x = randomFloats(gen) * 2.0 - 1.0;
+    float y = randomFloats(gen) * 2.0 - 1.0; 
+    float z = randomFloats(gen);
+   
+    glm::vec3 one_samle( x,y,z );
+
+    one_samle = glm::normalize(one_samle);
+    one_samle *= randomFloats(gen);
+    GLfloat scale = GLfloat(i) / 64.0;
+
+    scale = Helper::lerp(0.1f, 1.0f, scale * scale);
+    one_samle *= scale;
+    ss<< "SSAOSamples["<<i<<"]";
+    //std::cout << one_samle.x <<","<<one_samle.y<<","<<one_samle.z<<std::endl;
+    setUniform(ss.str(), one_samle);
+  }
+
+}
+
+
+//  use -------------------------------------------------
+
+void PostProcessingShader::use()
+{
+  Shader::bind();
 }

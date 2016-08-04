@@ -36,6 +36,9 @@ private:
   static Button * m_tb_hdr;
   static Text * m_txt_hdr;
 
+  static Button * m_tb_bloom;
+  static Text * m_txt_bloom;
+
   static Button * m_tb_shadow_pcf;
   static Text * m_txt_shadow_pcf;
 

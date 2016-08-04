@@ -4,8 +4,9 @@ Requirements:
   - GL
   - glfw3
   - assimp
-  - SOIL
+  - SOIL     (place in external)
   - freetype
+  - tinyxml2 (place in external)
 
 gl-loader-file generated with https://bitbucket.org/alfonse/glloadgen/wiki/Home 
 
@@ -42,25 +43,51 @@ Lighting:
 TODO:
 
 Structural:
-  - screen space culling
+  - screen space culling ( material flickering when activated )
   - write doc
+
+General:
+  - lua scripting
 
 Graphical:
   - water
   - ambient oclusion
-  - bloom effect
-  - HDR
-  - 3d picking
+  - bloom effect ( basic|needs major improvement)
+  - HDR ( basic |should be improved later ) 
   - terrain
   - OIT
-  - material refactor and improvement
 
 GUI:
-  - GUI class
-  - Panels
+  - usability improvement
 
 Customizability:
   - setting specifactions (MULTI_SAMPLES,...)
+
+Partially done ( improvements should be done) :
+  - Shadows (Point/Spot/Directional)
+    - PCF (for all light types)
+    - RandomSampling ( for Directional/Spot)
+  - GUI 
+    - EditText
+    - Image
+    - Button
+  - SceneEditor
+    - Add/Delete Lights
+    - Add/Delete Objects
+    - Add Skybox
+  - Scene
+    - Loading/Saveing
+    - Object/Light- Management
+
+
+Done:
+  - DeferredLighting
+  - FXAA
+  - Picking
+  - Objects
+    - Skybox
+    - AnimatedObjects (Bone-Animation)
+
 
 
 

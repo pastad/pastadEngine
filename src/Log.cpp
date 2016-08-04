@@ -12,10 +12,8 @@ Log::~Log()
 {	
 }
 
-void Log::debugMode()
-{
-	m_debug = true;
-}
+
+// logging ------------------------------------------
 
 void Log::logToConsole( std::string tag, std::string msg)
 {
@@ -37,4 +35,12 @@ void Log::log( std::string tag, std::string step,  std::string msg)
 {
   if(m_debug)
     logToConsole( tag, step, msg);
+}
+
+
+// getter/setter ------------------------------------------
+
+void Log::debugMode()
+{
+	m_debug = true;
 }

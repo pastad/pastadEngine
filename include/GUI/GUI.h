@@ -2,6 +2,9 @@
 #define GUI_H
 
 #include <map>
+#include <vector>
+
+#include <glm/glm.hpp>
 
 // represents a Graphical User Interface
 
@@ -10,6 +13,7 @@ class Text;
 class ImageShader;
 class Image;
 class Button;
+class EditText;
 
 
 class Quad;
@@ -31,17 +35,22 @@ public:
   void setInactive();
 
   // returns a text bound to this ui
-  Text * getText();
+  Text * addText();
   // removes the text
   void removeText(Text * text);
 
+  // returns a edit text bound to this ui
+  EditText * addEditText();
+  // removes the edittext
+  void removeEditText(EditText * text);
+
   // returns a image bound to this ui
-  Image * getImage();  
+  Image * addImage();  
   // removes the image
   void removeImage(Image * image);
 
   // returns a button bound to this ui
-  Button * getButton();  
+  Button * addButton();  
   // removes the button
   void removeButton(Button * button);
 
@@ -56,6 +65,21 @@ public:
 
   // register the callback function if a button is pressed
   void registerButtonPressedCallback( void  (*callback)(Button * btn)   );
+
+   // register the callback function if an edit text is changed
+  void registerEditTextCallback( void  (*callback)(EditText * btn)   );
+
+  // adds a child to the gui
+  void addChild(GUI * gui);
+
+  // returns true if pos is inside gui | size must be set
+  bool isInside(glm::vec2 pos);
+
+  // sets the size of the gui
+  void setSizeAndOffset(glm::vec2 size, glm::vec2 offset);
+
+  // called when key is pressed
+  void keyWasPressed(unsigned int key);
 
 private:
 
@@ -77,8 +101,24 @@ private:
   std::map<int,Button *>  m_buttons;
   unsigned int m_button_ids;
 
+  // holds the edit texts 
+  std::map<int,EditText *>  m_edit_texts;
+  unsigned int m_edit_text_ids;
+
+  // holds the child guis;
+  std::vector<GUI * > m_children;
+
+  // holds the size of the gui
+  glm::vec2 m_size;
+
+  // holds the offset of the gui
+  glm::vec2 m_offset;
+
   // stores the callback for the button press
   void (*external_buttonPressedCallback)(Button * btn);
+
+  // stores the callback for the edittext finish
+  void (*external_editTextCallback)(EditText * edtxt);
   
 };
 
