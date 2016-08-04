@@ -50,6 +50,7 @@ Camera::Camera(float x, float y, float z): m_pos(x,y,z),m_rotation_allowed(false
   m_far_plane_width = m_far_plane_height *ratio;
 
   m_vertical_movement_allowed = true;
+  m_up_down_movement_allowed = true;
 
   recalculateMatrices();
 }
@@ -128,15 +129,23 @@ void Camera::movementWithCollisionCheck(glm::vec3 dir, float step)
 void Camera::rotate(float deltax,float deltay)
 {
   if(m_rotation_allowed)
-  {
-    m_rot_1 +=deltax*m_rotation_speed;
-    m_rot_2 -=deltay*m_rotation_speed;
+  {  
+
+    m_rot_1 += deltax*m_rotation_speed;
+    m_rot_2 -= deltay*m_rotation_speed;
+
 
     // limit to range for better retrieval
     if(m_rot_1 >360.0f)
       m_rot_1 = 0.0f;
     if(m_rot_1 <0.0f)
       m_rot_1 = 360.0f;
+
+    // limt so that we can turn upside down
+    if(m_rot_2 >89.0f)
+      m_rot_2 = 89.0f;
+    if(m_rot_2 <-89.0f)
+      m_rot_2 = -89.0f;
 
     m_forward = Helper::anglesToDirection(m_rot_1,m_rot_2);
     Engine::getScene()->cameraRotated();
@@ -147,7 +156,7 @@ void Camera::rotate(float deltax,float deltay)
 
 void Camera::move(glm::vec3 step)
 {
-  m_pos+=step;
+  m_pos += step;
   recalculateMatrices();
   //Engine::getLog()->log("Camera", "moved camera ");
   if(external_cameraMovedCallback != nullptr)
@@ -249,13 +258,19 @@ void Camera::update(float delta_time)
     }
     if(IOSubsystem::isKeyPressed(' '))
     {
-      moved = true;
-      m_pos += m_up* step;
+      if(m_up_down_movement_allowed)
+      {
+        moved = true;
+        m_pos += m_up* step;
+      }
     }
     if(IOSubsystem::isKeyPressed('V'))
     {
-      moved = true;
-      m_pos -= m_up* step;
+      if(m_up_down_movement_allowed)
+      {
+        moved = true;
+        m_pos -= m_up* step;
+      }
     }
     if(IOSubsystem::isKeyPressed('L'))
     {
@@ -466,7 +481,7 @@ void Camera::applyDrop(glm::vec3 delta)
   m_fall_vector+=delta;
   move(m_fall_vector);  
   if(Engine::getScene()!= nullptr)
-  Engine::getScene()->cameraMoved();
+    Engine::getScene()->cameraMoved();
 }
 
 void Camera::allowUpDownTranslation()
@@ -503,6 +518,15 @@ void Camera::setSurroundingOffset(float val)
 {
   if(val >=0.0f)
     m_surrounding_offset = val;
+}
+
+void Camera::allowUpDownMovement()
+{
+  m_up_down_movement_allowed = true;
+}
+void Camera::dontAllowUpDownMovement()
+{
+  m_up_down_movement_allowed = false;
 }
 
 

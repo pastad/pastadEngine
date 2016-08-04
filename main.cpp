@@ -20,6 +20,7 @@
 
 
 #include "Game.h"
+#include "GameMenu.h"
 
 #include "LuaScript.h"
 
@@ -40,21 +41,46 @@ int main(void)
 
   if(launch_game)
   {
-    engine.initialize(1240, 720, PHYSIC_SUBSYSTEM, false, false);
-    Game * game = new Game();
 
-    if(game->initialize())
+    engine.initialize(1240, 720, RENDER_SUBSYSTEM, false, false);
+
+    
+    GameMenu * game_menu = new GameMenu();   
+ 
+    game_menu->initialize();
+
+    while(game_menu->isActive())
     {
-
-      while(engine.running())
-      {        
-        engine.update();
-        game->update();   
-        engine.render();
-      }
+      game_menu->update();
+      engine.update();
+      engine.render();
     }
 
-    delete game;
+    game_menu->unload();
+
+    if( game_menu->shouldGameBeStarted())
+    {
+      Game * game = new Game();
+
+      if(game->initialize())
+      {
+
+        while(engine.running())
+        {        
+          engine.update();
+          game->update();   
+          engine.render();
+        }
+      }
+
+      delete game;
+    }
+    delete game_menu;
+    
+
+
+
+
   }
   else
   {

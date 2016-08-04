@@ -464,7 +464,7 @@ GUI * Engine::addGUI()
 
 void Engine::removeGUI(GUI * gui)
 {
-	for( std::vector<GUI*>::iterator it = m_guis.begin(); it != m_guis.end();it++)
+	for( std::vector<GUI*>::iterator it = m_guis.begin(); it != m_guis.end();)
 	{
 		if( (*it)->getId() == gui->getId() )
 		{
@@ -472,6 +472,8 @@ void Engine::removeGUI(GUI * gui)
 			m_guis.erase(it);
 			it = m_guis.end();
 		}
+    else
+      it++;
 	}
 }
 

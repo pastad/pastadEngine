@@ -8,6 +8,7 @@
 
 #include "Light.h"
 #include "Camera.h"
+#include "Script.h"
 
 #include <iostream>
 
@@ -20,6 +21,7 @@ Object::Object(std::string identifier, Model * parent):Transform(glm::vec3(0,0,0
   m_model = parent;
   m_physics_static = false;
   refreshAABB();
+  m_script = nullptr;
 }
 
 Object::~Object()
@@ -34,6 +36,7 @@ Object::~Object()
 void Object::move(glm::vec3 direction)
 {
   setPosition( getPosition() + direction  ); 
+  m_model->bufferedMatricesShouldBeRefreshed();
 }
 
 void Object::rotate(glm::vec3 delta)
@@ -59,6 +62,7 @@ void Object::rotate(glm::vec3 delta)
 
   setRotation( rot );
   refreshAABB();
+  m_model->bufferedMatricesShouldBeRefreshed();
 }
 
 
@@ -299,6 +303,14 @@ void Object::advanceAnimation(float delta)
   }
 }
 
+void Object::update(float delta, Scene * scene)
+{
+  if(m_script != nullptr)
+  {
+    m_script->update(delta, scene, this);
+  }
+}
+
 
 //  getter/setters -------------------------------------------------
 
@@ -358,6 +370,7 @@ void Object::setPosition(glm::vec3 p)
   m_needs_fall_check = true;
   if(Engine::getScene() != nullptr)
     Engine::getScene()->refreshLights();
+  m_model->bufferedMatricesShouldBeRefreshed();
 }
 
 void Object::setRotation(glm::vec3 r)
@@ -366,6 +379,7 @@ void Object::setRotation(glm::vec3 r)
   refreshAABB();
   if(Engine::getScene() != nullptr)
     Engine::getScene()->refreshLights();
+  m_model->bufferedMatricesShouldBeRefreshed();
 }
 
 
@@ -375,6 +389,7 @@ void Object::setScale(glm::vec3 s)
   refreshAABB();  
   if(Engine::getScene() != nullptr)
     Engine::getScene()->refreshLights();
+  m_model->bufferedMatricesShouldBeRefreshed();
 }
 
 glm::mat4 Object::getModelMatrix()
@@ -529,4 +544,18 @@ bool Object::isPhysicsApplied()
 bool Object::isPhysicsStatic()
 {
   return m_physics_static;
+}
+
+// script
+
+Script *  Object::addScript()
+{
+  m_script = new Script();
+  return m_script;
+}
+
+void  Object::removeScript()
+{
+  delete m_script;
+  m_script = nullptr;
 }

@@ -179,7 +179,7 @@ void GUI::addChild(GUI * gui)
 
 // text
 
-Text * GUI::getText()
+Text * GUI::addText()
 {
   Text * text = new Text(m_text_ids);
   m_texts.insert(std::pair<int, Text*>(m_text_ids,text));
@@ -199,7 +199,7 @@ void GUI::removeText(Text * text)
 
 // edittext
 
-EditText * GUI::getEditText()
+EditText * GUI::addEditText()
 {
   EditText * text = new EditText(m_edit_text_ids, this);
   m_edit_texts.insert(std::pair<int, EditText*>(m_edit_text_ids,text));
@@ -219,7 +219,7 @@ void GUI::removeEditText(EditText * text)
 
 // image
 
-Image * GUI::getImage()
+Image * GUI::addImage()
 {
   Image * image = new Image(m_image_ids);
   m_images.insert(std::pair<int, Image*>(m_image_ids,image));
@@ -239,7 +239,7 @@ void GUI::removeImage(Image * image)
 
 //button
 
-Button * GUI::getButton()
+Button * GUI::addButton()
 {
   Button * button = new Button(m_button_ids, this);
   m_buttons.insert(std::pair<int, Button*>(m_button_ids,button));

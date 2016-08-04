@@ -39,7 +39,7 @@ void PhysicSubsystem::updateScene(Scene * scene, float delta)
   {
     if(cam->isPhysicsApplied())
     {      
-      glm::vec3 drop = glm::vec3(0,-9.81,0)* (delta/1000.0f);
+      glm::vec3 drop = glm::vec3(0,-98.1,0)* (delta/1000.0f);
 
       std::vector<Object *> objs = scene->getPhysicsStaticObjects();
 
@@ -57,12 +57,13 @@ void PhysicSubsystem::updateScene(Scene * scene, float delta)
           if(dist < distance)
             distance =dist;
         }
-
       }
       if(  ( distance - cam->getBottomOffset() -0.1f ) > 0 )
       {
         cam->applyDrop(drop);  
       }
+      else
+        cam->setFallVector(glm::vec3(0,0,0));
     }
   }
   

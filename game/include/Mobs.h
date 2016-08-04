@@ -30,10 +30,10 @@ public:
   void update(Player * player, Environment * env);
 
   // spawns random mobs
-  void spawnRandom(Scene * scene, unsigned int amount);
+  void spawnRandom(Scene * scene, unsigned int min_amount, unsigned int max_amount, float drain);
 
   // removes a mob
-  void removeMob(Mob * m);
+  void removeMob(Mob * m, Environment * env);
 
   // returns the closest mob in range
   Mob * getClosestMobInRange(glm::vec3 pos , float range);
@@ -52,6 +52,12 @@ private:
 
   // the mob amount
   std::vector<int> m_waves;
+
+  // the drain of the spawnwave
+  float m_drain;
+
+  // which spawn wave we are at
+  unsigned int m_wave;
 
 };
 

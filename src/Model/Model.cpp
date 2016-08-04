@@ -24,7 +24,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-Model::Model(std::string path, bool instanced):m_path(path), m_instanced(instanced)
+Model::Model(std::string path, bool instanced):m_path(path), m_instanced(instanced),m_instanced_matrices_refresh_needed(false)
 {	
 }
 
@@ -37,6 +37,9 @@ Model::~Model()
     
 }
 
+
+
+
 //  render -------------------------------------------------
 
 void Model::render(RenderBaseShader * render_shader, bool with_material)
@@ -46,12 +49,14 @@ void Model::render(RenderBaseShader * render_shader, bool with_material)
 
 void Model::render(RenderBaseShader * render_shader, std::vector<Object *> objects, bool with_material)
 {
-  std::vector<glm::mat4> matrices;
+/*  std::vector<glm::mat4> matrices;
   for(std::vector<Object *>::iterator it = objects.begin(); it != objects.end();it++)
   {
     if( (*it)->isVisible() )
       matrices.insert(matrices.end(),  (*it)->getModelMatrix()  );
-  }
+  }*/
+  if(m_instanced_matrices_refresh_needed)
+    refreshBufferedMatrices();
 
   if( !m_animated )
   {
@@ -62,8 +67,8 @@ void Model::render(RenderBaseShader * render_shader, std::vector<Object *> objec
       {       
         if( with_material )
           m_materials.at((*it)->getMaterialIndex())->bind(0, (RenderShader *) render_shader);
-        (*it)->bufferModelMatrices(&matrices);
-        (*it)->render(matrices.size()); 
+
+        (*it)->render(m_num_instanced_buffered_matrices); 
       }
     }
     else
@@ -420,6 +425,8 @@ Object * Model::getInstance()
   Object * obj = new Object(m_path, this);
 
   m_instances.insert(m_instances.end(),obj);
+
+  bufferedMatricesShouldBeRefreshed();
   
   return obj;
 }
@@ -427,7 +434,7 @@ void Model::removeInstance( Object * obj)
 {
   for(std::vector<Object *>::iterator it = m_instances.begin(); it != m_instances.end();)
   {
-    if(*it == obj)
+    if( (*it) == obj)
     {
       m_instances.erase(it);
       it = m_instances.end();
@@ -435,4 +442,35 @@ void Model::removeInstance( Object * obj)
     else
       it++;
   }
+}
+void Model::bufferedMatricesShouldBeRefreshed()
+{
+  if(m_instanced)
+    m_instanced_matrices_refresh_needed =true;
+}
+
+// refreshers
+
+void Model::refreshBufferedMatrices()
+{
+  std::vector<glm::mat4> matrices;
+  for(std::vector<Object *>::iterator it = m_instances.begin(); it != m_instances.end();it++)
+  {
+    if( (*it)->isVisible() )
+      matrices.insert(matrices.end(),  (*it)->getModelMatrix()  );
+  }
+  if( !m_animated )
+  {
+    if(m_instanced)
+    {
+      for(std::vector<Mesh *>::iterator it = m_meshes.begin(); it != m_meshes.end(); it++)
+      {       
+        (*it)->bufferModelMatrices(&matrices);
+      }
+      m_num_instanced_buffered_matrices = matrices.size();
+      Engine::getLog()->log("Model","Rebuffered instanced matrices");
+    }
+
+  }
+  m_instanced_matrices_refresh_needed = false;
 }

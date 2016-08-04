@@ -35,22 +35,22 @@ public:
   void setInactive();
 
   // returns a text bound to this ui
-  Text * getText();
+  Text * addText();
   // removes the text
   void removeText(Text * text);
 
   // returns a edit text bound to this ui
-  EditText * getEditText();
+  EditText * addEditText();
   // removes the edittext
   void removeEditText(EditText * text);
 
   // returns a image bound to this ui
-  Image * getImage();  
+  Image * addImage();  
   // removes the image
   void removeImage(Image * image);
 
   // returns a button bound to this ui
-  Button * getButton();  
+  Button * addButton();  
   // removes the button
   void removeButton(Button * button);
 

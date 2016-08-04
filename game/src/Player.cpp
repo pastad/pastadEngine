@@ -11,6 +11,9 @@
 #include "GUI.h"
 #include "Text.h"
 
+#define JUMP_TIME 0.1f
+#define JUMP_CD 1.0f
+
 #include <iostream>
 #include <sstream>
 
@@ -22,9 +25,14 @@ float Player::m_energy;
 GUI * Player::m_gui;
 Text * Player::m_lower_text;
 
+int Player::m_jump_state;
+float Player::m_jump_time;
+
 Player::Player()
 {  
   m_energy = 100.0f;
+  m_jump_time =0.0f;
+  m_jump_state = 0;
 }
 
 Player::~Player()
@@ -37,18 +45,7 @@ bool Player::init(Scene * scene)
   m_camera = scene->getCamera();
   m_camera->registerMovedCallback(&cameraMovedCallback);
 
-
   m_inventory = new Inventory();
-
- /* Object * spear_obj = scene->addObject("game/models/spear.obj",glm::vec3(0,0,0), false);
-  Item * spear_item = new Item(spear_obj,true);
-  spear_item->setInactive();
-  m_inventory->addItem(spear_item);
-
-  Object * hatchet_obj = scene->addObject("game/models/hatchet.obj",glm::vec3(0,0,0), false);
-  Item * hatchet_item = new Item(hatchet_obj,true);
-  hatchet_item->setInactive();
-  m_inventory->addItem(hatchet_item);*/
 
   Object * plant_harvest_obj = scene->addObject("game/models/hand.obj",glm::vec3(0,0,0), false);
   Item * plant_harvest_item = new Item(plant_harvest_obj,true, ITEM_HARVEST_TOOL);
@@ -73,7 +70,7 @@ void Player::setupGUI()
 {
   m_gui =  Engine::addGUI();
 
-  m_lower_text = m_gui->getText();
+  m_lower_text = m_gui->addText();
   m_lower_text->setPosition(glm::vec2(40.0f,10.0f));
   m_lower_text->setScale(0.25f);
   m_lower_text->setColor(glm::vec3(255,255,255));
@@ -82,8 +79,34 @@ void Player::setupGUI()
 
 void Player::update()
 {
+  float delta = Engine::getTimeDelta();
   m_inventory->update();
 
+  if(m_jump_state != 0)
+    m_jump_time += delta;
+
+  if( (m_jump_state == 1) && (m_jump_time > JUMP_TIME ) )
+  {
+    m_jump_state = -1;
+    m_jump_time = 0.0f;
+  }
+  if( (m_jump_state == -1) && (m_jump_time > JUMP_CD ) )
+  {
+    m_jump_state = 0;
+    m_jump_time = 0.0f;
+  }
+
+
+  if( Engine::isKeyReleasedAndPressed(' '))
+  {
+    if( m_jump_state == 0 )
+    {
+      m_jump_state = 1;
+    }  
+  }
+
+  if(m_jump_state == 1)
+    m_camera->move(glm::vec3(0,10,0)*delta );
 
   std::stringstream ss;
   ss << "   Energy: "<<m_energy ;

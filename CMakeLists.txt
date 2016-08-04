@@ -53,6 +53,9 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Effects/Water.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Effects/Wave.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Script/Script.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Script/ScriptElement.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Script/RotationScriptElement.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Script/ExternalTriggerScriptElement.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RessourceManager.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Helper.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/LuaScript.cpp
@@ -68,6 +71,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/game/src/Plant.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/game/src/Environment.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/game/src/EnergyShot.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/game/src/GameMenu.cpp
    
 )
 set(HEADERS
@@ -120,6 +124,9 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Effects/Water.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Effects/Wave.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Script/Script.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Script/ScriptElement.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Script/RotationScriptElement.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Script/ExternalTriggerScriptElement.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RessourceManager.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Helper.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/LuaScript.h
@@ -134,6 +141,7 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/game/include/Plant.h
    ${CMAKE_CURRENT_SOURCE_DIR}/game/include/Environment.h
    ${CMAKE_CURRENT_SOURCE_DIR}/game/include/EnergyShot.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/game/include/GameMenu.h
 
 
 )
@@ -154,6 +162,7 @@ ${CMAKE_CURRENT_SOURCE_DIR}/include/Scene
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Extension
 ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Effects
+${CMAKE_CURRENT_SOURCE_DIR}/include/Script
 ${CMAKE_CURRENT_SOURCE_DIR}/external
 ${CMAKE_CURRENT_SOURCE_DIR}/external/tinyxml2
 

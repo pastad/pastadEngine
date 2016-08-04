@@ -18,12 +18,17 @@ class Model;
 class Light;
 class Camera;
 class BoundingBox;
+class Script;
+class Scene;
 
 class Object : public Transform
 {
 public:
 	Object(std::string identifier, Model * parent);
 	~Object();
+
+  // updates the object | called by "engine"
+  void update(float delta, Scene * scene);
 
   // updates the bones 
   void boneUpdate(float time_in_seconds);
@@ -137,6 +142,12 @@ public:
 
   // true if fall should be checked;
   bool shouldFallBeChecked();
+
+  // adds a script to the object
+  Script * addScript();
+
+  // removes and deletes the set script
+  void removeScript();
   
 private:
 
@@ -178,6 +189,9 @@ private:
 
   // true if fall should be checked
   bool m_needs_fall_check = true;
+
+  // the script of the object
+  Script * m_script;
 
   // returns the angle to ...
   float getAngleTo(glm::vec3 dir, glm::vec3 lp , glm::vec3 pos);

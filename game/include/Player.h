@@ -63,6 +63,12 @@ private:
   static GUI * m_gui;
   static Text * m_lower_text;
 
+  // the time the player is jumping
+  static float m_jump_time;
+
+  // -1 = cooldown | 1 = jump | 0 = none
+  static int m_jump_state;
+
   // the callback called by the camera
   static void cameraMovedCallback();
 

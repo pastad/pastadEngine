@@ -20,6 +20,8 @@
 
 Mobs::Mobs()
 {  
+  m_drain = 0.0f;
+  m_wave = 0;
 }
 
 Mobs::~Mobs()
@@ -45,22 +47,29 @@ bool Mobs::initialize(Scene * scene)
   }*/
 }
 
-void Mobs::spawnRandom(Scene * scene, unsigned int amount)
+void Mobs::spawnRandom(Scene * scene, unsigned int min_amount, unsigned int max_amount, float drain)
 {
 
+  std::srand(std::time(0));
+  int amount = std::rand()  %( max_amount - min_amount)    + min_amount;
+  float damage =   drain /  ((float )amount);
+
+  std::cout << "hpm " <<damage<<std::endl;
   for(int x=0; x < amount;x++)
   {
     Mob * mob =  new Mob();
-    mob->initialize(scene);
+    if( !mob->initialize(scene, damage))
+    {
+        std::cout << "ERRRRRORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR --------------- ERRRRRORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"<<std::endl;
+    }
 
-    float rad = 30.0f;
+    float rad = 50.0f;
 
-    std::srand(std::time(0));
     int angle = std::rand() %360;
 
     glm::vec2 r = glm::rotate(glm::vec2(1,0), angle/180.0f * 3.0f ) * rad;
 
-    std::cout <<angle << " "<< r.x <<" , "<<r.y <<std::endl;
+    //std::cout <<angle << " "<< r.x <<" , "<<r.y <<std::endl;
 
     mob->setPosition(glm::vec3(r.x,0.7f,r.y));
 
@@ -73,66 +82,22 @@ void Mobs::update(Player * player, Environment * env)
   float delta = Engine::getTimeDelta();
   float step = delta *5.0f;
 
-
   for(std::vector<Mob*>::iterator it = m_mobs.begin(); it != m_mobs.end();)
   {
+
     float dis =  glm::distance((*it)->getObject()->getPosition(), player->getPosition());
 
-    if(dis<2.0f)
+    if( dis < 1.5f )
     {
-      std::cout << "Mob desolved" <<std::endl;
+      std::cout << "Mob desolved" <<std::endl;     
 
-      env->refreshTargets((*it) , this);
+      player->drainEnergy((*it)->getHealth());
 
-      Engine::getScene()->removeObject((*it)->getObject());
-      delete *it;
-      m_mobs.erase(it);
-      player->drainEnergy(25.0f);
-
-
-
+      removeMob((*it), env);
     }
     else
     {
-      (*it)->update(player,delta);
-      /*bool can_move = true;
-      
-      Object * obj =  player->getWeapon();
-      if( obj != nullptr)
-      {
-        if( Engine::getPhysicSubsystem()->collisionObjectObject((*it)->getObject(), obj ))
-        {
-         // std::cout << "HIT" <<std::endl;
-          Engine::getScene()->removeObject((*it)->getObject());
-          delete *it;
-          m_mobs.erase(it);
-          can_move = false;
-        }
-      }
-      if(can_move)
-      {*/
-       /* glm::vec3 dir = glm::normalize( player->getPosition() - (*it)->getObject()->getPosition() );
-        dir.y =0.0f;
-
-        glm::vec3 npos;
-        glm::vec3 tnpos = (*it)->getObject()->getPosition() +dir*step;
-
-        bool move_ok = true;
-
-       /* for(std::vector<Mob*>::iterator it2 = m_mobs.begin(); it2 != m_mobs.end();it2++)
-        {
-          float d = glm::distance(tnpos,(*it2)->getObject()->getPosition());
-         // std::cout <<d<<std::endl;
-          if( d < 0.3f && ( (*it2) != (*it) ) )
-            move_ok = false;
-        }*/
-/*
-        if( Engine::getPhysicSubsystem() != nullptr && move_ok)
-        {
-          if(Engine::getPhysicSubsystem()->collisionMovement(Engine::getScene(), (*it)->getObject()->getPosition() , dir, step, 0.2f, 0.1f, &npos))
-            (*it)->getObject()->setPosition(npos);
-        } */      
-      //}
+      (*it)->update(player,delta); 
       it++;
     }
 
@@ -170,20 +135,26 @@ Mob * Mobs::getClosestMobInRange(glm::vec3 pos , float range)
   return ret;
 }
 
-void Mobs::removeMob(Mob * m)
+void Mobs::removeMob(Mob * m, Environment * env)
 {
+  Mob * target = m;
+ 
   for(std::vector<Mob*>::iterator it = m_mobs.begin(); it != m_mobs.end();)
   {
     if( (*it) == m )
     {
+      std::cout << "removed mob| left:"<<m_mobs.size()<<std::endl;
       Engine::getScene()->removeObject((*it)->getObject());
+      delete (*it)->getObject();
       delete *it;
+      (*it ) = nullptr;
       m_mobs.erase(it);
       it = m_mobs.end();
     }
     else
       it++;
   }
+  env->refreshTargets(target , this);
 }
 std::vector<Mob *> Mobs::getMobs()
 {
@@ -192,6 +163,16 @@ std::vector<Mob *> Mobs::getMobs()
 
 void Mobs::spawnNextWave()
 {
-  spawnRandom(Engine::getScene(),1);
-  std::cout << "spawn mob wave" <<std::endl;
+  m_wave++;
+  m_drain +=450.0f;
+  if(m_wave < 13)
+    spawnRandom(Engine::getScene(),8,10,m_drain);
+  else
+  {
+    if(m_wave < 26)
+      spawnRandom(Engine::getScene(),16,20,m_drain);
+    else
+       spawnRandom(Engine::getScene(),32,40,m_drain);
+  }
+  std::cout << "spawn mob wave "<<m_wave <<std::endl;
 }

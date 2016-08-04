@@ -29,33 +29,33 @@ FileViewer::~FileViewer()
 
 bool FileViewer::initialize()
 {
-  m_back_panel = GUI::getImage();
+  m_back_panel = GUI::addImage();
   m_back_panel->load("resources/panel_square.png");
   glm::vec2 pos = glm::vec2(200,Engine::getWindowHeight() -540.0f);
   m_back_panel->setPosition(pos);
 
-  m_btn_close = GUI::getButton();
+  m_btn_close = GUI::addButton();
   m_btn_close->intitialize("resources/btn.png","",pos+ m_back_panel->getSize()- glm::vec2(30,20),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "close");
 
-  m_btn_ok = GUI::getButton();
+  m_btn_ok = GUI::addButton();
   m_btn_ok->intitialize("resources/btn_small_border.png","OK",pos+ glm::vec2(m_back_panel->getSize().x,20)- glm::vec2(50,0),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "ok");
   m_btn_ok->setInactive();
 
-  m_btn_up = GUI::getButton();
+  m_btn_up = GUI::addButton();
   m_btn_up->intitialize("resources/btn_up.png","",pos+ glm::vec2(10,m_back_panel->getSize().y-50),glm::vec2(0.6f,0.6f),
     glm::vec3(0,0,0), "up");
 
-  m_btn_down = GUI::getButton();
+  m_btn_down = GUI::addButton();
   m_btn_down->intitialize("resources/btn_down.png","",pos+ glm::vec2(10,40),glm::vec2(0.6f,0.6f),
     glm::vec3(0,0,0), "down");
 
-  m_txt_selected = GUI::getEditText();
+  m_txt_selected = GUI::addEditText();
   m_txt_selected->set( "default_file", pos +glm::vec2(20,20), 0.22f, glm::vec3(0,0,0));
   m_txt_selected->setDescriptor("path_chosen");
 
-  m_txt_path = GUI::getText();
+  m_txt_path = GUI::addText();
   m_txt_path->setPosition(pos +glm::vec2(20,m_back_panel->getSize().y-30));
   m_txt_path->setScale(0.3f);
   m_txt_path->setColor(glm::vec3(0,0,0));
@@ -65,7 +65,7 @@ bool FileViewer::initialize()
 
   for(unsigned int c=0; c < FILE_AMOUNT ; c++)
   {
-    Button * btn = GUI::getButton();
+    Button * btn = GUI::addButton();
     std::stringstream ss;
     ss<< "file_btn_"<<c;
     btn->intitialize("resources/btn_large_empty.png","",pos+ glm::vec2(15,m_back_panel->getSize().y-TOP_OFFSET)- glm::vec2(0,15 *c) ,glm::vec2(0.5f,0.5f),

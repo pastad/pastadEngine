@@ -84,6 +84,7 @@ void Scene::update(SceneTreeElement * element,  float delta)
   {    
     Object * obj =objects.at(x);
     obj->advanceAnimation(delta); 
+    obj->update(delta, this);
   }
   for( int x=0;  x< children.size(); x++)
   {
@@ -580,7 +581,7 @@ void Scene::removeObject(Object * obj)
     if( (*it) == obj)
     {
       m_objects_static.erase(it);
-      Engine::getLog()->log("Scene", "removed object from scene");
+      Engine::getLog()->log("Scene", "removed static object from scene");
     }
     else
       it++; 
@@ -590,7 +591,7 @@ void Scene::removeObject(Object * obj)
     if( (*it) == obj)
     {
       m_objects_dynamic.erase(it);
-      Engine::getLog()->log("Scene", "removed object from scene");
+      Engine::getLog()->log("Scene", "removed dynamic object from scene");
     }
     else
       it++; 

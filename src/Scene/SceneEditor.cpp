@@ -115,133 +115,133 @@ bool SceneEditor::initialize()
   addChild((GUI*)m_file_chooser);
 
 
-  Button * bt_2 = GUI::getButton();
+  Button * bt_2 = GUI::addButton();
   bt_2->intitialize("resources/collapse.png","",glm::vec2(Engine::getWindowWidth() -40.0f,Engine::getWindowHeight()-40.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "expand_edit");
 
-  m_back_panel_edit = GUI::getImage();
+  m_back_panel_edit = GUI::addImage();
   m_back_panel_edit->load("resources/panel.png");
   m_back_panel_edit->setPosition(glm::vec2(Engine::getWindowWidth()-200.0f,Engine::getWindowHeight() -540.0f));
   m_back_panel_edit->setInactive();
 
 
-  m_btn_open_scene = GUI::getButton();
+  m_btn_open_scene = GUI::addButton();
   m_btn_open_scene->intitialize("resources/btn_large_border.png","Open Scene",glm::vec2(Engine::getWindowWidth() -190.0f,Engine::getWindowHeight()-30.0f),glm::vec2(0.42f,0.5f),
     glm::vec3(0,0,0), "open_scene");
   m_btn_open_scene->setInactive();
 
-  m_btn_save_scene = GUI::getButton();
+  m_btn_save_scene = GUI::addButton();
   m_btn_save_scene->intitialize("resources/btn_large_border.png","SaveScene",glm::vec2(Engine::getWindowWidth() -90.0f,Engine::getWindowHeight()-30.0f),glm::vec2(0.42f,0.5f),
     glm::vec3(0,0,0), "save_scene");
   m_btn_save_scene->setInactive();
 
 
-  m_txt_del_light = GUI::getText();
+  m_txt_del_light = GUI::addText();
   m_txt_del_light->setPosition(glm::vec2(Engine::getWindowWidth() -170.0f,Engine::getWindowHeight()-490.0f));
   m_txt_del_light->setScale(0.22f);
   m_txt_del_light->setColor(glm::vec3(0,0,0));
   m_txt_del_light->setText("Delete Light");
   m_txt_del_light->setInactive();
 
-  m_btn_del_light = GUI::getButton();
+  m_btn_del_light = GUI::addButton();
   m_btn_del_light->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -190.0f,Engine::getWindowHeight()-490.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "delete_light");
   m_btn_del_light->setInactive();
 
 
-  m_txt_add_directional_light = GUI::getText();
+  m_txt_add_directional_light = GUI::addText();
   m_txt_add_directional_light->setPosition(glm::vec2(Engine::getWindowWidth() -170.0f,Engine::getWindowHeight()-470.0f));
   m_txt_add_directional_light->setScale(0.22f);
   m_txt_add_directional_light->setColor(glm::vec3(0,0,0));
   m_txt_add_directional_light->setText("Add Directional Light");
   m_txt_add_directional_light->setInactive();
 
-  m_btn_add_directional_light = GUI::getButton();
+  m_btn_add_directional_light = GUI::addButton();
   m_btn_add_directional_light->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -190.0f,Engine::getWindowHeight()-470.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "add_directional_light");
   m_btn_add_directional_light->setInactive();
 
 
 
-  m_txt_add_light = GUI::getText();
+  m_txt_add_light = GUI::addText();
   m_txt_add_light->setPosition(glm::vec2(Engine::getWindowWidth() -170.0f,Engine::getWindowHeight()-450.0f));
   m_txt_add_light->setScale(0.22f);
   m_txt_add_light->setColor(glm::vec3(0,0,0));
   m_txt_add_light->setText("Add Point-Light");
   m_txt_add_light->setInactive();
 
-  m_btn_add_light = GUI::getButton();
+  m_btn_add_light = GUI::addButton();
   m_btn_add_light->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -190.0f,Engine::getWindowHeight()-450.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "add_light");
   m_btn_add_light->setInactive();
 
-  m_txt_add_spot_light = GUI::getText();
+  m_txt_add_spot_light = GUI::addText();
   m_txt_add_spot_light->setPosition(glm::vec2(Engine::getWindowWidth() -170.0f,Engine::getWindowHeight()-430.0f));
   m_txt_add_spot_light->setScale(0.22f);
   m_txt_add_spot_light->setColor(glm::vec3(0,0,0));
   m_txt_add_spot_light->setText("Add Spot-Light");
   m_txt_add_spot_light->setInactive();
 
-  m_btn_add_spot_light = GUI::getButton();
+  m_btn_add_spot_light = GUI::addButton();
   m_btn_add_spot_light->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -190.0f,Engine::getWindowHeight()-430.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "add_spot_light");
   m_btn_add_spot_light->setInactive();
 
 
-  m_txt_add_object_static = GUI::getText();
+  m_txt_add_object_static = GUI::addText();
   m_txt_add_object_static->setPosition(glm::vec2(Engine::getWindowWidth() -170.0f,Engine::getWindowHeight()-365.0f));
   m_txt_add_object_static->setScale(0.22f);
   m_txt_add_object_static->setColor(glm::vec3(0,0,0));
   m_txt_add_object_static->setText("Add static  Object");
   m_txt_add_object_static->setInactive();
 
-  m_btn_add_object_static = GUI::getButton();
+  m_btn_add_object_static = GUI::addButton();
   m_btn_add_object_static->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -190.0f,Engine::getWindowHeight()-365.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "add_object_static");
   m_btn_add_object_static->setInactive();
 
 
-  m_txt_add_object = GUI::getText();
+  m_txt_add_object = GUI::addText();
   m_txt_add_object->setPosition(glm::vec2(Engine::getWindowWidth() -170.0f,Engine::getWindowHeight()-385.0f));
   m_txt_add_object->setScale(0.22f);
   m_txt_add_object->setColor(glm::vec3(0,0,0));
   m_txt_add_object->setText("Add dynamic Object");
   m_txt_add_object->setInactive();
 
-  m_btn_add_object = GUI::getButton();
+  m_btn_add_object = GUI::addButton();
   m_btn_add_object->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -190.0f,Engine::getWindowHeight()-385.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "add_object");
   m_btn_add_object->setInactive();
 
-  m_txt_del_object = GUI::getText();
+  m_txt_del_object = GUI::addText();
   m_txt_del_object->setPosition(glm::vec2(Engine::getWindowWidth() -170.0f,Engine::getWindowHeight()-405.0f));
   m_txt_del_object->setScale(0.22f);
   m_txt_del_object->setColor(glm::vec3(0,0,0));
   m_txt_del_object->setText("Delete Object");
   m_txt_del_object->setInactive();
 
-  m_btn_del_object = GUI::getButton();
+  m_btn_del_object = GUI::addButton();
   m_btn_del_object->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -190.0f,Engine::getWindowHeight()-405.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "delete_object");
   m_btn_del_object->setInactive();
 
 
 
-  m_txt_add_skybox = GUI::getText();
+  m_txt_add_skybox = GUI::addText();
   m_txt_add_skybox->setPosition(glm::vec2(Engine::getWindowWidth() -170.0f,Engine::getWindowHeight()-515.0f));
   m_txt_add_skybox->setScale(0.22f);
   m_txt_add_skybox->setColor(glm::vec3(0,0,0));
   m_txt_add_skybox->setText("Add Skybox");
   m_txt_add_skybox->setInactive();
 
-  m_btn_add_skybox = GUI::getButton();
+  m_btn_add_skybox = GUI::addButton();
   m_btn_add_skybox->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -190.0f,Engine::getWindowHeight()-515.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "add_skybox");
   m_btn_add_skybox->setInactive();
 
 
  
-  m_txt_coords = GUI::getText();
+  m_txt_coords = GUI::addText();
   m_txt_coords->setPosition(glm::vec2(Engine::getWindowWidth() -190.0f,Engine::getWindowHeight()-50.0f));
   m_txt_coords->setScale(0.25f);
   m_txt_coords->setColor(glm::vec3(0,0,0));
@@ -250,53 +250,53 @@ bool SceneEditor::initialize()
 
 
   // x edit
-  m_edittxt_x_coord = GUI::getEditText();
+  m_edittxt_x_coord = GUI::addEditText();
   m_edittxt_x_coord->set( "x", glm::vec2(Engine::getWindowWidth() -120.0f,Engine::getWindowHeight()-65.0f), 0.22f, glm::vec3(0,0,0));
   m_edittxt_x_coord->setInactive();
   m_edittxt_x_coord->setDescriptor("x_coord");
 
-  m_btn_x_plus = GUI::getButton();
+  m_btn_x_plus = GUI::addButton();
   m_btn_x_plus->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -175.0f,Engine::getWindowHeight()-68.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "x_plus");
   m_btn_x_plus->setInactive();
-  m_btn_x_minus = GUI::getButton();
+  m_btn_x_minus = GUI::addButton();
   m_btn_x_minus->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -150.0f,Engine::getWindowHeight()-68.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "x_minus");
   m_btn_x_minus->setInactive();
 
   // y edit
-  m_edittxt_y_coord = GUI::getEditText();
+  m_edittxt_y_coord = GUI::addEditText();
   m_edittxt_y_coord->set( "y", glm::vec2(Engine::getWindowWidth() -120.0f,Engine::getWindowHeight()-80.0f), 0.22f, glm::vec3(0,0,0));
   m_edittxt_y_coord->setInactive();
   m_edittxt_y_coord->setDescriptor("y_coord");
 
-  m_btn_y_plus = GUI::getButton();
+  m_btn_y_plus = GUI::addButton();
   m_btn_y_plus->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -175.0f,Engine::getWindowHeight()-83.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "y_plus");
   m_btn_y_plus->setInactive();
-  m_btn_y_minus = GUI::getButton();
+  m_btn_y_minus = GUI::addButton();
   m_btn_y_minus->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -150.0f,Engine::getWindowHeight()-83.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "y_minus");
   m_btn_y_minus->setInactive();
 
   // z edit
-  m_edittxt_z_coord = GUI::getEditText();
+  m_edittxt_z_coord = GUI::addEditText();
   m_edittxt_z_coord->set( "z", glm::vec2(Engine::getWindowWidth() -120.0f,Engine::getWindowHeight()-95.0f), 0.22f, glm::vec3(0,0,0));
   m_edittxt_z_coord->setInactive();
   m_edittxt_z_coord->setDescriptor("z_coord");
 
-  m_btn_z_plus = GUI::getButton();
+  m_btn_z_plus = GUI::addButton();
   m_btn_z_plus->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -175.0f,Engine::getWindowHeight()-98.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "z_plus");
   m_btn_z_plus->setInactive();
-  m_btn_z_minus = GUI::getButton();
+  m_btn_z_minus = GUI::addButton();
   m_btn_z_minus->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -150.0f,Engine::getWindowHeight()-98.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "z_minus");
   m_btn_z_minus->setInactive();
 
 
 
-  m_txt_rotation = GUI::getText();
+  m_txt_rotation = GUI::addText();
   m_txt_rotation->setPosition(glm::vec2(Engine::getWindowWidth() -190.0f,Engine::getWindowHeight()-120.0f));
   m_txt_rotation->setScale(0.25f);
   m_txt_rotation->setColor(glm::vec3(0,0,0));
@@ -304,72 +304,72 @@ bool SceneEditor::initialize()
   m_txt_rotation->setInactive();
 
   // rot 1 edit
-  m_edittxt_x_rot = GUI::getEditText();
+  m_edittxt_x_rot = GUI::addEditText();
   m_edittxt_x_rot->set( "x rot", glm::vec2(Engine::getWindowWidth() -120.0f,Engine::getWindowHeight()-140.0f), 0.22f, glm::vec3(0,0,0));
   m_edittxt_x_rot->setInactive();
   m_edittxt_x_rot->setDescriptor("x_rot");
 
-  m_btn_rot_x_plus = GUI::getButton();
+  m_btn_rot_x_plus = GUI::addButton();
   m_btn_rot_x_plus->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -175.0f,Engine::getWindowHeight()-143.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "x_rot_plus");
   m_btn_rot_x_plus->setInactive();
-  m_btn_rot_x_minus = GUI::getButton();
+  m_btn_rot_x_minus = GUI::addButton();
   m_btn_rot_x_minus->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -150.0f,Engine::getWindowHeight()-143.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "x_rot_minus");
   m_btn_rot_x_minus->setInactive();
 
   // rot y edit
-  m_edittxt_y_rot = GUI::getEditText();
+  m_edittxt_y_rot = GUI::addEditText();
   m_edittxt_y_rot->set( "y rot", glm::vec2(Engine::getWindowWidth() -120.0f,Engine::getWindowHeight()-155.0f), 0.22f, glm::vec3(0,0,0));
   m_edittxt_y_rot->setInactive();
   m_edittxt_y_rot->setDescriptor("y_rot");
 
-  m_btn_rot_y_plus = GUI::getButton();
+  m_btn_rot_y_plus = GUI::addButton();
   m_btn_rot_y_plus->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -175.0f,Engine::getWindowHeight()-158.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "y_rot_plus");
   m_btn_rot_y_plus->setInactive();
-  m_btn_rot_y_minus = GUI::getButton();
+  m_btn_rot_y_minus = GUI::addButton();
   m_btn_rot_y_minus->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -150.0f,Engine::getWindowHeight()-158.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "y_rot_minus");
   m_btn_rot_y_minus->setInactive();
 
   // rot z edit
-  m_edittxt_z_rot = GUI::getEditText();
+  m_edittxt_z_rot = GUI::addEditText();
   m_edittxt_z_rot->set( "z rot", glm::vec2(Engine::getWindowWidth() -120.0f,Engine::getWindowHeight()-170.0f), 0.22f, glm::vec3(0,0,0));
   m_edittxt_z_rot->setInactive();
   m_edittxt_z_rot->setDescriptor("z_rot");
 
-  m_btn_rot_z_plus = GUI::getButton();
+  m_btn_rot_z_plus = GUI::addButton();
   m_btn_rot_z_plus->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -175.0f,Engine::getWindowHeight()-173.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "z_rot_plus");
   m_btn_rot_z_plus->setInactive();
-  m_btn_rot_z_minus = GUI::getButton();
+  m_btn_rot_z_minus = GUI::addButton();
   m_btn_rot_z_minus->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -150.0f,Engine::getWindowHeight()-173.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "z_rot_minus");
   m_btn_rot_z_minus->setInactive();
 
   // scale 
-  m_edittxt_scale = GUI::getEditText();
+  m_edittxt_scale = GUI::addEditText();
   m_edittxt_scale->set( "scale", glm::vec2(Engine::getWindowWidth() -40.0f,Engine::getWindowHeight()-140.0f), 0.22f, glm::vec3(0,0,0));
   m_edittxt_scale->setInactive();
   m_edittxt_scale->setDescriptor("scale");
 
-  m_btn_scale_plus = GUI::getButton();
+  m_btn_scale_plus = GUI::addButton();
   m_btn_scale_plus->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -95.0f,Engine::getWindowHeight()-143.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "scale_plus");
   m_btn_scale_plus->setInactive();
-  m_btn_scale_minus = GUI::getButton();
+  m_btn_scale_minus = GUI::addButton();
   m_btn_scale_minus->intitialize("resources/btn.png","",glm::vec2(Engine::getWindowWidth() -70.0f,Engine::getWindowHeight()-143.0f),glm::vec2(0.5f,0.5f),
     glm::vec3(0,0,0), "scale_minus");
   m_btn_scale_minus->setInactive();
 
 
-  m_edittxt_light_color = GUI::getEditText();
+  m_edittxt_light_color = GUI::addEditText();
   m_edittxt_light_color->set( "RGB", glm::vec2(Engine::getWindowWidth() -120.0f,Engine::getWindowHeight()-190.0f), 0.22f, glm::vec3(0,0,0));
   m_edittxt_light_color->setInactive();
   m_edittxt_light_color->setDescriptor("light_color");
 
-  m_txt_light_color = GUI::getText();
+  m_txt_light_color = GUI::addText();
   m_txt_light_color->setPosition(glm::vec2(Engine::getWindowWidth() -190.0f,Engine::getWindowHeight()-190.0f));
   m_txt_light_color->setScale(0.25f);
   m_txt_light_color->setColor(glm::vec3(0,0,0));

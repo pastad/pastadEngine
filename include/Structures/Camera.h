@@ -102,6 +102,10 @@ public:
     glm::vec3 getFallVector();
     void setFallVector(glm::vec3 val);
 
+    // allow jump getter setter
+    void allowUpDownMovement();
+    void dontAllowUpDownMovement();
+
     // returns the corner points of the frustrum
     std::vector<glm::vec3> getFrustrumCorners(float min_bound, float max_bound);
 
@@ -138,6 +142,9 @@ private:
 
     // true if camera is allowed to move up/down in Y 
     bool m_vertical_movement_allowed;
+
+    // true if camera can 'jump'
+    bool m_up_down_movement_allowed;
 
     // holds the exposure for the camera
     float m_exposure;

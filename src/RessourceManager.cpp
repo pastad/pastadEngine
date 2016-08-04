@@ -37,7 +37,7 @@ Model * RessourceManager::loadModel(std::string path, bool instanced)
 	if( it != m_models.end() )
 	{
 		model = it->second;
-		Engine::getLog()->log("RessourceManager","found model",path);
+		//Engine::getLog()->log("RessourceManager","found model",path);
 	}
 	else
 	{

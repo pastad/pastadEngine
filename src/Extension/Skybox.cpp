@@ -91,7 +91,7 @@ bool Skybox::load(const std::string basef)
   std::stringstream ss;
   ss <<basef << "_rt.jpg";
   texs.push_back(ss.str());
-   ss.str(""); ss <<basef << "_lf.jpg";
+  ss.str(""); ss <<basef << "_lf.jpg";
   texs.push_back(ss.str());
   ss.str(""); ss <<basef << "_up.jpg";
   texs.push_back(ss.str());
@@ -108,8 +108,12 @@ bool Skybox::load(const std::string basef)
     if(image == nullptr )
     {
       Engine::getLog()->log("Skybox", "skybox couldn't be loaded :", texs[i]);
+      
+      Engine::getLog()->log("Skybox","skybox couldn't be loaded :", SOIL_last_result() );
       return false;
     }
+
+    Engine::getLog()->log("Skybox", "skybox loaded :", texs[i]);
 
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB,
                   width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);

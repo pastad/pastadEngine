@@ -19,7 +19,7 @@
 
 #include <glm/gtx/rotate_vector.hpp>
 
-#define DAY_LENGTH 10
+#define DAY_LENGTH 60
 #define DEG_PER_SEC 360.0f / DAY_LENGTH
  
 Game::Game()
@@ -49,12 +49,13 @@ bool Game::initialize()
   m_scene = new Scene();
   m_scene->load("island-scene.xml");
 
-  m_scene->setSkybox("game/models/skybox/sk1");
+  m_scene->setSkybox("game/models/skybox1/sk1");
 
   m_scene->getCamera()->setRotationAllowed();
   m_scene->getCamera()->applyPhysicsDrop(1.7f);
   m_scene->getCamera()->dontAllowUpDownTranslation();
   m_scene->getCamera()->setSurroundingOffset(0.2f);
+  m_scene->getCamera()->dontAllowUpDownMovement();
 
   // set the engine specs
   Engine::setPostProcessing(PP_FXAA,true);
@@ -149,7 +150,7 @@ void Game::update()
 
   // debug triggers  ------------- DELETE ME AT END
    if(Engine::isKeyReleasedAndPressed('F'))
-    m_mobs->spawnRandom(m_scene, 1);
+    m_mobs->spawnNextWave();
   if(Engine::isKeyReleasedAndPressed('P'))
   {
     glm::vec3 p = m_player->getPosition() - glm::vec3(0,Engine::getScene()->getCamera()->getBottomOffset(),0.0f);
