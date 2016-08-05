@@ -244,7 +244,7 @@ void Scene::renderSkybox(SkyboxShader * skybox_shader)
   skybox_shader->setProjection(m_camera->getProjection());
 
   if(m_skybox != nullptr)
-    m_skybox->render();
+    m_skybox->render(skybox_shader);
 }
 
 
@@ -296,6 +296,7 @@ void Scene::refreshRenderObjects()
     (*ito)->unsetExtractionFlag();
   }
   refreshRenderObjectsSceneTree();
+  //std::cout << m_render_objects.size()<<std::endl;
   //m_render_objects.clear();
   glm::vec3 v = m_camera->getDirection();
   v = glm::normalize(v);
@@ -311,7 +312,7 @@ void Scene::refreshRenderObjects()
     if( ( ((*it)->getPriorityRender() ) || m_camera->insideFrustrum((*it)) )  && ((*it)->isVisible())  ) //(angle_min < m_camera->getFOV())
     {
       //std::cout << angle_mid << std::endl;
-      //std::cout << (*it)->getIdentifier()<<std::endl;*/
+      //std::cout << (*it)->getIdentifier()<<std::endl;
     
       std::map< std::string , std::vector<Object *> >::iterator entry = m_render_objects.find( (*it)->getIdentifier() );
       if(entry != m_render_objects.end())
@@ -406,12 +407,18 @@ bool Scene::load(std::string path)
       if( type == "Object")
       {
         std::string file_name = "";
+        bool static_ob = false ;
         tinyxml2::XMLElement * el = child->FirstChildElement("Identifier");
         if( el != nullptr)
         {
             file_name =std::string( el->Attribute("value") );
         }
-        Object * new_object = addObject(file_name,glm::vec3(0,0,0), false , false, true); 
+        el = child->FirstChildElement("Static");
+        if( el != nullptr)
+        {
+            static_ob =el->BoolAttribute("value") ;
+        }
+        Object * new_object = addObject(file_name,glm::vec3(0,0,0), false , static_ob, static_ob); 
         new_object->load(child);
         new_object->refreshAABB();
         m_tree_root->insert(new_object);
@@ -540,7 +547,7 @@ Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, 
     else
       m_objects_dynamic.push_back(obj);
     m_models[path] = m;
-    if(insert_in_tree)
+    if(insert_in_tree )
       m_tree_root->insert(obj);             
     refreshRenderObjects();
   }
@@ -683,7 +690,7 @@ Terrain * Scene::addTerrain()
 
 // skybox
 
-bool Scene::setSkybox(const std::string path)
+Skybox *  Scene::setSkybox(const std::string path)
 {
   if(m_skybox != nullptr)
   {
@@ -698,10 +705,10 @@ bool Scene::setSkybox(const std::string path)
   {
     delete m_skybox;
     m_skybox = nullptr;
-    return false;  
+    return m_skybox;  
   }
 
-  return true;
+  return m_skybox;
 }
 
 //camera

@@ -37,12 +37,12 @@ int main(void)
 
 
 
-  bool launch_game = true;
+  bool launch_game = false;
 
   if(launch_game)
   {
 
-    engine.initialize(1240, 720, RENDER_SUBSYSTEM, false, false);
+    engine.initialize(1240, 720, PHYSIC_SUBSYSTEM | AUDIO_SUBSYSTEM, false, false);
 
     
     GameMenu * game_menu = new GameMenu();   
@@ -67,8 +67,8 @@ int main(void)
 
         while(engine.running())
         {        
-          engine.update();
-          game->update();   
+          game->update(); 
+          engine.update();            
           engine.render();
         }
       }

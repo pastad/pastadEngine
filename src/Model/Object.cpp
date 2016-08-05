@@ -36,7 +36,6 @@ Object::~Object()
 void Object::move(glm::vec3 direction)
 {
   setPosition( getPosition() + direction  ); 
-  m_model->bufferedMatricesShouldBeRefreshed();
 }
 
 void Object::rotate(glm::vec3 delta)
@@ -62,7 +61,6 @@ void Object::rotate(glm::vec3 delta)
 
   setRotation( rot );
   refreshAABB();
-  m_model->bufferedMatricesShouldBeRefreshed();
 }
 
 
@@ -370,7 +368,6 @@ void Object::setPosition(glm::vec3 p)
   m_needs_fall_check = true;
   if(Engine::getScene() != nullptr)
     Engine::getScene()->refreshLights();
-  m_model->bufferedMatricesShouldBeRefreshed();
 }
 
 void Object::setRotation(glm::vec3 r)
@@ -379,7 +376,6 @@ void Object::setRotation(glm::vec3 r)
   refreshAABB();
   if(Engine::getScene() != nullptr)
     Engine::getScene()->refreshLights();
-  m_model->bufferedMatricesShouldBeRefreshed();
 }
 
 
@@ -389,7 +385,6 @@ void Object::setScale(glm::vec3 s)
   refreshAABB();  
   if(Engine::getScene() != nullptr)
     Engine::getScene()->refreshLights();
-  m_model->bufferedMatricesShouldBeRefreshed();
 }
 
 glm::mat4 Object::getModelMatrix()

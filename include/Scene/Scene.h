@@ -44,8 +44,8 @@ public:
   // renders the skybox of the scene
   void renderSkybox(SkyboxShader * sybox_shader);
 
-  // sets the skybox for the scene  returns | true if succeeded
-  bool setSkybox(const std::string path);
+  // sets the skybox for the scene  returns | Skybox * or nullptr if failed
+  Skybox * setSkybox(const std::string path);
 
   // sets the shadow textures
   void setupLightsForShadingPass(RenderShader * render_shader);

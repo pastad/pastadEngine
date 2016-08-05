@@ -10,6 +10,7 @@
 #include "RenderSubsystem.h"
 #include "IOSubsystem.h"
 #include "PhysicSubsystem.h"
+#include "AudioSubsystem.h"
 #include "EngineGUI.h"
 #include "SceneEditor.h"
 #include "Light.h"
@@ -20,6 +21,7 @@ Log * Engine::m_log;
 RenderSubsystem * Engine::m_render_system;
 IOSubsystem * Engine::m_io_system;
 PhysicSubsystem * Engine::m_physic_system;
+AudioSubsystem * Engine::m_audio_system;
 GLFWwindow * Engine::m_window;
 unsigned int Engine::m_system_flags;
 Scene * Engine::m_scene;
@@ -72,6 +74,7 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 	m_render_system =  new RenderSubsystem();
 	m_io_system =  new IOSubsystem();
 	m_physic_system = new PhysicSubsystem();
+  m_audio_system = new AudioSubsystem();
 
 	// set minimal systems (Render,IO)
 	m_system_flags = system_flags;
@@ -218,12 +221,23 @@ bool Engine::startUpSubsystems()
     if(! m_physic_system->startUp() )
       return false;
   }
+  if( m_system_flags & AUDIO_SUBSYSTEM )
+  {
+    if(! m_audio_system->startUp() )
+      return false;
+  }
+
 
   return true;
 }
 
 bool Engine::shutDownSubsystems()
 { 
+  if( m_system_flags & AUDIO_SUBSYSTEM )
+  {
+    if(! m_audio_system->shutDown() )
+      return false;
+  }
   if( m_system_flags & PHYSIC_SUBSYSTEM )
   {
     if(! m_physic_system->shutDown() )
@@ -239,6 +253,7 @@ bool Engine::shutDownSubsystems()
     if(! m_io_system->shutDown() )
       return false;
   }
+
 
   return true;
 }

@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-GameMenu::GameMenu():m_launch_game(false)
+GameMenu::GameMenu():m_launch_game(false),m_selected(0)
 {
 }
 GameMenu::~GameMenu()

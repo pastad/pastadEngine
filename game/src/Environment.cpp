@@ -58,7 +58,8 @@ bool Environment::initialize(Scene * scene)
     float r = static_cast <float> (std::rand()) / static_cast <float> (RAND_MAX);
     float dist_f = dist +r;
     glm::vec3 d = glm::rotateY(glm::vec3(1,0,0), (float)random_variable) * (float) dist_f;
-    Object * obj =  scene->addObjectInstanced("game/models/grass.obj",d, false ); 
+    Object * obj =  scene->addObjectInstanced("game/models/grass2.obj",d, false ); 
+
   }
 
   return true;
@@ -136,10 +137,11 @@ void Environment::update(float delta, float sun_strength, Player * player, Mobs 
   for(std::vector<EnergyShot*>::iterator it = m_energy_shots.begin(); it != m_energy_shots.end(); )
   {
     bool mob_killed;
+
+    bool remove_shot =(*it)->update(delta, mobs,&mob_killed, this);
+
     if( (*it)->getTarget() != nullptr )
     {    
-      bool remove_shot =(*it)->update(delta, mobs,&mob_killed, this);
-
       if( mob_killed)
       {
         if(mobs->getMobs().size() <=1 )

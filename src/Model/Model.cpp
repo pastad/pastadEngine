@@ -24,7 +24,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-Model::Model(std::string path, bool instanced):m_path(path), m_instanced(instanced),m_instanced_matrices_refresh_needed(false)
+Model::Model(std::string path, bool instanced):m_path(path), m_instanced(instanced)
 {	
 }
 
@@ -55,8 +55,8 @@ void Model::render(RenderBaseShader * render_shader, std::vector<Object *> objec
     if( (*it)->isVisible() )
       matrices.insert(matrices.end(),  (*it)->getModelMatrix()  );
   }*/
-  if(m_instanced_matrices_refresh_needed)
-    refreshBufferedMatrices();
+  //if(m_instanced_matrices_refresh_needed)
+    refreshBufferedMatrices(objects);
 
   if( !m_animated )
   {
@@ -425,8 +425,6 @@ Object * Model::getInstance()
   Object * obj = new Object(m_path, this);
 
   m_instances.insert(m_instances.end(),obj);
-
-  bufferedMatricesShouldBeRefreshed();
   
   return obj;
 }
@@ -443,18 +441,13 @@ void Model::removeInstance( Object * obj)
       it++;
   }
 }
-void Model::bufferedMatricesShouldBeRefreshed()
-{
-  if(m_instanced)
-    m_instanced_matrices_refresh_needed =true;
-}
 
 // refreshers
 
-void Model::refreshBufferedMatrices()
+void Model::refreshBufferedMatrices(std::vector<Object *> instances)
 {
   std::vector<glm::mat4> matrices;
-  for(std::vector<Object *>::iterator it = m_instances.begin(); it != m_instances.end();it++)
+  for(std::vector<Object *>::iterator it = instances.begin(); it != instances.end();it++)
   {
     if( (*it)->isVisible() )
       matrices.insert(matrices.end(),  (*it)->getModelMatrix()  );
@@ -468,9 +461,8 @@ void Model::refreshBufferedMatrices()
         (*it)->bufferModelMatrices(&matrices);
       }
       m_num_instanced_buffered_matrices = matrices.size();
-      Engine::getLog()->log("Model","Rebuffered instanced matrices");
+     // Engine::getLog()->log("Model","Rebuffered instanced matrices");
     }
 
   }
-  m_instanced_matrices_refresh_needed = false;
 }

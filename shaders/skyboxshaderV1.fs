@@ -14,12 +14,12 @@ layout(location = 2 ) out vec3 NormalData;
 layout(location = 3 ) out vec3 ColorData;
 layout(location = 4 ) out vec3 MaterialData;
 
-
-
 layout(binding=0) uniform samplerCube cubeTexture;
 
 
 uniform int MaterialIndex;
+
+uniform float LightStrength;
 
 // MAIN    -----------------------------------------------------------
 
@@ -31,7 +31,7 @@ void main()
 
   PositionData = Position;
   NormalData = vec3(99,99,99);
-  ColorData = color.xyz;
+  ColorData = color.xyz * LightStrength;
   MaterialData = vec3(99999,0,0); 
   FragColor = vec4(1,0,0,0);
 }

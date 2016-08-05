@@ -12,6 +12,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Subsystems/RenderSubsystem.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Subsystems/IOSubsystem.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Subsystems/PhysicSubsystem.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Subsystems/AudioSubsystem.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/Shader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/RenderShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/RenderBaseShader.cpp
@@ -56,6 +57,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Script/ScriptElement.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Script/RotationScriptElement.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Script/ExternalTriggerScriptElement.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/Audio/AudioClip.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RessourceManager.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Helper.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/LuaScript.cpp
@@ -83,6 +85,7 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems/RenderSubsystem.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems/IOSubsystem.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems/PhysicSubsystem.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems/AudioSubsystem.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/Shader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/RenderShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/RenderBaseShader.h
@@ -127,6 +130,7 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Script/ScriptElement.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Script/RotationScriptElement.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Script/ExternalTriggerScriptElement.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/include/Audio/AudioClip.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RessourceManager.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Helper.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/LuaScript.h
@@ -151,7 +155,7 @@ find_package(Freetype REQUIRED)
 find_package(Boost REQUIRED)
 find_package(Lua51 REQUIRED)
 
-include_directories( ${OPENGL_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} {GLFW_INCLUDE_DIRS} {ASSIMP_INCLUDE_DIRS} {SOIL_INCLUDE_DIRS} {BOOST_INCLUDE_DIRS}  ${LUA_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include
+include_directories( ${OPENGL_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} {GLFW_INCLUDE_DIRS} {ASSIMP_INCLUDE_DIRS} {SOIL_INCLUDE_DIRS} {BOOST_INCLUDE_DIRS}  ${LUA_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include ${PORTAUDIO2_INCLUDE_DIRS}
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures
@@ -163,6 +167,7 @@ ${CMAKE_CURRENT_SOURCE_DIR}/include/Extension
 ${CMAKE_CURRENT_SOURCE_DIR}/include/GUI
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Effects
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Script
+${CMAKE_CURRENT_SOURCE_DIR}/include/Audio
 ${CMAKE_CURRENT_SOURCE_DIR}/external
 ${CMAKE_CURRENT_SOURCE_DIR}/external/tinyxml2
 
@@ -174,6 +179,6 @@ LINK_DIRECTORIES(${GLFW_LIBRARY_DIR} ${FREETYPE_LIBRARY_DIRS} ${ASSIMP_LIBRARY_D
  
 add_executable(Engine main.cpp ${SOURCE} ${HEADERS})
 
-target_link_libraries(Engine tinyxml2  GL glfw3 assimp boost_system boost_filesystem SOIL freetype lua5.1  ${LUA_LIBRARIES} ${GLFW_STATIC_LIBRARIES}  ${GLFW_STATIC_LIBRARIES}   ${OPENGL_LIBRARIES} X11 Xcursor Xinerama Xxf86vm Xi Xrandr pthread dl  )
+target_link_libraries(Engine tinyxml2 portaudio GL glfw3 assimp boost_system boost_filesystem SOIL freetype lua5.1  ${LUA_LIBRARIES} ${GLFW_STATIC_LIBRARIES}  ${GLFW_STATIC_LIBRARIES}   ${OPENGL_LIBRARIES} X11 Xcursor Xinerama Xxf86vm Xi Xrandr pthread dl  )
 
 

@@ -19,6 +19,7 @@ class Scene;
 class RenderSubsystem;
 class IOSubsystem;
 class PhysicSubsystem;
+class AudioSubsystem;
 class GUI;
 class EngineGUI;
 class Object;
@@ -29,7 +30,8 @@ enum SubsystemType
 {
 	RENDER_SUBSYSTEM = 1,
 	IO_SUBSYSTEM = 2,
-	PHYSIC_SUBSYSTEM = 4
+	PHYSIC_SUBSYSTEM = 4,
+	AUDIO_SUBSYSTEM = 8
 };
 enum PostprocessType
 {
@@ -163,6 +165,7 @@ private:
 	static RenderSubsystem * m_render_system;
 	static IOSubsystem  * m_io_system;
 	static PhysicSubsystem  * m_physic_system;
+	static AudioSubsystem  * m_audio_system;
 
 	// gl context
 	static GLFWwindow * m_window;

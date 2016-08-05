@@ -9,6 +9,8 @@
 
 #include "tinyxml2.h"
 
+class SkyboxShader;
+
 // class to represent the skybox
 
 class Skybox
@@ -23,13 +25,16 @@ class Skybox
     bool load(const std::string basef);
 
     // renders the skybox
-    void render();
+    void render(SkyboxShader * shader);
 
     //saves the skybox
     void save(tinyxml2::XMLNode * parent, tinyxml2::XMLDocument* document);
 
     // loads the skybox from xml
     bool load( tinyxml2::XMLElement *  element);
+
+    // sets the light strength for the skybox
+    void setLightStrength(float strength);
 
   protected:
 
@@ -43,6 +48,9 @@ class Skybox
 
     // the base file of the skybox
     std::string m_base_file;
+
+    // the light strength
+    float m_light_strength;
 };
 
 #endif // SKYBOX_H

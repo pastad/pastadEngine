@@ -9,6 +9,7 @@
 #include "Water.h"
 #include "Light.h"
 #include "Camera.h"
+#include "Skybox.h"
 
 #include "Player.h"
 #include "Mobs.h"
@@ -49,7 +50,7 @@ bool Game::initialize()
   m_scene = new Scene();
   m_scene->load("island-scene.xml");
 
-  m_scene->setSkybox("game/models/skybox1/sk1");
+  m_skybox = m_scene->setSkybox("game/models/skybox1/sk1");
 
   m_scene->getCamera()->setRotationAllowed();
   m_scene->getCamera()->applyPhysicsDrop(1.7f);
@@ -119,11 +120,13 @@ void Game::update()
   }
 
   // turn the sun and calculate a strength value for refreshing energy
- // glm::vec3 v = glm::rotateZ(m_sun->getDirection(), glm::radians(DEG_PER_SEC*delta)  ) ;
-//  m_sun->setDirection(v);
+  glm::vec3 v = glm::rotateZ(m_sun->getDirection(), glm::radians(DEG_PER_SEC*delta)  ) ;
+  m_sun->setDirection(v);
   float sun_strength = -1.0f * m_sun->getDirection().y;
   if(sun_strength <0.0f)
     sun_strength = 0.0f;
+
+  m_skybox->setLightStrength(sun_strength);
 
   // do the spawns here
   if( (m_game_time > DAY_LENGTH / 2.0f) && (!m_spawn_done) )

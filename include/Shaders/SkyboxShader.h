@@ -23,6 +23,9 @@ class SkyboxShader : public Shader
     void setView(glm::mat4 view); 
     void setProjection(glm::mat4 projection);
 
+    //sets the strength of the light | darkens the skybox
+    void setLightStrength(float strength);
+
     // binds the shader
     void use();
 

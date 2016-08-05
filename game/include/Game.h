@@ -9,6 +9,7 @@ class Mobs;
 class Environment;
 
 class Light;
+class Skybox;
 
 // the main class of the game
 
@@ -42,6 +43,8 @@ private:
   Environment * m_environment;
 
   Light * m_sun;
+
+  Skybox * m_skybox;
 
   // day time 
   float m_game_time;

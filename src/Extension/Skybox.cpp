@@ -9,6 +9,8 @@
 #include "Engine.h"
 #include "Log.h"
 
+#include "SkyboxShader.h"
+
 
 GLfloat Skybox::m_verts[108] =
 {
@@ -55,7 +57,7 @@ GLfloat Skybox::m_verts[108] =
      1.0f, -1.0f,  1.0f
 };
 
-Skybox::Skybox()
+Skybox::Skybox(): m_light_strength(1.0f)
 {
 }
 
@@ -134,8 +136,11 @@ bool Skybox::load(const std::string basef)
   return true;
 }
 
-void Skybox::render()
+void Skybox::render(SkyboxShader * shader)
 {
+  shader->use();
+  shader->setLightStrength(m_light_strength);
+
   glDepthFunc(GL_LEQUAL);
 
   glBindVertexArray(m_vao);
@@ -164,4 +169,9 @@ bool Skybox::load( tinyxml2::XMLElement *  element)
     return load(m_base_file);
   }
   return false;
+}
+
+void Skybox::setLightStrength(float strength)
+{
+  m_light_strength = strength;
 }
