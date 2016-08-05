@@ -3,6 +3,8 @@
 #include "Log.h"
 #include "Engine.h"
 
+#define M_PI  3.14159265358979323846264338327950288
+
 
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/transform.hpp>

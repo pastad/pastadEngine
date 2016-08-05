@@ -394,9 +394,9 @@ const aiNodeAnim* Model::findNodeAnim(const aiAnimation* pAnimation, const std::
   return NULL;
 }
 
-uint Model::findPosition(float animation_time, const aiNodeAnim* pNodeAnim)
+unsigned int Model::findPosition(float animation_time, const aiNodeAnim* pNodeAnim)
 {
-  for (uint i = 0 ; i < pNodeAnim->mNumPositionKeys - 1 ; i++)
+  for (unsigned int i = 0 ; i < pNodeAnim->mNumPositionKeys - 1 ; i++)
   {
     if (animation_time < (float)pNodeAnim->mPositionKeys[i + 1].mTime)
       return i;
@@ -407,11 +407,11 @@ uint Model::findPosition(float animation_time, const aiNodeAnim* pNodeAnim)
   return 0;
 }
 
-uint Model::findRotation(float animation_time, const aiNodeAnim* pNodeAnim)
+unsigned int Model::findRotation(float animation_time, const aiNodeAnim* pNodeAnim)
 {
   assert(pNodeAnim->mNumRotationKeys > 0);
 
-  for (uint i = 0 ; i < pNodeAnim->mNumRotationKeys - 1 ; i++)
+  for (unsigned int i = 0 ; i < pNodeAnim->mNumRotationKeys - 1 ; i++)
   {
     if (animation_time < (float)pNodeAnim->mRotationKeys[i + 1].mTime)
       return i;    
@@ -421,11 +421,11 @@ uint Model::findRotation(float animation_time, const aiNodeAnim* pNodeAnim)
   return 0;
 }
 
-uint Model::findScaling(float animation_time, const aiNodeAnim* pNodeAnim)
+unsigned int Model::findScaling(float animation_time, const aiNodeAnim* pNodeAnim)
 {
   assert(pNodeAnim->mNumScalingKeys > 0);
 
-  for (uint i = 0 ; i < pNodeAnim->mNumScalingKeys - 1 ; i++)
+  for (unsigned int i = 0 ; i < pNodeAnim->mNumScalingKeys - 1 ; i++)
   {
     if (animation_time < (float)pNodeAnim->mScalingKeys[i + 1].mTime)
       return i;    

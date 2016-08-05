@@ -22,7 +22,7 @@
 #include "Game.h"
 #include "GameMenu.h"
 
-#include "LuaScript.h"
+//#include "LuaScript.h"
 
 void test_callback(Button * b)
 {

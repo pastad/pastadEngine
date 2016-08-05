@@ -7,6 +7,8 @@ Requirements:
   - SOIL     (place in external)
   - freetype
   - tinyxml2 (place in external)
+  
+ 
 
 gl-loader-file generated with https://bitbucket.org/alfonse/glloadgen/wiki/Home 
 
@@ -89,7 +91,7 @@ Done:
     - AnimatedObjects (Bone-Animation)
 
 
-
+"personal note for xcompile  ./../../lib/mxe/usr/bin/i686-w64-mingw32.static-cmake ."
 
 
 

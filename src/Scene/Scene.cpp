@@ -79,7 +79,7 @@ void Scene::update(SceneTreeElement * element,  float delta)
   std::vector< SceneTreeElement *> children = element->getChildren();
   std::vector< Object *> objects = element->getObjects();
 
-  std::vector<std::future<void>> updated;
+  //std::vector<std::future<void>> updated;
   for( int x=0;  x< objects.size(); x++)
   {    
     Object * obj =objects.at(x);

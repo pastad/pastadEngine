@@ -580,7 +580,7 @@ bool Engine::checkGUIsForButtonPresses(float x, float y)
 {
   bool ret = false;
 
-  std::vector<std::future<bool>> futures;
+ /* std::vector<std::future<bool>> futures;
 
   for( std::vector<GUI*>::iterator it = m_guis.begin(); it != m_guis.end();it++)
   {
@@ -606,8 +606,25 @@ bool Engine::checkGUIsForButtonPresses(float x, float y)
     bool ergeb = e.get();
     if(ergeb)
       ret = true;
-  } 
-
+  } */
+  
+  for( std::vector<GUI*>::iterator it = m_guis.begin(); it != m_guis.end();it++)
+  {
+    if( (*it)->isActive() )
+    {
+      if ( (*it)->checkButtonPressed(x,y))
+        ret = true;
+    }
+  }
+    
+  if(m_engine_gui->checkButtonPressed(x,y))
+    ret = true;
+  if(m_edit_mode)
+  {
+    if(m_scene_editor->checkButtonPressed(x,y))
+      ret = true;
+  }
+  
   return ret;
 }
 
