@@ -61,6 +61,8 @@ public:
   // sets the lights that should be rendered
   void setLights(std::vector<Light*> * lights);
 
+  std::vector<int> getEmmissiveMaterialIndices();
+
 
   // shadow specific ---------------------------------------------
 

@@ -6,8 +6,11 @@
 
 #include "Object.h"
 #include "Scene.h"
+#include "Model.h"
+#include "Material.h"
 
 #include <iostream>
+#include <map>
 
 #include "Script.h"
 #include "RotationScriptElement.h"
@@ -29,7 +32,11 @@ EnergyShot::~EnergyShot()
 bool EnergyShot::initialize(Scene * scene, Mob * target, glm::vec3 start_position, float damage)
 {
   m_object = scene->addObject("game/models/energy_remain.obj",start_position, false);
-
+  std::map<int, Material * > materials =  m_object->getModel()->getMaterials();
+  for(std::map<int,Material*>::iterator it = materials.begin(); it != materials.end();it++)
+  { 
+    it->second->setEmmissive(1.0f);
+  }             
   Script * script = m_object->addScript();
   RotationScriptElement * rse = script->addRotationScript();
   rse->setupAlways();

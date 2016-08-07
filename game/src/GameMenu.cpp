@@ -23,15 +23,15 @@ bool GameMenu::initialize()
 
   m_btn_play =  m_gui->addButton();
   m_btn_play->intitializeWithToggle("game/models/menu_play_toggled.png","game/models/menu_play.png",
-  glm::vec2(Engine::getWindowWidth()/2.0f-100.0f,Engine::getWindowHeight()/2.0f),  glm::vec2(0.5f,0.5f), "Play", true);
+  glm::vec2(Engine::getWindowWidth()/2.0f-100.0f,Engine::getWindowHeight()/2.0f),  glm::vec2(0.3f,0.3f), "Play", true);
 
   m_btn_credits =  m_gui->addButton();
   m_btn_credits->intitializeWithToggle("game/models/menu_credits_toggled.png","game/models/menu_credits.png",
-  glm::vec2(Engine::getWindowWidth()/2.0f-100.0f,Engine::getWindowHeight()/2.0f-50.0f),  glm::vec2(0.5f,0.5f), "Credits", false);
+  glm::vec2(Engine::getWindowWidth()/2.0f-100.0f,Engine::getWindowHeight()/2.0f-50.0f),  glm::vec2(0.3f,0.3f), "Credits", false);
 
   m_btn_exit =  m_gui->addButton();
   m_btn_exit->intitializeWithToggle("game/models/menu_exit_toggled.png","game/models/menu_exit.png",
-  glm::vec2(Engine::getWindowWidth()/2.0f-100.0f,Engine::getWindowHeight()/2.0f-100.0f),  glm::vec2(0.5f,0.5f), "Exit", false);
+  glm::vec2(Engine::getWindowWidth()/2.0f-100.0f,Engine::getWindowHeight()/2.0f-100.0f),  glm::vec2(0.3f,0.3f), "Exit", false);
 
   m_active = true;
 

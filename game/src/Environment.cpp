@@ -51,7 +51,7 @@ bool Environment::initialize(Scene * scene)
   std::srand(std::time(0)); //use current time as seed for random generator
    
   // test init
-  for(int x=0; x<1000;x++)
+  for(int x=0; x<500;x++)
   {
     int random_variable = std::rand() % 360;
     int dist = std::rand() % 40 +2;
@@ -115,10 +115,11 @@ void Environment::update(float delta, float sun_strength, Player * player, Mobs 
     if(dist < ENERGY_REACTION_CLOSE)
     {
        remain->rotate(glm::vec3(1,1,1) );
+      float amount = remain->getScale().x * ENERGY_AMOUNT;
       Engine::getScene()->removeObject(remain);
       delete remain;
       m_energy_remains.erase(it);
-      player->gainEngery(ENERGY_AMOUNT);
+      player->gainEngery(amount );
     }  
     else
     {

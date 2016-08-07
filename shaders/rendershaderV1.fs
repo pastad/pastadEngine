@@ -93,6 +93,7 @@ struct BaseLight
     vec3  DiffuseColor;
     vec3  SpecularColor;
     float Intensity;
+  //  float Emmissive;
 };
 struct Attenuation
 {
@@ -130,6 +131,14 @@ uniform SpotLight        SpotLights[MAX_SPOT_LIGHTS];
 
 // LIGHTS END --------------------------------------------------------
 
+float LinearizeDepth(float depth)
+{
+  float far_plane_dist = 1000.0f;
+  float near_plane_dist = 0.1f;
+  float z = depth *2.0 -1.0; 
+  return (2.0 * near_plane_dist * far_plane_dist) / (far_plane_dist + near_plane_dist - z * (far_plane_dist - near_plane_dist));  
+}
+
 // SHADOWS    --------------------------------------------------------
 
 uniform mat4 ShadowMatrices[MAX_DIRECTIONAL_SHADOWS+MAX_POINT_SHADOWS*6]; 
@@ -137,7 +146,7 @@ uniform int EnableShadows;
 
 layout(binding=19) uniform sampler3D JitterTex;
 
-float calcDirShadowPCF(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap)
+float calcDirShadowPCF(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap, float bias)
 {
   vec4 ShadowCoord = shadowMat * vec4(pos,1);  
   float sum = 1.0;
@@ -146,12 +155,43 @@ float calcDirShadowPCF(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap)
 
   if(ShadowCoord.z  >= 0)
   {    
+
+    //float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.015);
     sum = 0.0;
-    sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(-1,-1));
-    sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(1,-1));
-    sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(-1,1));
-    sum += textureProjOffset(shadowMap, ShadowCoord,ivec2(1,1));    
-    sum *= 0.25; 
+    float ts = textureProjOffset(shadowMap, ShadowCoord,ivec2(1,0));   
+    vec4 tShadowCoord = ShadowCoord;
+
+    tShadowCoord.xy +=   vec2(-1, -1) * texelSize;
+    ts = textureProj(shadowMap, tShadowCoord );
+    if(! (tShadowCoord.z-bias  > ts) )
+        sum += 1;    
+
+    tShadowCoord = ShadowCoord;
+    tShadowCoord.xy +=  vec2(1, -1) * texelSize;
+    ts = textureProj(shadowMap, tShadowCoord );
+    if(! (tShadowCoord.z+bias  > ts) )
+        sum += 1;    
+    tShadowCoord = ShadowCoord;
+    tShadowCoord.xy +=  vec2(-1, 1) * texelSize;
+    ts = textureProj(shadowMap, tShadowCoord );
+    if(! (tShadowCoord.z+bias  > ts) )
+        sum += 1;   
+
+    tShadowCoord = ShadowCoord;
+    tShadowCoord.xy +=  vec2(1, 1) * texelSize;
+    ts = textureProj(shadowMap, tShadowCoord );
+    if(! (tShadowCoord.z+bias  > ts) )
+        sum += 1;   
+
+    tShadowCoord = ShadowCoord;
+    tShadowCoord.xy +=  vec2(0, 0) * texelSize;
+    ts = textureProj(shadowMap, tShadowCoord );
+    if(! (tShadowCoord.z+bias  > ts) )
+        sum += 1;   
+ 
+      
+  
+    sum *= 0.20; 
   }
 
   return sum;
@@ -177,9 +217,13 @@ float calcDirShadowRandomSampling(vec3 pos,mat4 shadowMat,sampler2DShadow shadow
       vec4 jitteredOffset = texelFetch(JitterTex,offset,0) * softness * ShadowCoord.w;
 
       tShadowCoord.xy = ShadowCoord.xy + jitteredOffset.xy;
-      sum += textureProj(shadowMap, tShadowCoord);
+      float ts =  textureProj(shadowMap, tShadowCoord);
+      if(! (tShadowCoord.z+0.01  > ts) )
+        sum+=1;
       tShadowCoord.xy = ShadowCoord.xy + jitteredOffset.zw;
-      sum += textureProj(shadowMap, tShadowCoord);
+      ts =  textureProj(shadowMap, tShadowCoord);
+      if(! (tShadowCoord.z+0.01  > ts) )
+        sum+=1;
     }
     ergeb= sum /(4.0 *2.0);
 
@@ -191,23 +235,24 @@ float calcDirShadowRandomSampling(vec3 pos,mat4 shadowMat,sampler2DShadow shadow
         offset.z = i;
         vec4 jitteredOffset = texelFetch(JitterTex, offset,0) * softness * ShadowCoord.w;
 
-        tShadowCoord.xy = ShadowCoord.xy + jitteredOffset.xy;
-        sum += textureProj(shadowMap, tShadowCoord);
+        tShadowCoord.xy = ShadowCoord.xy + jitteredOffset.xy;       
+        float ts =  textureProj(shadowMap, tShadowCoord);
+        if(! (tShadowCoord.z+0.01  > ts) )
+          sum+=1;
         tShadowCoord.xy = ShadowCoord.xy + jitteredOffset.zw;
-        sum += textureProj(shadowMap, tShadowCoord);
+        ts =  textureProj(shadowMap, tShadowCoord);
+        if(! (tShadowCoord.z+0.01  > ts) )
+          sum+=1;
       }
       ergeb = sum / float(sizeZ * 2.0);
     }
-    if(ergeb < 1.0)
-      ergeb = 0.5;
-    if(ergeb > 1.0)
-      ergeb = 0.5;
   }
 
-  return ergeb;
+  return sum / 16;
 }
 
-float calcSingleDirectionalShadow(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap)
+
+float calcSingleDirectionalShadow(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap, float bias)
 { 
   float sum = 1.0;
 
@@ -216,7 +261,7 @@ float calcSingleDirectionalShadow(vec3 pos,mat4 shadowMat,sampler2DShadow shadow
   {
     if(EnableShadows == 2 )
     {
-      sum = calcDirShadowPCF(pos,shadowMat, shadowMap);
+      sum = calcDirShadowPCF(pos,shadowMat, shadowMap, bias);
     }
     if(EnableShadows == 3)
     {
@@ -226,8 +271,11 @@ float calcSingleDirectionalShadow(vec3 pos,mat4 shadowMat,sampler2DShadow shadow
     { 
       if(ShadowCoord.z  >= 0)
       { 
-        vec4 ShadowCoord = shadowMat * vec4(pos,1);          
-        sum = textureProj(shadowMap, ShadowCoord );         
+        sum =  textureProj(shadowMap, ShadowCoord ) ;  
+        if(ShadowCoord.z+0.01  > sum )
+          sum = 0;   
+        else
+          sum = 1;  
       }
     }
     
@@ -322,7 +370,7 @@ float calcPointShadowfactor(int idx,vec3 lightPos, vec3 fragPos)
   return ret;
 }  
 
-float calcSpotShadowFactor(int idx)
+float calcSpotShadowFactor(int idx, float bias)
 {
   float ret = 0.0;
   vec3 pos = vec3( texture( Tex1, TexCoord ) );
@@ -330,37 +378,37 @@ float calcSpotShadowFactor(int idx)
   if( EnableShadows > 0 )
   {
     if(idx == 0 )  
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[0], ShadowData0);  
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[0], ShadowData0,bias);  
     if(idx == 1 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[1], ShadowData1);  
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[1], ShadowData1,bias);  
     if(idx == 2 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[2], ShadowData2);  
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[2], ShadowData2,bias);  
     if(idx == 3 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[3], ShadowData3);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[3], ShadowData3,bias);
     if(idx == 4 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[4], ShadowData4);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[4], ShadowData4,bias);
     if(idx == 5 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[5], ShadowData5);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[5], ShadowData5,bias);
     if(idx == 6 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[6], ShadowData6);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[6], ShadowData6,bias);
     if(idx == 7 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[7], ShadowData7);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[7], ShadowData7,bias);
     if(idx == 8 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[8], ShadowData8);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[8], ShadowData8,bias);
     if(idx == 9 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[9], ShadowData9);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[9], ShadowData9,bias);
     if(idx == 10 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[10], ShadowData10);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[10], ShadowData10,bias);
     if(idx == 11 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[11], ShadowData11);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[11], ShadowData11,bias);
     if(idx == 12 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[12], ShadowData12);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[12], ShadowData12,bias);
     if(idx == 13 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[13], ShadowData13);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[13], ShadowData13,bias);
     if(idx == 14 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[14], ShadowData14);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[14], ShadowData14,bias);
     if(idx == 15 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[15], ShadowData15);    
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[15], ShadowData15,bias);    
   }
   else
     ret =1.0;
@@ -393,6 +441,8 @@ vec4 calcDirectionalLight(int idx, Material mat, vec3 pos, vec3 normal)
   float diff     = max(dot(norm, lightDir), 0.0);
   vec3 diffuse = diff * l.Base.DiffuseColor;
 
+  float bias = max(0.05 * (1.0 - dot(norm, lightDir)), 0.015);
+
   vec3 ambient   = l.Base.AmbientColor * mat.AmbientColor;
   
   vec3  specular   = calcSpecularColor(lightDir, l.Base.SpecularColor, mat,pos,normal);
@@ -400,7 +450,7 @@ vec4 calcDirectionalLight(int idx, Material mat, vec3 pos, vec3 normal)
  
   float shadowFactor = 1.0f;
  // if(length( vec2(pos.x,pos.z) - vec2(CameraPosition.x,CameraPosition.z )) <10 )
-   shadowFactor = calcSpotShadowFactor(l.ShadowMapIndex);
+   shadowFactor = calcSpotShadowFactor(l.ShadowMapIndex, bias);
 
   return vec4(diffuse* shadowFactor * l.Base.Intensity + ambient* l.Base.Intensity + specular* shadowFactor * l.Base.Intensity,1) ;
 }
@@ -454,7 +504,8 @@ vec4 calcSpotLight(int idx, Material mat, vec3 pos, vec3 normal)
     float spec = pow(max(dot(h, norm), 0.0), mat.Shininess);
 
     vec3 specular =    l.Pointlight.Base.SpecularColor * spec * mat.SpecularColor;
-    float shadowFactor = calcSpotShadowFactor(l.ShadowMapIndex);
+    float bias = max(0.05 * (1.0 - dot(norm, lightToPixel)), 0.1);
+    float shadowFactor = calcSpotShadowFactor(l.ShadowMapIndex,bias);
 
     float delta = cutoff - angle; // maybe use different smoothing
 
@@ -470,13 +521,7 @@ vec4 calcSpotLight(int idx, Material mat, vec3 pos, vec3 normal)
 // LIGHT CALCULATION END ---------------------------------------------
 
 // PASS 1     --------------------------------------------------------
-float LinearizeDepth(float depth)
-{
-  float far_plane_dist = 1000.0f;
-  float near_plane_dist = 0.1f;
-  float z = depth *2.0 -1.0; 
-  return (2.0 * near_plane_dist * far_plane_dist) / (far_plane_dist + near_plane_dist - z * (far_plane_dist - near_plane_dist));  
-}
+
 
 
 
@@ -528,11 +573,19 @@ void pass2()
       light += calcSpotLight(x,mat,pos,norm);
 
     FragColor = color * light ;
+
+    float len = length(CameraPosition - pos);
+    if( len > 0.0 )
+    {
+      float fac = len*len *0.0001;
+      FragColor+=vec4(fac,fac,fac,1);
+    }
+
     //FragColor = vec4(0,shadow,0,1.0);
  }
+
  if(matIdx ==99999)
   FragColor = color;  
-  FragColor.a =0.5;
 }
 // PASS 2 END    -----------------------------------------------------
 

@@ -260,6 +260,24 @@ void RenderShader::setMaterial(std::string name, MaterialColorSpecs specs)
   //==std::cout<< "Mat count:" << m_materials_mapping.size()<<std::endl;
 }
 
+std::vector<int> RenderShader::getEmmissiveMaterialIndices()
+{
+  std::vector<int> ret;
+
+  for(std::map<std::string, int>::iterator it = m_materials_mapping.begin(); it != m_materials_mapping.end();it++)
+  {
+    int idx = it->second;
+    std::map<int, MaterialColorSpecs>::iterator it2 = m_materials.find(idx);
+    if(it2 != m_materials.end())
+    {      
+     if( it2->second.m_emmissive != 0.0f )
+        ret.push_back(idx);   
+    }
+  }
+
+  return ret;
+}
+
 void RenderShader::setMaterialIndex(int idx)
 {
    setUniform("MaterialIndex",idx);

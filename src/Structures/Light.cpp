@@ -117,8 +117,8 @@ bool Light::setDirectional(glm::vec3 direction, glm::vec3 col_am ,glm::vec3 col_
       {
         m_directional_buffer = new DirectionalShadowBuffer();        
         m_num_directional_shadows++;
-        if( !m_directional_buffer->initialize(Engine::getWindowWidth() *4.0f,
-         Engine::getWindowHeight() *4.0f))
+        if( !m_directional_buffer->initialize(Engine::getWindowWidth() *10.0f,
+         Engine::getWindowHeight() *10.0f))
           return false;
       }
       else
@@ -686,7 +686,8 @@ void Light::bindForShadowRenderDirectional(RenderBaseShader * shadow_shader)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
-    glPolygonOffset(0.01f,0.01f);
+    glEnable(GL_POLYGON_OFFSET_FILL);
+    glPolygonOffset(4, 3);
 
     shadow_shader->setProjectionMatrix(getProjection());    
     shadow_shader->setViewMatrix(getView() ); 
@@ -694,7 +695,7 @@ void Light::bindForShadowRenderDirectional(RenderBaseShader * shadow_shader)
     glViewport(0,0, m_directional_buffer->getWidth() ,m_directional_buffer->getHeight());
     glClearColor(1000,0,0,0);
     glEnable(GL_CULL_FACE);
-    glCullFace(GL_FRONT);    
+    glCullFace(GL_BACK);    
 
   }
 
@@ -738,7 +739,7 @@ void Light::bindForShadowRenderPoint( RenderBaseShader * point_shadow_shader, in
       point_shadow_shader->setViewMatrix(getView(glm::vec3(0.0f,0.0f,-1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));      
     }  
    
-    glPolygonOffset(0.01f,0.01f);
+   // glPolygonOffset(0.01f,0.01f);
 
     point_shadow_shader->setProjectionMatrix(getProjection());  
     point_shadow_shader->setUniform("LightPosition",getPosition());  
@@ -759,10 +760,12 @@ void Light::unbindFromShadowRender()
 
   if( ( getType() == LIGHT_SPOT) || ( getType() == LIGHT_DIRECTIONAL) )
   {
+   
     glFlush();
     glFinish();
     glPolygonOffset(0.0f,0.0f);
-    glDisable(GL_CULL_FACE);
+    glDisable(GL_POLYGON_OFFSET_FILL);
+
     m_directional_buffer->unbindFromInput();
     glViewport(0,0, Engine::getWindowWidth(),Engine::getWindowHeight());
   }
@@ -770,11 +773,12 @@ void Light::unbindFromShadowRender()
   {    
     glFlush();
     glFinish();
-    glPolygonOffset(0.0f,0.0f);
     glDisable(GL_CULL_FACE);
     m_point_buffer->unbindFromInput();
     glViewport(0,0, Engine::getWindowWidth(),Engine::getWindowHeight());
   }  
+  glCullFace(GL_BACK); 
+   glDisable(GL_CULL_FACE);  
 }
 
 void Light::bindForRender(RenderShader * render_shader)

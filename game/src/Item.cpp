@@ -74,6 +74,26 @@ void Item::doAction(Environment * env)
       }
     }
   }
+  if( (m_type == ITEM_ATTACK_PLANT_TOOL) || (m_type == ITEM_TRAP_PLANT_TOOL)  )
+  {
+    if( Player::getEnergy() >= 15.0f )
+    {
+      glm::vec3 npos;
+      glm::vec3 dir = Engine::getScene()->getCamera()->getDirection() ;
+      dir.y=0.0f;
+      if(getPlacement(&npos))
+      {
+        //std::cout << npos.x << ", "<< npos.y << ", "<< npos.z << std::endl;
+        if(m_type == ITEM_ATTACK_PLANT_TOOL) 
+          env->addPlant(Engine::getScene(), PLANT_ATTACK_FLOWER, npos);
+        if(m_type == ITEM_TRAP_PLANT_TOOL) 
+          env->addPlant(Engine::getScene(), PLANT_TRAP_FLOWER, npos);
+
+      Player::drainEnergy(15.0f);
+
+      }
+    }
+  }
   if(m_type == ITEM_HARVEST_TOOL)
   {
     Object * obj = Engine::pickObjectAtCenter();
@@ -92,23 +112,7 @@ void Item::doAction(Environment * env)
 
 void Item::doSecondaryAction(Environment * env)
 {
-  if(m_type == ITEM_PLANT_TOOL)
-  {
-    if( Player::getEnergy() >= 15.0f )
-    {
-      glm::vec3 npos;
-      glm::vec3 dir = Engine::getScene()->getCamera()->getDirection() ;
-      dir.y=0.0f;
-      if(getPlacement(&npos))
-      {
-        //std::cout << npos.x << ", "<< npos.y << ", "<< npos.z << std::endl;
-        env->addPlant(Engine::getScene(), PLANT_ATTACK_FLOWER, npos);
-
-      Player::drainEnergy(15.0f);
-
-      }
-    }
-  }
+ 
 }
 
 bool  Item::getPlacement( glm::vec3 *pos)

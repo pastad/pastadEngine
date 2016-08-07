@@ -61,6 +61,9 @@ public:
   // returns the meshes
   std::vector<Mesh*> getMeshes();
 
+  // returns all materials
+  std::map<int,Material *> getMaterials();
+
   // rebuffer if we have changed our objects
   void refreshBufferedMatrices(std::vector<Object *> instances);
 

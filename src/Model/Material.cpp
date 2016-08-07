@@ -7,6 +7,8 @@
 
 #include "RessourceManager.h"
 
+#include <iostream>
+
 Material::Material()
 {
 }
@@ -56,11 +58,12 @@ Material::Material(aiMaterial * pMaterial, std::string dir)
     }
   }  
  
-  aiColor4D diffuse,specular,ambient;
+  aiColor4D diffuse,specular,ambient,emmissive;
   float opacity,shininess;
   aiGetMaterialColor(pMaterial, AI_MATKEY_COLOR_DIFFUSE, &diffuse);
   aiGetMaterialColor(pMaterial, AI_MATKEY_COLOR_SPECULAR, &specular);
   aiGetMaterialColor(pMaterial, AI_MATKEY_COLOR_AMBIENT, &ambient);
+  aiGetMaterialColor(pMaterial, AI_MATKEY_COLOR_EMISSIVE, &emmissive);
   aiGetMaterialFloat(pMaterial, AI_MATKEY_OPACITY, &opacity);
   aiGetMaterialFloat(pMaterial, AI_MATKEY_SHININESS, &shininess);
   m_material_specs.m_opacity = opacity;
@@ -75,6 +78,13 @@ Material::Material(aiMaterial * pMaterial, std::string dir)
     && (m_material_specs.m_ambient_color .z == 0) )
   {
       m_material_specs.m_ambient_color = m_material_specs.m_diffuse_color ;
+  }
+  m_material_specs.m_emmissive = 0.0f;
+  if( (emmissive.r != 0.0f) || (emmissive.g != 0.0f) 
+    || (emmissive.b != 0.0f) )  
+  {
+    std::cout <<"emissive material"<<std::endl;
+    m_material_specs.m_emmissive = 1.0f;
   }
 }
 
@@ -106,3 +116,7 @@ bool Material::isTransparent()
   return false;
 }
 
+void Material::setEmmissive(float val)
+{
+  m_material_specs.m_emmissive = val;
+}

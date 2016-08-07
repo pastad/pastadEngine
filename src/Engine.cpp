@@ -48,11 +48,18 @@ bool Engine::m_gui_movement_lock = false;
 Engine::Engine()
 {
 	Engine::m_initialized = false;
-	
+	m_scene_editor =  nullptr;
+  m_engine_gui =   nullptr;
+  m_log =   nullptr;
+  m_render_system = nullptr;
+  m_io_system = nullptr;
+  m_physic_system = nullptr;
+  m_audio_system = nullptr;
 }
 
 Engine::~Engine()
 {		
+ 
 }
 
 
@@ -182,15 +189,31 @@ void Engine::shutDown()
 	{
 		shutDownSubsystems();
 
+    m_log->log("Engine", "Subsystems shut down");
+
 		glfwTerminate();
 
-		m_log->log("Engine", "shut down");
+    if(m_log != nullptr)
+		  m_log->log("Engine", "shut down");
 		if(m_scene_editor != nullptr)
 			delete m_scene_editor;
-		delete m_engine_gui;
-		delete m_log;
-		delete m_render_system;
-		delete m_io_system;
+    if(m_engine_gui != nullptr)
+		  delete m_engine_gui;
+    if(m_log != nullptr)
+		  delete m_log;
+
+    m_log = nullptr;
+    m_engine_gui = nullptr;
+    m_scene_editor = nullptr;
+
+    if(m_render_system != nullptr)
+      delete m_render_system;
+    if(m_io_system != nullptr)
+      delete m_io_system;
+    if(m_physic_system != nullptr)
+      delete m_physic_system;
+    if(m_audio_system != nullptr)
+      delete m_audio_system;
 
 		for( std::vector<GUI*>::iterator it = m_guis.begin(); it != m_guis.end();it++)
 		{

@@ -60,7 +60,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Audio/AudioClip.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RessourceManager.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Helper.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/src/LuaScript.cpp
+  # ${CMAKE_CURRENT_SOURCE_DIR}/src/LuaScript.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/external/gl_core_4_.c
 
 
@@ -133,7 +133,7 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Audio/AudioClip.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RessourceManager.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Helper.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/include/LuaScript.h
+  # ${CMAKE_CURRENT_SOURCE_DIR}/include/LuaScript.h
    ${CMAKE_CURRENT_SOURCE_DIR}/external/gl_core_4_.h
 
    ${CMAKE_CURRENT_SOURCE_DIR}/game/include/Game.h

@@ -69,6 +69,9 @@ private:
   // -1 = cooldown | 1 = jump | 0 = none
   static int m_jump_state;
 
+  // the object of the players "body"
+  static Object * m_player_object;
+
   // the callback called by the camera
   static void cameraMovedCallback();
 

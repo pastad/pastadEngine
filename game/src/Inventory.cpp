@@ -49,4 +49,6 @@ void Inventory::update()
     selectItem(1);
   if( Engine::isKeyReleasedAndPressed('3'))
     selectItem(2);
+  if( Engine::isKeyReleasedAndPressed('4'))
+    selectItem(3);
 }

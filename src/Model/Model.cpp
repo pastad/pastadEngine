@@ -442,6 +442,11 @@ void Model::removeInstance( Object * obj)
   }
 }
 
+std::map<int,Material *> Model::getMaterials()
+{
+  return m_materials;
+}
+
 // refreshers
 
 void Model::refreshBufferedMatrices(std::vector<Object *> instances)

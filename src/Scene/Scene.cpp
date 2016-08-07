@@ -194,7 +194,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
         (*it)->unbindFromShadowRender();
       }
       if( (*it)->getType() == LIGHT_DIRECTIONAL )  
-      {
+      {       
         shadow_shader->use();
         (*it)->bindForShadowRenderDirectional(shadow_shader);
 
@@ -309,7 +309,7 @@ void Scene::refreshRenderObjects()
     float angle_min = (*it)->getMinAngleToCamera(m_camera);  
 
     // tmp disable due to material flickers 
-    if( ( ((*it)->getPriorityRender() ) || m_camera->insideFrustrum((*it)) )  && ((*it)->isVisible())  ) //(angle_min < m_camera->getFOV())
+    if( ( ((*it)->getPriorityRender() ) || m_camera->insideFrustrum((*it)) )  && ((*it)->isVisible()) && (!(*it)->isOnlyShadowRendered()) ) //(angle_min < m_camera->getFOV())
     {
       //std::cout << angle_mid << std::endl;
       //std::cout << (*it)->getIdentifier()<<std::endl;

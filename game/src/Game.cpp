@@ -33,8 +33,8 @@ Game::~Game()
 {  
   if(m_player)
     delete m_player;
-  if(m_scene)
-    delete m_scene;
+  //if(m_scene)
+  //  delete m_scene;
   if(m_mobs)
     delete m_mobs;
   if(m_environment)
@@ -61,6 +61,9 @@ bool Game::initialize()
   // set the engine specs
   Engine::setPostProcessing(PP_FXAA,true);
   Engine::setPostProcessing(PP_HDR,true);
+  Engine::setPostProcessing(PP_BLOOM,true);
+  
+//  Engine::setShadowTechnique(ST_STANDARD);
 
   // setup the mobs and the environment
   m_mobs = new Mobs();
@@ -120,8 +123,8 @@ void Game::update()
   }
 
   // turn the sun and calculate a strength value for refreshing energy
-  glm::vec3 v = glm::rotateZ(m_sun->getDirection(), glm::radians(DEG_PER_SEC*delta)  ) ;
-  m_sun->setDirection(v);
+  //glm::vec3 v = glm::rotateZ(m_sun->getDirection(), glm::radians(DEG_PER_SEC*delta)  ) ;
+ // m_sun->setDirection(v);
   float sun_strength = -1.0f * m_sun->getDirection().y;
   if(sun_strength <0.0f)
     sun_strength = 0.0f;

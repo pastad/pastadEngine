@@ -37,7 +37,7 @@ int main(void)
 
 
 
-  bool launch_game = false;
+  bool launch_game = true;
 
   if(launch_game)
   {
@@ -46,6 +46,7 @@ int main(void)
 
     
     GameMenu * game_menu = new GameMenu();   
+    Game * game = nullptr;
  
     game_menu->initialize();
 
@@ -73,13 +74,14 @@ int main(void)
         }
       }
 
-      delete game;
     }
     delete game_menu;
     
 
+    engine.shutDown();
 
-
+    if(game != nullptr)
+      delete game;
 
   }
   else
@@ -201,9 +203,12 @@ int main(void)
       engine.update();
     	engine.render();
     }
+    
+    engine.shutDown();
+    if(scene != nullptr)
+      delete scene;
   }
 
-  engine.shutDown();
 
   return 0;  
 }

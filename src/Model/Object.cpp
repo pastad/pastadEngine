@@ -554,3 +554,18 @@ void  Object::removeScript()
   delete m_script;
   m_script = nullptr;
 }
+
+void Object::setShadowRenderOnly()
+{
+  m_shadow_render_only = true;
+}
+
+void Object::setNotShadowRenderOnly()
+{
+  m_shadow_render_only = false;
+}
+
+bool Object::isOnlyShadowRendered()
+{
+  return m_shadow_render_only;
+}

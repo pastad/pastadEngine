@@ -40,14 +40,19 @@ bool Mob::initialize(Scene * scene, float health)
   float s =( MAX_SCALE / MAX_HEALTH ) * m_health;
   m_object->setScale(glm::vec3(s,s,s));
 
+  m_moveable = true;
+
   return true;
 }
 
 void Mob::update(Player * player, float delta)
 {
-  glm::vec3 d =glm::normalize( player->getPosition()-glm::vec3(0,0.8f,0) - m_object->getPosition() );
-  glm::vec3 step = d * delta * MOVEMENT_SPEED;
-  setPosition( m_object->getPosition()+ step );
+  if(isMoveable())
+  {
+    glm::vec3 d =glm::normalize( player->getPosition()-glm::vec3(0,0.8f,0) - m_object->getPosition() );
+    glm::vec3 step = d * delta * MOVEMENT_SPEED;
+    setPosition( m_object->getPosition()+ step );
+  }
 }
 
 Object * Mob::getObject()
@@ -77,4 +82,17 @@ bool Mob::doDamage(float damage)
 float Mob::getHealth()
 {
   return m_health;
+}
+
+void Mob::setMoveable()
+{
+  m_moveable = true;
+}
+void Mob::setNotMoveable()
+{
+  m_moveable = false;
+}
+bool Mob::isMoveable()
+{
+  return m_moveable;
 }

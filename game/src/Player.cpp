@@ -10,6 +10,11 @@
 
 #include "GUI.h"
 #include "Text.h"
+#include "Material.h"
+#include "Model.h"
+
+#include "Script.h"
+#include "RotationScriptElement.h"
 
 #define JUMP_TIME 0.1f
 #define JUMP_CD 1.0f
@@ -19,6 +24,8 @@
 
 Camera * Player::m_camera;
 Inventory * Player::m_inventory;
+
+Object * Player::m_player_object;
 
 float Player::m_energy;
 
@@ -47,15 +54,46 @@ bool Player::init(Scene * scene)
 
   m_inventory = new Inventory();
 
-  Object * plant_harvest_obj = scene->addObject("game/models/hand.obj",glm::vec3(0,0,0), false);
+  Object * plant_harvest_obj = scene->addObject("game/models/energy_pull_tool.obj",glm::vec3(0,0,0), false);
+  plant_harvest_obj->setScale(glm::vec3(0.2f,0.2f,0.2f));
+
+  std::map<int, Material * > materials =  plant_harvest_obj->getModel()->getMaterials();
+  for(std::map<int,Material*>::iterator it = materials.begin(); it != materials.end();it++)
+  { 
+    it->second->setEmmissive(1.0f);
+  }    
+
+
   Item * plant_harvest_item = new Item(plant_harvest_obj,true, ITEM_HARVEST_TOOL);
   plant_harvest_item->setInactive();
   m_inventory->addItem(plant_harvest_item);
 
-  Object * plant_tool_obj = scene->addObject("game/models/energy_tool.obj",glm::vec3(0,0,0), false);
+  /*Object * plant_tool_obj = scene->addObject("game/models/energy_tool.obj",glm::vec3(0,0,0), false);
+  Item * plant_tool_item = new Item(plant_tool_obj,true, ITEM_PLANT_TOOL);
+  plant_tool_item->setInactive();
+  m_inventory->addItem(plant_tool_item);*/
+
+  Object * plant_tool_obj = scene->addObject("game/models/flower_tool.obj",glm::vec3(0,0,0), false);
+  plant_tool_obj->setScale(glm::vec3(0.2f,0.2f,0.2f));
   Item * plant_tool_item = new Item(plant_tool_obj,true, ITEM_PLANT_TOOL);
   plant_tool_item->setInactive();
   m_inventory->addItem(plant_tool_item);
+
+
+  Object * attack_plant_tool_obj = scene->addObject("game/models/attack_flower_tool.obj",glm::vec3(0,0,0), false);
+  attack_plant_tool_obj->setScale(glm::vec3(0.2f,0.2f,0.2f));
+  Item * attack_plant_tool_item = new Item(attack_plant_tool_obj,true, ITEM_ATTACK_PLANT_TOOL);
+  attack_plant_tool_item->setInactive();
+  m_inventory->addItem(attack_plant_tool_item);
+
+  Object * trap_plant_tool_obj = scene->addObject("game/models/grab_flower_tool.obj",glm::vec3(0,0,0), false);
+  trap_plant_tool_obj->setScale(glm::vec3(0.2f,0.2f,0.2f));
+  Item * trap_plant_tool_item = new Item(trap_plant_tool_obj,true, ITEM_TRAP_PLANT_TOOL);
+  trap_plant_tool_item->setInactive();
+  m_inventory->addItem(trap_plant_tool_item);
+
+  m_player_object = scene->addObject("game/models/dark_energy_monster.obj",glm::vec3(0,0,0), false);
+  m_player_object->setShadowRenderOnly();
 
 
   setupGUI();
@@ -81,6 +119,8 @@ void Player::update()
 {
   float delta = Engine::getTimeDelta();
   m_inventory->update();
+
+  m_player_object->setPosition( m_camera->getPosition() );
 
   if(m_jump_state != 0)
     m_jump_time += delta;
@@ -122,7 +162,7 @@ void Player::cameraMovedCallback()
   Item * item = m_inventory->getSelectedItem();
   if(item != nullptr)
   {
-    item->setPosition(m_camera->getPosition()+m_camera->getDirection() +m_camera->getRight()*0.4f -m_camera->getUp() *0.3f);
+    item->setPosition(m_camera->getPosition()+m_camera->getDirection()*0.5f +m_camera->getRight()*0.3f -m_camera->getUp() *0.2f);
     item->setRotation(r);
   }
  // m_weapon->setPosition(m_camera->getPosition()+m_camera->getDirection() +m_camera->getRight()*0.4f -m_camera->getUp() *0.3f);

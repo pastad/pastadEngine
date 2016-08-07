@@ -21,7 +21,6 @@ Wave::~Wave()
 void Wave::refresh()
 {
   m_frequency =  (2.0f * M_PI) / m_length;
-  std::cout << m_frequency<<std::endl;
   m_phase_constant = m_speed * m_frequency;
 }
 

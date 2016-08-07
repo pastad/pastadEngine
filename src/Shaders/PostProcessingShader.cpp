@@ -180,6 +180,23 @@ void PostProcessingShader::setSSAOSamples()
 
 }
 
+void PostProcessingShader::setEmmissiveIndices(std::vector<int> indices)
+{
+  for(int x=0; x< 20;x++)
+  {
+    std::stringstream ss;
+    ss<< "Emissive["<<x<<"]";
+    setUniform(ss.str(),0);
+  }
+  for(int x=0; x< indices.size();x++)
+  {
+    std::stringstream ss;
+    ss<< "Emissive["<<indices[x]<<"]";
+    setUniform(ss.str(),1);
+    //std::cout << indices[x]<<std::endl;
+  }
+}
+
 
 //  use -------------------------------------------------
 
