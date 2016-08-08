@@ -91,7 +91,7 @@ Done:
     - AnimatedObjects (Bone-Animation)
 
 
-"personal note for xcompile  ./../../lib/mxe/usr/bin/i686-w64-mingw32.static-cmake ."
+"personal note for xcompile  ./../../lib/mxe/usr/bin/x86_64-w64-mingw32.static-cmake ."
 
 
 

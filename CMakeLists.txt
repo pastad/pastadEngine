@@ -3,7 +3,7 @@ project (Engine)
 
 SET(CMAKE_SYSTEM_NAME Windows)
 SET(CMAKE_CXX_COMPILER x86_64-w64-mingw32-g++)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -static-libgcc -static-libstdc++")
 
 set(SOURCE
    ${SOURCE}
