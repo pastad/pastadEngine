@@ -60,6 +60,10 @@ private:
   // the object 
   Object * m_object;
 
+  // an additional object
+  Object * m_additional_object = nullptr;
+  Object * m_additional_object2 = nullptr;
+
   // how far the plant is grown (percantage)
   float m_growth;
   float m_energy_growth;
@@ -81,6 +85,12 @@ private:
 
   // the energy the plant holds
   std::vector<Object *> m_energy;
+
+  // the standard plant pos
+  glm::vec3 m_standard_pos;
+
+  // if trapplant extension of the grabber
+  float m_extension_length = 0;
 
 };
 

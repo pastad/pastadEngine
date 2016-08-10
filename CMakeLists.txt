@@ -57,7 +57,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Script/ScriptElement.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Script/RotationScriptElement.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Script/ExternalTriggerScriptElement.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/src/Audio/AudioClip.cpp
+ #  ${CMAKE_CURRENT_SOURCE_DIR}/src/Audio/AudioClip.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RessourceManager.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Helper.cpp
   # ${CMAKE_CURRENT_SOURCE_DIR}/src/LuaScript.cpp
@@ -74,6 +74,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/game/src/Environment.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/game/src/EnergyShot.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/game/src/GameMenu.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/game/src/SoundManager.cpp
    
 )
 set(HEADERS
@@ -130,7 +131,7 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Script/ScriptElement.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Script/RotationScriptElement.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Script/ExternalTriggerScriptElement.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/include/Audio/AudioClip.h
+  # ${CMAKE_CURRENT_SOURCE_DIR}/include/Audio/AudioClip.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RessourceManager.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Helper.h
   # ${CMAKE_CURRENT_SOURCE_DIR}/include/LuaScript.h
@@ -146,6 +147,7 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/game/include/Environment.h
    ${CMAKE_CURRENT_SOURCE_DIR}/game/include/EnergyShot.h
    ${CMAKE_CURRENT_SOURCE_DIR}/game/include/GameMenu.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/game/include/SoundManager.h
 
 
 )
@@ -175,10 +177,10 @@ ${CMAKE_CURRENT_SOURCE_DIR}/external/tinyxml2
 ${CMAKE_CURRENT_SOURCE_DIR}/game/include
  )
 
-LINK_DIRECTORIES(${GLFW_LIBRARY_DIR} ${FREETYPE_LIBRARY_DIRS} ${ASSIMP_LIBRARY_DIR} ${SOIL_LIBRARY_DIR} ${Boost_LIBRARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/external/tinyxml2 ${LUA_LIBRARY_DIR}) 
+LINK_DIRECTORIES(${GLFW_LIBRARY_DIR} ${FREETYPE_LIBRARY_DIRS} ${ASSIMP_LIBRARY_DIR} ${SOIL_LIBRARY_DIR} ${Boost_LIBRARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/external/tinyxml2 ${LUA_LIBRARY_DIR} ${SFML_LIBRARIES}) 
  
 add_executable(Engine main.cpp ${SOURCE} ${HEADERS})
 
-target_link_libraries(Engine tinyxml2 portaudio GL glfw3 assimp boost_system boost_filesystem SOIL freetype lua5.1  ${LUA_LIBRARIES} ${GLFW_STATIC_LIBRARIES}  ${GLFW_STATIC_LIBRARIES}   ${OPENGL_LIBRARIES} X11 Xcursor Xinerama Xxf86vm Xi Xrandr pthread dl  )
+target_link_libraries(Engine tinyxml2 portaudio GL glfw3 assimp boost_system boost_filesystem SOIL freetype lua5.1 sfml-audio sfml-system ${SFML_LIBRARIES}  ${LUA_LIBRARIES} ${GLFW_STATIC_LIBRARIES}  ${GLFW_STATIC_LIBRARIES}   ${OPENGL_LIBRARIES} X11 Xcursor Xinerama Xxf86vm Xi Xrandr pthread dl  )
 
 

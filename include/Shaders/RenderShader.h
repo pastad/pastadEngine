@@ -43,6 +43,9 @@ public:
   // sets the render pass
   void setRenderPass(unsigned int pass);
 
+  // setter for the fog
+  void setFog(glm::vec3 color, float factor, float offset);
+
 
   // material and lights -----------------------------------------
 

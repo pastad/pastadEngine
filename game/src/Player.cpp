@@ -5,6 +5,9 @@
 #include "Object.h"
 #include "Inventory.h"
 #include "Item.h"
+#include "SoundManager.h"
+#include "Game.h"
+
 
 #include "Engine.h"
 
@@ -12,6 +15,8 @@
 #include "Text.h"
 #include "Material.h"
 #include "Model.h"
+
+
 
 #include "Script.h"
 #include "RotationScriptElement.h"
@@ -35,22 +40,32 @@ Text * Player::m_lower_text;
 int Player::m_jump_state;
 float Player::m_jump_time;
 
+unsigned int Player::m_movement_keys_pressed;
+
+sf::SoundBuffer * Player::m_walking_sound_buffer;
+sf::Sound * Player::m_walking_sound_sound;
+
+
 Player::Player()
 {  
   m_energy = 100.0f;
-  m_jump_time =0.0f;
+  m_jump_time = 0.0f;
   m_jump_state = 0;
+  m_movement_keys_pressed = 0;
 }
 
 Player::~Player()
 {  
   delete m_inventory;
+  delete m_walking_sound_sound;
+  delete m_walking_sound_buffer;
 }
 
 bool Player::init(Scene * scene)
 {
   m_camera = scene->getCamera();
   m_camera->registerMovedCallback(&cameraMovedCallback);
+  m_camera->registerRotatedCallback(&cameraRotatedCallback);
 
   m_inventory = new Inventory();
 
@@ -95,6 +110,19 @@ bool Player::init(Scene * scene)
   m_player_object = scene->addObject("game/models/dark_energy_monster.obj",glm::vec3(0,0,0), false);
   m_player_object->setShadowRenderOnly();
 
+  m_walking_sound_buffer = new sf::SoundBuffer();
+  m_walking_sound_sound = new sf::Sound();
+
+  if (!m_walking_sound_buffer->loadFromFile("game/models/sounds/wind.ogg"))
+  {
+    delete m_walking_sound_sound;
+    delete m_walking_sound_buffer;
+    return false;
+  }
+
+  m_walking_sound_sound->setBuffer(*m_walking_sound_buffer);
+  m_walking_sound_sound->setLoop(true);
+  m_walking_sound_sound->setVolume(SOUND_EFFECT_VOLUME);
 
   setupGUI();
 
@@ -145,6 +173,38 @@ void Player::update()
     }  
   }
 
+  if( Engine::isKeyReleasedAndPressed('W'))
+    m_movement_keys_pressed++;
+  if( Engine::isKeyReleasedAndPressed('A'))
+    m_movement_keys_pressed++;
+  if( Engine::isKeyReleasedAndPressed('S'))
+    m_movement_keys_pressed++;
+  if( Engine::isKeyReleasedAndPressed('D'))
+    m_movement_keys_pressed++;
+   
+  if( Engine::isKeyPressedAndReleased('W') )  
+    m_movement_keys_pressed--;
+  if( Engine::isKeyPressedAndReleased('A') )  
+    m_movement_keys_pressed--;
+  if( Engine::isKeyPressedAndReleased('S') )  
+    m_movement_keys_pressed--;
+  if( Engine::isKeyPressedAndReleased('D') )  
+    m_movement_keys_pressed--;
+
+  if(m_movement_keys_pressed != 0)
+  {
+   // if( m_walking_sound_sound->getStatus() != sf::Sound::Status::Playing  )
+   //   m_walking_sound_sound->play();
+  }
+  else
+  {
+   // if( m_walking_sound_sound->getStatus() != sf::Sound::Status::Stopped  )
+    //  m_walking_sound_sound->stop();
+  }
+  
+ 
+
+
   if(m_jump_state == 1)
     m_camera->move(glm::vec3(0,10,0)*delta );
 
@@ -159,6 +219,8 @@ void Player::cameraMovedCallback()
   glm::vec3 d = m_camera->getDirection();
   //d.z = 0.0f;
   // d.x = 0.0f;
+
+
   Item * item = m_inventory->getSelectedItem();
   if(item != nullptr)
   {
@@ -169,6 +231,19 @@ void Player::cameraMovedCallback()
 
  
  // m_weapon->setRotation(r);
+}
+
+void Player::cameraRotatedCallback()
+{
+  glm::vec3 r(m_camera->getYaw(),-m_camera->getPitch()-90.0f,0);
+  glm::vec3 d = m_camera->getDirection();
+
+  Item * item = m_inventory->getSelectedItem();
+  if(item != nullptr)
+  {
+    item->setPosition(m_camera->getPosition()+m_camera->getDirection()*0.5f +m_camera->getRight()*0.3f -m_camera->getUp() *0.2f);
+    item->setRotation(r);
+  }
 }
 
 Object * Player::getWeapon()
@@ -188,10 +263,7 @@ glm::vec3 Player::getPosition()
 	return m_camera->getPosition();
 }
 
-void Player::gainEngery(float val)
-{
-  m_energy += val;
-}
+
 
 void Player::checkAction(Environment * environment)
 {
@@ -204,12 +276,27 @@ void Player::checkSecondaryAction(Environment * environment)
     m_inventory->getSelectedItem()->doSecondaryAction(environment);
 }
 
-void Player::drainEnergy(float val)
+void Player::drainEnergy(float val, bool deadly)
 {
   m_energy-=val;
-  if(m_energy<0.0f)
+  if(deadly && (m_energy <0.0f) )
+  {
+    Game::end();
+  }
+  if( m_energy < 0.0f)
     m_energy = 0.0f;
+
+  float scale = 1.0f/100.0f *   m_energy ;
+  m_player_object->setScale(glm::vec3(scale,scale,scale));
+}
+
+void Player::gainEngery(float val)
+{
+  SoundManager::addAndPlaySound("game/models/sounds/healspell1.wav");
+  m_energy += val;
   
+  float scale = 1.0f/100.0f *   m_energy ;
+  m_player_object->setScale(glm::vec3(scale,scale,scale));
 }
 
 float Player::getEnergy()

@@ -51,7 +51,7 @@ bool Environment::initialize(Scene * scene)
   std::srand(std::time(0)); //use current time as seed for random generator
    
   // test init
-  for(int x=0; x<500;x++)
+  for(int x=0; x<10;x++)
   {
     int random_variable = std::rand() % 360;
     int dist = std::rand() % 40 +2;

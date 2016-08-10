@@ -151,6 +151,7 @@ public:
 
 	// returns true if key is released and now pressed
 	static bool isKeyReleasedAndPressed(int key_code);
+	static bool isKeyPressedAndReleased(int key_code);
 	static bool isMouseButtonReleasedAndPressed(int key_code);
 
 private:
@@ -219,6 +220,9 @@ private:
 
 	// the lock for example when a edit box is edited
 	static bool m_gui_movement_lock;
+
+	// true if scene should be switched
+	static bool m_switch_scene;
 
 	// starts the subsystems
 	static bool startUpSubsystems();

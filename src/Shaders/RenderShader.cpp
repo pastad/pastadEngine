@@ -378,6 +378,13 @@ void RenderShader::setShadows(ShadowTechniqueType tech)
   checkUniformError("set standard shadows");
 }
 
+void RenderShader::setFog(glm::vec3 color, float factor,float offset)
+{
+  setUniform("FogColor",color );
+  setUniform("FogFactor",factor );
+  setUniform("FogOffset",offset );
+}
+
 //  use/reset -------------------------------------------------
 
 void RenderShader::use()

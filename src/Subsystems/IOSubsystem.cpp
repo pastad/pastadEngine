@@ -163,8 +163,8 @@ std::string IOSubsystem::readFile(std::string path)
 
 void IOSubsystem::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-    Engine::errorShutDown();
+ // if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+ //   Engine::errorShutDown();
 
   if(action == GLFW_PRESS)
   {

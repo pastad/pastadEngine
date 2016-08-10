@@ -47,31 +47,41 @@ int main(void)
     
     GameMenu * game_menu = new GameMenu();   
     Game * game = nullptr;
- 
-    game_menu->initialize();
 
-    while(game_menu->isActive())
+    
+    while( game_menu->shouldGameBeStarted() && engine.running() )
     {
-      game_menu->update();
-      engine.update();
-      engine.render();
-    }
+      game_menu->initialize(1240,720);
 
-    game_menu->unload();
-
-    if( game_menu->shouldGameBeStarted())
-    {
-      Game * game = new Game();
-
-      if(game->initialize())
+      while(game_menu->isActive())
       {
+        game_menu->update();
+        engine.update();
+        engine.render();
+      }
 
-        while(engine.running())
-        {        
-          game->update(); 
-          engine.update();            
-          engine.render();
+      game_menu->unload();
+
+      if( game_menu->shouldGameBeStarted())
+      {
+        Game * game = new Game();
+
+        if(game->initialize())
+        {
+
+          while(engine.running() && (!game->hasEnded()) )
+          {        
+            game->update(); 
+            engine.update();            
+            engine.render();
+          }
         }
+        Engine::setScene(nullptr,true);
+        engine.update();
+
+        if(game != nullptr)
+          delete game;
+
       }
 
     }
@@ -80,13 +90,12 @@ int main(void)
 
     engine.shutDown();
 
-    if(game != nullptr)
-      delete game;
+   
 
   }
   else
   {
-    engine.initialize(1240, 720, PHYSIC_SUBSYSTEM, true, false);
+    engine.initialize(1240, 720, PHYSIC_SUBSYSTEM |AUDIO_SUBSYSTEM, true, false);
     Scene *  scene = new Scene();
 
 
@@ -162,6 +171,8 @@ int main(void)
 
     engine.setScene(scene, false);
     //ground->setPriorityRender();  
+
+
 
     // run the main loop
     while(engine.running())

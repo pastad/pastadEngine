@@ -29,6 +29,10 @@ Scene::Scene()
   m_terrain = nullptr;
   m_tree_root= new SceneTreeElement(500, glm::vec3(0,0,0));
   Engine::getLog()->log("Scene", "created");
+
+  m_fog_color = glm::vec3(1,1,1);
+  m_fog_factor = 0.0f;
+  m_fog_offset = 0.0f;
   
 }
 
@@ -39,30 +43,32 @@ Scene::~Scene()
     if( (*it) != nullptr)
       delete (*it);
   }
+  Engine::getLog()->log("Scene", "deleted all static objects");
   for(std::vector<Object *>::iterator it = m_objects_dynamic.begin(); it != m_objects_dynamic.end();it++)
   {
     if( (*it) != nullptr)
       delete (*it);
   }
+  Engine::getLog()->log("Scene", "deleted all dynamic objects");
   m_objects_dynamic.clear();
   m_objects_static.clear();
   if(m_tree_root != nullptr)
     delete m_tree_root;
+  Engine::getLog()->log("Scene", "deleted the tree");
   for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end();it++)
   {
     if( (*it) != nullptr)
       delete (*it);
   }
+  Engine::getLog()->log("Scene", "deleted all lights");
   m_lights.clear();
   if(m_skybox != nullptr)
     delete m_skybox;
   if(m_camera != nullptr)
     delete m_camera;
-  if(m_tree_root != nullptr)
-    delete m_tree_root;
   if(m_terrain != nullptr)
     delete m_terrain;
-  Engine::getLog()->log("Scene", "deleted");
+  Engine::getLog()->log("Scene", "deletion complete");
 }
 
 
@@ -109,6 +115,7 @@ void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, R
 
   render_shader->setLights(&m_lights);
   render_shader->setCameraPosition(m_camera->getPosition());
+  render_shader->setFog(m_fog_color,m_fog_factor,m_fog_offset);
 
  // float angle_mid = glm::orientedAngle(glm::vec2(1,1),  glm::vec2( v.x ,v.z)   );
 
@@ -716,4 +723,13 @@ Skybox *  Scene::setSkybox(const std::string path)
 Camera * Scene::getCamera()
 {
   return m_camera;
+}
+
+// fog
+
+void Scene::setFog(glm::vec3 color, float factor, float offset)
+{
+  m_fog_color = color;
+  m_fog_factor = factor;
+  m_fog_offset = offset;
 }

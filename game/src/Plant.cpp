@@ -5,6 +5,8 @@
 #include "Engine.h"
 #include "Material.h"
 #include "Model.h"
+#include "PhysicSubsystem.h"
+#include "Ray.h"
 
 #include "Mobs.h"
 #include "Mob.h"
@@ -31,6 +33,7 @@
 #define ATTACK_FLOWER_CAPACITY 100
 
 #define TRAP_FLOWER_HOLD_TIME 2
+#define TRAP_FLOWER_BIND_TIME 0.2
 #define TRAP_FLOWER_COOLDOWN 1
 #define TRAP_FLOWER_RANGE 3
 
@@ -46,6 +49,7 @@ Plant::Plant(Scene * scene , unsigned int type, glm::vec3 pos)
   m_stored_energy = 25.0f;
   m_hold_time = 0.0f;
   m_hold_target = nullptr;
+  m_standard_pos = pos;
 
   if( type == PLANT_TREE)
   {
@@ -78,6 +82,12 @@ Plant::Plant(Scene * scene , unsigned int type, glm::vec3 pos)
     m_object->setScale(glm::vec3(0.0f,0.0f,0.0f));
     m_object->applyPhysics();
     m_object->applyPhysicsStatic();
+
+    m_additional_object = scene->addObject("game/models/grab_flower_grabber.obj",pos, false);
+    m_additional_object->setInvisible();
+
+    m_additional_object2= scene->addObject("game/models/grab_flower_grabber_stem.obj",pos, false);
+    m_additional_object2->setInvisible();
   }
 }
 
@@ -90,15 +100,29 @@ void Plant::update(float delta, float sun_strength, Mobs * mobs, Environment * e
   //std::cout << m_cooldown<<std::endl;
 
   // check attack
-  if( (m_type ==PLANT_ATTACK_FLOWER) || (m_type ==PLANT_TRAP_FLOWER) )
+  if( (m_type == PLANT_ATTACK_FLOWER) || (m_type == PLANT_TRAP_FLOWER) )
   {
     if(m_cooldown > 0.0f)
     {
       float d = m_cooldown -delta;    
       if(d > 0.0f)    
-        m_cooldown = d;    
-      else    
-        m_cooldown = 0.0f;    
+      {
+        m_cooldown = d;   
+        if( m_type == PLANT_TRAP_FLOWER ) 
+        {
+          float step = (0.5f / TRAP_FLOWER_COOLDOWN ) *delta;
+          m_object->setPosition( m_object->getPosition() + glm::vec3(0,step,0));
+        }
+      }
+      else
+      {         
+        if( m_type == PLANT_TRAP_FLOWER ) 
+        {
+          float step = (0.5f / TRAP_FLOWER_COOLDOWN ) *m_cooldown;
+          m_object->setPosition( m_object->getPosition() + glm::vec3(0,step,0));
+        }
+        m_cooldown = 0.0f;  
+      }  
     }
     if( m_cooldown == 0.0f )
     {
@@ -123,7 +147,26 @@ void Plant::update(float delta, float sun_strength, Mobs * mobs, Environment * e
       {
         m_cooldown = TRAP_FLOWER_COOLDOWN;   
         if(m_hold_target != nullptr)  
+        {
+          // restore positon
+          m_additional_object->setInvisible();
+          m_additional_object2->setInvisible();
+
+        // m_object->setPosition( m_object->getPosition()+ glm::vec3(0,0.5,0));
           m_hold_target->setMoveable();           
+        }
+      }
+      else
+      {
+        if( (m_hold_time > 0.0f) && ( d2 > (TRAP_FLOWER_HOLD_TIME - TRAP_FLOWER_BIND_TIME)  ) ) 
+        {
+          float step = (0.5f / TRAP_FLOWER_BIND_TIME ) *delta;
+          float step2 = (m_extension_length / TRAP_FLOWER_BIND_TIME ) *delta;
+          m_object->setPosition( m_object->getPosition() - glm::vec3(0,step,0) );
+          m_additional_object->setPosition( m_additional_object->getPosition() + glm::vec3(0,step2,0) );
+          m_additional_object2->setPosition( m_additional_object->getPosition()  );
+          m_additional_object2->setScale( glm::vec3(1,step2,1));
+        }
       }
 
       if(d2 <0.0f)
@@ -262,6 +305,26 @@ void Plant::trapMobs(Mobs* mobs, Environment * env)
 
     if(dist < TRAP_FLOWER_RANGE )
     {
+      m_additional_object->setVisible();
+      m_additional_object->setPosition( m->getObject()->getPosition());
+      m_additional_object->setScale( m->getObject()->getScale() );
+
+      m_additional_object2->setVisible();
+      
+
+      Ray r2( m->getObject()->getPosition() ,glm::vec3(0,-1,0));
+      float distance2 =0.0f;
+      bool res = Engine::getPhysicSubsystem()->collisionRayScene(Engine::getScene(), &r2, &distance2);
+      if(res)
+      {
+        std::cout << distance2<<std::endl;
+        m_additional_object2->setScale(glm::vec3(1,0.0f,1));
+        m_extension_length = distance2;
+        m_additional_object2->setPosition( m->getObject()->getPosition()- glm::vec3(0,0.1+distance2,0));
+        m_additional_object2->setPosition( m->getObject()->getPosition()- glm::vec3(0,0.1+distance2,0));
+      }
+
+      //m_object->setPosition( m_object->getPosition()- glm::vec3(0,0.5,0));
 
       m->setNotMoveable();
       m_hold_target = m;

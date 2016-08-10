@@ -49,7 +49,9 @@ layout(binding=47) uniform samplerCube PointShadowData07;
 layout(binding=48) uniform samplerCube PointShadowData08; 
 layout(binding=49) uniform samplerCube PointShadowData09; 
 
-
+uniform vec3 FogColor;
+uniform float FogFactor;
+uniform float FogOffset;
 
 uniform int ColorOnly;
 uniform vec4 Color;
@@ -575,10 +577,11 @@ void pass2()
     FragColor = color * light ;
 
     float len = length(CameraPosition - pos);
-    if( len > 0.0 )
-    {
-      float fac = len*len *0.0001;
-      FragColor+=vec4(fac,fac,fac,1);
+    if( len > FogOffset )
+    {      
+      vec3 fac = FogColor *len*len  *FogFactor;
+
+      FragColor+=vec4(fac.x,fac.y,fac.z,1);
     }
 
     //FragColor = vec4(0,shadow,0,1.0);

@@ -8,9 +8,19 @@
 #include <vector>
 #include <string>
 
+#include <SFML/Audio.hpp>
+
+enum
+{
+  GM_SLIDE_MAIN,
+  GM_SLIDE_INSTRUCTIONS,
+  GM_SLIDE_CREDITS
+};
+
 
 class GUI;
 class Button;
+class Image;
 
 // represents the menu of the game 
 
@@ -24,7 +34,7 @@ public:
   GameMenu& operator=(const GameMenu& other) = delete;
 
   // initializes the menu
-  bool initialize();
+  bool initialize(float width, float height);
 
   // unloads/cleans-up the menu
   bool unload();
@@ -54,10 +64,26 @@ private:
   Button *m_btn_play;
   Button *m_btn_credits;
   Button *m_btn_exit;
+  Button *m_btn_instructions;
+  Button *m_btn_back;
+
+  // instructions and credits
+  Image * m_img_instructions;
+  Image * m_img_credits;
 
   // the selected button
   unsigned int m_selected;
 
+  // the current slide(main/credit/instructions) 
+  unsigned int m_selected_slide;
+
+  // background sound
+  sf::SoundBuffer * m_background_sound_buffer;
+  sf::Sound * m_background_sound_sound;
+
+  // refresh and slide change
+  void refreshSelection();
+  void changeSlide(unsigned int slide);
 
   
 

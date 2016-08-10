@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "Plant.h"
 #include "Environment.h"
+#include "SoundManager.h"
 
 #include <iostream>
 
@@ -69,7 +70,8 @@ void Item::doAction(Environment * env)
         //std::cout << npos.x << ", "<< npos.y << ", "<< npos.z << std::endl;
         env->addPlant(Engine::getScene(), PLANT_ENERGY_FLOWER, npos);
 
-        Player::drainEnergy(25.0f);
+        Player::drainEnergy(25.0f,false);
+        SoundManager::addAndPlaySound("game/models/sounds/rustle19.flac");
 
       }
     }
@@ -88,8 +90,8 @@ void Item::doAction(Environment * env)
           env->addPlant(Engine::getScene(), PLANT_ATTACK_FLOWER, npos);
         if(m_type == ITEM_TRAP_PLANT_TOOL) 
           env->addPlant(Engine::getScene(), PLANT_TRAP_FLOWER, npos);
-
-      Player::drainEnergy(15.0f);
+        SoundManager::addAndPlaySound("game/models/sounds/rustle19.flac");
+        Player::drainEnergy(15.0f,false);
 
       }
     }

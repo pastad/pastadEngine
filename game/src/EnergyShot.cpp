@@ -3,6 +3,7 @@
 #include "Mobs.h"
 #include "Mob.h"
 #include "Environment.h"
+#include "SoundManager.h"
 
 #include "Object.h"
 #include "Scene.h"
@@ -85,6 +86,7 @@ bool EnergyShot::update(float delta, Mobs * mobs, bool * mob_killed, Environment
         mobs->removeMob(m_target, env);      
         *mob_killed = true;
       }
+      SoundManager::addAndPlaySound("game/models/sounds/flaunch.wav");
 
       return true;
     }

@@ -112,6 +112,9 @@ public:
     // registers the moved callback function
     void registerMovedCallback( void  (*callback)()   );
 
+    // register rotation callback function
+    void registerRotatedCallback( void  (*callback)()   );
+
  
 private:
 
@@ -181,6 +184,9 @@ private:
 
     // stores the callback function for movement
     void (*external_cameraMovedCallback)();
+
+    // stores the callback function for rotation
+    void (*external_cameraRotatedCallback)();
 
        // recalculates the frustrum planes
     void recalculatePlanes();
