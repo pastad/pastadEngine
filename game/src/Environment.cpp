@@ -51,14 +51,15 @@ bool Environment::initialize(Scene * scene)
   std::srand(std::time(0)); //use current time as seed for random generator
    
   // test init
-  for(int x=0; x<1000;x++)
+  for(int x=0; x<10;x++)
   {
     int random_variable = std::rand() % 360;
     int dist = std::rand() % 40 +2;
     float r = static_cast <float> (std::rand()) / static_cast <float> (RAND_MAX);
     float dist_f = dist +r;
     glm::vec3 d = glm::rotateY(glm::vec3(1,0,0), (float)random_variable) * (float) dist_f;
-    Object * obj =  scene->addObjectInstanced("game/models/grass.obj",d, false ); 
+    Object * obj =  scene->addObjectInstanced("game/models/grass2.obj",d, false ); 
+
   }
 
   return true;
@@ -114,10 +115,11 @@ void Environment::update(float delta, float sun_strength, Player * player, Mobs 
     if(dist < ENERGY_REACTION_CLOSE)
     {
        remain->rotate(glm::vec3(1,1,1) );
+      float amount = remain->getScale().x * ENERGY_AMOUNT;
       Engine::getScene()->removeObject(remain);
       delete remain;
       m_energy_remains.erase(it);
-      player->gainEngery(ENERGY_AMOUNT);
+      player->gainEngery(amount );
     }  
     else
     {
@@ -136,10 +138,11 @@ void Environment::update(float delta, float sun_strength, Player * player, Mobs 
   for(std::vector<EnergyShot*>::iterator it = m_energy_shots.begin(); it != m_energy_shots.end(); )
   {
     bool mob_killed;
+
+    bool remove_shot =(*it)->update(delta, mobs,&mob_killed, this);
+
     if( (*it)->getTarget() != nullptr )
     {    
-      bool remove_shot =(*it)->update(delta, mobs,&mob_killed, this);
-
       if( mob_killed)
       {
         if(mobs->getMobs().size() <=1 )

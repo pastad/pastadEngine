@@ -41,16 +41,23 @@ float Engine::m_render_update_delta= 0.0f;
 bool Engine::m_render_update_needed;
 bool Engine::m_fullscreen;
 bool Engine::m_gui_movement_lock = false;
+bool Engine::m_switch_scene =false;
 
 
 Engine::Engine()
 {
 	Engine::m_initialized = false;
-	
+	m_scene_editor =  nullptr;
+  m_engine_gui =   nullptr;
+  m_log =   nullptr;
+  m_render_system = nullptr;
+  m_io_system = nullptr;
+  m_physic_system = nullptr;
 }
 
 Engine::~Engine()
 {		
+ 
 }
 
 
@@ -179,15 +186,32 @@ void Engine::shutDown()
 	{
 		shutDownSubsystems();
 
+    m_log->log("Engine", "Subsystems shut down");
+
 		glfwTerminate();
 
-		m_log->log("Engine", "shut down");
+    if(m_log != nullptr)
+		  m_log->log("Engine", "shut down");
+     if(m_scene != nullptr)
+      delete m_scene;
 		if(m_scene_editor != nullptr)
 			delete m_scene_editor;
-		delete m_engine_gui;
-		delete m_log;
-		delete m_render_system;
-		delete m_io_system;
+    if(m_engine_gui != nullptr)
+		  delete m_engine_gui;
+    if(m_log != nullptr)
+		  delete m_log;
+
+
+    m_log = nullptr;
+    m_engine_gui = nullptr;
+    m_scene_editor = nullptr;
+
+    if(m_render_system != nullptr)
+      delete m_render_system;
+    if(m_io_system != nullptr)
+      delete m_io_system;
+    if(m_physic_system != nullptr)
+      delete m_physic_system;
 
 		for( std::vector<GUI*>::iterator it = m_guis.begin(); it != m_guis.end();it++)
 		{
@@ -219,11 +243,14 @@ bool Engine::startUpSubsystems()
       return false;
   }
 
+
+
   return true;
 }
 
 bool Engine::shutDownSubsystems()
 { 
+
   if( m_system_flags & PHYSIC_SUBSYSTEM )
   {
     if(! m_physic_system->shutDown() )
@@ -239,6 +266,7 @@ bool Engine::shutDownSubsystems()
     if(! m_io_system->shutDown() )
       return false;
   }
+
 
   return true;
 }
@@ -286,7 +314,8 @@ void Engine::refreshWindow()
 void Engine::update()
 {
 	if(m_initialized)
-	{
+	{    
+    sceneSwitch();
 		if(m_scene != nullptr)
 		{
 			m_scene->update(m_time_delta);
@@ -302,7 +331,6 @@ void Engine::update()
 
 		glfwPollEvents();
 		timeUpdate();
-		sceneSwitch();
 	}
 }
 
@@ -429,6 +457,7 @@ Scene * Engine::getScene()
 
 void Engine::setScene(Scene * scene, bool delete_old)
 {
+  m_switch_scene = true;
 	m_scene_next = scene;
 	m_scene_next_delete = delete_old;
 	m_log->log("Engine", "scene was set");
@@ -436,7 +465,7 @@ void Engine::setScene(Scene * scene, bool delete_old)
 
 void Engine::sceneSwitch()
 {
-	if(m_scene_next != nullptr)
+	if(m_switch_scene)
 	{
 		Scene * t = m_scene;
 		if(t != nullptr && m_scene_next_delete)
@@ -447,6 +476,7 @@ void Engine::sceneSwitch()
 		m_scene = m_scene_next;
 		m_scene_next = nullptr;
 		m_log->log("Engine", "scene switched");
+    m_switch_scene = false;
 	}
 }
 
@@ -661,6 +691,10 @@ Light * Engine::pickLightAt(glm::vec2 p)
 bool Engine::isKeyReleasedAndPressed(int key_code)
 {
   return m_io_system->isKeyReleasedAndPressed(key_code);
+}
+bool Engine::isKeyPressedAndReleased(int key_code)
+{
+  return m_io_system->isKeyPressedAndReleased(key_code);
 }
 bool Engine::isMouseButtonReleasedAndPressed(int key_code)
 {

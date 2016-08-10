@@ -69,6 +69,9 @@ public:
   // sets the ssao sample array
   void setSSAOSamples();
 
+  // the emmissive indices 
+  void setEmmissiveIndices(std::vector<int> indices);
+
   // binds the shader  
   void use();
   

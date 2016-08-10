@@ -38,6 +38,11 @@ public:
   // returns the health of the mob
   float getHealth();
 
+  // moveable getter setter
+  void setMoveable();
+  void setNotMoveable();
+  bool isMoveable();
+
 private:
 
   // the objecy ... obviously
@@ -45,6 +50,9 @@ private:
 
   // the health of the mob 0 == dead
   float m_health;
+
+  // true if mob can move
+  bool m_moveable;
 
 };
 

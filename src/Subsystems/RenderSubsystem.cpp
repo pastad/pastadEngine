@@ -137,7 +137,7 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 		m_shadows_standard_enabled = true;
 
 		m_pp_shader->setGaussSize(10);
-		m_pp_shader->setBloomThreshold(0.6f);
+		m_pp_shader->setBloomThreshold(0.8f);
 		m_pp_shader->setSSAOSamples();
 
 		//glEnable(GL_FRAMEBUFFER_SRGB); 
@@ -332,8 +332,10 @@ void RenderSubsystem::renderPassLightBlur()
 	// light 
 	m_pp_shader->use();
 	m_pp_shader->setExposure(Engine::getScene()->getCamera()->getExposure());
+  m_pp_shader->setEmmissiveIndices(m_shader->getEmmissiveMaterialIndices());
 	
-	m_pp_buffer->bindForOutput();
+	m_pp_buffer->bindForOutput();  
+  m_gbuffer->bindMaterialTextureForOutput(1);
 	m_light_buffer->bindForInput();
 
 	m_pp_shader->setIdentityMatrices();

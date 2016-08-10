@@ -11,6 +11,7 @@
 class Scene;
 class Object;
 class Mobs;
+class Mob;
 class Environment;
 
 
@@ -18,7 +19,8 @@ enum
 {
   PLANT_TREE,
   PLANT_ENERGY_FLOWER,
-  PLANT_ATTACK_FLOWER
+  PLANT_ATTACK_FLOWER,
+  PLANT_TRAP_FLOWER
 };
 
 // represents a plant 
@@ -50,17 +52,30 @@ public:
   // attacks mobs if conditions match
   void attackMobs(Mobs* mobs, Environment * env);
 
+  // traps a mob
+  void trapMobs(Mobs* mobs, Environment * env);
+
 private:
 
   // the object 
   Object * m_object;
 
+  // an additional object
+  Object * m_additional_object = nullptr;
+  Object * m_additional_object2 = nullptr;
+
   // how far the plant is grown (percantage)
   float m_growth;
   float m_energy_growth;
 
-  // the cooldown for the action
+  // the cooldown time for the action
   float m_cooldown;
+
+  //  hold time for trap plant  
+  float m_hold_time;
+
+  // the target for holding
+  Mob * m_hold_target;
 
   // indicates how much energy is stored
   float m_stored_energy;
@@ -70,6 +85,12 @@ private:
 
   // the energy the plant holds
   std::vector<Object *> m_energy;
+
+  // the standard plant pos
+  glm::vec3 m_standard_pos;
+
+  // if trapplant extension of the grabber
+  float m_extension_length = 0;
 
 };
 

@@ -44,8 +44,8 @@ public:
   // renders the skybox of the scene
   void renderSkybox(SkyboxShader * sybox_shader);
 
-  // sets the skybox for the scene  returns | true if succeeded
-  bool setSkybox(const std::string path);
+  // sets the skybox for the scene  returns | Skybox * or nullptr if failed
+  Skybox * setSkybox(const std::string path);
 
   // sets the shadow textures
   void setupLightsForShadingPass(RenderShader * render_shader);
@@ -108,6 +108,9 @@ public:
   // removes the light from the scene
   void removeLight(Light * l);
 
+  // sets the fog
+  void setFog(glm::vec3 color, float factor, float offset);
+
   // saves the scene to a path 
   void save(std::string path);
 
@@ -153,6 +156,11 @@ private:
   // the current scene time and the time advance
   float m_time_line_seconds = 0.0f;
   float m_time_advance = 1.0f;
+
+  // the fog specs
+  glm::vec3 m_fog_color;
+  float m_fog_factor;
+  float m_fog_offset;
 
   // internal addObject request handling function ( with|without position)
   Object * addObject(std::string  path, glm::vec3 position, bool instanced, bool insert_in_tree, bool static_object);

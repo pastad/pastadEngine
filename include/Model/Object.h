@@ -118,6 +118,11 @@ public:
   void unsetStaticFlag();
   bool isStaticFlagSet();
 
+  // shadow render only getter setter
+  void setShadowRenderOnly();
+  void setNotShadowRenderOnly();
+  bool isOnlyShadowRendered();
+
 
   //using  Transform::setPosition;  
   using  Transform::getPosition;
@@ -162,6 +167,9 @@ private:
 
   // determines if object should be rendered when in the visible range
   bool m_visible = true;
+
+  // true if only the shadow should be rendered
+  bool m_shadow_render_only = false;
 
   // determines is physics should be applied
   bool m_physics_enabled = false;

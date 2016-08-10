@@ -33,6 +33,10 @@ uniform int EnableBloom;
 uniform mat4 CameraProjection;
 uniform mat4 CameraView;
 
+const int MAX_NUM_MATERIALS =  20;
+
+uniform int Emissive[MAX_NUM_MATERIALS];
+
 // inspired by https://www.youtube.com/watch?v=Z9bYzpwVINA
 
 vec4 fxaa()
@@ -136,7 +140,7 @@ void passStandard()
   color = gamma_correction(color);  
 
   if( EnableBloom == 1 )
-    FragColor = color + lightblur;//
+    FragColor =  color +lightblur;//
   else
     FragColor = color ;//
 
@@ -148,14 +152,21 @@ subroutine (RenderPassType)
 void passBright()
 {
   vec4 color = texture2D(Tex1, TexCoord );
+  vec4 material = texture2D(Tex2, TexCoord );
+
   if(EnableHDR == 1)
     color = hdr_exposure(color);
   float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
 
-  if(brightness > BloomThreshold)
+  if(  (brightness > BloomThreshold)   )
     FragColor = vec4(brightness)*0.1; // 0.1 for brightness scaling
   else
-    FragColor = vec4(0,0,0,0);
+  {
+    if(  Emissive[ int(material.x )] == 1 )
+      FragColor = vec4(brightness);
+    else
+      FragColor = vec4(0,0,0,0);
+  }
 }
 
 
@@ -182,7 +193,7 @@ void passBlur2()
     color += texture2D(Tex1, TexCoord + vec2(0.0, off.y * i)) * GaussKernel[i-1];
     color += texture2D(Tex1, TexCoord - vec2(0.0, off.y * i)) * GaussKernel[i-1];
   }
-
+  FragColor = color;
 }
 
 subroutine (RenderPassType)

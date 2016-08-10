@@ -4,6 +4,8 @@
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
+#include <SFML/Audio.hpp>
+
 class Camera;
 class Scene;
 class Object;
@@ -39,7 +41,7 @@ public:
 
   // adds/ removes energy to the player
   static void gainEngery(float val);
-  static void drainEnergy(float val);
+  static void drainEnergy(float val, bool deadly);
 
   // returns the energy stored by the player
   static float getEnergy();
@@ -69,8 +71,18 @@ private:
   // -1 = cooldown | 1 = jump | 0 = none
   static int m_jump_state;
 
+  // the object of the players "body"
+  static Object * m_player_object;
+
+  static unsigned int m_movement_keys_pressed;
+
+  // walking sound
+  static sf::SoundBuffer * m_walking_sound_buffer;
+  static sf::Sound * m_walking_sound_sound;
+
   // the callback called by the camera
   static void cameraMovedCallback();
+  static void cameraRotatedCallback();
 
   // sets up the gui
   static void setupGUI();

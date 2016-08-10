@@ -83,6 +83,11 @@ void GBuffer::bindForOutput()
   m_material_texture->bind(3);
 }
 
+void GBuffer::bindMaterialTextureForOutput(unsigned int off)
+{
+  m_material_texture->bind(off);
+}
+
 
 //  picking -------------------------------------------------
 

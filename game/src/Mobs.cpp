@@ -91,7 +91,7 @@ void Mobs::update(Player * player, Environment * env)
     {
       std::cout << "Mob desolved" <<std::endl;     
 
-      player->drainEnergy((*it)->getHealth());
+      player->drainEnergy((*it)->getHealth(), true);
 
       removeMob((*it), env);
     }

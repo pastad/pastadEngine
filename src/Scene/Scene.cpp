@@ -29,6 +29,10 @@ Scene::Scene()
   m_terrain = nullptr;
   m_tree_root= new SceneTreeElement(500, glm::vec3(0,0,0));
   Engine::getLog()->log("Scene", "created");
+
+  m_fog_color = glm::vec3(1,1,1);
+  m_fog_factor = 0.0f;
+  m_fog_offset = 0.0f;
   
 }
 
@@ -39,30 +43,32 @@ Scene::~Scene()
     if( (*it) != nullptr)
       delete (*it);
   }
+  Engine::getLog()->log("Scene", "deleted all static objects");
   for(std::vector<Object *>::iterator it = m_objects_dynamic.begin(); it != m_objects_dynamic.end();it++)
   {
     if( (*it) != nullptr)
       delete (*it);
   }
+  Engine::getLog()->log("Scene", "deleted all dynamic objects");
   m_objects_dynamic.clear();
   m_objects_static.clear();
   if(m_tree_root != nullptr)
     delete m_tree_root;
+  Engine::getLog()->log("Scene", "deleted the tree");
   for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end();it++)
   {
     if( (*it) != nullptr)
       delete (*it);
   }
+  Engine::getLog()->log("Scene", "deleted all lights");
   m_lights.clear();
   if(m_skybox != nullptr)
     delete m_skybox;
   if(m_camera != nullptr)
     delete m_camera;
-  if(m_tree_root != nullptr)
-    delete m_tree_root;
   if(m_terrain != nullptr)
     delete m_terrain;
-  Engine::getLog()->log("Scene", "deleted");
+  Engine::getLog()->log("Scene", "deletion complete");
 }
 
 
@@ -109,6 +115,7 @@ void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, R
 
   render_shader->setLights(&m_lights);
   render_shader->setCameraPosition(m_camera->getPosition());
+  render_shader->setFog(m_fog_color,m_fog_factor,m_fog_offset);
 
  // float angle_mid = glm::orientedAngle(glm::vec2(1,1),  glm::vec2( v.x ,v.z)   );
 
@@ -194,7 +201,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
         (*it)->unbindFromShadowRender();
       }
       if( (*it)->getType() == LIGHT_DIRECTIONAL )  
-      {
+      {       
         shadow_shader->use();
         (*it)->bindForShadowRenderDirectional(shadow_shader);
 
@@ -244,7 +251,7 @@ void Scene::renderSkybox(SkyboxShader * skybox_shader)
   skybox_shader->setProjection(m_camera->getProjection());
 
   if(m_skybox != nullptr)
-    m_skybox->render();
+    m_skybox->render(skybox_shader);
 }
 
 
@@ -296,6 +303,7 @@ void Scene::refreshRenderObjects()
     (*ito)->unsetExtractionFlag();
   }
   refreshRenderObjectsSceneTree();
+  //std::cout << m_render_objects.size()<<std::endl;
   //m_render_objects.clear();
   glm::vec3 v = m_camera->getDirection();
   v = glm::normalize(v);
@@ -308,10 +316,10 @@ void Scene::refreshRenderObjects()
     float angle_min = (*it)->getMinAngleToCamera(m_camera);  
 
     // tmp disable due to material flickers 
-    if( ( ((*it)->getPriorityRender() ) || m_camera->insideFrustrum((*it)) )  && ((*it)->isVisible())  ) //(angle_min < m_camera->getFOV())
+    if( ( ((*it)->getPriorityRender() ) || m_camera->insideFrustrum((*it)) )  && ((*it)->isVisible()) && (!(*it)->isOnlyShadowRendered()) ) //(angle_min < m_camera->getFOV())
     {
       //std::cout << angle_mid << std::endl;
-      //std::cout << (*it)->getIdentifier()<<std::endl;*/
+      //std::cout << (*it)->getIdentifier()<<std::endl;
     
       std::map< std::string , std::vector<Object *> >::iterator entry = m_render_objects.find( (*it)->getIdentifier() );
       if(entry != m_render_objects.end())
@@ -406,12 +414,18 @@ bool Scene::load(std::string path)
       if( type == "Object")
       {
         std::string file_name = "";
+        bool static_ob = false ;
         tinyxml2::XMLElement * el = child->FirstChildElement("Identifier");
         if( el != nullptr)
         {
             file_name =std::string( el->Attribute("value") );
         }
-        Object * new_object = addObject(file_name,glm::vec3(0,0,0), false , false, true); 
+        el = child->FirstChildElement("Static");
+        if( el != nullptr)
+        {
+            static_ob =el->BoolAttribute("value") ;
+        }
+        Object * new_object = addObject(file_name,glm::vec3(0,0,0), false , static_ob, static_ob); 
         new_object->load(child);
         new_object->refreshAABB();
         m_tree_root->insert(new_object);
@@ -540,7 +554,7 @@ Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, 
     else
       m_objects_dynamic.push_back(obj);
     m_models[path] = m;
-    if(insert_in_tree)
+    if(insert_in_tree )
       m_tree_root->insert(obj);             
     refreshRenderObjects();
   }
@@ -683,7 +697,7 @@ Terrain * Scene::addTerrain()
 
 // skybox
 
-bool Scene::setSkybox(const std::string path)
+Skybox *  Scene::setSkybox(const std::string path)
 {
   if(m_skybox != nullptr)
   {
@@ -698,10 +712,10 @@ bool Scene::setSkybox(const std::string path)
   {
     delete m_skybox;
     m_skybox = nullptr;
-    return false;  
+    return m_skybox;  
   }
 
-  return true;
+  return m_skybox;
 }
 
 //camera
@@ -710,3 +724,14 @@ Camera * Scene::getCamera()
 {
   return m_camera;
 }
+
+
+// fog
+
+void Scene::setFog(glm::vec3 color, float factor, float offset)
+{
+  m_fog_color = color;
+  m_fog_factor = factor;
+  m_fog_offset = offset;
+}
+

@@ -47,6 +47,10 @@ void SkyboxShader::setProjection(glm::mat4 projection)
   checkUniformError("set projectionMarix"); 
 }
 
+void SkyboxShader::setLightStrength(float strength)
+{
+  setUniform("LightStrength",strength);
+}
 //  use -------------------------------------------------
 
 void SkyboxShader::use()

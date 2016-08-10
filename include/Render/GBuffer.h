@@ -27,6 +27,7 @@ public:
     void bindForInput();
     void unbindFromInput();
     void bindForOutput();
+    void bindMaterialTextureForOutput(unsigned int off);
 
     int pickObjectAt(glm::vec2 pos);
     int pickObjectAtCenter();

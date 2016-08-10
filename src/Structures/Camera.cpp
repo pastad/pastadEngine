@@ -52,6 +52,8 @@ Camera::Camera(float x, float y, float z): m_pos(x,y,z),m_rotation_allowed(false
   m_vertical_movement_allowed = true;
   m_up_down_movement_allowed = true;
 
+  external_cameraRotatedCallback = nullptr;
+
   recalculateMatrices();
 }
 
@@ -149,8 +151,10 @@ void Camera::rotate(float deltax,float deltay)
 
     m_forward = Helper::anglesToDirection(m_rot_1,m_rot_2);
     Engine::getScene()->cameraRotated();
-    if(external_cameraMovedCallback != nullptr)
-      external_cameraMovedCallback();
+
+    //Engine::getLog()->log("Camera", "rotated");
+    if(external_cameraRotatedCallback != nullptr)
+      external_cameraRotatedCallback();
   }
 }
 
@@ -628,4 +632,9 @@ unsigned int Camera::insideFrustrum(BoundingBox * bb)
 void Camera::registerMovedCallback( void  (*callback)(void)   )
 {
   external_cameraMovedCallback = callback;
+}
+
+void Camera::registerRotatedCallback( void  (*callback)(void)   )
+{
+  external_cameraRotatedCallback = callback;
 }

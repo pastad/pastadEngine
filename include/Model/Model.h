@@ -61,9 +61,11 @@ public:
   // returns the meshes
   std::vector<Mesh*> getMeshes();
 
+  // returns all materials
+  std::map<int,Material *> getMaterials();
+
   // rebuffer if we have changed our objects
-  void refreshBufferedMatrices();
-  void bufferedMatricesShouldBeRefreshed();
+  void refreshBufferedMatrices(std::vector<Object *> instances);
 
 
 private:
@@ -103,9 +105,6 @@ private:
 
 	// the bounding box of the model
 	BoundingBox * m_bounding_box = nullptr;
-
-	// true if instanced models should be rebuffered
-	bool m_instanced_matrices_refresh_needed;
 
 	// the number of instanced matrices
 	unsigned int m_num_instanced_buffered_matrices;

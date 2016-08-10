@@ -42,49 +42,60 @@ int main(void)
   if(launch_game)
   {
 
-    engine.initialize(1240, 720, RENDER_SUBSYSTEM, false, false);
+    engine.initialize(1240, 720, PHYSIC_SUBSYSTEM , false, false);
 
     
     GameMenu * game_menu = new GameMenu();   
- 
-    game_menu->initialize();
+    Game * game = nullptr;
 
-    while(game_menu->isActive())
+    
+    while( game_menu->shouldGameBeStarted() && engine.running() )
     {
-      game_menu->update();
-      engine.update();
-      engine.render();
-    }
+      game_menu->initialize(1240,720);
 
-    game_menu->unload();
-
-    if( game_menu->shouldGameBeStarted())
-    {
-      Game * game = new Game();
-
-      if(game->initialize())
+      while(game_menu->isActive())
       {
-
-        while(engine.running())
-        {        
-          engine.update();
-          game->update();   
-          engine.render();
-        }
+        game_menu->update();
+        engine.update();
+        engine.render();
       }
 
-      delete game;
+      game_menu->unload();
+
+      if( game_menu->shouldGameBeStarted())
+      {
+        Game * game = new Game();
+
+        if(game->initialize())
+        {
+
+          while(engine.running() && (!game->hasEnded()) )
+          {        
+            game->update(); 
+            engine.update();            
+            engine.render();
+          }
+        }
+        Engine::setScene(nullptr,true);
+        engine.update();
+
+        if(game != nullptr)
+          delete game;
+
+      }
+
     }
     delete game_menu;
     
 
+    engine.shutDown();
 
-
+   
 
   }
   else
   {
-    engine.initialize(1240, 720, PHYSIC_SUBSYSTEM, true, false);
+    engine.initialize(1240, 720, PHYSIC_SUBSYSTEM , true, false);
     Scene *  scene = new Scene();
 
 
@@ -161,6 +172,8 @@ int main(void)
     engine.setScene(scene, false);
     //ground->setPriorityRender();  
 
+
+
     // run the main loop
     while(engine.running())
     {
@@ -201,9 +214,12 @@ int main(void)
       engine.update();
     	engine.render();
     }
+    
+    engine.shutDown();
+    if(scene != nullptr)
+      delete scene;
   }
 
-  engine.shutDown();
 
   return 0;  
 }

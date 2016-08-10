@@ -26,6 +26,8 @@ struct MaterialColorSpecs
   // the transparency value
   float m_opacity;
 
+  // if the material is emmissive
+  float m_emmissive;
 };
 
 class Material
@@ -44,6 +46,8 @@ public:
   // returns true if the material is transparent
   bool isTransparent();
 
+  // emmissive getter setters
+  void setEmmissive(float val);
 
 protected:
 
@@ -61,6 +65,9 @@ private:
 
   // determines if base texture is set
   bool m_base_texture_set;
+
+  // true if material emmits
+  bool m_emmissive;
 };
 
 #endif // MATERIAL_H

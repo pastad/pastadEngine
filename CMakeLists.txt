@@ -14,6 +14,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Subsystems/RenderSubsystem.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Subsystems/IOSubsystem.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Subsystems/PhysicSubsystem.cpp
+   #${CMAKE_CURRENT_SOURCE_DIR}/src/Subsystems/AudioSubsystem.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/Shader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/RenderShader.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Shaders/RenderBaseShader.cpp
@@ -58,6 +59,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Script/ScriptElement.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Script/RotationScriptElement.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Script/ExternalTriggerScriptElement.cpp
+ #  ${CMAKE_CURRENT_SOURCE_DIR}/src/Audio/AudioClip.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/RessourceManager.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/src/Helper.cpp
   # ${CMAKE_CURRENT_SOURCE_DIR}/src/LuaScript.cpp
@@ -74,6 +76,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/game/src/Environment.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/game/src/EnergyShot.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/game/src/GameMenu.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/game/src/SoundManager.cpp
    
 )
 set(HEADERS
@@ -87,6 +90,7 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems/RenderSubsystem.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems/IOSubsystem.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems/PhysicSubsystem.h
+   #${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems/AudioSubsystem.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/Shader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/RenderShader.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders/RenderBaseShader.h
@@ -131,9 +135,10 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Script/ScriptElement.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Script/RotationScriptElement.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Script/ExternalTriggerScriptElement.h
+  # ${CMAKE_CURRENT_SOURCE_DIR}/include/Audio/AudioClip.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/RessourceManager.h
    ${CMAKE_CURRENT_SOURCE_DIR}/include/Helper.h
-   #${CMAKE_CURRENT_SOURCE_DIR}/include/LuaScript.h
+   
    ${CMAKE_CURRENT_SOURCE_DIR}/external/gl_core_4_.h
 
    ${CMAKE_CURRENT_SOURCE_DIR}/game/include/Game.h
@@ -146,6 +151,7 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/game/include/Environment.h
    ${CMAKE_CURRENT_SOURCE_DIR}/game/include/EnergyShot.h
    ${CMAKE_CURRENT_SOURCE_DIR}/game/include/GameMenu.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/game/include/SoundManager.h
 
 
 )
@@ -153,8 +159,8 @@ set(HEADERS
 find_package(OpenGL REQUIRED)
 find_package(Freetype REQUIRED)
 
-
 include_directories( ${OPENGL_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} {GLFW_INCLUDE_DIRS} {ASSIMP_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/external/SOIL/src {BOOST_INCLUDE_DIRS}  ${LUA_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include
+
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Subsystems
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Shaders
 ${CMAKE_CURRENT_SOURCE_DIR}/include/Structures
@@ -177,20 +183,19 @@ ${CMAKE_CURRENT_SOURCE_DIR}/external/tinyxml2
 ${CMAKE_CURRENT_SOURCE_DIR}/game/include
  )
 
+
 #<<<<<<< HEAD
-LINK_DIRECTORIES(${GLFW_LIBRARY_DIR}  ${FREETYPE_LIBRARY_DIRS} ${ASSIMP_LIBRARY_DIR}     ${CMAKE_CURRENT_SOURCE_DIR}/external/SOIL/lib ${LUA_LIBRARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/mxe/usr/x86_64-w64-mingw32.static/lib  )
+LINK_DIRECTORIES(${GLFW_LIBRARY_DIR}  ${FREETYPE_LIBRARY_DIRS} ${ASSIMP_LIBRARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/external/lib/sfml     ${CMAKE_CURRENT_SOURCE_DIR}/external/SOIL/lib ${LUA_LIBRARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/mxe/usr/x86_64-w64-mingw32.static/lib  )
 
 add_executable(Engine main.cpp ${SOURCE} ${HEADERS})
 
 set(LINK_LIBS "liba libb libc")
-#=======
-#LINK_DIRECTORIES(${GLFW_LIBRARY_DIR} ${FREETYPE_LIBRARY_DIRS} ${ASSIMP_LIBRARY_DIR} ${SOIL_LIBRARY_DIR} ${Boost_LIBRARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/external/tinyxml2 ${LUA_LIBRARY_DIR}) 
- 
-#add_executable(Engine main.cpp ${SOURCE} ${HEADERS})
 
-#target_link_libraries(Engine tinyxml2  GL glfw3 assimp boost_system boost_filesystem SOIL freetype lua5.1  ${LUA_LIBRARIES} ${GLFW_STATIC_LIBRARIES}  ${GLFW_STATIC_LIBRARIES}   ${OPENGL_LIBRARIES} X11 Xcursor Xinerama Xxf86vm Xi Xrandr pthread dl  )
-#>>>>>>> master
 
-target_link_libraries(Engine SOIL opengl32 tinyxml2    freetype  harfbuzz glib-2.0 bz2 z png  pcre intl iconv libboost_filesystem-mt.a  libboost_system-mt.a   ws2_32 winmm glfw3 assimp  freetype  ${GLFW_STATIC_LIBRARIES}   pthread  ) #${OPENGL_LIBRARIES}
+
+#target_link_libraries(Engine tinyxml2 portaudio GL glfw3 assimp boost_system boost_filesystem SOIL freetype lua5.1 sfml-audio sfml-system ${SFML_LIBRARIES}  ${LUA_LIBRARIES} ${GLFW_STATIC_LIBRARIES}  ${GLFW_STATIC_LIBRARIES}   ${OPENGL_LIBRARIES} X11 Xcursor Xinerama Xxf86vm Xi Xrandr pthread dl  )
+
+
+target_link_libraries(Engine SOIL opengl32 tinyxml2    sfml-system  sfml-audio freetype  harfbuzz glib-2.0 bz2 z png  pcre intl iconv libboost_filesystem-mt.a  libboost_system-mt.a   ws2_32 winmm glfw3 assimp  freetype  ${GLFW_STATIC_LIBRARIES}   pthread  ) #${OPENGL_LIBRARIES}
 #GL  X11 Xcursor Xinerama Xxf86vm Xi Xrandr dl 
 
