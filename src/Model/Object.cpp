@@ -22,6 +22,7 @@ Object::Object(std::string identifier, Model * parent):Transform(glm::vec3(0,0,0
   m_physics_static = false;
   refreshAABB();
   m_script = nullptr;
+  std::cout << "objct constructor done"<<std::endl;  
 }
 
 Object::~Object()
@@ -172,7 +173,7 @@ bool Object::load( tinyxml2::XMLElement *  element)
     setStaticFlag();
   else
     unsetStaticFlag();
-  
+  std::cout << "objct loading done"<<std::endl; 
   return true;
 }
 

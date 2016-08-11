@@ -418,17 +418,22 @@ bool Scene::load(std::string path)
         tinyxml2::XMLElement * el = child->FirstChildElement("Identifier");
         if( el != nullptr)
         {
-            file_name =std::string( el->Attribute("value") );
+          file_name =std::string( el->Attribute("value") );
         }
         el = child->FirstChildElement("Static");
         if( el != nullptr)
         {
-            static_ob =el->BoolAttribute("value") ;
+          static_ob =el->BoolAttribute("value") ;
         }
+            std::cout << "objct pre constructor"<<std::endl; 
         Object * new_object = addObject(file_name,glm::vec3(0,0,0), false , static_ob, static_ob); 
+            std::cout << "objct pre load"<<std::endl; 
         new_object->load(child);
+            std::cout << "objct post load"<<std::endl; 
         new_object->refreshAABB();
+          std::cout << "objct pre insert"<<std::endl; 
         m_tree_root->insert(new_object);
+          std::cout << "objct post insert"<<std::endl; 
       }
       if( type == "Skybox")
       {

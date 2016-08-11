@@ -3,7 +3,7 @@ project (Engine)
 
 SET(CMAKE_SYSTEM_NAME Windows)
 SET(CMAKE_CXX_COMPILER x86_64-w64-mingw32-g++)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -static-libgcc -static-libstdc++")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static -std=c++11 -static-libgcc -static-libstdc++")
 
 set(SOURCE
    ${SOURCE}
@@ -193,7 +193,7 @@ set(LINK_LIBS "liba libb libc")
 
 
 
-#target_link_libraries(Engine tinyxml2 portaudio GL glfw3 assimp boost_system boost_filesystem SOIL freetype lua5.1 sfml-audio sfml-system ${SFML_LIBRARIES}  ${LUA_LIBRARIES} ${GLFW_STATIC_LIBRARIES}  ${GLFW_STATIC_LIBRARIES}   ${OPENGL_LIBRARIES} X11 Xcursor Xinerama Xxf86vm Xi Xrandr pthread dl  )
+#target_link_libraries(Engine tinyxml2 portaudio GL glfw3 assimp boost_system boost_filesystem SOIL freetype lua5.1 sfml-audio-s sfml-system-s ${SFML_LIBRARIES}  ${LUA_LIBRARIES} ${GLFW_STATIC_LIBRARIES}  ${GLFW_STATIC_LIBRARIES}   ${OPENGL_LIBRARIES} X11 Xcursor Xinerama Xxf86vm Xi Xrandr pthread dl  )
 
 
 target_link_libraries(Engine SOIL opengl32 tinyxml2    sfml-system  sfml-audio freetype  harfbuzz glib-2.0 bz2 z png  pcre intl iconv libboost_filesystem-mt.a  libboost_system-mt.a   ws2_32 winmm glfw3 assimp  freetype  ${GLFW_STATIC_LIBRARIES}   pthread  ) #${OPENGL_LIBRARIES}

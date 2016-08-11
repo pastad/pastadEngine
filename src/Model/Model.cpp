@@ -167,10 +167,10 @@ void Model::processScene()
     for (unsigned int i = 0 ; i <m_scene->mNumMeshes ; i++)
     {
       const aiMesh* mesh = m_scene->mMeshes[i];
-      AnimationMesh * n = NULL;
+      AnimationMesh * n = nullptr;
 
       n= new AnimationMesh(mesh,mesh->mMaterialIndex);
-      if(n == NULL)
+      if(n == nullptr)
         Engine::getLog()->log("Model","AnimationMesh is null");
       else
       {        
@@ -187,10 +187,10 @@ void Model::processScene()
     for (unsigned int i = 0 ; i <m_scene->mNumMeshes ; i++)
     {
       const aiMesh* mesh = m_scene->mMeshes[i];
-      Mesh * n = NULL;
+      Mesh * n = nullptr;
 
       n= new Mesh(mesh,mesh->mMaterialIndex);
-      if(n == NULL)
+      if(n == nullptr)
         Engine::getLog()->log("Model","Mesh is null");
       else
       {        
@@ -391,7 +391,7 @@ const aiNodeAnim* Model::findNodeAnim(const aiAnimation* pAnimation, const std::
     }
   }
 
-  return NULL;
+  return nullptr;
 }
 
 unsigned int Model::findPosition(float animation_time, const aiNodeAnim* pNodeAnim)
