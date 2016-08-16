@@ -156,7 +156,7 @@ bool Game::initialize()
 void Game::update()
 {
   float delta = Engine::getTimeDelta();
-  if(m_first_run)
+  if(m_first_run || delta >0.5f) // for the fade in halt
   {
     m_first_run = false;
     delta = 0.0f;
@@ -191,7 +191,7 @@ void Game::update()
     }
     else
     {
-      std::cout << "fade in" <<std::endl;
+      //std::cout << "fade in" <<std::endl;
       float fac = sun_strength + (SHADOW_TIME-m_game_time);
       m_scene->setFog(glm::vec3(fac, fac, fac), fac , 0.0f);
       m_skybox->setLightStrength(fac*fac);
