@@ -15,6 +15,8 @@ Image::Image(unsigned int id):m_id(id), m_active(true)
   setPosition(glm::vec2(0,0));
   setScale(glm::vec2(1.0f,1.0f));
   m_texture = nullptr;
+  m_mix_color = glm::vec3(1,1,1);
+  m_mix_value = 0.0f;
 }
 
 Image::~Image()
@@ -38,6 +40,7 @@ void Image::render(ImageShader * image_shader, Quad * quad)
     image_shader->setScreenSize(glm::vec2(Engine::getWindowWidth(),Engine::getWindowHeight()));
     image_shader->setPosition(m_position );
     image_shader->setModelSize(  m_texture->getSize() * m_scale );
+    image_shader->setMixColor(m_mix_color,m_mix_value);
     m_texture->bind(0);
     quad->render();
   }
@@ -83,4 +86,12 @@ void Image::setInactive()
 bool Image::isActive()
 {
   return m_active;
+}
+
+// mixing color
+
+void Image::mixWithColor(glm::vec3 color, float mix_value)
+{
+  m_mix_color = color;
+  m_mix_value = mix_value;
 }

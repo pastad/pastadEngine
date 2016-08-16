@@ -19,6 +19,12 @@ double IOSubsystem::m_mouse_x = -1;
 double IOSubsystem::m_mouse_y= -1;
 glm::vec2 IOSubsystem::m_mouse_delta;
 
+
+IOSubsystem::EXTERNALKEYCALLBACK IOSubsystem::m_external_keyCallback = nullptr ;
+IOSubsystem::EXTERNALMOUSEMOVECALLBACK IOSubsystem::m_external_mouseMoveCallback = nullptr ;
+IOSubsystem::EXTERNALMOUSESCROLLCALLBACK IOSubsystem::m_external_mouseScrollCallback = nullptr ;
+IOSubsystem::EXTERNALMOUSEKEYCALLBACK IOSubsystem::m_external_mouseKeyCallback = nullptr;
+
 IOSubsystem::IOSubsystem():Subsystem("IOSubsystem")
 {
 	m_initialized = false;
@@ -37,6 +43,7 @@ bool IOSubsystem::startUp(GLFWwindow * window)
     glfwSetKeyCallback(window, keyCallback);
     glfwSetCursorPosCallback(window, mouseMoveCallback);
     glfwSetMouseButtonCallback(window, mouseButtonCallback);
+    glfwSetScrollCallback (window, mouseScrollCallback); 
 		Engine::getLog()->log("IOSubsystem", "started");
 		
     m_initialized = true;
@@ -184,10 +191,15 @@ void IOSubsystem::keyCallback(GLFWwindow* window, int key, int scancode, int act
 
     m_keys[key] = false;
   }
+  if(m_external_keyCallback != nullptr)
+    m_external_keyCallback(key, ( action == GLFW_PRESS) ? 1: 0 );
 }
 
 void IOSubsystem::mouseMoveCallback(GLFWwindow* window, double x, double y )
 {
+  if(m_external_mouseMoveCallback != nullptr)
+    m_external_mouseMoveCallback(x,y);
+
   if(m_mouse_x == -1)
   {
     m_mouse_x =x;
@@ -205,6 +217,8 @@ void IOSubsystem::mouseMoveCallback(GLFWwindow* window, double x, double y )
 
 void IOSubsystem::mouseButtonCallback(GLFWwindow * window, int button, int action, int mods)
 { 
+
+
  if(action == GLFW_PRESS)
   {        
     if(!m_mouse_buttons[button])  
@@ -213,8 +227,7 @@ void IOSubsystem::mouseButtonCallback(GLFWwindow * window, int button, int actio
       m_mouse_buttons_released_and_pressed[button] = true;
     }
 
-    m_mouse_buttons[button] = true; 
-    
+    m_mouse_buttons[button] = true;     
   }
   if(action == GLFW_RELEASE)
   {
@@ -228,4 +241,33 @@ void IOSubsystem::mouseButtonCallback(GLFWwindow * window, int button, int actio
     m_mouse_buttons[button] = false;
   }
 
+}
+
+void IOSubsystem::mouseScrollCallback(GLFWwindow * window, double xoffset, double yoffset)
+{ 
+  if(m_external_mouseScrollCallback != nullptr)
+    m_external_mouseScrollCallback(xoffset,yoffset);
+}
+
+
+
+void IOSubsystem::registerKeyCallback( EXTERNALKEYCALLBACK  callback   )
+{
+  m_external_keyCallback = callback;
+}
+
+
+void IOSubsystem::registerMouseMoveCallback( EXTERNALMOUSEMOVECALLBACK  callback  )
+{
+  m_external_mouseMoveCallback = callback;
+}
+
+void IOSubsystem::registerMouseScrollCallback( EXTERNALMOUSESCROLLCALLBACK callback   )
+{
+  m_external_mouseScrollCallback = callback;
+}
+
+void IOSubsystem::registerMouseKeyCallback( EXTERNALMOUSEKEYCALLBACK callback  )
+{
+  m_external_mouseKeyCallback = callback;
 }

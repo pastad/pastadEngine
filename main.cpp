@@ -35,15 +35,17 @@ int main(void)
 
   Engine engine;
 
-
+  unsigned int w = 1920;
+  unsigned int h = 1080;
 
   bool launch_game = true;
 
   if(launch_game)
   {
 
-    engine.initialize(1240, 720, PHYSIC_SUBSYSTEM | AUDIO_SUBSYSTEM, false, false);
-
+   // engine.initialize(w, h, PHYSIC_SUBSYSTEM , false, false);
+    engine.initialize("game/engine_config.xml");
+   // engine.saveConfig("game/test_engine_config.xml", 1920,1080, true, false, 0,ST_STANDARD);
     
     GameMenu * game_menu = new GameMenu();   
     Game * game = nullptr;
@@ -51,7 +53,7 @@ int main(void)
     
     while( game_menu->shouldGameBeStarted() && engine.running() )
     {
-      game_menu->initialize(1240,720);
+      game_menu->initialize(engine.getWindowWidth(),  engine.getWindowHeight());
 
       while(game_menu->isActive())
       {
@@ -95,7 +97,7 @@ int main(void)
   }
   else
   {
-    engine.initialize(1240, 720, PHYSIC_SUBSYSTEM |AUDIO_SUBSYSTEM, true, false);
+    engine.initialize(1240, 720, PHYSIC_SUBSYSTEM , true, false);
     Scene *  scene = new Scene();
 
 

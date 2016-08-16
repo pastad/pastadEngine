@@ -15,6 +15,7 @@ class Plant;
 class Player;
 class Mobs;
 class EnergyShot;
+class EnergySpark;
 class Mob;
 
 // combines all environment objects 
@@ -36,6 +37,10 @@ public:
 
   // adds a shot to the environment
   void addEnergyShot(Scene * scene, Mob * target, glm::vec3 start_position  );
+
+  // adds an energy spark to the environemnt
+  void addEnergySpark(glm::vec3 start, glm::vec3 target, unsigned int type);
+  void addEnergySpark( Object * object, glm::vec3 target, unsigned int type );
 
   // adds energy remains to the environment
   void addEnergyRemains(std::vector<Object *> objs);
@@ -62,6 +67,9 @@ private:
 
   // active shots
   std::vector<EnergyShot*> m_energy_shots;
+
+  // the active sparks
+  std::vector<EnergySpark*> m_energy_sparks;
 
 };
 

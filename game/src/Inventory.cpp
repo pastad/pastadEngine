@@ -2,6 +2,8 @@
 
 #include "Item.h"
 #include "Engine.h"
+#include "Player.h"
+
 
 #include <iostream>
 
@@ -31,7 +33,14 @@ void Inventory::selectItem(unsigned int idx)
       m_items[m_selected_item]->setInactive();  
     m_selected_item = idx;
     m_items[m_selected_item]->setActive();
+    Player::refreshSparks();
   }
+}
+
+void Inventory::scroll(double x)
+{
+  //std::cout << x <<std::endl;
+  selectItem(m_selected_item + (int) x);
 }
 
 Item * Inventory::getSelectedItem()
@@ -49,6 +58,5 @@ void Inventory::update()
     selectItem(1);
   if( Engine::isKeyReleasedAndPressed('3'))
     selectItem(2);
-  if( Engine::isKeyReleasedAndPressed('4'))
-    selectItem(3);
+
 }

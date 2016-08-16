@@ -73,6 +73,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/game/src/Plant.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/game/src/Environment.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/game/src/EnergyShot.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/game/src/EnergySpark.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/game/src/GameMenu.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/game/src/SoundManager.cpp
    
@@ -146,6 +147,7 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/game/include/Plant.h
    ${CMAKE_CURRENT_SOURCE_DIR}/game/include/Environment.h
    ${CMAKE_CURRENT_SOURCE_DIR}/game/include/EnergyShot.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/game/include/EnergySpark.h
    ${CMAKE_CURRENT_SOURCE_DIR}/game/include/GameMenu.h
    ${CMAKE_CURRENT_SOURCE_DIR}/game/include/SoundManager.h
 

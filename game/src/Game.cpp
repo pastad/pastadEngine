@@ -23,13 +23,17 @@
 
 #include <GLFW/glfw3.h>
 
+#include "tinyxml2.h"
 
-#define DAY_LENGTH 60
-#define DEG_PER_SEC 360.0f / DAY_LENGTH
 
-#define SHADOW_TIME 2
+
 
 float Game::m_end_time;
+float Game::m_game_time;
+
+unsigned int Game::m_sound_effect_volume = 30;
+unsigned int Game::m_sound_background_volume = 10;
+
 
 Game::Game()
 {  
@@ -129,7 +133,7 @@ bool Game::initialize()
 
   m_background_sound_sound->setBuffer(*m_background_sound_buffer);
   m_background_sound_sound->play();
-  m_background_sound_sound->setVolume(SOUND_BACKGROUND_VOLUME);
+  m_background_sound_sound->setVolume(Game::getSoundEffectVolume() *0.3f);
   m_background_sound_sound->setLoop(true);
 
   //m_scene->setFog(glm::vec3(1,1,1.0f), 0.000003f , 10.0f);
@@ -137,8 +141,14 @@ bool Game::initialize()
   glm::vec3 vd = glm::rotateZ(m_sun->getDirection(), glm::radians(-160.0f)  ) ;
   m_sun->setDirection(vd);
 
+  m_game_day = 0;
+  m_game_time = 0.0f ;
+
   // set the scene to the current one
   Engine::setScene(m_scene, false);
+
+  loadConfig("game/game_config.xml");
+  loadHighscore();
 
   return true;
 }
@@ -159,6 +169,7 @@ void Game::update()
     {
       m_spawn_done = false;
       m_game_time -= DAY_LENGTH;
+      m_game_day++;
     }
 
     // turn the sun and calculate a strength value for refreshing energy
@@ -168,7 +179,7 @@ void Game::update()
     if(sun_strength <0.0f)
       sun_strength = 0.0f;
 
-    if( m_game_time > SHADOW_TIME)
+    if( (m_game_time > SHADOW_TIME) || ( m_game_day > 0 )  )
     {
       m_scene->setFog(glm::vec3(sun_strength,sun_strength,sun_strength), 0.0001f , 0.0f);
       m_skybox->setLightStrength(sun_strength);
@@ -214,17 +225,20 @@ void Game::update()
   {
     m_end_time += delta;
 
+    //std::cout << "END"<<std::endl;
+
     if( m_end_time > SHADOW_TIME )
       m_ended = true;
     else
     {
-    float sun_strength = -1.0f * m_sun->getDirection().y;
-    if(sun_strength <0.0f)
-      sun_strength = 0.0f;
+      float sun_strength = -1.0f * m_sun->getDirection().y;
+      if(sun_strength <0.0f)
+        sun_strength = 0.0f;
 
-      float fac = sun_strength + (m_end_time);
+      float fac = sun_strength + m_end_time;
+    
       m_scene->setFog(glm::vec3(fac, fac, fac), fac , 0.0f);
-      m_skybox->setLightStrength(fac*fac);
+      m_skybox->setLightStrength(fac*fac*fac);
     }
   }
 
@@ -232,9 +246,196 @@ void Game::update()
 
 bool Game::hasEnded()
 {
+  if(m_ended)
+  {
+    m_last_highscore.days = m_game_day;
+    m_last_highscore.time = m_game_time;
+    m_last_highscore.energy_left = m_player->getEnergy();
+
+    if( m_last_highscore.days >= m_best_highscore.days )
+    {
+      if( m_last_highscore.days > m_best_highscore.days )
+      {
+        m_best_highscore.days = m_last_highscore.days;
+        m_best_highscore.time = m_last_highscore.time;
+        m_best_highscore.energy_left = m_last_highscore.energy_left;
+      }
+      else
+      {
+        if(m_last_highscore.time >= m_best_highscore.time )
+        {
+          if(m_last_highscore.time > m_best_highscore.time )
+          {
+            m_best_highscore.days = m_last_highscore.days;
+            m_best_highscore.time = m_last_highscore.time;
+            m_best_highscore.energy_left = m_last_highscore.energy_left;
+          }
+          else
+          {
+            if(m_last_highscore.energy_left > m_best_highscore.energy_left)
+            {
+              m_best_highscore.days = m_last_highscore.days;
+              m_best_highscore.time = m_last_highscore.time;
+              m_best_highscore.energy_left = m_last_highscore.energy_left;
+            }
+          }
+        }        
+      }
+    }
+
+    saveHighscore();
+  }
   return m_ended;
 }
 void Game::end()
 {
   m_end_time = 0;
+}
+bool Game::saveConfig(std::string path, unsigned int effect_volume, unsigned int background_volume)
+{
+  tinyxml2::XMLDocument document;
+  tinyxml2::XMLNode * root = document.NewElement("GameConfig");
+  document.InsertFirstChild(root);
+
+  tinyxml2::XMLElement * element_sev = document.NewElement("SoundEffectVolume");
+  root->InsertEndChild(element_sev);
+  element_sev->SetAttribute("value", effect_volume);
+
+  tinyxml2::XMLElement * element_sbv = document.NewElement("SoundBackgroundVolume");
+  root->InsertEndChild(element_sbv);
+  element_sbv->SetAttribute("value", background_volume);
+
+
+  tinyxml2::XMLError eResult = document.SaveFile(path.c_str());
+
+
+  return true;
+}
+
+bool Game::loadConfig(std::string path)
+{
+  return readConfig(path, &m_sound_effect_volume, &m_sound_background_volume);
+}
+bool Game::readConfig(std::string path, unsigned int * sev, unsigned int * sbv)
+{
+  tinyxml2::XMLDocument document;
+  tinyxml2::XMLError result = document.LoadFile(path.c_str() );
+
+  if(result != tinyxml2::XML_SUCCESS)
+  {
+    return false;
+  }
+
+  tinyxml2::XMLNode * root = document.FirstChild();
+
+  if(root !=nullptr)
+  {
+    tinyxml2::XMLElement * child = root->FirstChildElement();
+
+    while (child != nullptr)
+    {
+      std::string type = std::string(child->Name() );
+
+      if( type == "SoundEffectVolume")
+      {
+        child->QueryUnsignedAttribute("value", sev) ;
+      }
+      if( type == "SoundBackgroundVolume")
+      {
+        child->QueryUnsignedAttribute("value", sbv) ;
+      }
+     
+
+      child = child->NextSiblingElement();
+    }
+  }
+  return true;
+}
+unsigned int Game::getSoundEffectVolume()
+{
+  return m_sound_effect_volume;
+}
+unsigned int Game::getSoundBackgroundVolume()
+{
+  return m_sound_background_volume;
+}
+float Game::getGameTime()
+{
+  return m_game_time;
+}
+
+bool Game::readHighsore(std::string path, HighScore *last, HighScore * best)
+{
+  tinyxml2::XMLDocument document;
+  tinyxml2::XMLError result = document.LoadFile(path.c_str() );
+
+  if(result != tinyxml2::XML_SUCCESS)
+  {
+    return false;
+  }
+
+  tinyxml2::XMLNode * root = document.FirstChild();
+
+  last->days = 0;
+  last->time = 0;
+  last->energy_left = 0;
+
+  best->days = 0;
+  best->time = 0;
+  best->energy_left = 0;
+
+  if(root !=nullptr)
+  {
+    tinyxml2::XMLElement * child = root->FirstChildElement();
+
+    while (child != nullptr)
+    {
+      std::string type = std::string(child->Name() );
+
+      if( type == "LastGame")
+      {
+        child->QueryUnsignedAttribute("days", &last->days) ;
+        child->QueryFloatAttribute("time", &last->time) ;
+        child->QueryFloatAttribute("energy_left", &last->energy_left) ;
+      }
+      if( type == "BestGame")
+      {
+        child->QueryUnsignedAttribute("days", &best->days) ;
+        child->QueryFloatAttribute("time", &best->time) ;
+        child->QueryFloatAttribute("energy_left", &best->energy_left) ;
+      }
+     
+
+      child = child->NextSiblingElement();
+    }
+  }
+  return true;
+}
+
+void Game::loadHighscore()
+{
+  readHighsore("game/game_highscore.xml",&m_last_highscore, &m_best_highscore);
+}
+
+void Game::saveHighscore()
+{
+  tinyxml2::XMLDocument document;
+  tinyxml2::XMLNode * root = document.NewElement("HighScore");
+  document.InsertFirstChild(root);
+
+  tinyxml2::XMLElement * element_last = document.NewElement("LastGame");
+  root->InsertEndChild(element_last);
+  element_last->SetAttribute("days", m_last_highscore.days);
+  element_last->SetAttribute("time", m_last_highscore.time);
+  element_last->SetAttribute("energy_left", m_last_highscore.energy_left);
+
+  tinyxml2::XMLElement * element_best = document.NewElement("BestGame");
+  root->InsertEndChild(element_best);
+  element_best->SetAttribute("days", m_best_highscore.days);
+  element_best->SetAttribute("time", m_best_highscore.time);
+  element_best->SetAttribute("energy_left", m_best_highscore.energy_left);
+
+
+  tinyxml2::XMLError eResult = document.SaveFile("game/game_highscore.xml");
+
 }

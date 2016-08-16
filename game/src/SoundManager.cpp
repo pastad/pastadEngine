@@ -24,7 +24,7 @@ void SoundManager::addAndPlaySound(std::string path)
     sound->setBuffer(*it->second);
     sound->play();
     sound->setLoop(false);
-    sound->setVolume(SOUND_EFFECT_VOLUME);
+    sound->setVolume(Game::getSoundEffectVolume() *0.5f);
     m_sounds.push_back(sound);
   }
   else
@@ -42,7 +42,7 @@ void SoundManager::addAndPlaySound(std::string path)
       sound->setBuffer(*buf);
       sound->play();
       sound->setLoop(false);
-      sound->setVolume(SOUND_EFFECT_VOLUME);
+      sound->setVolume(Game::getSoundEffectVolume());
       m_sounds.push_back(sound);
     }
   

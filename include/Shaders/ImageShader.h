@@ -23,6 +23,8 @@ public:
   void setScreenSize( glm::vec2 pos );
   void setModelSize( glm::vec2 sz );
 
+  void setMixColor(glm::vec3 color, float value);
+
   // binds the shader
   void use();
 

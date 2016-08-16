@@ -44,6 +44,9 @@ public:
   // returns the size of the image
   glm::vec2 getSize();
 
+  // mixes the image with a color
+  void mixWithColor(glm::vec3 color, float mix_value);
+
 protected:
 
   // the id of the image
@@ -58,6 +61,10 @@ protected:
 
   // activation state 
   bool m_active;
+
+  // colortomix the image with
+  glm::vec3 m_mix_color;
+  float m_mix_value;
 
 
   

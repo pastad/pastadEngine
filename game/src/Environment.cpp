@@ -8,6 +8,8 @@
 #include "Mobs.h"
 #include "Mob.h"
 #include "EnergyShot.h"
+#include "EnergySpark.h"
+
 
 #include <iostream>
 
@@ -44,6 +46,11 @@ Environment::~Environment()
     delete (*it);
     m_energy_remains.erase(it);
   }
+  for(std::vector<EnergySpark*>::iterator it = m_energy_sparks.begin(); it != m_energy_sparks.end(); )
+  {
+    delete (*it);
+    m_energy_sparks.erase(it);
+  }
 }
 
 bool Environment::initialize(Scene * scene)
@@ -51,7 +58,7 @@ bool Environment::initialize(Scene * scene)
   std::srand(std::time(0)); //use current time as seed for random generator
    
   // test init
-  for(int x=0; x<10;x++)
+  for(int x=0; x<1000;x++)
   {
     int random_variable = std::rand() % 360;
     int dist = std::rand() % 40 +2;
@@ -80,6 +87,21 @@ void Environment::addEnergyRemains(std::vector<Object *> objs)
     m_energy_remains.push_back(*it);
   }
 }
+
+void Environment::addEnergySpark(glm::vec3 start, glm::vec3 target, unsigned int type )
+{
+  EnergySpark * spark = new EnergySpark();
+  spark->initialize(Engine::getScene(), start, target, type);
+  m_energy_sparks.push_back(spark);
+}
+
+void Environment::addEnergySpark( Object * object, glm::vec3 target, unsigned int type )
+{
+  EnergySpark * spark = new EnergySpark();
+  spark->initialize(object, target, type);
+  m_energy_sparks.push_back(spark);
+}
+
 
 void Environment::checkAction(Player * player)
 {
@@ -162,10 +184,24 @@ void Environment::update(float delta, float sun_strength, Player * player, Mobs 
         delete (*it);
         (*it) = nullptr;
         m_energy_shots.erase(it);
-           std::cout << "erased shot | left:"<<m_energy_shots.size()<<std::endl;
+           //std::cout << "erased shot | left:"<<m_energy_shots.size()<<std::endl;
       }
       else
         it++;
+    }
+    else
+      it++;
+  }
+  for(std::vector<EnergySpark*>::iterator it = m_energy_sparks.begin(); it != m_energy_sparks.end(); )
+  {
+    if( (*it)->update(delta) )
+    {
+      addPlant(Engine::getScene() , (*it)->getPlantType(), (*it)->getTarget() );
+      Engine::getScene()->removeObject((*it)->getObject());
+      delete (*it)->getObject();      
+      delete (*it);
+      (*it) = nullptr;
+      m_energy_sparks.erase(it);
     }
     else
       it++;
@@ -194,10 +230,14 @@ void Environment::addEnergyShot(Scene * scene, Mob * target, glm::vec3 start_pos
 
 void Environment::refreshTargets(Mob * old, Mobs * mobs)
 {
-  std::cout << "refreshTargets" <<std::endl;
+  //std::cout << "refreshTargets" <<std::endl;
   for(std::vector<EnergyShot*>::iterator it = m_energy_shots.begin(); it != m_energy_shots.end();it++ )
   {  
     (*it)->changeTarget(old, mobs);     
   }
-  std::cout << "refreshTargets done" <<std::endl;
+
+  for(std::vector<Plant*>::iterator it = m_plants.begin(); it != m_plants.end();it++ )
+  {
+    (*it)->targeGone(old);
+  }  
 }

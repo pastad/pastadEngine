@@ -14,7 +14,14 @@
 
 class IOSubsystem : public Subsystem
 {
+
 public:
+
+	typedef void (*EXTERNALKEYCALLBACK)(int , bool);
+	typedef void (*EXTERNALMOUSEMOVECALLBACK)(double , double);
+	typedef void (*EXTERNALMOUSEKEYCALLBACK)(int , bool);
+	typedef void (*EXTERNALMOUSESCROLLCALLBACK)(double , double);
+
 	IOSubsystem();
 	~IOSubsystem();
 
@@ -35,6 +42,7 @@ public:
 	static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	static void mouseMoveCallback(GLFWwindow* window, double x, double y );
 	static void mouseButtonCallback(GLFWwindow *, int, int, int);
+	static void mouseScrollCallback(GLFWwindow * window, double xoffset, double yoffset);
 
 	// returns true if key is pressed
 	static bool isKeyPressed(int key);
@@ -68,6 +76,20 @@ public:
 	// resets the keys when queried
 	static void clearKeys();
 
+
+	// registers the key callback function
+  static void registerKeyCallback( EXTERNALKEYCALLBACK  callback );
+
+  // register mouse move callback function
+  static void registerMouseMoveCallback( EXTERNALMOUSEMOVECALLBACK  callback);
+
+  // register mouse scroll callback function
+  static void registerMouseScrollCallback( EXTERNALMOUSESCROLLCALLBACK callback  );
+
+    // register mouse key callback function
+  static void registerMouseKeyCallback( EXTERNALMOUSEKEYCALLBACK callback  );
+
+
 private:
 
 	// determines if keys are pressed,...
@@ -84,8 +106,19 @@ private:
 	static double m_mouse_x;
 	static double m_mouse_y;
 	static glm::vec2 m_mouse_delta;
+
+
+	// stores the callback function for movement
+  static EXTERNALMOUSEMOVECALLBACK m_external_mouseMoveCallback;
+
+  // stores the callback function for keys
+  static EXTERNALKEYCALLBACK m_external_keyCallback;
 	
-	
+	// stores the callback function for scroll
+  static EXTERNALMOUSESCROLLCALLBACK m_external_mouseScrollCallback;
+
+ 	//  stores the callback function for mouse keys
+  static EXTERNALMOUSEKEYCALLBACK m_external_mouseKeyCallback;
 };
 
 

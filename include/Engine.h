@@ -5,6 +5,7 @@
 #define GLM_FORCE_RADIANS
 #include <GLFW/glfw3.h>
 #include <vector>
+#include <string>
 #include <glm/glm.hpp>
 
 #define NUM_TIME_SAMPLES 40
@@ -57,6 +58,7 @@ public:
 
 	// Initializes Engine
 	static bool initialize(unsigned int width, unsigned int height, unsigned int types, bool edit_mode, bool fullscreen);
+	static bool initialize(std::string path);
 
 	// Shuts down Engine and it's components
 	static void shutDown();	
@@ -137,6 +139,11 @@ public:
 	static PhysicSubsystem * getPhysicSubsystem();
 	static IOSubsystem * getIOSubsystem();
 
+	// saves a config file
+	static bool saveConfig( std::string path, unsigned int width, unsigned int height, bool fullscreen, bool edit_mode, unsigned int system_flags , ShadowTechniqueType shadow_technique);
+
+	// reads a config file and stores values into pointers
+	static bool readConfig( std::string path, unsigned int* width, unsigned int *height, bool *fullscreen, bool* edit_mode, unsigned int *system_flags , ShadowTechniqueType *shadow_technique);
 
 	// passing from subsystems
 
