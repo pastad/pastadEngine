@@ -124,7 +124,7 @@ bool Game::initialize()
   m_background_sound_buffer = new sf::SoundBuffer();
   m_background_sound_sound = new sf::Sound();
 
-  if (!m_background_sound_buffer->loadFromFile("game/models/sounds/wind1.wav"))
+  if (!m_background_sound_buffer->loadFromFile("game/sounds/wind1.wav"))
   {
     delete m_background_sound_sound;
     delete m_background_sound_buffer;
@@ -156,6 +156,11 @@ bool Game::initialize()
 void Game::update()
 {
   float delta = Engine::getTimeDelta();
+  if(m_first_run)
+  {
+    m_first_run = false;
+    delta = 0.0f;
+  }
 
   if(Engine::isKeyReleasedAndPressed(GLFW_KEY_ESCAPE))
     end();
@@ -186,6 +191,7 @@ void Game::update()
     }
     else
     {
+      std::cout << "fade in" <<std::endl;
       float fac = sun_strength + (SHADOW_TIME-m_game_time);
       m_scene->setFog(glm::vec3(fac, fac, fac), fac , 0.0f);
       m_skybox->setLightStrength(fac*fac);

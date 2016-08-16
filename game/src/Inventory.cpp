@@ -27,8 +27,8 @@ void Inventory::addItem(Item * item)
 
 void Inventory::selectItem(unsigned int idx)
 {
-  if(m_items.size() >idx)
-  {
+  if( (m_items.size() >idx) && (idx >=0) && (m_selected_item != idx) )
+  {    
     if( m_selected_item != -1)
       m_items[m_selected_item]->setInactive();  
     m_selected_item = idx;

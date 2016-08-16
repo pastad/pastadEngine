@@ -76,7 +76,7 @@ void Item::doAction(Environment * env)
 
           Player::drainEnergy(25.0f,false);
           Player::refreshSparks();
-          SoundManager::addAndPlaySound("game/models/sounds/rustle19.flac");
+          SoundManager::addAndPlaySound("game/sounds/rustle19.flac");
         }
 
       }
@@ -102,7 +102,7 @@ void Item::doAction(Environment * env)
           env->addEnergySpark( m_object->getPosition(), npos, (unsigned int) PLANT_TRAP_FLOWER);
           //env->addPlant(Engine::getScene(), PLANT_TRAP_FLOWER, npos);
         }
-        SoundManager::addAndPlaySound("game/models/sounds/rustle19.flac");
+        SoundManager::addAndPlaySound("game/sounds/rustle19.flac");
         Player::drainEnergy(15.0f,false);
         Player::refreshSparks();
 

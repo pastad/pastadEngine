@@ -145,7 +145,7 @@ bool Player::init(Scene * scene)
   m_walking_sound_buffer = new sf::SoundBuffer();
   m_walking_sound_sound = new sf::Sound();
 
-  if (!m_walking_sound_buffer->loadFromFile("game/models/sounds/wind.ogg"))
+  if (!m_walking_sound_buffer->loadFromFile("game/sounds/wind1.wav"))
   {
     delete m_walking_sound_sound;
     delete m_walking_sound_buffer;
@@ -195,12 +195,12 @@ void Player::setupGUI()
   m_lower_text->setText("Health");
 
   m_crosshair_active = m_gui->addImage();
-  m_crosshair_active->load("game/models/graphics/crosshair.png");
+  m_crosshair_active->load("game/graphics/crosshair.png");
   m_crosshair_active->setScale(glm::vec2(0.25f, 0.25f));
   m_crosshair_active->setPosition(glm::vec2( ( Engine::getWindowWidth() ) /2.0f -  m_crosshair_active->getSize().x/2.0f , ( Engine::getWindowHeight()  ) / 2.0f - m_crosshair_active->getSize().y/2.0f ) );
 
   m_crosshair_inactive = m_gui->addImage();
-  m_crosshair_inactive->load("game/models/graphics/crosshair_inactive.png");
+  m_crosshair_inactive->load("game/graphics/crosshair_inactive.png");
   m_crosshair_inactive->setScale(glm::vec2(0.25f, 0.25f));
   m_crosshair_inactive->setPosition(glm::vec2( ( Engine::getWindowWidth() ) /2.0f -  m_crosshair_inactive->getSize().x/2.0f , ( Engine::getWindowHeight()  ) / 2.0f - m_crosshair_inactive->getSize().y/2.0f ) );
   m_crosshair_inactive->setInactive();
@@ -211,7 +211,7 @@ void Player::update()
   float delta = Engine::getTimeDelta();
   m_inventory->update();
 
-  m_player_object->setPosition( m_camera->getPosition() );
+
 
   if(m_jump_state != 0)
     m_jump_time += delta;
@@ -434,7 +434,7 @@ void Player::cameraMovedCallback()
     item->setPosition(m_camera->getPosition()+m_camera->getDirection()*0.5f +m_camera->getRight()*0.3f -m_camera->getUp() *0.2f);
     item->setRotation(r);
   }
-
+  m_player_object->setPosition( m_camera->getPosition() );
   refreshItemPosition();
  // m_weapon->setRotation(r);
 }

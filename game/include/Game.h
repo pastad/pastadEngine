@@ -110,6 +110,8 @@ private:
   static unsigned int m_sound_effect_volume ;
   static unsigned int m_sound_background_volume ;
 
+  bool m_first_run = true;
+
   void loadHighscore();
   void saveHighscore();
 

@@ -51,7 +51,7 @@ bool GameMenu::initialize(float width, float height)
   m_gui = Engine::addGUI();
 
   m_menu_background = m_gui->addImage();
-  m_menu_background->load("game/models/menu_background.png");
+  m_menu_background->load("game/graphics/menu_background.png");
 
   float back_scale_x = m_menu_background->getSize().x;
   float back_scale_y = m_menu_background->getSize().y;
@@ -75,11 +75,11 @@ bool GameMenu::initialize(float width, float height)
   m_menu_background->setScale(glm::vec2(back_scale_x,back_scale_y));
 
   m_img_instructions = m_gui->addImage();
-  m_img_instructions->load("game/models/graphics/Instructions.png");
+  m_img_instructions->load("game/graphics/Instructions.png");
   m_img_instructions->setInactive();
 
   m_img_credits = m_gui->addImage();
-  m_img_credits->load("game/models/graphics/Credits.png");
+  m_img_credits->load("game/graphics/Credits.png");
 
 
   float ssize1 = width - (SLIDE_SIDE_OFFSET /2.0f);
@@ -97,27 +97,27 @@ bool GameMenu::initialize(float width, float height)
 
 
   m_btn_play =  m_gui->addButton();
-  m_btn_play->intitializeWithToggle("game/models/menu_play_toggled.png","game/models/menu_play.png",
+  m_btn_play->intitializeWithToggle("game/graphics/menu_play_toggled.png","game/graphics/menu_play.png",
   glm::vec2(Engine::getWindowWidth()/2.0f-100.0f*back_scale_x,Engine::getWindowHeight()/2.0f),  glm::vec2(0.3f,0.3f), "Play", true);
   m_btn_play->setScale(glm::vec2(back_scale_x *0.3f,back_scale_y*0.3f));
 
   m_btn_instructions =  m_gui->addButton();
-  m_btn_instructions->intitializeWithToggle("game/models/menu_instructions_toggled.png","game/models/menu_instructions.png",
+  m_btn_instructions->intitializeWithToggle("game/graphics/menu_instructions_toggled.png","game/graphics/menu_instructions.png",
   glm::vec2(Engine::getWindowWidth()/2.0f-100.0f*back_scale_x,Engine::getWindowHeight()/2.0f-50.0f*back_scale_y),  glm::vec2(0.3f,0.3f), "Instructions", false);
   m_btn_instructions->setScale(glm::vec2(back_scale_x *0.3f,back_scale_y*0.3f));
 
   m_btn_options =  m_gui->addButton();
-  m_btn_options->intitializeWithToggle("game/models/menu_options_toggled.png","game/models/menu_options.png",
+  m_btn_options->intitializeWithToggle("game/graphics/menu_options_toggled.png","game/graphics/menu_options.png",
   glm::vec2(Engine::getWindowWidth()/2.0f-100.0f*back_scale_x,Engine::getWindowHeight()/2.0f-100.0f*back_scale_y),  glm::vec2(0.3f,0.3f), "Options", false);
   m_btn_options->setScale(glm::vec2(back_scale_x *0.3f,back_scale_y*0.3f));
 
   m_btn_credits =  m_gui->addButton();
-  m_btn_credits->intitializeWithToggle("game/models/menu_credits_toggled.png","game/models/menu_credits.png",
+  m_btn_credits->intitializeWithToggle("game/graphics/menu_credits_toggled.png","game/graphics/menu_credits.png",
   glm::vec2(Engine::getWindowWidth()/2.0f-100.0f*back_scale_x,Engine::getWindowHeight()/2.0f-150.0f*back_scale_y),  glm::vec2(0.3f,0.3f), "Credits", false);
   m_btn_credits->setScale(glm::vec2(back_scale_x *0.3f,back_scale_y*0.3f));
 
   m_btn_exit =  m_gui->addButton();
-  m_btn_exit->intitializeWithToggle("game/models/menu_exit_toggled.png","game/models/menu_exit.png",
+  m_btn_exit->intitializeWithToggle("game/graphics/menu_exit_toggled.png","game/graphics/menu_exit.png",
   glm::vec2(Engine::getWindowWidth()/2.0f-100.0f*back_scale_x,Engine::getWindowHeight()/2.0f-200.0f*back_scale_y),  glm::vec2(0.3f,0.3f), "Exit", false);
   m_btn_exit->setScale(glm::vec2(back_scale_x *0.3f,back_scale_y*0.3f));
 
@@ -183,7 +183,7 @@ bool GameMenu::initialize(float width, float height)
   m_background_sound_buffer = new sf::SoundBuffer();
   m_background_sound_sound = new sf::Sound();
 
-  if (!m_background_sound_buffer->loadFromFile("game/models/sounds/litm.flac"))
+  if (!m_background_sound_buffer->loadFromFile("game/sounds/litm.flac"))
   {
     delete m_background_sound_sound;
     delete m_background_sound_buffer;
@@ -375,7 +375,9 @@ void GameMenu::update()
           if(m_btn_play->isToggled())
           {
             m_launch_game = true;
-            m_main_state = GM_STATE_FADE_OUT;
+            m_main_state = GM_STATE_FADE_OUT;            
+            m_txt_highscore_last->setInactive();
+            m_txt_highscore_best->setInactive();
           }
           if(m_btn_instructions->isToggled())
           {
