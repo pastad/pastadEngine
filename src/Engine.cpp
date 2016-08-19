@@ -95,9 +95,9 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 	glfwInit();
 	/*glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
-	glfwWindowHint(GLFW_DOUBLEBUFFER,GL_TRUE);
-	glfwWindowHint(GLFW_RESIZABLE,GL_FALSE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,gl::TRUE);
+	glfwWindowHint(GLFW_DOUBLEBUFFER,gl::TRUE);
+	glfwWindowHint(GLFW_RESIZABLE,gl::FALSE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
 
 	// create gl context ..... -1 to fix black window bug
@@ -119,20 +119,30 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
   }
 
 	// check opengl genderated headers
-	int loaded = ogl_LoadFunctions();
+	/*int loaded = ogl_LoadFunctions();
 	if(loaded == ogl_LOAD_FAILED)
 	{
 		m_log->log("Engine", "OpenGL function wrapper couldn't be loaded");
 		glfwTerminate();
 		delete m_log;
 		return false;
-	}
+	}*/
+
+  gl::exts::LoadTest didLoad = gl::sys::LoadFunctions();
+  if (!didLoad)
+  {
+    m_log->log("Engine", "OpenGL function wrapper couldn't be loaded");
+    glfwTerminate();
+    delete m_log;
+    return false;
+  }
+
 
 	// check window creation
 	bool vers_avail = checkVersionSupport(4, 3 );	
 	if(!vers_avail)
 	{
-		m_log->log("Engine", "OpenGL version not compatible");
+		m_log->log("Engine", "Opengl:: version not compatible");
 		glfwTerminate();
 		delete m_log;
   	return false;
@@ -158,9 +168,9 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
     glfwSetInputMode(m_window,GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 
-	glDepthFunc(GL_LEQUAL);
-  glCullFace(GL_BACK);
-  glEnable(GL_MULTISAMPLE);
+	gl::DepthFunc(gl::LEQUAL);
+  gl::CullFace(gl::BACK);
+  gl::Enable(gl::MULTISAMPLE);
 
   m_engine_gui =  new EngineGUI();
   if(!m_engine_gui->initialize())
@@ -274,7 +284,7 @@ bool Engine::shutDownSubsystems()
 void Engine::errorShutDown()
 {
   m_log->log("Engine", "shut down due to request");
-  glfwSetWindowShouldClose(m_window, GL_TRUE);
+  glfwSetWindowShouldClose(m_window, gl::TRUE_);
 }
 
 
@@ -289,9 +299,9 @@ void Engine::refreshWindow()
   }
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
-  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
-  glfwWindowHint(GLFW_DOUBLEBUFFER,GL_TRUE);
-  glfwWindowHint(GLFW_RESIZABLE,GL_FALSE);
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,gl::TRUE_);
+  glfwWindowHint(GLFW_DOUBLEBUFFER,gl::TRUE_);
+  glfwWindowHint(GLFW_RESIZABLE,gl::FALSE_);
   glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
 
   // create gl context ..... -1 to fix black window bug
@@ -407,14 +417,14 @@ void Engine::render()
 
 bool Engine::checkVersionSupport(unsigned int version_major, unsigned int version_minor )
 {
-  const GLubyte * glsl_version =  glGetString(GL_SHADING_LANGUAGE_VERSION);
-  const GLubyte * renderer =  glGetString(GL_RENDERER);
-  const GLubyte * vendor =  glGetString(GL_VENDOR);
+  const GLubyte * glsl_version = gl::GetString(gl::SHADING_LANGUAGE_VERSION);
+  const GLubyte * renderer = gl::GetString(gl::RENDERER);
+  const GLubyte * vendor = gl::GetString(gl::VENDOR);
 
   GLint vers_major;
   GLint vers_minor;
-  glGetIntegerv(GL_MAJOR_VERSION,&vers_minor); 
-  glGetIntegerv(GL_MAJOR_VERSION,&vers_major);
+  gl::GetIntegerv(gl::MAJOR_VERSION,&vers_minor);
+  gl::GetIntegerv(gl::MAJOR_VERSION,&vers_major);
 
   std::cout<<"OpenGL version: "<<vers_major<<"." <<version_minor<<std::endl;
   std::cout<<"GLSL   version: "<<glsl_version<<std::endl;
@@ -584,7 +594,7 @@ void Engine::windowSizeChangedCallback(GLFWwindow* window, int width, int height
 {
 	m_win_width = width;
 	m_win_height = height;
-	glViewport(0, 0, width, height);
+  gl::Viewport(0, 0, width, height);
 }
 
 

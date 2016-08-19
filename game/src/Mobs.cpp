@@ -45,6 +45,7 @@ bool Mobs::initialize(Scene * scene)
 
     m_mobs.push_back(m);
   }*/
+	return true;
 }
 
 void Mobs::spawnRandom(Scene * scene, unsigned int min_amount, unsigned int max_amount, float drain)

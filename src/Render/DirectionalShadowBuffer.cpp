@@ -1,6 +1,6 @@
 #include "DirectionalShadowBuffer.h"
 
-#include "Engine.h"
+
 #include "Log.h"
 #include "Texture.h"
 
@@ -12,8 +12,8 @@ DirectionalShadowBuffer::DirectionalShadowBuffer()
 
 DirectionalShadowBuffer::~DirectionalShadowBuffer()
 {  
-  glDeleteFramebuffers(1, &m_buffer_handle);
-  glDeleteTextures(1, &m_depth_texture);
+  gl::DeleteFramebuffers(1, &m_buffer_handle);
+  gl::DeleteTextures(1, &m_depth_texture);
 }
 
 
@@ -25,35 +25,35 @@ bool DirectionalShadowBuffer::initialize(  float width ,  float height)
   m_width = width;
   m_height =height;
   
-  glGenTextures(1, &m_depth_texture);
-  glBindTexture(GL_TEXTURE_2D, m_depth_texture);
-  glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH_COMPONENT24, width, height);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-  glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LESS);
+  gl::GenTextures(1, &m_depth_texture);
+  gl::BindTexture(gl::TEXTURE_2D, m_depth_texture);
+  gl::TexStorage2D(gl::TEXTURE_2D, 1, gl::DEPTH_COMPONENT24, width, height);
+  gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::LINEAR);
+  gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::LINEAR);
+  gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::CLAMP_TO_BORDER);
+  gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_T, gl::CLAMP_TO_BORDER);
+  gl::TexParameterfv(gl::TEXTURE_2D, gl::TEXTURE_BORDER_COLOR, border);
+  gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_COMPARE_MODE, gl::COMPARE_REF_TO_TEXTURE);
+  gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_COMPARE_FUNC, gl::LESS);
 
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, m_depth_texture);
+  gl::ActiveTexture(gl::TEXTURE0);
+  gl::BindTexture(gl::TEXTURE_2D, m_depth_texture);
 
-  glGenFramebuffers(1, &m_buffer_handle);
-  glBindFramebuffer(GL_FRAMEBUFFER, m_buffer_handle);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depth_texture, 0);
+  gl::GenFramebuffers(1, &m_buffer_handle);
+  gl::BindFramebuffer(gl::FRAMEBUFFER, m_buffer_handle);
+  gl::FramebufferTexture2D(gl::FRAMEBUFFER, gl::DEPTH_ATTACHMENT, gl::TEXTURE_2D, m_depth_texture, 0);
 
-  GLenum drawBuffers[] = {GL_NONE};
-  glDrawBuffers(1, drawBuffers);
+  GLenum drawBuffers[] = { gl::NONE};
+  gl::DrawBuffers(1, drawBuffers);
 
-  GLenum result = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-  if( result != GL_FRAMEBUFFER_COMPLETE)
+  GLenum result = gl::CheckFramebufferStatus(gl::FRAMEBUFFER);
+  if( result != gl::FRAMEBUFFER_COMPLETE)
   {
     Engine::getLog()->log("DirectionalShadowBuffer", "couldn't be inititalized" );
     return false;
   }
 
-  glBindFramebuffer(GL_FRAMEBUFFER,0);
+  gl::BindFramebuffer(gl::FRAMEBUFFER,0);
 
   return true;
 }
@@ -63,18 +63,18 @@ bool DirectionalShadowBuffer::initialize(  float width ,  float height)
 
 void DirectionalShadowBuffer::bindForInput()
 {
-  glBindFramebuffer(GL_FRAMEBUFFER, m_buffer_handle);
+  gl::BindFramebuffer(gl::FRAMEBUFFER, m_buffer_handle);
 }
 
 void DirectionalShadowBuffer::unbindFromInput()
 {
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  gl::BindFramebuffer(gl::FRAMEBUFFER, 0);
 }
 
 void DirectionalShadowBuffer::bindForOutput(unsigned int offset)
 {
-  glActiveTexture(GL_TEXTURE0+ TEXTURE_SHADOW_START + offset);
-  glBindTexture(GL_TEXTURE_2D, m_depth_texture);
+  gl::ActiveTexture(gl::TEXTURE0+ TEXTURE_SHADOW_START + offset);
+  gl::BindTexture(gl::TEXTURE_2D, m_depth_texture);
   std::stringstream ss;
 //  ss <<(TEXTURE_SHADOW_START + offset);
  // Engine::getLog()->log("DirectionalShadowBuffer", " bound buffer to", ss.str());

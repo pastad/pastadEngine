@@ -683,19 +683,19 @@ void Light::bindForShadowRenderDirectional(RenderBaseShader * shadow_shader)
   {     
     shadow_shader->use();
     m_directional_buffer->bindForInput();
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
+    gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
+    gl::Enable(gl::DEPTH_TEST);
 
-    glEnable(GL_POLYGON_OFFSET_FILL);
-    glPolygonOffset(4, 3);
+    gl::Enable(gl::POLYGON_OFFSET_FILL);
+    gl::PolygonOffset(4, 3);
 
     shadow_shader->setProjectionMatrix(getProjection());    
     shadow_shader->setViewMatrix(getView() ); 
 
-    glViewport(0,0, m_directional_buffer->getWidth() ,m_directional_buffer->getHeight());
-    glClearColor(1000,0,0,0);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);    
+    gl::Viewport(0,0, m_directional_buffer->getWidth() ,m_directional_buffer->getHeight());
+    gl::ClearColor(1000,0,0,0);
+    gl::Enable(gl::CULL_FACE);
+    gl::CullFace(gl::BACK);
 
   }
 
@@ -710,32 +710,32 @@ void Light::bindForShadowRenderPoint( RenderBaseShader * point_shadow_shader, in
     point_shadow_shader->use();
     if( iteration == 0)
     {
-      m_point_buffer->bindForInput(GL_TEXTURE_CUBE_MAP_POSITIVE_X);
+      m_point_buffer->bindForInput(gl::TEXTURE_CUBE_MAP_POSITIVE_X);
       point_shadow_shader->setViewMatrix(getView(glm::vec3(1.0f,0.0f,0.0f), glm::vec3(0.0f, -1.0f, 0.0f)  ));      
     }
     if( iteration == 1)
     {
-      m_point_buffer->bindForInput(GL_TEXTURE_CUBE_MAP_NEGATIVE_X);
+      m_point_buffer->bindForInput(gl::TEXTURE_CUBE_MAP_NEGATIVE_X);
       point_shadow_shader->setViewMatrix(getView(glm::vec3(-1.0f,0.0f,0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));      
     }
     if( iteration == 2)
     {
-      m_point_buffer->bindForInput(GL_TEXTURE_CUBE_MAP_POSITIVE_Y);
+      m_point_buffer->bindForInput(gl::TEXTURE_CUBE_MAP_POSITIVE_Y);
       point_shadow_shader->setViewMatrix(getView(glm::vec3(0.0f,1.0f,0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));      
     }
     if( iteration == 3)
     {
-      m_point_buffer->bindForInput(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y);
+      m_point_buffer->bindForInput(gl::TEXTURE_CUBE_MAP_NEGATIVE_Y);
       point_shadow_shader->setViewMatrix(getView(glm::vec3(0.0f,-1.0f,0.0f), glm::vec3(0.0f, 0.0f, -1.0f) ));      
     }
     if( iteration == 4)
     {
-      m_point_buffer->bindForInput(GL_TEXTURE_CUBE_MAP_POSITIVE_Z);
+      m_point_buffer->bindForInput(gl::TEXTURE_CUBE_MAP_POSITIVE_Z);
       point_shadow_shader->setViewMatrix(getView(glm::vec3(0.0f,0.0f,1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));      
     }
     if( iteration == 5)
     {
-      m_point_buffer->bindForInput(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
+      m_point_buffer->bindForInput(gl::TEXTURE_CUBE_MAP_NEGATIVE_Z);
       point_shadow_shader->setViewMatrix(getView(glm::vec3(0.0f,0.0f,-1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));      
     }  
    
@@ -743,13 +743,13 @@ void Light::bindForShadowRenderPoint( RenderBaseShader * point_shadow_shader, in
 
     point_shadow_shader->setProjectionMatrix(getProjection());  
     point_shadow_shader->setUniform("LightPosition",getPosition());  
-    glViewport(0,0, 1000 ,1000);
+    gl::Viewport(0,0, 1000 ,1000);
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
+    gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
+    gl::Enable(gl::DEPTH_TEST);
 
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_FRONT);
+    gl::Enable(gl::CULL_FACE);
+    gl::CullFace(gl::FRONT);
     
   }
   
@@ -761,24 +761,24 @@ void Light::unbindFromShadowRender()
   if( ( getType() == LIGHT_SPOT) || ( getType() == LIGHT_DIRECTIONAL) )
   {
    
-    glFlush();
-    glFinish();
-    glPolygonOffset(0.0f,0.0f);
-    glDisable(GL_POLYGON_OFFSET_FILL);
+    gl::Flush();
+    gl::Finish();
+    gl::PolygonOffset(0.0f,0.0f);
+    gl::Disable(gl::POLYGON_OFFSET_FILL);
 
     m_directional_buffer->unbindFromInput();
-    glViewport(0,0, Engine::getWindowWidth(),Engine::getWindowHeight());
+    gl::Viewport(0,0, Engine::getWindowWidth(),Engine::getWindowHeight());
   }
   if( getType() == LIGHT_POINT)
   {    
-    glFlush();
-    glFinish();
-    glDisable(GL_CULL_FACE);
+    gl::Flush();
+    gl::Finish();
+    gl::Disable(gl::CULL_FACE);
     m_point_buffer->unbindFromInput();
-    glViewport(0,0, Engine::getWindowWidth(),Engine::getWindowHeight());
+    gl::Viewport(0,0, Engine::getWindowWidth(),Engine::getWindowHeight());
   }  
-  glCullFace(GL_BACK); 
-   glDisable(GL_CULL_FACE);  
+  gl::CullFace(gl::BACK);
+   gl::Disable(gl::CULL_FACE);
 }
 
 void Light::bindForRender(RenderShader * render_shader)

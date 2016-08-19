@@ -12,7 +12,7 @@ RenderBuffer::RenderBuffer()
 RenderBuffer::~RenderBuffer()
 {  
   delete m_buffer_texture;
-  glDeleteFramebuffers(1, &m_buffer_handle);  
+  gl::DeleteFramebuffers(1, &m_buffer_handle);
 }
 
 
@@ -21,17 +21,17 @@ RenderBuffer::~RenderBuffer()
 bool RenderBuffer::initialize()
 {
  
-  glGenFramebuffers(1, &m_buffer_handle);
-  glBindFramebuffer(GL_FRAMEBUFFER, m_buffer_handle);  
+  gl::GenFramebuffers(1, &m_buffer_handle);
+  gl::BindFramebuffer(gl::FRAMEBUFFER, m_buffer_handle);
 
   m_buffer_texture = new Texture();
-  m_buffer_texture->create(0, GL_RGB32F,Engine::getWindowWidth(),  Engine::getWindowHeight());
-  m_buffer_texture->bindToFramebuffer(GL_COLOR_ATTACHMENT0);
+  m_buffer_texture->create(0, gl::RGB32F,Engine::getWindowWidth(),  Engine::getWindowHeight());
+  m_buffer_texture->bindToFramebuffer(gl::COLOR_ATTACHMENT0);
   
-  GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0};
-  glDrawBuffers(1, drawBuffers);
+  GLenum drawBuffers[] = { gl::COLOR_ATTACHMENT0};
+  gl::DrawBuffers(1, drawBuffers);
 
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  gl::BindFramebuffer(gl::FRAMEBUFFER, 0);
 
   return true;
 }
@@ -45,9 +45,9 @@ float RenderBuffer::getAverageLuminance()
   GLfloat *texData = new GLfloat[ size*3];
 
   m_buffer_texture->bind(0);
-  //glActiveTexture(GL_TEXTURE0);
-  //glBindTexture(GL_TEXTURE_2D, hdrTex);
-  glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_FLOAT, texData);
+  //glActiveTexture(gl::TEXTURE0);
+  //glBindTexture(gl::TEXTURE_2D, hdrTex);
+  gl::GetTexImage(gl::TEXTURE_2D, 0, gl::RGB, gl::FLOAT, texData);
 
   float sampling = 1.0f;
 
@@ -71,12 +71,12 @@ float RenderBuffer::getAverageLuminance()
 
 void RenderBuffer::bindForInput()
 {
-  glBindFramebuffer(GL_FRAMEBUFFER, m_buffer_handle);
+  gl::BindFramebuffer(gl::FRAMEBUFFER, m_buffer_handle);
 }
 
 void RenderBuffer::unbindFromInput()
 {
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  gl::BindFramebuffer(gl::FRAMEBUFFER, 0);
 }
 
 void RenderBuffer::bindForOutput()

@@ -1,6 +1,7 @@
 #ifndef MODEL
 #define MODEL_H
 
+#include "Engine.h"
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <assimp/Importer.hpp>

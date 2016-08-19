@@ -51,7 +51,10 @@ int main(void)
     
     while( game_menu->shouldGameBeStarted() && engine.running() )
     {
-      game_menu->initialize(1240,720);
+      if (game_menu->initialize(1240, 720))
+      {
+          return -1;
+      }
 
       while(game_menu->isActive())
       {

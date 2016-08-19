@@ -2,7 +2,7 @@
 
 #include "Object.h"
 #include "Material.h"
-#include "Engine.h"
+
 #include "Log.h"
 #include "Mesh.h"
 #include "BoundingBox.h"

@@ -161,7 +161,7 @@ void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, R
 
 void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* point_shadow_shader)
 {  
-  glClearColor(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);
+  gl::ClearColor(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);
   for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end();it++)
   {
     if( (*it)->getShadowRefresh() && (*it)->isShadowEnabled())

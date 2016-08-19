@@ -63,7 +63,7 @@ Skybox::Skybox(): m_light_strength(1.0f)
 
 Skybox::~Skybox()
 {
-  glDeleteVertexArrays(1, &m_vao);
+  gl::DeleteVertexArrays(1, &m_vao);
 }
 
 
@@ -71,20 +71,21 @@ bool Skybox::load(const std::string basef)
 {
   m_base_file = basef;
 
-  glGenVertexArrays(1, &m_vao);
-  glGenBuffers(1, &m_vbo);
+  gl::DeleteVertexArrays(1, &m_vao);
+  gl::GenVertexArrays(1, &m_vao);
+  gl::GenBuffers(1, &m_vbo);
 
-  glBindVertexArray(m_vao);
-  glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(m_verts), &m_verts, GL_STATIC_DRAW);
+  gl::BindVertexArray(m_vao);
+  gl::BindBuffer(gl::ARRAY_BUFFER, m_vbo);
+  gl::BufferData(gl::ARRAY_BUFFER, sizeof(m_verts), &m_verts, gl::STATIC_DRAW);
 
-  glEnableVertexAttribArray(0);
+  gl::EnableVertexAttribArray(0);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+  gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE_, 3 * sizeof(GLfloat), (GLvoid*)0);
 
-  glBindVertexArray(0);
+  gl::BindVertexArray(0);
 
-  glGenTextures(1,&m_texture);
+  gl::GenTextures(1,&m_texture);
 
   int width,height;
   unsigned char* image;
@@ -103,7 +104,7 @@ bool Skybox::load(const std::string basef)
   texs.push_back(ss.str());
   ss.str(""); ss <<basef << "_ft.jpg";
   texs.push_back(ss.str());
-  glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture);
+  gl::BindTexture(gl::TEXTURE_CUBE_MAP, m_texture);
   for(GLuint i = 0; i < texs.size(); i++)
   { 
     image = SOIL_load_image(texs[i].c_str(), &width, &height, 0, SOIL_LOAD_RGB);
@@ -117,20 +118,20 @@ bool Skybox::load(const std::string basef)
 
     Engine::getLog()->log("Skybox", "skybox loaded :", texs[i]);
 
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB,
-                  width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    gl::TexImage2D(gl::TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, gl::RGB,
+                  width, height, 0, gl::RGB, gl::UNSIGNED_BYTE, image);
 
 
     SOIL_free_image_data(image);
   }
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  gl::TexParameteri(gl::TEXTURE_CUBE_MAP, gl::TEXTURE_MAG_FILTER, gl::LINEAR);
+  gl::TexParameteri(gl::TEXTURE_CUBE_MAP, gl::TEXTURE_MIN_FILTER, gl::LINEAR);
 
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+  gl::TexParameteri(gl::TEXTURE_CUBE_MAP, gl::TEXTURE_WRAP_S, gl::CLAMP_TO_EDGE);
+  gl::TexParameteri(gl::TEXTURE_CUBE_MAP, gl::TEXTURE_WRAP_T, gl::CLAMP_TO_EDGE);
+  gl::TexParameteri(gl::TEXTURE_CUBE_MAP, gl::TEXTURE_WRAP_R, gl::CLAMP_TO_EDGE);
 
-  glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+  gl::BindTexture(gl::TEXTURE_CUBE_MAP, 0);
   Engine::getLog()->log("Skybox", "loaded");
 
   return true;
@@ -141,17 +142,17 @@ void Skybox::render(SkyboxShader * shader)
   shader->use();
   shader->setLightStrength(m_light_strength);
 
-  glDepthFunc(GL_LEQUAL);
+  gl::DepthFunc(gl::LEQUAL);
 
-  glBindVertexArray(m_vao);
-  glActiveTexture(GL_TEXTURE0);
+  gl::BindVertexArray(m_vao);
+  gl::ActiveTexture(gl::TEXTURE0);
 
-  glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture);
-  glDrawArrays(GL_TRIANGLES, 0, 36);
+  gl::BindTexture(gl::TEXTURE_CUBE_MAP, m_texture);
+  gl::DrawArrays(gl::TRIANGLES, 0, 36);
 
-  glBindVertexArray(0);
+  gl::BindVertexArray(0);
 
-  glDepthFunc(GL_LESS);
+  gl::DepthFunc(gl::LESS);
 
 }
 

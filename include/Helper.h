@@ -2,12 +2,14 @@
 #define HELPER_H
 
 #include <assimp/scene.h>
-#include "gl_core_4_.h"
+#include "gl_core_4_.hpp"
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 
 #include "tinyxml2.h"
 
+#include <vector>
+#include <string>
 
 class Helper
 {

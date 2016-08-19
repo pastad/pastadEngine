@@ -1,0 +1,10 @@
+/home/pastad/repos/pastadEngine/external/tinyxml2/CMakeFiles/edit_cache.dir
+/home/pastad/repos/pastadEngine/external/tinyxml2/CMakeFiles/install/local.dir
+/home/pastad/repos/pastadEngine/external/tinyxml2/CMakeFiles/install/strip.dir
+/home/pastad/repos/pastadEngine/external/tinyxml2/CMakeFiles/rebuild_cache.dir
+/home/pastad/repos/pastadEngine/external/tinyxml2/CMakeFiles/DATA_COPY.dir
+/home/pastad/repos/pastadEngine/external/tinyxml2/CMakeFiles/tinyxml2static.dir
+/home/pastad/repos/pastadEngine/external/tinyxml2/CMakeFiles/install.dir
+/home/pastad/repos/pastadEngine/external/tinyxml2/CMakeFiles/list_install_components.dir
+/home/pastad/repos/pastadEngine/external/tinyxml2/CMakeFiles/tinyxml2.dir
+/home/pastad/repos/pastadEngine/external/tinyxml2/CMakeFiles/test.dir

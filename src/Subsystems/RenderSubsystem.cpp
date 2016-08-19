@@ -217,8 +217,8 @@ void RenderSubsystem::renderPassGBuffer()
   m_shader->use();
   m_gbuffer->bindForInput();
 
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glEnable(GL_DEPTH_TEST);
+  gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
+  gl::Enable(gl::DEPTH_TEST);
 
   Camera * cam = Engine::getScene()->getCamera();
   m_shader->setProjectionMatrix(cam->getProjection());
@@ -240,7 +240,7 @@ void RenderSubsystem::renderPassGBuffer()
   if(scene != nullptr)
     scene->render(m_shader, m_skybox_shader, m_terrain_shader,m_water_shader);
   
-  glFinish();
+  gl::Finish();
   m_gbuffer->unbindFromInput();
   //Engine::getLog()->log("RenderSubsystem", "gbuffer passs");
 }
@@ -262,8 +262,8 @@ void RenderSubsystem::renderPassLight()
     scene->setupLightsForShadingPass(m_shader);
 
 
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glDisable(GL_DEPTH_TEST);
+  gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
+  gl::Disable(gl::DEPTH_TEST);
 
   m_shader->setIdentityMatrices();
   m_shader->setAllMaterialsForRenderPass();
@@ -272,7 +272,7 @@ void RenderSubsystem::renderPassLight()
 
   m_render_quad->render();  
 
-  glFinish();
+  gl::Finish();
 
   m_pp_buffer->unbindFromInput();
   //Engine::getLog()->log("RenderSubsystem", "light pass");
@@ -280,7 +280,7 @@ void RenderSubsystem::renderPassLight()
 
 void RenderSubsystem::renderPassShadow()
 {
-  glCullFace(GL_FRONT);
+  gl::CullFace(gl::FRONT);
   m_shadow_shader->use();
 
   Scene * scene = Engine::getScene();
@@ -289,7 +289,7 @@ void RenderSubsystem::renderPassShadow()
     scene->renderShadow(m_shadow_shader,m_point_shadow_shader);
   //Engine::getLog()->log("RenderSubsystem", "shadow pass");
 
-   glCullFace(GL_BACK);
+   gl::CullFace(gl::BACK);
 }
 
 // ppps
@@ -317,13 +317,13 @@ void RenderSubsystem::renderPassPostProcess()
 	m_pp_shader->setIdentityMatrices();
 	m_pp_shader->setTextureScaling( glm::vec2(1.0f /Engine::getWindowWidth(),1.0f /Engine::getWindowHeight()) );
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glDisable(GL_DEPTH_TEST);
+	gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
+  gl::Disable(gl::DEPTH_TEST);
 
   m_pp_shader->setRenderPass(PASS_STANDARD);
   m_render_quad->render();	
 
-	glFinish();
+	gl::Finish();
 	//Engine::getLog()->log("RenderSubsystem", "pp pass");
 }
 
@@ -341,14 +341,14 @@ void RenderSubsystem::renderPassLightBlur()
 	m_pp_shader->setIdentityMatrices();
 
   m_pp_shader->setRenderPass(PASS_BRIGHT);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glDisable(GL_DEPTH_TEST);
+	gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
+  gl::Disable(gl::DEPTH_TEST);
 
   // render the bright regions
 
   m_render_quad->render();	
 
-	glFinish();	
+	gl::Finish();	
 	m_light_buffer->unbindFromInput();
 
 	// blur
@@ -359,12 +359,12 @@ void RenderSubsystem::renderPassLightBlur()
 	m_pp_shader->setIdentityMatrices();
 
   m_pp_shader->setRenderPass(PASS_BLUR_1);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glDisable(GL_DEPTH_TEST);
+	gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
+  gl::Disable(gl::DEPTH_TEST);
  
   m_render_quad->render();	  
 
-	glFinish();
+	gl::Finish();
 	m_blur_buffer->unbindFromInput();
 
 	// blur2 
@@ -374,13 +374,13 @@ void RenderSubsystem::renderPassLightBlur()
 	
 	m_pp_shader->setIdentityMatrices();
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glDisable(GL_DEPTH_TEST);
+	gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
+  gl::Disable(gl::DEPTH_TEST);
 
   m_pp_shader->setRenderPass(PASS_BLUR_2);
   m_render_quad->render();	  
 
-	glFinish();
+	gl::Finish();
 	m_light_buffer->unbindFromInput();
 
 }
@@ -399,12 +399,12 @@ void RenderSubsystem::renderSSAO()
  	m_pp_shader->setViewMatrix(cam->getView());
 
   m_pp_shader->setRenderPass(PASS_SSAO);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glDisable(GL_DEPTH_TEST);
+	gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
+  gl::Disable(gl::DEPTH_TEST);
  
   m_render_quad->render();	  
 
-	glFinish();
+	gl::Finish();
 
 	m_ssao_buffer->unbindFromInput();
 }
@@ -412,8 +412,8 @@ void RenderSubsystem::renderSSAO()
 void RenderSubsystem::renderUI()
 {
 	m_text_shader->use();
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);	
+	gl::Enable(gl::BLEND);
+	gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
 	m_text_shader->setProjection();
 
 	std::vector<GUI* > * guis = Engine::getGUIs();
@@ -425,8 +425,8 @@ void RenderSubsystem::renderUI()
 	if(Engine::getSceneEditor() != nullptr)
 		Engine::getSceneEditor()->render(m_text_shader,m_image_shader, m_render_quad);
 
-	glDisable(GL_BLEND);
-	glFinish();
+	gl::Disable(gl::BLEND);
+	gl::Finish();
 	//Engine::getLog()->log("RenderSubsystem", "ui pass");
 }
 
@@ -438,7 +438,7 @@ void RenderSubsystem::startRender()
 
   if(m_initialized)
   {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    gl::ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     m_shader->reset();
   }
   //Engine::getLog()->log("RenderSubsystem", "start render");

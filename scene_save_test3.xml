@@ -1,0 +1,3703 @@
+<Scene>
+    <Light Type="1">
+        <Position x="2" y="0" z="0"/>
+        <Direction x="0" y="0" z="0"/>
+        <Rotation x="0" y="0"/>
+        <ColorAmbient x="1" y="1" z="1"/>
+        <ColorDiffuse x="1" y="1" z="1"/>
+        <ColorSpecular x="1" y="1" z="1"/>
+        <Intensity value="0.5"/>
+        <AttenuationConstant value="0.1"/>
+        <AttenuationLinear value="0.090000004"/>
+        <AttenuationQuadratic value="0.032000002"/>
+        <CutoffAngle value="1.1723806e-37"/>
+        <ShadowEnabled value="1"/>
+    </Light>
+    <Light Type="1">
+        <Position x="2" y="4" z="0"/>
+        <Direction x="0" y="0" z="0"/>
+        <Rotation x="0" y="0"/>
+        <ColorAmbient x="1" y="0" z="1"/>
+        <ColorDiffuse x="1" y="1" z="1"/>
+        <ColorSpecular x="1" y="1" z="1"/>
+        <Intensity value="0.5"/>
+        <AttenuationConstant value="0.1"/>
+        <AttenuationLinear value="0.090000004"/>
+        <AttenuationQuadratic value="0.032000002"/>
+        <CutoffAngle value="1.9043646e-42"/>
+        <ShadowEnabled value="1"/>
+    </Light>
+    <Object>
+        <Position x="4" y="0" z="7"/>
+        <Rotation x="0" y="90" z="90"/>
+        <Scale x="0.5" y="0.5" z="0.5"/>
+        <Identifier value="game/models/Fox.dae"/>
+        <PhysicsEnabled value="1"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-4" y="0" z="5"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/bush1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="20" y="0" z="5"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/bush1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="15"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/bridge1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="0" y="0" z="0"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="10" y="10" z="10"/>
+        <Identifier value="models/ground.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="0"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="models/gaz.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-10" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-6" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="6" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="14" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="18" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="22" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="26" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="30" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="34" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="38" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="42" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="46" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="50" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="54" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="58" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="62" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="66" y="0" z="10"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-10" y="0" z="14"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-6" y="0" z="14"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="14"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="14"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="6" y="0" z="14"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="14"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="14" y="0" z="14"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="18" y="0" z="14"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="22" y="0" z="14"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="26" y="0" z="14"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="30" y="0" z="14"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="34" y="0" z="14"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="38" y="0" z="14"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="42" y="0" z="14"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="46" y="0" z="14"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="50" y="0" z="14"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="54" y="0" z="14"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="58" y="0" z="14"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="62" y="0" z="14"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="66" y="0" z="14"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-10" y="0" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-6" y="0" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="6" y="0" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="14" y="0" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="18" y="0" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="22" y="0" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="26" y="0" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="30" y="0" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="34" y="0" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="38" y="0" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="42" y="0" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="46" y="0" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="50" y="0" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="54" y="0" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="58" y="0" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="62" y="0" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="66" y="0" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-10" y="0" z="22"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-6" y="0" z="22"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="22"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="22"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="6" y="0" z="22"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="22"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="14" y="0" z="22"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="18" y="0" z="22"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="22" y="0" z="22"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="26" y="0" z="22"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="30" y="0" z="22"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="34" y="0" z="22"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="38" y="0" z="22"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="42" y="0" z="22"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="46" y="0" z="22"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="50" y="0" z="22"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="54" y="0" z="22"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="58" y="0" z="22"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="62" y="0" z="22"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="66" y="0" z="22"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-10" y="0" z="26"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-6" y="0" z="26"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="26"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="26"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="6" y="0" z="26"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="26"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="14" y="0" z="26"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="18" y="0" z="26"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="22" y="0" z="26"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="26" y="0" z="26"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="30" y="0" z="26"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="34" y="0" z="26"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="38" y="0" z="26"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="42" y="0" z="26"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="46" y="0" z="26"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="50" y="0" z="26"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="54" y="0" z="26"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="58" y="0" z="26"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="62" y="0" z="26"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="66" y="0" z="26"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-10" y="0" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-6" y="0" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="6" y="0" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="14" y="0" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="18" y="0" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="22" y="0" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="26" y="0" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="30" y="0" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="34" y="0" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="38" y="0" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="42" y="0" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="46" y="0" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="50" y="0" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="54" y="0" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="58" y="0" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="62" y="0" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="66" y="0" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-10" y="0" z="34"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-6" y="0" z="34"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="34"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="34"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="6" y="0" z="34"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="34"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="14" y="0" z="34"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="18" y="0" z="34"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="22" y="0" z="34"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="26" y="0" z="34"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="30" y="0" z="34"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="34" y="0" z="34"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="38" y="0" z="34"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="42" y="0" z="34"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="46" y="0" z="34"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="50" y="0" z="34"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="54" y="0" z="34"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="58" y="0" z="34"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="62" y="0" z="34"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="66" y="0" z="34"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-10" y="0" z="38"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-6" y="0" z="38"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="38"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="38"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="6" y="0" z="38"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="38"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="14" y="0" z="38"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="18" y="0" z="38"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="22" y="0" z="38"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="26" y="0" z="38"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="30" y="0" z="38"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="34" y="0" z="38"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="38" y="0" z="38"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="42" y="0" z="38"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="46" y="0" z="38"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="50" y="0" z="38"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="54" y="0" z="38"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="58" y="0" z="38"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="62" y="0" z="38"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="66" y="0" z="38"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-10" y="0" z="42"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-6" y="0" z="42"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="42"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="42"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="6" y="0" z="42"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="42"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="14" y="0" z="42"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="18" y="0" z="42"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="22" y="0" z="42"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="26" y="0" z="42"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="30" y="0" z="42"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="34" y="0" z="42"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="38" y="0" z="42"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="42" y="0" z="42"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="46" y="0" z="42"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="50" y="0" z="42"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="54" y="0" z="42"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="58" y="0" z="42"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="62" y="0" z="42"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="66" y="0" z="42"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-10" y="0" z="46"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-6" y="0" z="46"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="46"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="46"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="6" y="0" z="46"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="46"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="14" y="0" z="46"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="18" y="0" z="46"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="22" y="0" z="46"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="26" y="0" z="46"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="30" y="0" z="46"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="34" y="0" z="46"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="38" y="0" z="46"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="42" y="0" z="46"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="46" y="0" z="46"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="50" y="0" z="46"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="54" y="0" z="46"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="58" y="0" z="46"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="62" y="0" z="46"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="66" y="0" z="46"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-10" y="0" z="50"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-6" y="0" z="50"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="50"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="50"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="6" y="0" z="50"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="50"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="14" y="0" z="50"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="18" y="0" z="50"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="22" y="0" z="50"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="26" y="0" z="50"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="30" y="0" z="50"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="34" y="0" z="50"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="38" y="0" z="50"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="42" y="0" z="50"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="46" y="0" z="50"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="50" y="0" z="50"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="54" y="0" z="50"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="58" y="0" z="50"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="62" y="0" z="50"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="66" y="0" z="50"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-10" y="0" z="54"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-6" y="0" z="54"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="54"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="54"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="6" y="0" z="54"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="54"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="14" y="0" z="54"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="18" y="0" z="54"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="22" y="0" z="54"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="26" y="0" z="54"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="30" y="0" z="54"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="34" y="0" z="54"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="38" y="0" z="54"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="42" y="0" z="54"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="46" y="0" z="54"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="50" y="0" z="54"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="54" y="0" z="54"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="58" y="0" z="54"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="62" y="0" z="54"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="66" y="0" z="54"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-10" y="0" z="58"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-6" y="0" z="58"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="58"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="58"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="6" y="0" z="58"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="58"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="14" y="0" z="58"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="18" y="0" z="58"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="22" y="0" z="58"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="26" y="0" z="58"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="30" y="0" z="58"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="34" y="0" z="58"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="38" y="0" z="58"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="42" y="0" z="58"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="46" y="0" z="58"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="50" y="0" z="58"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="54" y="0" z="58"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="58" y="0" z="58"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="62" y="0" z="58"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="66" y="0" z="58"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-10" y="0" z="62"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-6" y="0" z="62"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="62"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="62"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="6" y="0" z="62"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="62"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="14" y="0" z="62"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="18" y="0" z="62"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="22" y="0" z="62"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="26" y="0" z="62"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="30" y="0" z="62"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="34" y="0" z="62"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="38" y="0" z="62"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="42" y="0" z="62"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="46" y="0" z="62"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="50" y="0" z="62"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="54" y="0" z="62"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="58" y="0" z="62"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="62" y="0" z="62"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="66" y="0" z="62"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-10" y="0" z="66"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-6" y="0" z="66"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="66"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="66"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="6" y="0" z="66"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="66"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="14" y="0" z="66"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="18" y="0" z="66"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="22" y="0" z="66"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="26" y="0" z="66"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="30" y="0" z="66"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="34" y="0" z="66"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="38" y="0" z="66"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="42" y="0" z="66"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="46" y="0" z="66"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="50" y="0" z="66"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="54" y="0" z="66"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="58" y="0" z="66"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="62" y="0" z="66"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="66" y="0" z="66"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-10" y="0" z="70"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-6" y="0" z="70"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="70"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="70"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="6" y="0" z="70"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="70"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="14" y="0" z="70"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="18" y="0" z="70"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="22" y="0" z="70"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="26" y="0" z="70"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="30" y="0" z="70"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="34" y="0" z="70"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="38" y="0" z="70"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="42" y="0" z="70"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="46" y="0" z="70"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="50" y="0" z="70"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="54" y="0" z="70"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="58" y="0" z="70"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="62" y="0" z="70"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="66" y="0" z="70"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-10" y="0" z="74"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-6" y="0" z="74"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="74"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="74"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="6" y="0" z="74"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="74"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="14" y="0" z="74"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="18" y="0" z="74"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="22" y="0" z="74"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="26" y="0" z="74"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="30" y="0" z="74"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="34" y="0" z="74"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="38" y="0" z="74"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="42" y="0" z="74"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="46" y="0" z="74"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="50" y="0" z="74"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="54" y="0" z="74"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="58" y="0" z="74"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="62" y="0" z="74"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="66" y="0" z="74"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-10" y="0" z="78"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-6" y="0" z="78"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="78"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="78"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="6" y="0" z="78"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="78"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="14" y="0" z="78"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="18" y="0" z="78"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="22" y="0" z="78"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="26" y="0" z="78"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="30" y="0" z="78"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="34" y="0" z="78"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="38" y="0" z="78"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="42" y="0" z="78"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="46" y="0" z="78"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="50" y="0" z="78"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="54" y="0" z="78"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="58" y="0" z="78"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="62" y="0" z="78"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="66" y="0" z="78"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-10" y="0" z="82"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-6" y="0" z="82"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="82"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="82"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="6" y="0" z="82"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="82"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="14" y="0" z="82"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="18" y="0" z="82"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="22" y="0" z="82"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="26" y="0" z="82"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="30" y="0" z="82"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="34" y="0" z="82"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="38" y="0" z="82"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="42" y="0" z="82"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="46" y="0" z="82"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="50" y="0" z="82"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="54" y="0" z="82"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="58" y="0" z="82"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="62" y="0" z="82"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="66" y="0" z="82"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-10" y="0" z="86"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-6" y="0" z="86"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-2" y="0" z="86"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="2" y="0" z="86"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="6" y="0" z="86"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="10" y="0" z="86"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="14" y="0" z="86"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="18" y="0" z="86"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="22" y="0" z="86"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="26" y="0" z="86"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="30" y="0" z="86"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="34" y="0" z="86"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="38" y="0" z="86"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="42" y="0" z="86"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="46" y="0" z="86"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="50" y="0" z="86"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="54" y="0" z="86"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="58" y="0" z="86"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="62" y="0" z="86"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="66" y="0" z="86"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="game/models/tree1.obj"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Object>
+        <Position x="-4.2999983" y="0" z="0.049999993"/>
+        <Rotation x="276" y="67.000008" z="0"/>
+        <Scale x="0.19999978" y="0.19999978" z="0.19999978"/>
+        <Identifier value="models/rooster.dae"/>
+        <PhysicsEnabled value="0"/>
+        <Visibility value="1"/>
+        <Static value="0"/>
+    </Object>
+    <Skybox Path="models/skybox1/sk1"/>
+</Scene>

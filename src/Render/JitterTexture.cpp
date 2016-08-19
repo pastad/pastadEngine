@@ -24,10 +24,10 @@ bool JitterTexture::load()
 
   float * texture_gen = new float[buffer_size];
 
-  glActiveTexture(GL_TEXTURE0);
-  glGenTextures(1, &m_texture_handle);
-  glBindTexture(GL_TEXTURE_3D, m_texture_handle);
-  glTexStorage3D(GL_TEXTURE_3D, 1, GL_RGBA32F, size, size, gen_size/2);
+  gl::ActiveTexture(gl::TEXTURE0);
+  gl::GenTextures(1, &m_texture_handle);
+  gl::BindTexture(gl::TEXTURE_3D, m_texture_handle);
+  gl::TexStorage3D(gl::TEXTURE_3D, 1, gl::RGBA32F, size, size, gen_size/2);
 
   for( unsigned int o = 0; o < size; o++) 
   {
@@ -65,9 +65,9 @@ bool JitterTexture::load()
     }
   }
 
-  glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, size, size, gen_size/2, GL_RGBA, GL_FLOAT, texture_gen);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  gl::TexSubImage3D(gl::TEXTURE_3D, 0, 0, 0, 0, size, size, gen_size/2, gl::RGBA, gl::FLOAT, texture_gen);
+  gl::TexParameteri(gl::TEXTURE_3D, gl::TEXTURE_MAG_FILTER, gl::NEAREST);
+  gl::TexParameteri(gl::TEXTURE_3D, gl::TEXTURE_MIN_FILTER, gl::NEAREST);
 
   delete [] texture_gen;
   return true;
@@ -78,6 +78,6 @@ bool JitterTexture::load()
 
 void JitterTexture::bind(int offset)
 {
-  glActiveTexture(GL_TEXTURE0 + offset);
-  glBindTexture(GL_TEXTURE_3D, m_texture_handle);
+  gl::ActiveTexture(gl::TEXTURE0 + offset);
+  gl::BindTexture(gl::TEXTURE_3D, m_texture_handle);
 }

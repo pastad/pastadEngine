@@ -1,7 +1,8 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#include "gl_core_4_.h"
+#include "gl_core_4_.hpp"
+
 #define GLM_FORCE_RADIANS
 #include <GLFW/glfw3.h>
 #include <vector>

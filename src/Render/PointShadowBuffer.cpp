@@ -28,41 +28,41 @@ bool PointShadowBuffer::initialize(  float width ,  float height)
   }*/
   m_width = width;
   m_height = height;
-  glGenFramebuffers(1, &m_buffer_handle);
+  gl::GenFramebuffers(1, &m_buffer_handle);
 
    GLfloat border[] = {1000.0f, 0.0f,0.0f,0.0f };
 
-  glGenTextures(1, &m_depth_texture);
-  glBindTexture(GL_TEXTURE_2D, m_depth_texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  gl::GenTextures(1, &m_depth_texture);
+  gl::BindTexture(gl::TEXTURE_2D, m_depth_texture);
+  gl::TexImage2D(gl::TEXTURE_2D, 0, gl::DEPTH_COMPONENT32, width, height, 0, gl::DEPTH_COMPONENT, gl::FLOAT, NULL);
+  gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::LINEAR);
+  gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::LINEAR);
+  gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::CLAMP_TO_EDGE);
+  gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_T, gl::CLAMP_TO_EDGE);
 
-  glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border);
-  glBindTexture(GL_TEXTURE_2D, 0);
+  gl::TexParameterfv(gl::TEXTURE_2D, gl::TEXTURE_BORDER_COLOR, border);
+  gl::BindTexture(gl::TEXTURE_2D, 0);
 
-  glGenTextures(1, &m_cube_texture);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, m_cube_texture);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-  glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border);
+  gl::GenTextures(1, &m_cube_texture);
+  gl::BindTexture(gl::TEXTURE_CUBE_MAP, m_cube_texture);
+  gl::TexParameteri(gl::TEXTURE_CUBE_MAP, gl::TEXTURE_MIN_FILTER, gl::LINEAR);
+  gl::TexParameteri(gl::TEXTURE_CUBE_MAP, gl::TEXTURE_MAG_FILTER, gl::LINEAR);
+  gl::TexParameteri(gl::TEXTURE_CUBE_MAP, gl::TEXTURE_WRAP_S, gl::CLAMP_TO_EDGE);
+  gl::TexParameteri(gl::TEXTURE_CUBE_MAP, gl::TEXTURE_WRAP_T, gl::CLAMP_TO_EDGE);
+  gl::TexParameteri(gl::TEXTURE_CUBE_MAP, gl::TEXTURE_WRAP_R, gl::CLAMP_TO_EDGE);
+  gl::TexParameterfv(gl::TEXTURE_2D, gl::TEXTURE_BORDER_COLOR, border);
 
   for (GLuint i = 0; i < 6; ++i)
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_R32F, m_width, m_height, 0, GL_RED, GL_FLOAT, NULL);  
+    gl::TexImage2D(gl::TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, gl::R32F, m_width, m_height, 0, gl::RED, gl::FLOAT, NULL);
 
 
-  glBindFramebuffer(GL_FRAMEBUFFER, m_buffer_handle);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,GL_TEXTURE_2D, m_depth_texture, 0);
-  glDrawBuffer(GL_NONE);
-  glReadBuffer(GL_NONE);
-  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+  gl::BindFramebuffer(gl::FRAMEBUFFER, m_buffer_handle);
+  gl::FramebufferTexture2D(gl::FRAMEBUFFER, gl::DEPTH_ATTACHMENT,gl::TEXTURE_2D, m_depth_texture, 0);
+  gl::DrawBuffer(gl::NONE);
+  gl::ReadBuffer(gl::NONE);
+  if (gl::CheckFramebufferStatus(gl::FRAMEBUFFER) != gl::FRAMEBUFFER_COMPLETE)
     Engine::getLog()->log("PointShadowBuffer", "FBO couldn't be created");
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  gl::BindFramebuffer(gl::FRAMEBUFFER, 0);
 
   return true;
 }
@@ -72,26 +72,26 @@ bool PointShadowBuffer::initialize(  float width ,  float height)
 void PointShadowBuffer::bindForInput(GLenum face)
 {
   //m_buffers[iteration]->bindForInput(); 
-  glViewport(0, 0, Engine::getWindowWidth(), Engine::getWindowHeight());
-  //glBindFramebuffer(GL_FRAMEBUFFER, m_buffer_handle);
+  gl::Viewport(0, 0, Engine::getWindowWidth(), Engine::getWindowHeight());
+  //glBindFramebuffer(gl::FRAMEBUFFER, m_buffer_handle);
 
 
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_buffer_handle);
-  glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, face, m_cube_texture, 0);
-  glDrawBuffer(GL_COLOR_ATTACHMENT0);
+  gl::BindFramebuffer(gl::DRAW_FRAMEBUFFER, m_buffer_handle);
+  gl::FramebufferTexture2D(gl::DRAW_FRAMEBUFFER, gl::COLOR_ATTACHMENT0, face, m_cube_texture, 0);
+  gl::DrawBuffer(gl::COLOR_ATTACHMENT0);
 
-  glClear(GL_DEPTH_BUFFER_BIT);
+  gl::Clear(gl::DEPTH_BUFFER_BIT);
 }
 
 void PointShadowBuffer::unbindFromInput()
 {
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  gl::BindFramebuffer(gl::FRAMEBUFFER, 0);
 }
 
 void PointShadowBuffer::bindForOutput(unsigned int offsetstart)
 {
-  glActiveTexture(GL_TEXTURE0+ TEXTURE_POINT_SHADOW_START+offsetstart);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, m_cube_texture);
+  gl::ActiveTexture(gl::TEXTURE0+ TEXTURE_POINT_SHADOW_START+offsetstart);
+  gl::BindTexture(gl::TEXTURE_CUBE_MAP, m_cube_texture);
 }
 
 

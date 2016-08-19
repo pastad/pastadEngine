@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-Transform::Transform()
+Transform::Transform():m_position()
 {	
 	recalculateMatrix();
 }

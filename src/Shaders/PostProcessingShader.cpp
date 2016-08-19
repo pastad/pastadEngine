@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <random>
 
 PostProcessingShader::PostProcessingShader() : Shader()
 {
@@ -137,7 +138,7 @@ void PostProcessingShader::setExposure(float value)
 void PostProcessingShader::setGaussSize(unsigned int size)
 {
   bind();
-  float weights[size];
+  float * weights = new float[size];
 
   float sum =0.0f;
   for(int count = 1; count< size+1;count++)
@@ -149,9 +150,10 @@ void PostProcessingShader::setGaussSize(unsigned int size)
   {
     std::stringstream ss, ssi;
     ss << "GaussKernel["<<count -1<<"]";
-    setUniform(ss.str(), weights[count-1]/sum);    
+    setUniform(ss.str() , (float )(weights[count-1]/sum) );    
     checkUniformError("GaussKernel set");
   }
+  delete weights;
 }
 
 void PostProcessingShader::setSSAOSamples()

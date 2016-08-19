@@ -2,7 +2,7 @@
 #define QUAD_H
 
 
-#include "gl_core_4_.h"
+#include "gl_core_4_.hpp"
 #include <glm/glm.hpp>
 
 class Quad

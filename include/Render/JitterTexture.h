@@ -1,7 +1,7 @@
 #ifndef JITTERTEXTURE_H
 #define JITTERTEXTURE_H
 
-#include "gl_core_4_.h"
+#include "gl_core_4_.hpp"
 #include <glm/glm.hpp>
 
 // jitter texture for shadow smoothing

@@ -40,7 +40,7 @@ bool  TextShader::load(const std::string path)
          Engine::getLog()->log("TextShader", "Couldn't load font");
 
   FT_Set_Pixel_Sizes(face, 0, 48);
-  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  gl::PixelStorei(gl::UNPACK_ALIGNMENT, 1);
 
   for (GLubyte c = 0; c < 128; c++)
   {
@@ -50,24 +50,24 @@ bool  TextShader::load(const std::string path)
           continue;
       }
 
-      glGenTextures(1, &m_texture);
-      glBindTexture(GL_TEXTURE_2D, m_texture);
-      glTexImage2D(
-          GL_TEXTURE_2D,
+      gl::GenTextures(1, &m_texture);
+      gl::BindTexture(gl::TEXTURE_2D, m_texture);
+      gl::TexImage2D(
+          gl::TEXTURE_2D,
           0,
-          GL_RED,
+          gl::RED,
           face->glyph->bitmap.width,
           face->glyph->bitmap.rows,
           0,
-          GL_RED,
-          GL_UNSIGNED_BYTE,
+          gl::RED,
+          gl::UNSIGNED_BYTE,
           face->glyph->bitmap.buffer
       );
 
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::CLAMP_TO_EDGE);
+      gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_T, gl::CLAMP_TO_EDGE);
+      gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::LINEAR);
+      gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::LINEAR);
 
       Character character = {
           m_texture,
@@ -78,20 +78,20 @@ bool  TextShader::load(const std::string path)
       };
       m_characters.insert(std::pair<GLchar, Character>(c, character));
   }
-  glBindTexture(GL_TEXTURE_2D, 0);
+  gl::BindTexture(gl::TEXTURE_2D, 0);
 
   FT_Done_Face(face);
   FT_Done_FreeType(ft);
 
-  glGenVertexArrays(1, &m_vao);
-  glGenBuffers(1, &m_vbo);
-  glBindVertexArray(m_vao);
-  glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindVertexArray(0);
+  gl::GenVertexArrays(1, &m_vao);
+  gl::GenBuffers(1, &m_vbo);
+  gl::BindVertexArray(m_vao);
+  gl::BindBuffer(gl::ARRAY_BUFFER, m_vbo);
+  gl::BufferData(gl::ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, gl::DYNAMIC_DRAW);
+  gl::EnableVertexAttribArray(0);
+  gl::VertexAttribPointer(0, 4, gl::FLOAT, gl::FALSE_, 4 * sizeof(GLfloat), 0);
+  gl::BindBuffer(gl::ARRAY_BUFFER, 0);
+  gl::BindVertexArray(0);
 
   return true;
 }
@@ -104,8 +104,8 @@ void TextShader::renderText(std::string text, glm::vec2 pos ,float scale, glm::v
 {
   bind();
   setUniform("TextColor",color);
-  glActiveTexture(GL_TEXTURE0);
-  glBindVertexArray(m_vao);
+  gl::ActiveTexture(gl::TEXTURE0);
+  gl::BindVertexArray(m_vao);
 
   
   if(centered)
@@ -132,19 +132,19 @@ void TextShader::renderText(std::string text, glm::vec2 pos ,float scale, glm::v
         { xpos + w, ypos + h,   1.0, 0.0 }
     };
 
-    glBindTexture(GL_TEXTURE_2D, ch.texture_id);
+    gl::BindTexture(gl::TEXTURE_2D, ch.texture_id);
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+    gl::BindBuffer(gl::ARRAY_BUFFER, m_vbo);
+    gl::BufferSubData(gl::ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    gl::BindBuffer(gl::ARRAY_BUFFER, 0);
 
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    gl::DrawArrays(gl::TRIANGLES, 0, 6);
 
     pos.x += (ch.advance >> 6) * scale;
   }
-  glBindVertexArray(0);
-  glBindTexture(GL_TEXTURE_2D, 0);
+  gl::BindVertexArray(0);
+  gl::BindTexture(gl::TEXTURE_2D, 0);
   checkUniformError("end textshader render");
 }
 

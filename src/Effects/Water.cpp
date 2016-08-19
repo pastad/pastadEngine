@@ -77,8 +77,8 @@ bool Water::initialize()
 
 void Water::render(RenderBaseShader * render_shader)
 {
-  glEnable (GL_BLEND);
-  glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  gl::Enable (gl::BLEND);
+  gl::BlendFunc (gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
 
   render_shader->use();
   setWavesForRender(render_shader);
@@ -88,7 +88,7 @@ void Water::render(RenderBaseShader * render_shader)
   render_shader->setUniform("Step", m_step);
   m_mesh->render();
 
-  glDisable (GL_BLEND);
+  gl::Disable (gl::BLEND);
 }
 
 float Water::getStep()

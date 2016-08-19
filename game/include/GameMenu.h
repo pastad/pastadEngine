@@ -78,8 +78,8 @@ private:
   unsigned int m_selected_slide;
 
   // background sound
-  sf::SoundBuffer * m_background_sound_buffer;
-  sf::Sound * m_background_sound_sound;
+  sf::SoundBuffer  m_background_sound_buffer;
+  sf::Sound  m_background_sound_sound;
 
   // refresh and slide change
   void refreshSelection();

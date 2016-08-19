@@ -1,6 +1,7 @@
 #include "GameMenu.h"
 
 #include "Engine.h"
+#include "Log.h"
 #include "GUI.h"
 #include "Button.h"
 #include "Image.h"
@@ -66,19 +67,22 @@ bool GameMenu::initialize(float width, float height)
 
   m_gui->registerButtonPressedCallback(&mouseButtonCallback);
 
-  m_background_sound_buffer = new sf::SoundBuffer();
-  m_background_sound_sound = new sf::Sound();
+ // m_background_sound_buffer = new sf::SoundBuffer();
+ // m_background_sound_sound = new sf::Sound();
 
-  if (!m_background_sound_buffer->loadFromFile("game/models/sounds/litm.flac"))
+  if (!m_background_sound_buffer.loadFromFile("game/models/sounds/canary.wav"))
   {
-    delete m_background_sound_sound;
-    delete m_background_sound_buffer;
+    Engine::getLog()->log("GameMenu", "couldn't load file");
+   // delete m_background_sound_sound;
+   // m_background_sound_sound = nullptr;
+   // delete m_background_sound_buffer;
+   // m_background_sound_buffer = nullptr;
     return false;
   }
 
-  m_background_sound_sound->setBuffer(*m_background_sound_buffer);
-  m_background_sound_sound->play();
-  m_background_sound_sound->setLoop(true);
+  m_background_sound_sound.setBuffer(m_background_sound_buffer);
+  m_background_sound_sound.play();
+  m_background_sound_sound.setLoop(true);
 
   m_selected =0;
   m_selected_slide = GM_SLIDE_MAIN;
@@ -92,10 +96,14 @@ bool GameMenu::unload()
 {
   Engine::removeGUI(m_gui);
 
-  m_background_sound_sound->stop();
+  m_background_sound_sound.stop();
 
-  delete m_background_sound_sound;
-  delete m_background_sound_buffer;
+  //if( m_background_sound_sound != nullptr)
+  //  delete m_background_sound_sound;
+ // if (m_background_sound_buffer != nullptr)
+  //  delete m_background_sound_buffer;
+
+  return true;
 }
 
 void GameMenu::update()

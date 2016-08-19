@@ -124,6 +124,7 @@ void Button::setDescriptor(std::string desc)
 bool Button::setImage(std::string path)
 {
   Image::load(path);
+  return true;
 }
 
 void Button::setTextFloat(unsigned int f)

@@ -1,0 +1,265 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="external\gl_core_4_.hpp" />
+    <ClInclude Include="game\include\EnergyShot.h" />
+    <ClInclude Include="game\include\Environment.h" />
+    <ClInclude Include="game\include\Game.h" />
+    <ClInclude Include="game\include\GameMenu.h" />
+    <ClInclude Include="game\include\Inventory.h" />
+    <ClInclude Include="game\include\Item.h" />
+    <ClInclude Include="game\include\Mob.h" />
+    <ClInclude Include="game\include\Mobs.h" />
+    <ClInclude Include="game\include\Plant.h" />
+    <ClInclude Include="game\include\Player.h" />
+    <ClInclude Include="game\include\SoundManager.h" />
+    <ClInclude Include="include\Effects\Water.h" />
+    <ClInclude Include="include\Effects\Wave.h" />
+    <ClInclude Include="include\Engine.h" />
+    <ClInclude Include="include\Extension\Skybox.h" />
+    <ClInclude Include="include\Extension\Terrain.h" />
+    <ClInclude Include="include\Geometric\BoundingBox.h" />
+    <ClInclude Include="include\Geometric\Plane.h" />
+    <ClInclude Include="include\Geometric\Ray.h" />
+    <ClInclude Include="include\GUI\Button.h" />
+    <ClInclude Include="include\GUI\EditText.h" />
+    <ClInclude Include="include\GUI\EngineGUI.h" />
+    <ClInclude Include="include\GUI\FileViewer.h" />
+    <ClInclude Include="include\GUI\GUI.h" />
+    <ClInclude Include="include\GUI\Image.h" />
+    <ClInclude Include="include\GUI\Text.h" />
+    <ClInclude Include="include\Helper.h" />
+    <ClInclude Include="include\Log.h" />
+    <ClInclude Include="include\Model\AnimationMesh.h" />
+    <ClInclude Include="include\Model\IndexedRepresentation.h" />
+    <ClInclude Include="include\Model\Material.h" />
+    <ClInclude Include="include\Model\Mesh.h" />
+    <ClInclude Include="include\Model\Model.h" />
+    <ClInclude Include="include\Model\Object.h" />
+    <ClInclude Include="include\Model\Texture.h" />
+    <ClInclude Include="include\RenderStructures\DirectionalShadowBuffer.h" />
+    <ClInclude Include="include\RenderStructures\GBuffer.h" />
+    <ClInclude Include="include\RenderStructures\JitterTexture.h" />
+    <ClInclude Include="include\RenderStructures\PointShadowBuffer.h" />
+    <ClInclude Include="include\RenderStructures\Quad.h" />
+    <ClInclude Include="include\RenderStructures\RenderBuffer.h" />
+    <ClInclude Include="include\Render\DirectionalShadowBuffer.h" />
+    <ClInclude Include="include\Render\GBuffer.h" />
+    <ClInclude Include="include\Render\JitterTexture.h" />
+    <ClInclude Include="include\Render\PointShadowBuffer.h" />
+    <ClInclude Include="include\Render\Quad.h" />
+    <ClInclude Include="include\Render\RenderBuffer.h" />
+    <ClInclude Include="include\RessourceManager.h" />
+    <ClInclude Include="include\Scene\Scene.h" />
+    <ClInclude Include="include\Scene\SceneEditor.h" />
+    <ClInclude Include="include\Scene\SceneTreeElement.h" />
+    <ClInclude Include="include\Script\ExternalTriggerScriptElement.h" />
+    <ClInclude Include="include\Script\RotationScriptElement.h" />
+    <ClInclude Include="include\Script\Script.h" />
+    <ClInclude Include="include\Script\ScriptElement.h" />
+    <ClInclude Include="include\Shaders\ImageShader.h" />
+    <ClInclude Include="include\Shaders\PostProcessingShader.h" />
+    <ClInclude Include="include\Shaders\RenderBaseShader.h" />
+    <ClInclude Include="include\Shaders\RenderShader.h" />
+    <ClInclude Include="include\Shaders\Shader.h" />
+    <ClInclude Include="include\Shaders\ShadowShader.h" />
+    <ClInclude Include="include\Shaders\SkyboxShader.h" />
+    <ClInclude Include="include\Shaders\TextShader.h" />
+    <ClInclude Include="include\Structures\Camera.h" />
+    <ClInclude Include="include\Structures\Light.h" />
+    <ClInclude Include="include\Structures\Terrain.h" />
+    <ClInclude Include="include\Structures\Transform.h" />
+    <ClInclude Include="include\Subsystems\IOSubsystem.h" />
+    <ClInclude Include="include\Subsystems\PhysicSubsystem.h" />
+    <ClInclude Include="include\Subsystems\RenderSubsystem.h" />
+    <ClInclude Include="include\Subsystems\Subsystem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="external\gl_core_4_.cpp" />
+    <ClCompile Include="game\src\EnergyShot.cpp" />
+    <ClCompile Include="game\src\Environment.cpp" />
+    <ClCompile Include="game\src\Game.cpp" />
+    <ClCompile Include="game\src\GameMenu.cpp" />
+    <ClCompile Include="game\src\Inventory.cpp" />
+    <ClCompile Include="game\src\Item.cpp" />
+    <ClCompile Include="game\src\Mob.cpp" />
+    <ClCompile Include="game\src\Mobs.cpp" />
+    <ClCompile Include="game\src\Plant.cpp" />
+    <ClCompile Include="game\src\Player.cpp" />
+    <ClCompile Include="game\src\SoundManager.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\Effects\Water.cpp" />
+    <ClCompile Include="src\Effects\Wave.cpp" />
+    <ClCompile Include="src\Engine.cpp" />
+    <ClCompile Include="src\Extension\Skybox.cpp" />
+    <ClCompile Include="src\Extension\Terrain.cpp" />
+    <ClCompile Include="src\Geometric\BoundingBox.cpp" />
+    <ClCompile Include="src\Geometric\Plane.cpp" />
+    <ClCompile Include="src\Geometric\Ray.cpp" />
+    <ClCompile Include="src\GUI\Button.cpp" />
+    <ClCompile Include="src\GUI\EditText.cpp" />
+    <ClCompile Include="src\GUI\EngineGUI.cpp" />
+    <ClCompile Include="src\GUI\FileViewer.cpp" />
+    <ClCompile Include="src\GUI\GUI.cpp" />
+    <ClCompile Include="src\GUI\Image.cpp" />
+    <ClCompile Include="src\GUI\Text.cpp" />
+    <ClCompile Include="src\Helper.cpp" />
+    <ClCompile Include="src\Log.cpp" />
+    <ClCompile Include="src\Model\AnimationMesh.cpp" />
+    <ClCompile Include="src\Model\IndexedRepresentation.cpp" />
+    <ClCompile Include="src\Model\Material.cpp" />
+    <ClCompile Include="src\Model\Mesh.cpp" />
+    <ClCompile Include="src\Model\Model.cpp" />
+    <ClCompile Include="src\Model\Object.cpp" />
+    <ClCompile Include="src\Model\Texture.cpp" />
+    <ClCompile Include="src\Render\DirectionalShadowBuffer.cpp" />
+    <ClCompile Include="src\Render\GBuffer.cpp" />
+    <ClCompile Include="src\Render\JitterTexture.cpp" />
+    <ClCompile Include="src\Render\PointShadowBuffer.cpp" />
+    <ClCompile Include="src\Render\Quad.cpp" />
+    <ClCompile Include="src\Render\RenderBuffer.cpp" />
+    <ClCompile Include="src\RessourceManager.cpp" />
+    <ClCompile Include="src\Scene\Scene.cpp" />
+    <ClCompile Include="src\Scene\SceneEditor.cpp" />
+    <ClCompile Include="src\Scene\SceneTreeElement.cpp" />
+    <ClCompile Include="src\Script\ExternalTriggerScriptElement.cpp" />
+    <ClCompile Include="src\Script\RotationScriptElement.cpp" />
+    <ClCompile Include="src\Script\Script.cpp" />
+    <ClCompile Include="src\Script\ScriptElement.cpp" />
+    <ClCompile Include="src\Shaders\ImageShader.cpp" />
+    <ClCompile Include="src\Shaders\PostProcessingShader.cpp" />
+    <ClCompile Include="src\Shaders\RenderBaseShader.cpp" />
+    <ClCompile Include="src\Shaders\RenderShader.cpp" />
+    <ClCompile Include="src\Shaders\Shader.cpp" />
+    <ClCompile Include="src\Shaders\ShadowShader.cpp" />
+    <ClCompile Include="src\Shaders\SkyboxShader.cpp" />
+    <ClCompile Include="src\Shaders\TextShader.cpp" />
+    <ClCompile Include="src\Structures\Camera.cpp" />
+    <ClCompile Include="src\Structures\Light.cpp" />
+    <ClCompile Include="src\Structures\Transform.cpp" />
+    <ClCompile Include="src\Subsystems\IOSubsystem.cpp" />
+    <ClCompile Include="src\Subsystems\PhysicSubsystem.cpp" />
+    <ClCompile Include="src\Subsystems\RenderSubsystem.cpp" />
+    <ClCompile Include="src\Subsystems\Subsystem.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{84773E5E-5599-4E04-9E52-09136082BE8D}</ProjectGuid>
+    <RootNamespace>pastadEngine</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\Users\pastad\Documents\libs\boost_1_59_0;C:\Users\pastad\Documents\libs\SFML-2.4.0\include;C:\Users\pastad\Documents\pastadEngine\game\include;C:\Users\pastad\Documents\libs\freetype-2.6.5\include;C:\Users\pastad\Documents\libs\tinyxml2-master;C:\Users\pastad\Documents\libs\soil\src;C:\Users\pastad\Documents\libs\assimp\include;C:\Users\pastad\Documents\libs\glfw_64\include;C:\Users\pastad\Documents\pastadEngine\external;C:\Users\pastad\Documents\libs\glm;C:\Users\pastad\Documents\pastadEngine\include;C:\Users\pastad\Documents\pastadEngine\include\Structures;C:\Users\pastad\Documents\pastadEngine\include\Subsystems;C:\Users\pastad\Documents\pastadEngine\include\Shaders;C:\Users\pastad\Documents\pastadEngine\include\Script;C:\Users\pastad\Documents\pastadEngine\include\Scene;C:\Users\pastad\Documents\pastadEngine\include\Render;C:\Users\pastad\Documents\pastadEngine\include\Model;C:\Users\pastad\Documents\pastadEngine\include\GUI;C:\Users\pastad\Documents\pastadEngine\include\Geometric;C:\Users\pastad\Documents\pastadEngine\include\Extension;C:\Users\pastad\Documents\pastadEngine\include\Effects;$(IncludePath)</IncludePath>
+    <SourcePath>C:\Users\pastad\Documents\pastadEngine\game\src;C:\Users\pastad\Documents\pastadEngine\src;C:\Users\pastad\Documents\pastadEngine\src\Subsystems;$(SourcePath)</SourcePath>
+    <LibraryPath>C:\Users\pastad\Documents\libs\SFML-2.4.0\lib;C:\Users\pastad\Documents\libs\boost_1_61_0\stage\lib;C:\Users\pastad\Documents\libs\freetype-2.6.5\objs\vc2010\x64;C:\Users\pastad\Documents\libs\glfw_64\lib-vc2015;C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.14393.0\um\x64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.14393.0\um\x64\opengl32.lib;assimp.lib;SOIL_64.lib;tinyxml2.lib;freetype265d.lib;boost_filesystem-vc140-mt-gd-1_59.lib;boost_system-vc140-mt-gd-1_59.lib;sfml-audio.lib;sfml-system.lib;kernel32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.14393.0\um\x64;C:\Users\pastad\Documents\libs\glfw_64\lib-vc2015;C:\Users\pastad\Documents\libs\assimp\lib64;C:\Users\pastad\Documents\libs\boost_1_59_0\lib64-msvc-14.0;C:\Users\pastad\Documents\libs\tinyxml2-master\tinyxml2\bin\x64-Debug-Dll;C:\Users\pastad\Documents\libs\SFML-2.4.0\lib;C:\Users\pastad\Documents\libs\soil\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -25,26 +25,26 @@ bool Quad::load()
 
 
   unsigned int handle[2];
-  glGenBuffers(2, handle);
+  gl::GenBuffers(2, handle);
 
-  glBindBuffer(GL_ARRAY_BUFFER, handle[0]);
-  glBufferData(GL_ARRAY_BUFFER, 6 * 3 * sizeof(float), vertices, GL_STATIC_DRAW);
+  gl::BindBuffer(gl::ARRAY_BUFFER, handle[0]);
+  gl::BufferData(gl::ARRAY_BUFFER, 6 * 3 * sizeof(float), vertices, gl::STATIC_DRAW);
 
-  glBindBuffer(GL_ARRAY_BUFFER, handle[1]);
-  glBufferData(GL_ARRAY_BUFFER, 6 * 2 * sizeof(float), textue_coordinates, GL_STATIC_DRAW);
+  gl::BindBuffer(gl::ARRAY_BUFFER, handle[1]);
+  gl::BufferData(gl::ARRAY_BUFFER, 6 * 2 * sizeof(float), textue_coordinates, gl::STATIC_DRAW);
   
-  glGenVertexArrays( 1, &m_buffer_handle );
-  glBindVertexArray(m_buffer_handle);
+  gl::GenVertexArrays( 1, &m_buffer_handle );
+  gl::BindVertexArray(m_buffer_handle);
 
-  glBindBuffer(GL_ARRAY_BUFFER, handle[0]);
-  glVertexAttribPointer( (GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, ((GLubyte *)NULL + (0)) );
-  glEnableVertexAttribArray(0); 
+  gl::BindBuffer(gl::ARRAY_BUFFER, handle[0]);
+  gl::VertexAttribPointer( (GLuint)0, 3, gl::FLOAT, gl::FALSE_, 0, ((GLubyte *)NULL + (0)) );
+  gl::EnableVertexAttribArray(0);
 
-  glBindBuffer(GL_ARRAY_BUFFER, handle[1]);
-  glVertexAttribPointer( (GLuint)1, 2, GL_FLOAT, GL_FALSE, 0, ((GLubyte *)NULL + (0)) );
-  glEnableVertexAttribArray(1);  
+  gl::BindBuffer(gl::ARRAY_BUFFER, handle[1]);
+  gl::VertexAttribPointer( (GLuint)1, 2, gl::FLOAT, gl::FALSE_, 0, ((GLubyte *)NULL + (0)) );
+  gl::EnableVertexAttribArray(1);
 
-  glBindVertexArray(0);
+  gl::BindVertexArray(0);
 
   return true;
 
@@ -52,6 +52,6 @@ bool Quad::load()
 
 void Quad::render()
 {
-  glBindVertexArray(m_buffer_handle);
-  glDrawArrays(GL_TRIANGLES, 0, 6);
+  gl::BindVertexArray(m_buffer_handle);
+  gl::DrawArrays(gl::TRIANGLES, 0, 6);
 }

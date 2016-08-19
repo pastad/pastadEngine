@@ -1,10 +1,10 @@
-#ifndef SHADER
-#define SHADER
+#ifndef SHADER_
+#define SHADER_
 
 #include <string>
 #include <map>
 
-#include "gl_core_4_.h"
+#include "gl_core_4_.hpp"
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 
@@ -14,12 +14,12 @@
 // type of shaders that can be added
 enum ShaderType
 {
-	VERTEX = GL_VERTEX_SHADER,
-	FRAGMENT =  GL_FRAGMENT_SHADER,
-	GEOMETRY =  GL_GEOMETRY_SHADER,
-	COMPUTE =  GL_COMPUTE_SHADER,
-	TESS_CONTROL =  GL_TESS_CONTROL_SHADER,
-	TESS_EVAL =  GL_TESS_EVALUATION_SHADER
+	VERTEX = gl::VERTEX_SHADER,
+	FRAGMENT =  gl::FRAGMENT_SHADER,
+	GEOMETRY =  gl::GEOMETRY_SHADER,
+	COMPUTE =  gl::COMPUTE_SHADER,
+	TESS_CONTROL =  gl::TESS_CONTROL_SHADER,
+	TESS_EVAL =  gl::TESS_EVALUATION_SHADER
 
 };
 

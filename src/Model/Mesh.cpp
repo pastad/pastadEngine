@@ -72,7 +72,7 @@ Mesh::Mesh(const  IndexedRepresentation& model, int mat_index)
 
 Mesh::~Mesh()
 {
-  glDeleteVertexArrays(1, &m_vertex_array_object);
+    gl::DeleteVertexArrays(1, &m_vertex_array_object);
   if(m_bounding_box != nullptr)
     delete m_bounding_box;
 }
@@ -83,32 +83,32 @@ Mesh::~Mesh()
 void  Mesh::initMesh(const  IndexedRepresentation& model)
 {
   m_draw_count = model.m_indices.size();
-  glGenVertexArrays(1, &m_vertex_array_object);
-  glBindVertexArray(m_vertex_array_object);
+  gl::GenVertexArrays(1, &m_vertex_array_object);
+  gl::BindVertexArray(m_vertex_array_object);
 
-  glGenBuffers(NUM_BUFFERS, m_vertex_array_buffers);
-  glBindBuffer(GL_ARRAY_BUFFER, m_vertex_array_buffers[POSITION_VB]);
-  glBufferData(GL_ARRAY_BUFFER, model.m_positions.size() * sizeof(model.m_positions[0]), &model.m_positions[0], GL_STATIC_DRAW );
+  gl::GenBuffers(NUM_BUFFERS, m_vertex_array_buffers);
+  gl::BindBuffer(gl::ARRAY_BUFFER, m_vertex_array_buffers[POSITION_VB]);
+  gl::BufferData(gl::ARRAY_BUFFER, model.m_positions.size() * sizeof(model.m_positions[0]), &model.m_positions[0], gl::STATIC_DRAW );
 
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  gl::EnableVertexAttribArray(0);
+  gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE_, 0, 0);
 
-  glBindBuffer(GL_ARRAY_BUFFER, m_vertex_array_buffers[TEXCOORD_VB]);
-  glBufferData(GL_ARRAY_BUFFER, model.m_positions.size() * sizeof(model.m_texCoords[0]), &model.m_texCoords[0], GL_STATIC_DRAW );
+  gl::BindBuffer(gl::ARRAY_BUFFER, m_vertex_array_buffers[TEXCOORD_VB]);
+  gl::BufferData(gl::ARRAY_BUFFER, model.m_positions.size() * sizeof(model.m_texCoords[0]), &model.m_texCoords[0], gl::STATIC_DRAW );
 
-  glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+  gl::EnableVertexAttribArray(1);
+  gl::VertexAttribPointer(1, 2, gl::FLOAT, gl::FALSE_, 0, 0);
 
-  glBindBuffer(GL_ARRAY_BUFFER, m_vertex_array_buffers[NORMAL_VB]);
-  glBufferData(GL_ARRAY_BUFFER, model.m_normals.size() * sizeof(model.m_normals[0]), &model.m_normals[0], GL_STATIC_DRAW );
+  gl::BindBuffer(gl::ARRAY_BUFFER, m_vertex_array_buffers[NORMAL_VB]);
+  gl::BufferData(gl::ARRAY_BUFFER, model.m_normals.size() * sizeof(model.m_normals[0]), &model.m_normals[0], gl::STATIC_DRAW );
 
-  glEnableVertexAttribArray(2);
-  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  gl::EnableVertexAttribArray(2);
+  gl::VertexAttribPointer(2, 3, gl::FLOAT, gl::FALSE_, 0, 0);
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vertex_array_buffers[INDEX_VB]);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, model.m_indices.size() * sizeof(model.m_indices[0]), &model.m_indices[0], GL_STATIC_DRAW );
-
-  glBindVertexArray(0);
+  gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, m_vertex_array_buffers[INDEX_VB]);
+  gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, model.m_indices.size() * sizeof(model.m_indices[0]), &model.m_indices[0], gl::STATIC_DRAW );
+ 
+  gl::BindVertexArray(0);
 
 }
 
@@ -117,32 +117,32 @@ void  Mesh::initMesh(const  IndexedRepresentation& model)
 
 void Mesh::bufferModelMatrices(std::vector<glm::mat4> * matrices)
 {
-  glBindVertexArray(m_vertex_array_object);
-  glBindBuffer(GL_ARRAY_BUFFER, m_vertex_array_buffers[MODEL_VB]);
-  glBufferData(GL_ARRAY_BUFFER, matrices->size() * sizeof(glm::mat4), &(*matrices)[0], GL_STATIC_DRAW );
+  gl::BindVertexArray(m_vertex_array_object);
+  gl::BindBuffer(gl::ARRAY_BUFFER, m_vertex_array_buffers[MODEL_VB]);
+  gl::BufferData(gl::ARRAY_BUFFER, matrices->size() * sizeof(glm::mat4), &(*matrices)[0], gl::STATIC_DRAW );
 
   for (unsigned int i = 0; i < 4 ; i++)
   {
-    glEnableVertexAttribArray(3 + i); // 3 because we skip the index buffer
-    glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof((*matrices)[0]), (const GLvoid*)(sizeof(glm::vec4) * i ));
-    glVertexAttribDivisor(3 + i, 1);
+    gl::EnableVertexAttribArray(3 + i); // 3 because we skip the index buffer
+    gl::VertexAttribPointer(3 + i, 4, gl::FLOAT, gl::FALSE_, sizeof((*matrices)[0]), (const GLvoid*)(sizeof(glm::vec4) * i ));
+    gl::VertexAttribDivisor(3 + i, 1);
   }
 
-  glBindVertexArray(0);
+  gl::BindVertexArray(0);
 }
 
 void Mesh::render(unsigned int num_instances)
 {  
-  glBindVertexArray(m_vertex_array_object);
-  glDrawElementsInstanced(GL_TRIANGLES, m_draw_count, GL_UNSIGNED_INT,0, num_instances);
-  glBindVertexArray(0);
+	gl::BindVertexArray(m_vertex_array_object);
+  gl::DrawElementsInstanced(gl::TRIANGLES, m_draw_count, gl::UNSIGNED_INT,0, num_instances);
+  gl::BindVertexArray(0);
 }
 
 void Mesh::render()
 {
-  glBindVertexArray(m_vertex_array_object);
-  glDrawElements(GL_TRIANGLES, m_draw_count, GL_UNSIGNED_INT,0);
-  glBindVertexArray(0);
+  gl::BindVertexArray(m_vertex_array_object);
+  gl::DrawElements(gl::TRIANGLES, m_draw_count, gl::UNSIGNED_INT,0);
+  gl::BindVertexArray(0);
 }
 
 

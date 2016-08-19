@@ -15,7 +15,7 @@
 
 Shader::Shader():m_ready(false)
 {
-   m_program = glCreateProgram();
+   m_program = gl::CreateProgram();
 }
 
 Shader::~Shader()
@@ -28,7 +28,7 @@ Shader::~Shader()
 
 GLuint Shader::createShader(const std::string text, GLenum shader_type)
 {
-    GLuint shader = glCreateShader(shader_type);
+    GLuint shader = gl::CreateShader(shader_type);
 
     if(shader == 0)
       Engine::getLog()->log("Shader","Shader creation failed");
@@ -39,10 +39,10 @@ GLuint Shader::createShader(const std::string text, GLenum shader_type)
     shader_source_strings[0] = text.c_str();
     shader_source_strings_length[0] = text.length();
 
-    glShaderSource(shader, 1, shader_source_strings, shader_source_strings_length);
-    glCompileShader(shader);
+    gl::ShaderSource(shader, 1, shader_source_strings, shader_source_strings_length);
+    gl::CompileShader(shader);
 
-    checkError(GL_COMPILE_STATUS, "compilation failed because of :", shader, false);
+    checkError(gl::COMPILE_STATUS, "compilation failed because of :", shader, false);
 
     return shader;
 }
@@ -50,7 +50,7 @@ GLuint Shader::createShader(const std::string text, GLenum shader_type)
 bool Shader::addShader(std::string path, ShaderType type)
 {
   GLuint sh = createShader(IOSubsystem::readFile(path), type);
-  glAttachShader(m_program, sh);
+  gl::AttachShader(m_program, sh);
   m_shaders[type] = sh;
 
   return true;
@@ -58,15 +58,15 @@ bool Shader::addShader(std::string path, ShaderType type)
 
 bool Shader::linkAndValidate()
 {
-  glBindAttribLocation(m_program, 0, "position");
-  glBindAttribLocation(m_program, 1, "tex_coord");
-  glBindAttribLocation(m_program, 2, "normal");
+  gl::BindAttribLocation(m_program, 0, "position");
+  gl::BindAttribLocation(m_program, 1, "tex_coord");
+  gl::BindAttribLocation(m_program, 2, "normal");
 
-  glLinkProgram(m_program);
-  checkError(GL_LINK_STATUS, "failed to link, because of :", m_program, true);
+  gl::LinkProgram(m_program);
+  checkError(gl::LINK_STATUS, "failed to link, because of :", m_program, true);
 
-  glValidateProgram(m_program);
-  checkError( GL_VALIDATE_STATUS, "failed to vaildate, because of :", m_program, true);
+  gl::ValidateProgram(m_program);
+  checkError( gl::VALIDATE_STATUS, "failed to vaildate, because of :", m_program, true);
   return true;
 }
 
@@ -76,19 +76,19 @@ bool Shader::linkAndValidate()
 void Shader::printUniforms()
 {
   GLint num = 0;
-  glGetProgramInterfaceiv(m_program, GL_UNIFORM, GL_ACTIVE_RESOURCES, &num);
+  gl::GetProgramInterfaceiv(m_program, gl::UNIFORM, gl::ACTIVE_RESOURCES, &num);
   //Engine::getLog()->log("Shader","Nr active uniforms", std::string((int)num));
-  GLenum properties[] = {GL_NAME_LENGTH, GL_TYPE,GL_LOCATION,GL_BLOCK_INDEX};
+  GLenum properties[] = {gl::NAME_LENGTH, gl::TYPE,gl::LOCATION,gl::BLOCK_INDEX};
   for(int i=0;i<num; ++i)
   {
     GLint results[4];
-    glGetProgramResourceiv(m_program,GL_UNIFORM, i,4,properties ,4,NULL,results);
+    gl::GetProgramResourceiv(m_program,gl::UNIFORM, i,4,properties ,4,NULL,results);
 
     if(results[3] != -1)
       continue;
     GLint nameSize = results[0] + 1;
     char * name = new char[nameSize];
-    glGetProgramResourceName(m_program, GL_UNIFORM, i, nameSize, NULL, name);
+    gl::GetProgramResourceName(m_program, gl::UNIFORM, i, nameSize, NULL, name);
     std::cout <<results[2]<< "  "<<name<<results[1]<<std::endl;
     delete name;
   }
@@ -99,41 +99,41 @@ void Shader::printUniforms()
 
 void Shader::setUniform(const std::string name, glm::vec2 v)
 { 
-  glUniform2f(glGetUniformLocation(m_program, name.c_str()),v.x ,v.y);
+  gl::Uniform2f(gl::GetUniformLocation(m_program, name.c_str()),v.x ,v.y);
 }
 
 void Shader::setUniform(const std::string name, glm::vec3 v)
 { 
-  glUniform3f(glGetUniformLocation(m_program, name.c_str()),v.x ,v.y ,v.z);
+  gl::Uniform3f(gl::GetUniformLocation(m_program, name.c_str()),v.x ,v.y ,v.z);
 }
 
 void Shader::setUniform(const std::string name, glm::vec4 v)
 {
-  glUniform4f(glGetUniformLocation(m_program, name.c_str()),v.x ,v.y ,v.z, v.w);
+  gl::Uniform4f(gl::GetUniformLocation(m_program, name.c_str()),v.x ,v.y ,v.z, v.w);
 }
 
 void Shader::setUniform(const std::string name, glm::mat4 v)
 {
   glm::mat4 t = v;
   //std::cout<<glm::to_string(t)<<std::endl;
-  GLint handle = glGetUniformLocation(m_program, name.c_str());
-  glUniformMatrix4fv(handle,1,GL_FALSE,glm::value_ptr(t) );
+  GLint handle = gl::GetUniformLocation(m_program, name.c_str());
+  gl::UniformMatrix4fv(handle,1,gl::FALSE_,glm::value_ptr(t) );
 }
 
 void Shader::setUniform(const std::string name, float v)
 {
-  glUniform1f(glGetUniformLocation(m_program, name.c_str()),v);
+  gl::Uniform1f(gl::GetUniformLocation(m_program, name.c_str()),v);
 }
 
 void Shader::setUniform(const std::string name, int v)
 {
-  glUniform1i(glGetUniformLocation(m_program, name.c_str()), v);
+  gl::Uniform1i(gl::GetUniformLocation(m_program, name.c_str()), v);
 }
 
 void Shader::setRenderPassSubroutine(const std::string pass)
 {
-  GLuint p = glGetSubroutineIndex( m_program, GL_FRAGMENT_SHADER, pass.c_str());
-  glUniformSubroutinesuiv( GL_FRAGMENT_SHADER, 1, &p);
+  GLuint p = gl::GetSubroutineIndex( m_program, gl::FRAGMENT_SHADER, pass.c_str());
+  gl::UniformSubroutinesuiv( gl::FRAGMENT_SHADER, 1, &p);
 }
 
 bool Shader::isReady()
@@ -146,17 +146,17 @@ bool Shader::isReady()
 
 void Shader::checkUniformError(std::string place)
 {
-  GLenum err =glGetError();
-  if(err!=GL_NO_ERROR)
+  GLenum err =gl::GetError();
+  if(err!= gl::NO_ERROR_)
   {
     Engine::getLog()->log("Shader",place);
-    if(err == GL_INVALID_ENUM)
+    if(err == gl::INVALID_ENUM)
         Engine::getLog()->log("Shader","GL_INVALID_ENUM");
-    if(err == GL_INVALID_VALUE)
+    if(err == gl::INVALID_VALUE)
         Engine::getLog()->log("Shader","GL_INVALID_VALUE");
-    if(err == GL_INVALID_OPERATION)
+    if(err == gl::INVALID_OPERATION)
          Engine::getLog()->log("Shader","GL_INVALID_OPERATION");
-    if(err == GL_INVALID_FRAMEBUFFER_OPERATION)
+    if(err == gl::INVALID_FRAMEBUFFER_OPERATION)
          Engine::getLog()->log("Shader","GL_INVALID_FRAMEBUFFER_OPERATION");
 
      Engine::errorShutDown();
@@ -168,17 +168,17 @@ bool Shader::checkError(GLuint flag, std::string msg, GLuint shader, bool use_pr
   GLint success = 0;
 
   if(use_program)
-    glGetProgramiv(shader, flag, &success);
+    gl::GetProgramiv(shader, flag, &success);
   else
-    glGetShaderiv(shader, flag, &success);
+    gl::GetShaderiv(shader, flag, &success);
 
-  if(success == GL_FALSE)
+  if(success == gl::FALSE_)
   {
     GLchar error[1024] = { 0 };
     if(use_program)
-      glGetProgramInfoLog(shader, sizeof(error), NULL, error);
+      gl::GetProgramInfoLog(shader, sizeof(error), NULL, error);
     else
-      glGetShaderInfoLog(shader, sizeof(error), NULL, error);
+      gl::GetShaderInfoLog(shader, sizeof(error), NULL, error);
     Engine::getLog()->log("Shader", msg, error);     
 
     return true;
@@ -192,5 +192,5 @@ bool Shader::checkError(GLuint flag, std::string msg, GLuint shader, bool use_pr
   
 void Shader::bind()
 {
-  glUseProgram(m_program);
+  gl::UseProgram(m_program);
 }

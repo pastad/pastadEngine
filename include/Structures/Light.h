@@ -1,7 +1,7 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
-#include "gl_core_4_.h"
+#include "gl_core_4_.hpp"
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 

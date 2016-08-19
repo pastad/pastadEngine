@@ -106,7 +106,7 @@ AnimationMesh::AnimationMesh(const aiMesh*mesh, int mat_index)
 
 AnimationMesh::~AnimationMesh()
 {  
-  glDeleteVertexArrays(1, &m_vertex_array_object);
+  gl::DeleteVertexArrays(1, &m_vertex_array_object);
 }
 
 
@@ -116,41 +116,41 @@ void AnimationMesh::initMesh(const  IndexedRepresentation& model)
 {
   m_draw_count = model.m_indices.size();
 
-  glGenVertexArrays(1, &m_vertex_array_object);
-  glBindVertexArray(m_vertex_array_object);
+  gl::GenVertexArrays(1, &m_vertex_array_object);
+  gl::BindVertexArray(m_vertex_array_object);
 
-  glGenBuffers(NUM_BUFFERS, m_vertex_array_buffers);
-  glBindBuffer(GL_ARRAY_BUFFER, m_vertex_array_buffers[POSITION_VB]);
-  glBufferData(GL_ARRAY_BUFFER, model.m_positions.size() * sizeof(model.m_positions[0]), &model.m_positions[0], GL_STATIC_DRAW );
+  gl::GenBuffers(NUM_BUFFERS, m_vertex_array_buffers);
+  gl::BindBuffer(gl::ARRAY_BUFFER, m_vertex_array_buffers[POSITION_VB]);
+  gl::BufferData(gl::ARRAY_BUFFER, model.m_positions.size() * sizeof(model.m_positions[0]), &model.m_positions[0], gl::STATIC_DRAW );
 
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  gl::EnableVertexAttribArray(0);
+  gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE_, 0, 0);
 
-  glBindBuffer(GL_ARRAY_BUFFER, m_vertex_array_buffers[TEXCOORD_VB]);
-  glBufferData(GL_ARRAY_BUFFER, model.m_positions.size() * sizeof(model.m_texCoords[0]), &model.m_texCoords[0], GL_STATIC_DRAW );
+  gl::BindBuffer(gl::ARRAY_BUFFER, m_vertex_array_buffers[TEXCOORD_VB]);
+  gl::BufferData(gl::ARRAY_BUFFER, model.m_positions.size() * sizeof(model.m_texCoords[0]), &model.m_texCoords[0], gl::STATIC_DRAW );
 
-  glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+  gl::EnableVertexAttribArray(1);
+  gl::VertexAttribPointer(1, 2, gl::FLOAT, gl::FALSE_, 0, 0);
 
-  glBindBuffer(GL_ARRAY_BUFFER, m_vertex_array_buffers[NORMAL_VB]);
-  glBufferData(GL_ARRAY_BUFFER, model.m_normals.size() * sizeof(model.m_normals[0]), &model.m_normals[0], GL_STATIC_DRAW );
+  gl::BindBuffer(gl::ARRAY_BUFFER, m_vertex_array_buffers[NORMAL_VB]);
+  gl::BufferData(gl::ARRAY_BUFFER, model.m_normals.size() * sizeof(model.m_normals[0]), &model.m_normals[0], gl::STATIC_DRAW );
 
-  glEnableVertexAttribArray(2);
-  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  gl::EnableVertexAttribArray(2);
+  gl::VertexAttribPointer(2, 3, gl::FLOAT, gl::FALSE_, 0, 0);
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vertex_array_buffers[INDEX_VB]);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, model.m_indices.size() * sizeof(model.m_indices[0]), &model.m_indices[0], GL_STATIC_DRAW );
+  gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, m_vertex_array_buffers[INDEX_VB]);
+  gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, model.m_indices.size() * sizeof(model.m_indices[0]), &model.m_indices[0], gl::STATIC_DRAW );
 
   // we skip attribute index 3 because this would be the instanced model mat in the shader
 
-  glBindBuffer(GL_ARRAY_BUFFER, m_vertex_array_buffers[BONE_VB]);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(model.m_bones[0]) * model.m_bones.size(), &model.m_bones[0], GL_STATIC_DRAW);
-  glEnableVertexAttribArray(4);
-  glVertexAttribIPointer(4, 4, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
-  glEnableVertexAttribArray(5);
-  glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)16);
+  gl::BindBuffer(gl::ARRAY_BUFFER, m_vertex_array_buffers[BONE_VB]);
+  gl::BufferData(gl::ARRAY_BUFFER, sizeof(model.m_bones[0]) * model.m_bones.size(), &model.m_bones[0], gl::STATIC_DRAW);
+  gl::EnableVertexAttribArray(4);
+  gl::VertexAttribIPointer(4, 4, gl::INT, sizeof(VertexBoneData), (const GLvoid*)0);
+  gl::EnableVertexAttribArray(5);
+  gl::VertexAttribPointer(5, 4, gl::FLOAT, gl::FALSE_, sizeof(VertexBoneData), (const GLvoid*)16);
 
-  glBindVertexArray(0);
+  gl::BindVertexArray(0);
 
 }
 
@@ -159,9 +159,9 @@ void AnimationMesh::initMesh(const  IndexedRepresentation& model)
 
 void AnimationMesh::render()
 {
-  glBindVertexArray(m_vertex_array_object);
-  glDrawElements(GL_TRIANGLES, m_draw_count, GL_UNSIGNED_INT,0);
-  glBindVertexArray(0);
+  gl::BindVertexArray(m_vertex_array_object);
+  gl::DrawElements(gl::TRIANGLES, m_draw_count, gl::UNSIGNED_INT,0);
+  gl::BindVertexArray(0);
 }
 
 void AnimationMesh::applyTransform(std::string NodeName,glm::mat4 & global_inv, glm::mat4 & trans)

@@ -1,6 +1,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "Engine.h"
+
 #include <string>
 
 #define GLM_FORCE_RADIANS

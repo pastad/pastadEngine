@@ -1,11 +1,13 @@
 #ifndef ANIMATIONMESH_H
 #define ANIMATIONMESH_H
 
+#include "Engine.h"
+
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <assimp/Importer.hpp>
 
-#include "Engine.h"
+
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
