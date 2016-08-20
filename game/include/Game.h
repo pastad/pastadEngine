@@ -5,9 +5,11 @@
 
 #include <SFML/Audio.hpp>
 
-#define SOUND_EFFECT_VOLUME 30
-#define SOUND_BACKGROUND_VOLUME 10
 
+#define DAY_LENGTH 90
+#define DEG_PER_SEC 360.0f / DAY_LENGTH
+
+#define SHADOW_TIME 2
 
 class Player;
 class Scene;
@@ -17,6 +19,14 @@ class SoundManager;
 
 class Light;
 class Skybox;
+
+struct HighScore
+{
+  unsigned int days;
+  float time;
+  float energy_left;
+};
+
 
 // the main class of the game
 
@@ -45,6 +55,22 @@ public:
   // ends the game
   static void end();
 
+  // returns the game time
+  static float getGameTime();
+
+  // config getters
+  static unsigned int getSoundEffectVolume();
+  static unsigned int getSoundBackgroundVolume();
+
+  // saving and loading the game config
+  bool saveConfig(std::string path, unsigned int effect_volume, unsigned int background_volume);
+  bool loadConfig(std::string path);
+  static  bool readConfig(std::string path, unsigned int * sev, unsigned int * sbv);
+
+  //saving and loading the highscore
+  static bool readHighsore(std::string path, HighScore *last, HighScore * best);
+
+
 private:
 
   Player * m_player;
@@ -63,8 +89,9 @@ private:
   sf::SoundBuffer  m_background_sound_buffer;
   sf::Sound  m_background_sound_sound;
 
-  // day time 
-  float m_game_time;
+  // day time day
+  static float m_game_time;
+  unsigned int m_game_day;
 
   // and the time after death;
   static float m_end_time;
@@ -75,7 +102,18 @@ private:
   // true if game should end
   bool m_ended;
 
+  // the highscores
+  HighScore m_last_highscore;
+  HighScore m_best_highscore;
 
+  // the configs
+  static unsigned int m_sound_effect_volume ;
+  static unsigned int m_sound_background_volume ;
+
+  bool m_first_run = true;
+
+  void loadHighscore();
+  void saveHighscore();
 
 };
 

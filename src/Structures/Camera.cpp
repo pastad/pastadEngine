@@ -194,7 +194,11 @@ void Camera::update(float delta_time)
       {
         glm::vec3 npos;
         if(physics_system->collisionMovement(scene, m_pos, f , step, m_surrounding_offset, m_bottom_offset, &npos))
+        {
           m_pos = npos;
+          if(external_cameraMovedCallback != nullptr)
+            external_cameraMovedCallback();
+        }
         moved = true;
       }
       else
@@ -215,7 +219,11 @@ void Camera::update(float delta_time)
       {
         glm::vec3 npos;
         if(physics_system->collisionMovement(scene, m_pos, f , step, m_surrounding_offset, m_bottom_offset, &npos))
+        {
           m_pos = npos;
+          if(external_cameraMovedCallback != nullptr)
+            external_cameraMovedCallback();
+        }
         moved = true;
       }
       else
@@ -231,7 +239,11 @@ void Camera::update(float delta_time)
       {
         glm::vec3 npos;
         if(physics_system->collisionMovement(scene, m_pos, -m_right , step, m_surrounding_offset, m_bottom_offset, &npos))
+        {
           m_pos = npos;
+          if(external_cameraMovedCallback != nullptr)
+            external_cameraMovedCallback();
+        }
 
         moved = true;
       }
@@ -250,7 +262,11 @@ void Camera::update(float delta_time)
       {
         glm::vec3 npos;
         if(physics_system->collisionMovement(scene, m_pos, m_right , step, m_surrounding_offset, m_bottom_offset, &npos))
+        {
           m_pos = npos;
+          if(external_cameraMovedCallback != nullptr)
+            external_cameraMovedCallback();
+        }
 
         moved = true;
       }

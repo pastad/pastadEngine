@@ -48,6 +48,9 @@ public:
   // execute the action
   void doAction(Environment * environment);
   void doSecondaryAction(Environment * environment);
+
+  // the needed energy for planting
+  float getNeededEnergy();
   
 private:
 

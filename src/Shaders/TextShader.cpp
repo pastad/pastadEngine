@@ -36,7 +36,8 @@ bool  TextShader::load(const std::string path)
   if (FT_Init_FreeType(&ft))
         Engine::getLog()->log("TextShader", "Couldn't init freetype");
   FT_Face face;
-  if (FT_New_Face(ft, "fonts/arial.ttf", 0, &face))
+  //if (FT_New_Face(ft, "fonts/arial.ttf", 0, &face))
+  if (FT_New_Face(ft, "fonts/Comfortaa_Regular.ttf", 0, &face))
          Engine::getLog()->log("TextShader", "Couldn't load font");
 
   FT_Set_Pixel_Sizes(face, 0, 48);

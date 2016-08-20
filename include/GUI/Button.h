@@ -25,10 +25,11 @@ public:
   Button(const Button& other) = delete;
   Button& operator=(const Button& other) = delete;
 
-  // returns the id of the image
+  //  usings
   using Image::getId;
   using Image::setActive;
   using Image::setInactive;
+  using Image::mixWithColor;
 
 
 

@@ -56,6 +56,12 @@ void ImageShader::setModelSize( glm::vec2 sz )
   checkUniformError("set ModelSize"); 
 }
 
+void ImageShader::setMixColor(glm::vec3 color, float value)
+{
+  bind();
+  setUniform("MixColor",color);
+  setUniform("MixValue", value);
+}
 
 //  use -------------------------------------------------
 

@@ -21,6 +21,9 @@
 
 #define MIN_LIGHT_THRESHOLD 0.1
 
+#define DIR_BUFFER_SIZE_X 5000
+#define DIR_BUFFER_SIZE_Z 3000
+
 
 unsigned int Light::m_num_point_lights = 0;
 unsigned int Light::m_num_spot_lights = 0;
@@ -117,8 +120,7 @@ bool Light::setDirectional(glm::vec3 direction, glm::vec3 col_am ,glm::vec3 col_
       {
         m_directional_buffer = new DirectionalShadowBuffer();        
         m_num_directional_shadows++;
-        if( !m_directional_buffer->initialize(Engine::getWindowWidth() *10.0f,
-         Engine::getWindowHeight() *10.0f))
+        if( !m_directional_buffer->initialize( DIR_BUFFER_SIZE_X, DIR_BUFFER_SIZE_Z ))
           return false;
       }
       else

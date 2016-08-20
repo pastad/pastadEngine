@@ -11,6 +11,7 @@
 #include "Mobs.h"
 #include "Mob.h"
 #include "Environment.h"
+#include "Game.h"
 
 
 #include <glm/gtx/vector_angle.hpp> 
@@ -18,14 +19,12 @@
 #include <iostream>
 #include <map>
 
-#define TREE_GROWTH_SPEED 2
-#define TREE_GROWTH_SCALE_MAX 0.25
 
-#define FLOWER_GROWTH_SPEED 20
+#define FLOWER_GROWTH_SPEED  DAY_LENGTH / 8.0f 
 #define FLOWER_GROWTH_SCALE_MAX 1.0
 
-#define ATTACK_FLOWER_GROWTH_SPEED 20
-#define ATTACK_FLOWER_REGEN_SPEED 20
+#define ATTACK_FLOWER_GROWTH_SPEED  DAY_LENGTH / 8.0f 
+#define ATTACK_FLOWER_REGEN_SPEED DAY_LENGTH / 2.0f
 #define ATTACK_FLOWER_GROWTH_SCALE_MAX 1.0
 #define ATTACK_FLOWER_COOLDOWN 1.0
 #define ATTACK_FLOWER_RANGE  5
@@ -37,7 +36,8 @@
 #define TRAP_FLOWER_COOLDOWN 1
 #define TRAP_FLOWER_RANGE 3
 
-#define ENERGY_GROWTH_SPEED 20
+
+#define ENERGY_GROWTH_SPEED DAY_LENGTH / 8.0f
 
 #define SHOOTING_COST 25
 
@@ -95,6 +95,17 @@ Plant::~Plant()
 {
 }
 
+void Plant::targeGone(Mob * m)
+{
+  if( m_type == PLANT_TRAP_FLOWER )
+  {
+    if( m == m_hold_target )
+    {
+      m_hold_target = nullptr;
+    }
+  }
+} 
+
 void Plant::update(float delta, float sun_strength, Mobs * mobs, Environment * env)
 {
   //std::cout << m_cooldown<<std::endl;
@@ -146,12 +157,12 @@ void Plant::update(float delta, float sun_strength, Mobs * mobs, Environment * e
       if( (m_hold_time > 0.0f) && (d2<=0.0f) )
       {
         m_cooldown = TRAP_FLOWER_COOLDOWN;   
+
+        m_additional_object->setInvisible();
+        m_additional_object2->setInvisible();
+        
         if(m_hold_target != nullptr)  
         {
-          // restore positon
-          m_additional_object->setInvisible();
-          m_additional_object2->setInvisible();
-
         // m_object->setPosition( m_object->getPosition()+ glm::vec3(0,0.5,0));
           m_hold_target->setMoveable();           
         }
@@ -165,7 +176,7 @@ void Plant::update(float delta, float sun_strength, Mobs * mobs, Environment * e
           m_object->setPosition( m_object->getPosition() - glm::vec3(0,step,0) );
           m_additional_object->setPosition( m_additional_object->getPosition() + glm::vec3(0,step2,0) );
           m_additional_object2->setPosition( m_additional_object->getPosition()  );
-          m_additional_object2->setScale( glm::vec3(1,step2,1));
+          m_additional_object2->setScale( m_additional_object2->getScale() +  glm::vec3(0,step2,0));
         }
       }
 
@@ -204,13 +215,6 @@ void Plant::update(float delta, float sun_strength, Mobs * mobs, Environment * e
   {   
     if(m_growth != 100.0f)
     {
-      if( m_type == PLANT_TREE)
-      {
-        m_growth+= delta *sun_strength * TREE_GROWTH_SPEED;
-
-        float scale = TREE_GROWTH_SCALE_MAX * (m_growth/100.0f);
-        m_object->setScale(glm::vec3(scale,scale,scale));
-      }
       if( m_type == PLANT_ENERGY_FLOWER)
       {
         m_growth+= delta *sun_strength * FLOWER_GROWTH_SPEED;
@@ -289,7 +293,7 @@ void Plant::attackMobs(Mobs* mobs, Environment * env)
     if(dist <ATTACK_FLOWER_RANGE )
     {
       env->addEnergyShot(Engine::getScene(), m, m_object->getPosition() +glm::vec3(0,0.83f,0));
-      std::cout << "shooooot" <<std::endl;
+      //std::cout << "shooooot" <<std::endl;
    
       m_cooldown = ATTACK_FLOWER_COOLDOWN;
       m_stored_energy-= SHOOTING_COST;
@@ -317,11 +321,13 @@ void Plant::trapMobs(Mobs* mobs, Environment * env)
       bool res = Engine::getPhysicSubsystem()->collisionRayScene(Engine::getScene(), &r2, &distance2);
       if(res)
       {
-        std::cout << distance2<<std::endl;
-        m_additional_object2->setScale(glm::vec3(1,0.0f,1));
+        //std::cout << distance2<<std::endl;
+        glm::vec3 sc =  m->getObject()->getScale();
+        sc.y =0.0f;
+        m_additional_object2->setScale(sc);
         m_extension_length = distance2;
-        m_additional_object2->setPosition( m->getObject()->getPosition()- glm::vec3(0,0.1+distance2,0));
-        m_additional_object2->setPosition( m->getObject()->getPosition()- glm::vec3(0,0.1+distance2,0));
+        m_additional_object->setPosition( m->getObject()->getPosition()- glm::vec3(0,distance2,0));
+        m_additional_object2->setPosition( m->getObject()->getPosition()- glm::vec3(0,distance2,0));
       }
 
       //m_object->setPosition( m_object->getPosition()- glm::vec3(0,0.5,0));
@@ -329,7 +335,7 @@ void Plant::trapMobs(Mobs* mobs, Environment * env)
       m->setNotMoveable();
       m_hold_target = m;
       m_hold_time = TRAP_FLOWER_HOLD_TIME;
-      std::cout << "start holding" <<std::endl;
+      //std::cout << "start holding" <<std::endl;
     }
   }
 }

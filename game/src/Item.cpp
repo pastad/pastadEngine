@@ -68,10 +68,16 @@ void Item::doAction(Environment * env)
       if(getPlacement(&npos))
       {
         //std::cout << npos.x << ", "<< npos.y << ", "<< npos.z << std::endl;
-        env->addPlant(Engine::getScene(), PLANT_ENERGY_FLOWER, npos);
+        //env->addPlant(Engine::getScene(), PLANT_ENERGY_FLOWER, npos);
+        Object * obj = Player::getClosestSpark(npos);
+        if(obj != nullptr)
+        {
+          env->addEnergySpark( obj , npos, (unsigned int) PLANT_ENERGY_FLOWER);       
 
-        Player::drainEnergy(25.0f,false);
-        SoundManager::addAndPlaySound("game/models/sounds/rustle19.flac");
+          Player::drainEnergy(25.0f,false);
+          Player::refreshSparks();
+          SoundManager::addAndPlaySound("game/sounds/rustle19.flac");
+        }
 
       }
     }
@@ -87,25 +93,19 @@ void Item::doAction(Environment * env)
       {
         //std::cout << npos.x << ", "<< npos.y << ", "<< npos.z << std::endl;
         if(m_type == ITEM_ATTACK_PLANT_TOOL) 
-          env->addPlant(Engine::getScene(), PLANT_ATTACK_FLOWER, npos);
+        {
+          env->addEnergySpark( m_object->getPosition(), npos, (unsigned int) PLANT_ATTACK_FLOWER);
+          //env->addPlant(Engine::getScene(), PLANT_ATTACK_FLOWER, npos);
+        }
         if(m_type == ITEM_TRAP_PLANT_TOOL) 
-          env->addPlant(Engine::getScene(), PLANT_TRAP_FLOWER, npos);
-        SoundManager::addAndPlaySound("game/models/sounds/rustle19.flac");
+        {
+          env->addEnergySpark( m_object->getPosition(), npos, (unsigned int) PLANT_TRAP_FLOWER);
+          //env->addPlant(Engine::getScene(), PLANT_TRAP_FLOWER, npos);
+        }
+        SoundManager::addAndPlaySound("game/sounds/rustle19.flac");
         Player::drainEnergy(15.0f,false);
+        Player::refreshSparks();
 
-      }
-    }
-  }
-  if(m_type == ITEM_HARVEST_TOOL)
-  {
-    Object * obj = Engine::pickObjectAtCenter();
-    Plant * plant = env->getPlant(obj);
-    if(plant != nullptr)
-    {
-      if(plant->getType() ==PLANT_ENERGY_FLOWER)
-      {
-        std::vector<Object *> en = plant->harvest();
-        env->addEnergyRemains(en);
       }
     }
   }
@@ -113,8 +113,17 @@ void Item::doAction(Environment * env)
 
 
 void Item::doSecondaryAction(Environment * env)
-{
- 
+{  
+  Object * obj = Engine::pickObjectAtCenter();
+  Plant * plant = env->getPlant(obj);
+  if(plant != nullptr)
+  {
+    if(plant->getType() ==PLANT_ENERGY_FLOWER)
+    {
+      std::vector<Object *> en = plant->harvest();
+      env->addEnergyRemains(en);
+    }
+  }  
 }
 
 bool  Item::getPlacement( glm::vec3 *pos)
@@ -130,8 +139,8 @@ bool  Item::getPlacement( glm::vec3 *pos)
     float distance2 =0.0f;
     bool res = Engine::getPhysicSubsystem()->collisionRayScene(scene, &r2, &distance2);
 
-    if(res)
-      std::cout <<distance2<<std::endl;
+    //if(res)
+    //  std::cout <<distance2<<std::endl;
 
     if( res && (distance2 < range) )
     {
@@ -143,4 +152,17 @@ bool  Item::getPlacement( glm::vec3 *pos)
 
   return false;
 
+}
+
+float Item::getNeededEnergy()
+{
+  if(m_type == ITEM_PLANT_TOOL)
+    return ENERGY_FLOWER_COST;
+  if(m_type == ITEM_ATTACK_PLANT_TOOL)
+    return ATTACK_FLOWER_COST;
+  if(m_type == ITEM_TRAP_PLANT_TOOL)
+    return TRAP_FLOWER_COST;
+
+
+  return -1;
 }

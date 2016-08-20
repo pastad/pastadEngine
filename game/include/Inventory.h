@@ -28,8 +28,12 @@ public:
   // returns the selected item
   Item * getSelectedItem();
 
+  // scrolls up/down the inventory
+  void scroll(double x);
+
   // updates the inventory
   void update();
+
 
 private:
 

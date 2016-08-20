@@ -23,6 +23,11 @@ enum
   PLANT_TRAP_FLOWER
 };
 
+#define ENERGY_FLOWER_COST 25
+#define ATTACK_FLOWER_COST 15
+#define TRAP_FLOWER_COST 15
+
+
 // represents a plant 
 
 class Plant
@@ -54,6 +59,9 @@ public:
 
   // traps a mob
   void trapMobs(Mobs* mobs, Environment * env);
+
+  // signals that target was eliminated
+  void targeGone(Mob * m);
 
 private:
 

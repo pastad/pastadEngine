@@ -90,7 +90,7 @@ void Mobs::update(Player * player, Environment * env)
 
     if( dis < 1.5f )
     {
-      std::cout << "Mob desolved" <<std::endl;     
+      //std::cout << "Mob desolved" <<std::endl;     
 
       player->drainEnergy((*it)->getHealth(), true);
 
@@ -144,7 +144,7 @@ void Mobs::removeMob(Mob * m, Environment * env)
   {
     if( (*it) == m )
     {
-      std::cout << "removed mob| left:"<<m_mobs.size()<<std::endl;
+     // std::cout << "removed mob| left:"<<m_mobs.size()<<std::endl;
       Engine::getScene()->removeObject((*it)->getObject());
       delete (*it)->getObject();
       delete *it;

@@ -89,6 +89,8 @@ const int MAX_SPOT_LIGHTS =  10;
 const int MAX_POINT_SHADOWS =  10;
 const int MAX_DIRECTIONAL_SHADOWS =  10;
 
+
+
 struct BaseLight
 {
     vec3  AmbientColor;
@@ -155,6 +157,7 @@ float calcDirShadowPCF(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap, float 
 
   vec2 texelSize = 1.0 / textureSize(shadowMap, 0); 
 
+
   if(ShadowCoord.z  >= 0)
   {    
 
@@ -189,24 +192,23 @@ float calcDirShadowPCF(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap, float 
     tShadowCoord.xy +=  vec2(0, 0) * texelSize;
     ts = textureProj(shadowMap, tShadowCoord );
     if(! (tShadowCoord.z+bias  > ts) )
-        sum += 1;   
- 
-      
+        sum += 1;      
   
     sum *= 0.20; 
   }
 
   return sum;
 }
-float calcDirShadowRandomSampling(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap)
+float calcDirShadowRandomSampling(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap, float bias)
 {
   float sum = 0.0;
   float ergeb = 1.0;
-  float softness =  2.0 / 4096.0; // lower ->lower radius
+  float softness =  1.0 / 8096.0; // lower ->lower radius
   int sizeX = 4;
   int sizeY = 8;
   int sizeZ = 8; 
   vec4 ShadowCoord = shadowMat * vec4(pos,1);
+
   if(ShadowCoord.z  >= 0)
   { 
     ivec3 offset;
@@ -220,32 +222,30 @@ float calcDirShadowRandomSampling(vec3 pos,mat4 shadowMat,sampler2DShadow shadow
 
       tShadowCoord.xy = ShadowCoord.xy + jitteredOffset.xy;
       float ts =  textureProj(shadowMap, tShadowCoord);
-      if(! (tShadowCoord.z+0.01  > ts) )
+      if(! (tShadowCoord.z+bias  > ts) )
         sum+=1;
       tShadowCoord.xy = ShadowCoord.xy + jitteredOffset.zw;
       ts =  textureProj(shadowMap, tShadowCoord);
-      if(! (tShadowCoord.z+0.01  > ts) )
+      if(! (tShadowCoord.z+bias  > ts) )
         sum+=1;
     }
     ergeb= sum /(4.0 *2.0);
+ 
+    for(int i = 4; i < sizeZ; i++) 
+    {    
+      vec4 tShadowCoord = ShadowCoord;
+      offset.z = i;
+      vec4 jitteredOffset = texelFetch(JitterTex, offset,0) * softness * ShadowCoord.w;
 
-    if( (ergeb != 0.0) && (ergeb != 1.0) ) 
-    {
-      for(int i = 4; i < sizeZ; i++) 
-      {    
-        vec4 tShadowCoord = ShadowCoord;
-        offset.z = i;
-        vec4 jitteredOffset = texelFetch(JitterTex, offset,0) * softness * ShadowCoord.w;
-
-        tShadowCoord.xy = ShadowCoord.xy + jitteredOffset.xy;       
-        float ts =  textureProj(shadowMap, tShadowCoord);
-        if(! (tShadowCoord.z+0.01  > ts) )
-          sum+=1;
-        tShadowCoord.xy = ShadowCoord.xy + jitteredOffset.zw;
-        ts =  textureProj(shadowMap, tShadowCoord);
-        if(! (tShadowCoord.z+0.01  > ts) )
-          sum+=1;
-      }
+      tShadowCoord.xy = ShadowCoord.xy + jitteredOffset.xy;       
+      float ts =  textureProj(shadowMap, tShadowCoord);
+      if(! (tShadowCoord.z+bias  > ts) )
+        sum+=1;
+      tShadowCoord.xy = ShadowCoord.xy + jitteredOffset.zw;
+      ts =  textureProj(shadowMap, tShadowCoord);
+      if(! (tShadowCoord.z+bias  > ts) )
+        sum+=1;
+ 
       ergeb = sum / float(sizeZ * 2.0);
     }
   }
@@ -259,6 +259,7 @@ float calcSingleDirectionalShadow(vec3 pos,mat4 shadowMat,sampler2DShadow shadow
   float sum = 1.0;
 
   vec4 ShadowCoord = shadowMat * vec4(pos,1);
+
   if( EnableShadows > 0 )
   {
     if(EnableShadows == 2 )
@@ -267,7 +268,7 @@ float calcSingleDirectionalShadow(vec3 pos,mat4 shadowMat,sampler2DShadow shadow
     }
     if(EnableShadows == 3)
     {
-      sum = calcDirShadowRandomSampling(pos,shadowMat, shadowMap);
+      sum = calcDirShadowRandomSampling(pos,shadowMat, shadowMap,bias);
     }
     if(EnableShadows == 1)
     { 
