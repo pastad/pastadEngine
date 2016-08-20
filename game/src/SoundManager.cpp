@@ -30,6 +30,8 @@ void SoundManager::addAndPlaySound(std::string path)
   else
   {
     sf::SoundBuffer * buf = new sf::SoundBuffer();
+    if (buf == nullptr)
+        std::cout << "t" << std::endl;
     if (!buf->loadFromFile(path))
     {
       std::cout << "sound couldn't be loaded" <<std::endl;

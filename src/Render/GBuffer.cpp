@@ -67,7 +67,7 @@ bool GBuffer::initialize()
 void GBuffer::bindForInput()
 {
   gl::BindFramebuffer(gl::FRAMEBUFFER, m_buffer_handle);
-  m_color_texture->clear(2,4);
+//  m_color_texture->clear(2,4);
 }
 
 void GBuffer::unbindFromInput()

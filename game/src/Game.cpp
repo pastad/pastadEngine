@@ -50,8 +50,6 @@ Game::~Game()
   if(m_environment)
     delete m_environment;
 
-  delete m_background_sound_sound;
-  delete m_background_sound_buffer;
 }
 
 
@@ -117,20 +115,18 @@ bool Game::initialize()
     return false;
   }
 
-  m_background_sound_buffer = new sf::SoundBuffer();
-  m_background_sound_sound = new sf::Sound();
 
-  if (!m_background_sound_buffer->loadFromFile("game/models/sounds/wind1.wav"))
+  if (!m_background_sound_buffer.loadFromFile("game/models/sounds/wind1.wav"))
   {
-    delete m_background_sound_sound;
-    delete m_background_sound_buffer;
-    return false;
+	//return false;
   }
-
-  m_background_sound_sound->setBuffer(*m_background_sound_buffer);
-  m_background_sound_sound->play();
-  m_background_sound_sound->setVolume(SOUND_BACKGROUND_VOLUME);
-  m_background_sound_sound->setLoop(true);
+  else
+  {
+	  m_background_sound_sound.setBuffer(m_background_sound_buffer);
+	  m_background_sound_sound.play();
+	  m_background_sound_sound.setVolume(SOUND_BACKGROUND_VOLUME);
+	  m_background_sound_sound.setLoop(true);
+  }
 
   //m_scene->setFog(glm::vec3(1,1,1.0f), 0.000003f , 10.0f);
 

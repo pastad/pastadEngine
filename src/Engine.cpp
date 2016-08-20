@@ -115,8 +115,8 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 	if(m_window == nullptr)
 	{
 		glfwTerminate();
-  	return false;
-  }
+  		return false;
+	  }
 
 	// check opengl genderated headers
 	/*int loaded = ogl_LoadFunctions();
@@ -323,9 +323,11 @@ void Engine::refreshWindow()
 
 void Engine::update()
 {
+	//float now = float(glfwGetTime());
+	//std::cout << now << std::endl;
 	if(m_initialized)
 	{    
-    sceneSwitch();
+		sceneSwitch();
 		if(m_scene != nullptr)
 		{
 			m_scene->update(m_time_delta);
@@ -342,12 +344,15 @@ void Engine::update()
 		glfwPollEvents();
 		timeUpdate();
 	}
+	//now = float(glfwGetTime());
+	//std::cout << now << std::endl;
 }
 
 void Engine::timeUpdate()
 {
 	float now = float(glfwGetTime());
 	m_time_samples[m_current_time_sample] = now;
+	//std::cout << now << std::endl;
 
   if(m_time_last == -1.0f)
   {
@@ -390,6 +395,10 @@ void Engine::timeUpdate()
 
 bool Engine::running()
 {
+
+	//std::cout << "------------------------------" << std::endl;
+	//float now = float(glfwGetTime());
+//	std::cout << now << std::endl;
 	if(glfwWindowShouldClose(m_window))
 	{
 		m_log->log("Engine", "window was closed");
@@ -399,11 +408,15 @@ bool Engine::running()
 	{
 		return false;
 	}
+	//now = float(glfwGetTime());
+	//std::cout << now << std::endl;
 	return true;
 }
 
 void Engine::render()
 {
+	//float now = float(glfwGetTime());
+	//std::cout << now << std::endl;
 	if(m_initialized)
 	{
 		if(m_render_update_needed)
@@ -412,7 +425,10 @@ void Engine::render()
 			m_render_update_needed = false;
 		}
 	
+
 	}
+	//now = float(glfwGetTime());
+	//std::cout << now << std::endl;
 }
 
 bool Engine::checkVersionSupport(unsigned int version_major, unsigned int version_minor )

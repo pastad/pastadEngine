@@ -364,6 +364,8 @@ bool Object::isStaticFlagSet()
 
 void Object::setPosition(glm::vec3 p)
 {
+    if (this == NULL)
+        std::cout << "wtf" << std::endl;
   Transform::setPosition(p);
   refreshAABB();
   m_needs_fall_check = true;

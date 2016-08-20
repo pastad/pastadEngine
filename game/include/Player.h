@@ -77,8 +77,8 @@ private:
   static unsigned int m_movement_keys_pressed;
 
   // walking sound
-  static sf::SoundBuffer * m_walking_sound_buffer;
-  static sf::Sound * m_walking_sound_sound;
+ // static sf::SoundBuffer  m_walking_sound_buffer;
+ // static sf::Sound  m_walking_sound_sound;
 
   // the callback called by the camera
   static void cameraMovedCallback();

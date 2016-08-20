@@ -231,6 +231,8 @@
     <Link>
       <AdditionalDependencies>C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.14393.0\um\x64\opengl32.lib;assimp.lib;SOIL_64.lib;tinyxml2.lib;freetype265d.lib;boost_filesystem-vc140-mt-gd-1_59.lib;boost_system-vc140-mt-gd-1_59.lib;sfml-audio.lib;sfml-system.lib;kernel32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.14393.0\um\x64;C:\Users\pastad\Documents\libs\glfw_64\lib-vc2015;C:\Users\pastad\Documents\libs\assimp\lib64;C:\Users\pastad\Documents\libs\boost_1_59_0\lib64-msvc-14.0;C:\Users\pastad\Documents\libs\tinyxml2-master\tinyxml2\bin\x64-Debug-Dll;C:\Users\pastad\Documents\libs\SFML-2.4.0\lib;C:\Users\pastad\Documents\libs\soil\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <HeapCommitSize>10</HeapCommitSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

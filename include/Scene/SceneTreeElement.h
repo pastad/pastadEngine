@@ -12,7 +12,7 @@
 #include <glm/glm.hpp>
 
 
-#define STOP_SIZE 10
+#define STOP_SIZE 20
 
 class Model;
 class Object;

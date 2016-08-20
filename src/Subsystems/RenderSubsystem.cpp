@@ -26,6 +26,7 @@
 #include "SceneEditor.h"
 
 #include <sstream>
+#include <iostream>
 
 RenderSubsystem::RenderSubsystem():Subsystem("RenderSubsystem")
 {	
@@ -214,9 +215,10 @@ bool RenderSubsystem::refreshShaders()
 
 void RenderSubsystem::renderPassGBuffer()
 {
+
   m_shader->use();
   m_gbuffer->bindForInput();
-
+ 
   gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
   gl::Enable(gl::DEPTH_TEST);
 
@@ -233,16 +235,19 @@ void RenderSubsystem::renderPassGBuffer()
   m_water_shader->setViewMatrix(cam->getView());
   m_water_shader->setUniform("Delta", Engine::getScene()->getTime());
 
+
   m_shader->use();
   Scene * scene = Engine::getScene();
 
   m_shader->setRenderPass(1);
+
   if(scene != nullptr)
     scene->render(m_shader, m_skybox_shader, m_terrain_shader,m_water_shader);
-  
+
   gl::Finish();
   m_gbuffer->unbindFromInput();
   //Engine::getLog()->log("RenderSubsystem", "gbuffer passs");
+
 }
 
 void RenderSubsystem::renderPassLight()
@@ -446,18 +451,31 @@ void RenderSubsystem::startRender()
 
 void RenderSubsystem::render()
 {
-	
+	//float now = float(glfwGetTime());
+	//std::cout << "rb"<< now << std::endl;
 	startRender();
 	if( Engine::getScene() != nullptr)
 	{
+		//now = float(glfwGetTime());
+		//std::cout << now << std::endl;
 		renderPassGBuffer();
+		//now = float(glfwGetTime());
+		//std::cout << now << std::endl;
 		if(m_shadows_standard_enabled)
 			renderPassShadow();
+		//now = float(glfwGetTime());
+		//std::cout << now << std::endl;
 		renderPassLight();
+		//now = float(glfwGetTime());
+		//std::cout << now << std::endl;
 		if(m_enable_bloom)
 			renderPassLightBlur();
+		//now = float(glfwGetTime());
+		//std::cout << now << std::endl;
 		//renderSSAO();
 		renderPassPostProcess();
+		//now = float(glfwGetTime());
+		//std::cout <<"rb end "<< now << std::endl;
 	}
 	renderUI();
 

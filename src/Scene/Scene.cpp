@@ -27,7 +27,7 @@ Scene::Scene()
   m_camera = new Camera(0,2,0);
   m_skybox =  nullptr;
   m_terrain = nullptr;
-  m_tree_root= new SceneTreeElement(500, glm::vec3(0,0,0));
+  m_tree_root= new SceneTreeElement(200, glm::vec3(0,0,0));
   Engine::getLog()->log("Scene", "created");
 
   m_fog_color = glm::vec3(1,1,1);
@@ -77,7 +77,14 @@ Scene::~Scene()
 void Scene::update(float delta)
 {
   m_camera->update(delta);
-  update( m_tree_root,delta);
+//  update( m_tree_root,delta);
+
+  timeUpdate(delta * m_time_advance);
+
+  for (std::vector<Object *>::iterator it = m_objects_dynamic.begin(); it != m_objects_dynamic.end(); it++)
+  {
+	 (*it)->update(delta, this);
+  }
 }
 
 void Scene::update(SceneTreeElement * element,  float delta)
@@ -97,7 +104,6 @@ void Scene::update(SceneTreeElement * element,  float delta)
     update(children.at(x), delta /2.0f);
   }
 
-  timeUpdate(delta * m_time_advance);
 }
 
 void Scene::timeUpdate(float delta)
@@ -302,7 +308,7 @@ void Scene::refreshRenderObjects()
   {
     (*ito)->unsetExtractionFlag();
   }
-  refreshRenderObjectsSceneTree();
+ // refreshRenderObjectsSceneTree();
   //std::cout << m_render_objects.size()<<std::endl;
   //m_render_objects.clear();
   glm::vec3 v = m_camera->getDirection();
@@ -311,9 +317,9 @@ void Scene::refreshRenderObjects()
   for(std::vector<Object *>::iterator it = m_objects_dynamic.begin(); it != m_objects_dynamic.end(); it++)
   {
     glm::vec3 dir_to_object  = (*it)->getPosition() - m_camera->getPosition();
-    float angle_mid = std::acos(glm::dot( glm::vec2(dir_to_object.x,dir_to_object.z), glm::vec2( v.x ,v.z) ) / ( glm::length(glm::vec2(dir_to_object.x,dir_to_object.z)) * glm::length(glm::vec2( v.x ,v.z) )  )); 
-    angle_mid = glm::degrees(angle_mid);  
-    float angle_min = (*it)->getMinAngleToCamera(m_camera);  
+    //float angle_mid = std::acos(glm::dot( glm::vec2(dir_to_object.x,dir_to_object.z), glm::vec2( v.x ,v.z) ) / ( glm::length(glm::vec2(dir_to_object.x,dir_to_object.z)) * glm::length(glm::vec2( v.x ,v.z) )  )); 
+   // angle_mid = glm::degrees(angle_mid);  
+   // float angle_min = (*it)->getMinAngleToCamera(m_camera);  
 
     // tmp disable due to material flickers 
     if( ( ((*it)->getPriorityRender() ) || m_camera->insideFrustrum((*it)) )  && ((*it)->isVisible()) && (!(*it)->isOnlyShadowRendered()) ) //(angle_min < m_camera->getFOV())
@@ -334,6 +340,35 @@ void Scene::refreshRenderObjects()
       }
     } //tmp disable due to flickers 
   }
+
+  // QUICKFIX ->move to scene tree when debugged
+  for (std::vector<Object *>::iterator it = m_objects_static.begin(); it != m_objects_static.end(); it++)
+  {
+	  glm::vec3 dir_to_object = (*it)->getPosition() - m_camera->getPosition();
+	  //float angle_mid = std::acos(glm::dot( glm::vec2(dir_to_object.x,dir_to_object.z), glm::vec2( v.x ,v.z) ) / ( glm::length(glm::vec2(dir_to_object.x,dir_to_object.z)) * glm::length(glm::vec2( v.x ,v.z) )  )); 
+	  // angle_mid = glm::degrees(angle_mid);  
+	  // float angle_min = (*it)->getMinAngleToCamera(m_camera);  
+
+	  // tmp disable due to material flickers 
+	  if ((((*it)->getPriorityRender()) || m_camera->insideFrustrum((*it))) && ((*it)->isVisible()) && (!(*it)->isOnlyShadowRendered())) //(angle_min < m_camera->getFOV())
+	  {
+		  //std::cout << angle_mid << std::endl;
+		  //std::cout << (*it)->getIdentifier()<<std::endl;
+
+		  std::map< std::string, std::vector<Object *> >::iterator entry = m_render_objects.find((*it)->getIdentifier());
+		  if (entry != m_render_objects.end())
+		  {
+			  entry->second.insert(entry->second.end(), (*it));
+		  }
+		  else
+		  {
+			  std::vector<Object *> ins_vec;
+			  ins_vec.insert(ins_vec.end(), (*it));
+			  m_render_objects.insert(std::pair< std::string, std::vector<Object *> >((*it)->getIdentifier(), ins_vec));
+		  }
+	  } //tmp disable due to flickers 
+  }
+  // QUICKFIX EnD
   //Engine::getLog()->log("Scene", "refreshed objects");*/
 }
 
@@ -408,32 +443,46 @@ bool Scene::load(std::string path)
       if( type == "Light")
       {
         Light * new_light = addLight();
-        if( ! new_light->load(child) )
-          removeLight(new_light);  
+		if (new_light != nullptr)
+		{
+			if (!new_light->load(child))
+				removeLight(new_light);
+		}
       }
       if( type == "Object")
       {
         std::string file_name = "";
         bool static_ob = false ;
         tinyxml2::XMLElement * el = child->FirstChildElement("Identifier");
-        if( el != nullptr)
+        if (el != nullptr)
         {
-          file_name =std::string( el->Attribute("value") );
+          file_name = std::string(el->Attribute("value"));
         }
+        
         el = child->FirstChildElement("Static");
         if( el != nullptr)
         {
           static_ob =el->BoolAttribute("value") ;
         }
-            std::cout << "objct pre constructor"<<std::endl; 
-        Object * new_object = addObject(file_name,glm::vec3(0,0,0), false , static_ob, static_ob); 
-            std::cout << "objct pre load"<<std::endl; 
-        new_object->load(child);
-            std::cout << "objct post load"<<std::endl; 
-        new_object->refreshAABB();
-          std::cout << "objct pre insert"<<std::endl; 
-        m_tree_root->insert(new_object);
-          std::cout << "objct post insert"<<std::endl; 
+        Object * new_object = addObject(file_name,glm::vec3(0,0,0), false , false, static_ob); 
+    
+
+        if (new_object == nullptr)
+        {
+             removeObject(new_object);
+        }
+        else
+        {
+            if (!new_object->load(child))
+            {
+                removeObject(new_object);
+            }
+            else
+            {
+                new_object->refreshAABB();
+                m_tree_root->insert(new_object);
+            }
+        }
       }
       if( type == "Skybox")
       {
@@ -546,7 +595,7 @@ Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, 
   Object * obj = nullptr;
   if(m != nullptr)
   {
-    obj = m->getInstance();;
+    obj = m->getInstance();
     obj->setId(getObjectIdentification());
     obj->setPosition(position);
 
@@ -605,7 +654,7 @@ void Scene::removeObject(Object * obj)
     else
       it++; 
   }
-   for(std::vector<Object *>::iterator it = m_objects_dynamic.begin(); it != m_objects_dynamic.end(); )
+  for(std::vector<Object *>::iterator it = m_objects_dynamic.begin(); it != m_objects_dynamic.end(); )
   {
     if( (*it) == obj)
     {
@@ -615,9 +664,12 @@ void Scene::removeObject(Object * obj)
     else
       it++; 
   }
-  m_tree_root->remove(obj);
-  obj->getModel()->removeInstance(obj); 
-  refreshRenderObjects();
+  if (obj != nullptr)
+  {
+    m_tree_root->remove(obj);
+    obj->getModel()->removeInstance(obj);
+    refreshRenderObjects();
+  }
 }
 
 std::vector<Object *> Scene::getPhysicsStaticObjects()

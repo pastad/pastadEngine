@@ -27,11 +27,10 @@
         <Position x="0" y="1.7999995" z="0"/>
         <Rotation x="0" y="0" z="0"/>
         <Scale x="1" y="1" z="1"/>
-        <Identifier value="/home/pastad/repos/pastadEngine/models/bush.obj"/>
+        <Identifier value="models/bush.obj"/>
         <PhysicsEnabled value="0"/>
         <PhysicsStatic value="0"/>
         <Visibility value="1"/>
         <Static value="48"/>
     </Object>
-    <Skybox Path="models/skybox1/sk1"/>
 </Scene>

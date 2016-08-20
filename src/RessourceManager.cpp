@@ -21,7 +21,7 @@ RessourceManager::~RessourceManager()
 	for(std::map<std::string, Model *>::iterator it = m_models.begin(); it != m_models.end();it++)
 		delete it->second;
 	for(std::map<std::string,  Texture *>::iterator iterator = m_textures.begin(); iterator != m_textures.end(); iterator++)
-    delete iterator->second;
+		delete iterator->second;
   
 }
 
@@ -43,9 +43,12 @@ Model * RessourceManager::loadModel(std::string path, bool instanced)
 	{
 		model =  new Model(path, instanced);
 		bool success  = model->load();
-		m_models[path] = model;
-		if(success)
-			Engine::getLog()->log("RessourceManager","loaded model",path);
+		
+		if (success)
+		{
+			m_models[path] = model;
+			Engine::getLog()->log("RessourceManager", "loaded model", path);
+		}
 		else
 		{
 			Engine::getLog()->log("RessourceManager","loading failed ",path);
@@ -71,11 +74,14 @@ Texture * RessourceManager::loadTexture(std::string path)
 	else
 	{
 		texture =  new Texture(path);
-		if(texture->load() )
-			Engine::getLog()->log("RessourceManager","loaded texture",path);
+		if (texture->load())
+		{
+			m_textures[path] = texture;
+			Engine::getLog()->log("RessourceManager", "loaded texture", path);
+		}
 		else
 			Engine::getLog()->log("RessourceManager","failed loading",path);
-		m_textures[path] = texture;
+		
 		
 	}
 

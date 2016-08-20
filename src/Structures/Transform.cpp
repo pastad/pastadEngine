@@ -25,7 +25,7 @@ Transform::Transform(glm::vec3 p,glm::vec3 r,glm::vec3 s ):m_position(p),m_rotat
 
 void Transform::recalculateMatrix()
 {
-	glm::mat4 mat_trans =  glm::translate(m_position);
+	glm::mat4 mat_trans =  glm::translate(glm::vec3(m_position) );
 
 	glm::quat rot(m_rotation);
 	glm::mat4 mat_rot = glm::mat4_cast(rot);
@@ -47,7 +47,7 @@ void Transform::setPosition(glm::vec3 p)
 }
 glm::vec3 Transform::getPosition()
 {
-  return m_position;
+  return glm::vec3(m_position);
 }
 
 //rotation

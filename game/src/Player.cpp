@@ -42,8 +42,7 @@ float Player::m_jump_time;
 
 unsigned int Player::m_movement_keys_pressed;
 
-sf::SoundBuffer * Player::m_walking_sound_buffer;
-sf::Sound * Player::m_walking_sound_sound;
+
 
 
 Player::Player()
@@ -57,8 +56,6 @@ Player::Player()
 Player::~Player()
 {  
   delete m_inventory;
-  delete m_walking_sound_sound;
-  delete m_walking_sound_buffer;
 }
 
 bool Player::init(Scene * scene)
@@ -110,19 +107,8 @@ bool Player::init(Scene * scene)
   m_player_object = scene->addObject("game/models/dark_energy_monster.obj",glm::vec3(0,0,0), false);
   m_player_object->setShadowRenderOnly();
 
-  m_walking_sound_buffer = new sf::SoundBuffer();
-  m_walking_sound_sound = new sf::Sound();
 
-  if (!m_walking_sound_buffer->loadFromFile("game/models/sounds/wind.ogg"))
-  {
-    delete m_walking_sound_sound;
-    delete m_walking_sound_buffer;
-    return false;
-  }
 
-  m_walking_sound_sound->setBuffer(*m_walking_sound_buffer);
-  m_walking_sound_sound->setLoop(true);
-  m_walking_sound_sound->setVolume(SOUND_EFFECT_VOLUME);
 
   setupGUI();
 

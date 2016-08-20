@@ -24,6 +24,10 @@
 
 //#include "LuaScript.h"
 
+#include <thread>
+//#include <future>
+
+
 void test_callback(Button * b)
 {
   std::cout << "woho callback"<<std::endl;
@@ -35,7 +39,7 @@ int main(void)
 
   Engine engine;
 
-
+ 
 
   bool launch_game = true;
 
@@ -47,9 +51,10 @@ int main(void)
     
     GameMenu * game_menu = new GameMenu();   
     Game * game = nullptr;
+	bool init_failed = false;
 
     
-    while( game_menu->shouldGameBeStarted() && engine.running() )
+    while( game_menu->shouldGameBeStarted() && engine.running() && (!init_failed) )
     {
       if (game_menu->initialize(1240, 720))
       {
@@ -86,6 +91,10 @@ int main(void)
           delete game;
 
       }
+	  else
+	  {
+		  init_failed = true;
+	  }
 
     }
     delete game_menu;
@@ -98,7 +107,7 @@ int main(void)
   }
   else
   {
-    engine.initialize(1240, 720, PHYSIC_SUBSYSTEM , true, false);
+    engine.initialize(1240, 720, RENDER_SUBSYSTEM , true, false);
     Scene *  scene = new Scene();
 
 
@@ -155,9 +164,9 @@ int main(void)
         temp_tree = scene.addObjectInstanced("game/models/tree1.obj",glm::vec3(t*4-10,0,k*4+10) ); 
       }      
     }*/
-    Water * water_1  = scene->addWaterEffect(glm::vec3(0,1,0),6);
-    Wave * wave_1 = water_1->addWave(glm::vec2(1,1),1.0f,0.001,0.1);
-    Wave * wave_2 = water_1->addWave(glm::vec2(0,1),1.0f,0.001,0.1);
+ //   Water * water_1  = scene->addWaterEffect(glm::vec3(0,1,0),6);
+  //  Wave * wave_1 = water_1->addWave(glm::vec2(1,1),1.0f,0.001,0.1);
+  //  Wave * wave_2 = water_1->addWave(glm::vec2(0,1),1.0f,0.001,0.1);
 
 
     //Object * test_roach = scene.addObject("models/rooster.dae", glm::vec3(0,1,7)); 
@@ -167,8 +176,8 @@ int main(void)
     //Terrain * terrain =  scene.addTerrain();
     //terrain->generate();
     //scene.save("scene_save_test.xml");
-    scene->load("island-scene.xml");
-  //scene->load("scene2.xml");
+   // scene->load("island-scene.xml");
+	scene->load("island-scene.xml");
    // scene->save("scene_save_test.xml");
     Helper::m_debug_float = 0.0f;
 
@@ -181,7 +190,7 @@ int main(void)
     while(engine.running())
     {
       // do stuff here
-      if(IOSubsystem::isKeyPressed('X') )
+    /*  if(IOSubsystem::isKeyPressed('X') )
       {
         Helper::m_debug_float+=0.1f;
       }
@@ -211,11 +220,13 @@ int main(void)
           std::cout << "no object picked" <<std::endl;
         if( l  != nullptr)
           std::cout << "light "<<l->getId()<<" picked" <<std::endl;
-      }
+      }*/
 
 
       engine.update();
-    	engine.render();
+      engine.render();
+
+	 // std::cout << "------------------------------" << std::endl;
     }
     
     engine.shutDown();

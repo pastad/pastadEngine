@@ -60,8 +60,8 @@ private:
   Skybox * m_skybox;
 
   // the background sound
-  sf::SoundBuffer * m_background_sound_buffer;
-  sf::Sound * m_background_sound_sound;
+  sf::SoundBuffer  m_background_sound_buffer;
+  sf::Sound  m_background_sound_sound;
 
   // day time 
   float m_game_time;
