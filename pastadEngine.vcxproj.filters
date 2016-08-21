@@ -96,9 +96,6 @@
     <ClInclude Include="include\RenderStructures\JitterTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\RenderStructures\PointShadowBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\RenderStructures\Quad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -437,5 +434,10 @@
     <ClCompile Include="game\src\EnergySpark.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Imballanced.zip">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

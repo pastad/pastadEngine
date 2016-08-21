@@ -21,7 +21,7 @@ public:
     DirectionalShadowBuffer& operator=(const DirectionalShadowBuffer& other) = delete;
 
     // returns true if succeeded
-    bool initialize(  float width ,  float height);
+    bool initialize(  int width ,  int height);
 
     // bind and unbind
     void bindForInput();

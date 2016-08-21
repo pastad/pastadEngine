@@ -243,11 +243,11 @@ private:
 	// true if scene should be switched
 	static bool m_switch_scene;
 
-  // stores the external update function to be called 
-  static EXTERNALUPDATE m_external_update;
+	// stores the external update function to be called 
+	static EXTERNALUPDATE m_external_update;
   
-  // run method quitter
-  static bool m_run;
+	// run method quitter
+	static bool m_run;
 
 	// starts the subsystems
 	static bool startUpSubsystems();

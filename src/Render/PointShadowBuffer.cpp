@@ -18,7 +18,7 @@ PointShadowBuffer::~PointShadowBuffer()
 
 //  initialization -------------------------------------------------
 
-bool PointShadowBuffer::initialize(  float width ,  float height)
+bool PointShadowBuffer::initialize(  int width ,  int height)
 {
   /*for(int x=0; x< 6;x++)
   {

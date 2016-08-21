@@ -59,7 +59,6 @@
     <ClInclude Include="include\RenderStructures\DirectionalShadowBuffer.h" />
     <ClInclude Include="include\RenderStructures\GBuffer.h" />
     <ClInclude Include="include\RenderStructures\JitterTexture.h" />
-    <ClInclude Include="include\RenderStructures\PointShadowBuffer.h" />
     <ClInclude Include="include\RenderStructures\Quad.h" />
     <ClInclude Include="include\RenderStructures\RenderBuffer.h" />
     <ClInclude Include="include\Render\DirectionalShadowBuffer.h" />
@@ -162,6 +161,9 @@
     <ClCompile Include="src\Subsystems\RenderSubsystem.cpp" />
     <ClCompile Include="src\Subsystems\Subsystem.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Imballanced.zip" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{84773E5E-5599-4E04-9E52-09136082BE8D}</ProjectGuid>
     <RootNamespace>pastadEngine</RootNamespace>
@@ -219,6 +221,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\pastad\Documents\libs\boost_1_59_0;C:\Users\pastad\Documents\libs\SFML-2.4.0\include;C:\Users\pastad\Documents\pastadEngine\game\include;C:\Users\pastad\Documents\libs\freetype-2.6.5\include;C:\Users\pastad\Documents\libs\tinyxml2-master;C:\Users\pastad\Documents\libs\soil\src;C:\Users\pastad\Documents\libs\assimp\include;C:\Users\pastad\Documents\libs\glfw_64\include;C:\Users\pastad\Documents\pastadEngine\external;C:\Users\pastad\Documents\libs\glm;C:\Users\pastad\Documents\pastadEngine\include;C:\Users\pastad\Documents\pastadEngine\include\Structures;C:\Users\pastad\Documents\pastadEngine\include\Subsystems;C:\Users\pastad\Documents\pastadEngine\include\Shaders;C:\Users\pastad\Documents\pastadEngine\include\Script;C:\Users\pastad\Documents\pastadEngine\include\Scene;C:\Users\pastad\Documents\pastadEngine\include\Render;C:\Users\pastad\Documents\pastadEngine\include\Model;C:\Users\pastad\Documents\pastadEngine\include\GUI;C:\Users\pastad\Documents\pastadEngine\include\Geometric;C:\Users\pastad\Documents\pastadEngine\include\Extension;C:\Users\pastad\Documents\pastadEngine\include\Effects;$(IncludePath)</IncludePath>
+    <TargetName>Imballanced</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -260,6 +263,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

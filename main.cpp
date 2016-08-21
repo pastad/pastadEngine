@@ -1,3 +1,5 @@
+#define NDEBUG
+
 #include <stdio.h>
 #include <iostream>
 #include "Engine.h"

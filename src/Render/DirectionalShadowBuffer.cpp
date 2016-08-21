@@ -19,11 +19,11 @@ DirectionalShadowBuffer::~DirectionalShadowBuffer()
 
 //  initialization -------------------------------------------------
 
-bool DirectionalShadowBuffer::initialize(  float width ,  float height)
+bool DirectionalShadowBuffer::initialize(  int width ,  int height)
 {
   GLfloat border[] = {1.0f, 0.0f,0.0f,0.0f };
   m_width = width;
-  m_height =height;
+  m_height = height;
   
   gl::GenTextures(1, &m_depth_texture);
   gl::BindTexture(gl::TEXTURE_2D, m_depth_texture);

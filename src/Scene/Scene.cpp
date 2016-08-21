@@ -174,6 +174,7 @@ void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, R
 
   renderSkybox(skybox_shader);
 
+ // water_shader->setUniform("delta", m_time_line_seconds);
   for(std::vector<Water *>::iterator it = m_water_effects.begin(); it != m_water_effects.end();it++)
   {
     (*it)->render(water_shader);

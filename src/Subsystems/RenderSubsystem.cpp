@@ -183,7 +183,7 @@ bool RenderSubsystem::refreshShaders()
 	m_point_shadow_shader = new RenderBaseShader();
 	m_skybox_shader = new SkyboxShader();
 	m_terrain_shader = new RenderBaseShader();
-  m_water_shader = new RenderBaseShader();
+	 m_water_shader = new RenderBaseShader();
 	if( ! m_shader->load("shaders/rendershaderV1") )
 		return false;
 	if( ! m_text_shader->load("shaders/textshaderV1") )
@@ -200,8 +200,8 @@ bool RenderSubsystem::refreshShaders()
 		return false;
 	if( ! m_terrain_shader->load("shaders/terrainshaderV1") )
 		return false;
-  if( ! m_water_shader->load("shaders/watershaderV1") )
-    return false;
+	if( ! m_water_shader->load("shaders/watershaderV1") )
+		return false;
 
 	m_pp_shader->setGaussSize(20);
 	m_pp_shader->setBloomThreshold(0.6f);

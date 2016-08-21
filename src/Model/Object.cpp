@@ -114,8 +114,8 @@ bool Object::load( tinyxml2::XMLElement *  element)
 
   bool physics_enabled = false;
   bool physics_static = false;
-  bool visible;
-  bool static_flag;
+  bool visible = true;
+  bool static_flag = false;
 
 
   tinyxml2::XMLElement *child = element->FirstChildElement("Visibility");

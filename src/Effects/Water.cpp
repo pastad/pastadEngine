@@ -100,7 +100,7 @@ Wave * Water::addWave(glm::vec2 direction, float length, float speed, float ampl
 {
   Wave * wave =  new Wave(direction,length,speed,amplitude);
   m_waves.push_back(wave);
-
+  Engine::getLog()->log("Water", "wave added");
   return wave;
 }
 

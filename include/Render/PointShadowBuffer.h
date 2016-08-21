@@ -20,7 +20,7 @@ public:
     PointShadowBuffer& operator=(const PointShadowBuffer& other) = delete;
 
     // returns true if succeeded
-    bool initialize(  float width ,  float height);
+    bool initialize(  int width ,  int height);
 
     // bind and unbind
     void bindForInput(GLenum face);

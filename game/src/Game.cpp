@@ -90,8 +90,8 @@ bool Game::initialize()
 	}
 
 	Water * water_1 = m_scene->addWaterEffect(glm::vec3(0, -0.25, 0), 6);
-	Wave * wave_1 = water_1->addWave(glm::vec2(1, 1), 1.0f, 0.01, 0.01);
-	Wave * wave_2 = water_1->addWave(glm::vec2(0, 1), 1.0f, 0.01, 0.01);
+	Wave * wave_1 = water_1->addWave(glm::vec2(1, 1), 1.0f, 1.0f, 0.01f);
+	Wave * wave_2 = water_1->addWave(glm::vec2(0, 1), 1.0f, 1.0f, 0.01f);
 
 	// set the params for our ground
 	std::vector<Object *> objs = m_scene->getObjects("game/models/island.obj");

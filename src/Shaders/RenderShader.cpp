@@ -235,7 +235,7 @@ void RenderShader::setIdentityMatrices()
 void RenderShader::setMaterial(std::string name, MaterialColorSpecs specs)
 {
   // store materials during gbuffer pass and only set index
-  int idx;
+  int idx =-1;
   std::map<std::string,int>::iterator it = m_materials_mapping.find(name);
   if(it == m_materials_mapping.end())
   {
@@ -253,7 +253,8 @@ void RenderShader::setMaterial(std::string name, MaterialColorSpecs specs)
     idx = it->second;
 
   //only set the id for now
-  setMaterialIndex(idx);
+  if(idx != -1)
+	 setMaterialIndex(idx);
   if(idx >= m_material_number)
     assert(0);
 
