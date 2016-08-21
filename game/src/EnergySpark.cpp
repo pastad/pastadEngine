@@ -47,9 +47,12 @@ bool EnergySpark::update(float delta)
 {
   float step = delta * SPEED;
   glm::vec3 d = glm::normalize( m_target_position - m_object->getPosition() );
+
+  if (glm::distance(m_target_position, m_object->getPosition()) <= step)
+	  return true;
+
   m_object->setPosition( m_object->getPosition() + d * step );
-  if( glm::distance(m_target_position, m_object->getPosition()) < 0.01f )
-    return true;
+
 
   return false;
 }

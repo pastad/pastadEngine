@@ -12,6 +12,7 @@ class Model;
 class Object;
 class Texture;
 class Material;
+class Scene;
 
 // loads the ressources and stores them to prevent loading multiple times
 
@@ -22,7 +23,7 @@ public:
 	~RessourceManager();
 
 	// returns a new Object for the user
-	Object * getObject(std::string path);
+	Object * getObject(std::string path, Scene * scene);
 
   // returns the requested texture (and loads it if not loaded)
   static Texture * loadTexture(std::string path);

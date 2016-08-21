@@ -21,8 +21,8 @@
 
 #define MIN_LIGHT_THRESHOLD 0.1
 
-#define DIR_BUFFER_SIZE_X 5000
-#define DIR_BUFFER_SIZE_Z 3000
+#define DIR_BUFFER_SIZE_X 10000
+#define DIR_BUFFER_SIZE_Z 6000
 
 
 unsigned int Light::m_num_point_lights = 0;
@@ -135,7 +135,7 @@ bool Light::setDirectional(glm::vec3 direction, glm::vec3 col_am ,glm::vec3 col_
     
       if(m_directional_object == nullptr)
       {
-        m_directional_object = m_model->getInstance();
+        m_directional_object = m_model->getInstance(nullptr);
         m_directional_object->setScale(glm::vec3(0.2f,0.2f,0.2f));
       }
     }    
@@ -184,7 +184,7 @@ bool Light::setPoint(glm::vec3 positon, glm::vec3 col_am ,glm::vec3 col_dif, glm
     
       if(m_point_object == nullptr)
       {
-        m_point_object = m_model->getInstance();
+        m_point_object = m_model->getInstance(nullptr);
         m_point_object->setScale(glm::vec3(0.2f,0.2f,0.2f));
       }
     }
@@ -239,7 +239,7 @@ bool Light::setSpot(glm::vec3 position, glm::vec3 col_am ,glm::vec3 col_dif, glm
     
       if(m_spot_object == nullptr)
       {
-        m_spot_object = m_model->getInstance();
+        m_spot_object = m_model->getInstance(nullptr);
         m_spot_object->setScale(glm::vec3(0.2f,0.2f,0.2f));
       }
     }   

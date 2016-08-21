@@ -42,6 +42,10 @@ bool Engine::m_render_update_needed;
 bool Engine::m_fullscreen;
 bool Engine::m_gui_movement_lock = false;
 bool Engine::m_switch_scene =false;
+bool Engine::m_run;
+
+Engine::EXTERNALUPDATE Engine::m_external_update = nullptr;
+
 
 
 Engine::Engine()
@@ -189,6 +193,119 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 	m_log->log("Engine", "initialized");
 	return true;
 }
+bool Engine::initialize(std::string path)
+{
+
+  m_log = new Log();
+  m_log->debugMode();
+
+  tinyxml2::XMLDocument document;
+  tinyxml2::XMLError result = document.LoadFile(path.c_str());
+
+  if (result != tinyxml2::XML_SUCCESS)
+  {
+    Engine::getLog()->log("Engine", "couldn't load config file");
+    return false;
+  }
+
+  ShadowTechniqueType shadow_technique;
+
+  if (!readConfig(path, &m_win_width, &m_win_height, &m_fullscreen, &m_edit_mode, &m_system_flags, &shadow_technique))
+    return false;
+
+  m_current_time_sample = 0;
+  Engine::m_time_delta = 0.0f;
+  Engine::m_time_last = -1.0f;
+
+
+
+  m_render_system = new RenderSubsystem();
+  m_io_system = new IOSubsystem();
+  m_physic_system = new PhysicSubsystem();
+  // set minimal systems (Render,IO)
+
+  if (!(m_system_flags & IO_SUBSYSTEM))
+  {
+    m_system_flags |= IO_SUBSYSTEM;
+  }
+  if (!(m_system_flags & RENDER_SUBSYSTEM))
+  {
+    m_system_flags |= RENDER_SUBSYSTEM;
+  }
+
+  // initialize opengl
+  glfwInit();
+
+  refreshWindow();
+  if (m_window == nullptr)
+  {
+    glfwTerminate();
+    return false;
+  }
+
+  // check opengl genderated headers
+  gl::exts::LoadTest didLoad = gl::sys::LoadFunctions();
+  if (!didLoad)
+  {
+    m_log->log("Engine", "OpenGL function wrapper couldn't be loaded");
+    glfwTerminate();
+    delete m_log;
+    return false;
+  }
+
+  // check window creation
+  bool vers_avail = checkVersionSupport(4, 3);
+  if (!vers_avail)
+  {
+    m_log->log("Engine", "OpenGL version not compatible");
+    glfwTerminate();
+    delete m_log;
+    return false;
+  }
+
+  // start the subsystems 
+  if (!startUpSubsystems())
+  {
+    m_log->log("Engine", "Subsystems couldn't be initialized");
+    glfwTerminate();
+    delete m_log;
+    return false;
+  }
+
+  // for fixing black window bug 
+  glfwSetWindowSize(m_window, m_win_width, m_win_height);
+
+  // set callback for resize
+  glfwSetWindowSizeCallback(m_window, windowSizeChangedCallback);
+
+  // if in edit mode bind the cursor
+  if (!isInEditMode())
+    glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+
+  gl::DepthFunc(gl::LEQUAL);
+  gl::CullFace(gl::BACK);
+  gl::Enable(gl::MULTISAMPLE);
+
+  m_engine_gui = new EngineGUI();
+  if (!m_engine_gui->initialize())
+    return false;
+  if (!m_edit_mode)
+    m_engine_gui->setInactive();
+
+  if (m_edit_mode)
+  {
+    m_scene_editor = new SceneEditor();
+    if (!m_scene_editor->initialize())
+      return false;
+  }
+
+  m_render_system->setShadowTechnique((ShadowTechniqueType)shadow_technique);
+
+  m_initialized = true;
+  m_log->log("Engine", "initialized");
+  return true;
+}
 
 void Engine::shutDown()
 {
@@ -330,7 +447,7 @@ void Engine::update()
 		sceneSwitch();
 		if(m_scene != nullptr)
 		{
-			m_scene->update(m_time_delta);
+	    m_scene->update(m_time_delta);
 
 			if( m_system_flags & PHYSIC_SUBSYSTEM )
 				m_physic_system->updateScene(m_scene, m_time_delta);
@@ -392,6 +509,23 @@ void Engine::timeUpdate()
 
 
 // running/render/checks functions -----------------------------------------------------------------------------------------
+
+void Engine::run()
+{
+  m_run = true;
+  while (running() && m_run)
+  {
+    if(m_external_update!= nullptr)
+      m_external_update(getTimeDelta());
+    update();
+    render();
+  }
+}
+
+void Engine::stopRunning()
+{
+  m_run = false;
+}
 
 bool Engine::running()
 {
@@ -525,8 +659,7 @@ void Engine::removeGUI(GUI * gui)
 		if( (*it)->getId() == gui->getId() )
 		{
 			delete (*it);
-			m_guis.erase(it);
-			it = m_guis.end();
+			it = m_guis.erase(it);
 		}
     else
       it++;
@@ -742,4 +875,125 @@ void Engine::setGUIMovementLock()
 void Engine::unsetGUIMovementLock()
 {
 	m_gui_movement_lock = false;
+}
+
+// callback function
+
+
+void  Engine::setUpdateFunction(EXTERNALUPDATE callback_update)
+{
+  m_external_update = callback_update;
+}
+
+
+// saver  ---------------------------------------------------------------------------------------------------------
+
+bool Engine::saveConfig(std::string path, unsigned int width, unsigned int height, bool fullscreen, bool edit_mode, unsigned int system_flags, ShadowTechniqueType shadow_technique)
+{
+  Engine::getLog()->log("Engine", "saving config to", path);
+  tinyxml2::XMLDocument document;
+  tinyxml2::XMLNode * root = document.NewElement("EngineConfig");
+  document.InsertFirstChild(root);
+
+  tinyxml2::XMLElement * element_window = document.NewElement("Window");
+  root->InsertEndChild(element_window);
+  element_window->SetAttribute("width", width);
+  element_window->SetAttribute("height", height);
+  element_window->SetAttribute("fullscreen", fullscreen);
+
+  tinyxml2::XMLElement * element_enginemode = document.NewElement("EngineMode");
+  root->InsertEndChild(element_enginemode);
+  element_enginemode->SetAttribute("edit", edit_mode);
+
+  tinyxml2::XMLElement * element_subsystems = document.NewElement("Subsystems");
+  root->InsertEndChild(element_subsystems);
+
+  element_subsystems->SetAttribute("io", (system_flags & IO_SUBSYSTEM) ? 1 : 0);
+  element_subsystems->SetAttribute("render", (system_flags & RENDER_SUBSYSTEM) ? 1 : 0);
+  element_subsystems->SetAttribute("physic", (system_flags & PHYSIC_SUBSYSTEM) ? 1 : 0);
+
+  tinyxml2::XMLElement * element_shadow_tech = document.NewElement("Shadow");
+  root->InsertEndChild(element_shadow_tech);
+
+  element_shadow_tech->SetAttribute("technique", (unsigned int)shadow_technique);
+
+  tinyxml2::XMLError eResult = document.SaveFile(path.c_str());
+
+  return true;
+}
+
+bool Engine::readConfig(std::string path, unsigned int* width, unsigned int *height, bool *fullscreen, bool* edit_mode, unsigned int *system_flags, ShadowTechniqueType *shadow_technique)
+{
+
+  tinyxml2::XMLDocument document;
+  tinyxml2::XMLError result = document.LoadFile(path.c_str());
+
+  if (result != tinyxml2::XML_SUCCESS)
+  {
+    Engine::getLog()->log("Engine", "couldn't load config file");
+    return false;
+  }
+
+  *width = 1240;
+  *height = 720;
+
+  *fullscreen = false;
+
+  *edit_mode = false;
+
+  *system_flags = RENDER_SUBSYSTEM | IO_SUBSYSTEM;
+
+  tinyxml2::XMLNode * root = document.FirstChild();
+
+  if (root != nullptr)
+  {
+    Engine::getLog()->log("Engine", "reading config: ", path);
+    tinyxml2::XMLElement * child = root->FirstChildElement();
+
+    while (child != nullptr)
+    {
+      std::string type = std::string(child->Name());
+      Engine::getLog()->log("Engine", "element read:", type);
+      if (type == "Window")
+      {
+        child->QueryUnsignedAttribute("width", width);
+        child->QueryUnsignedAttribute("height", height);
+
+        *fullscreen = child->BoolAttribute("fullscreen");
+      }
+      if (type == "EngineMode")
+      {
+        *edit_mode = child->BoolAttribute("edit");
+      }
+      if (type == "Subsystems")
+      {
+        if (child->BoolAttribute("render"))
+          *system_flags |= RENDER_SUBSYSTEM;
+
+        if (child->BoolAttribute("physic"))
+          *system_flags |= PHYSIC_SUBSYSTEM;
+
+        if (child->BoolAttribute("io"))
+          *system_flags |= IO_SUBSYSTEM;
+
+
+      }
+      if (type == "Shadow")
+      {
+        unsigned int tech;
+        child->QueryUnsignedAttribute("technique", &tech);
+        if (tech <= ST_STANDARD_RS)
+        {
+          *shadow_technique = (ShadowTechniqueType)tech;
+        }
+      }
+
+      child = child->NextSiblingElement();
+    }
+  }
+  else
+  {
+    Engine::getLog()->log("Engine", "no root element in config file");
+  }
+  return true;
 }

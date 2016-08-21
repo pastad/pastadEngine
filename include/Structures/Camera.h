@@ -110,6 +110,11 @@ public:
 
     // returns the corner points of the frustrum
     std::vector<glm::vec3> getFrustrumCorners(float min_bound, float max_bound);
+     
+     // fall check
+    bool shouldFallBeChecked();
+    void setFallCheck();
+    void unsetFallCheck();
 
     // registers the moved callback function
     void registerMovedCallback( void  (*callback)()   );
@@ -183,6 +188,7 @@ private:
     float m_surrounding_offset;
     bool m_apply_physics;
     glm::vec3 m_fall_vector;
+    bool m_should_fall_be_checked;
 
     // stores the callback function for movement
     void (*external_cameraMovedCallback)();

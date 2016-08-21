@@ -27,17 +27,26 @@
 #include <thread>
 //#include <future>
 
+Game * game = nullptr;
 
 void test_callback(Button * b)
 {
   std::cout << "woho callback"<<std::endl;
 }
 
+void update(float d)
+{
+  if(game != nullptr)
+    game->update();
+}
 
 int main(void)
 {
 
   Engine engine;
+
+  unsigned int w = 1920;
+  unsigned int h = 1080;
 
  
 
@@ -46,17 +55,17 @@ int main(void)
   if(launch_game)
   {
 
-    engine.initialize(1240, 720, PHYSIC_SUBSYSTEM , false, false);
+    engine.initialize("game/engine_config.xml");
 
     
     GameMenu * game_menu = new GameMenu();   
-    Game * game = nullptr;
-	bool init_failed = false;
+    game = nullptr;
+	  bool init_failed = false;
 
     
     while( game_menu->shouldGameBeStarted() && engine.running() && (!init_failed) )
     {
-      if (game_menu->initialize(1240, 720))
+      if (!game_menu->initialize(engine.getWindowWidth(), engine.getWindowHeight()))
       {
           return -1;
       }
@@ -72,23 +81,25 @@ int main(void)
 
       if( game_menu->shouldGameBeStarted())
       {
-        Game * game = new Game();
+        game = new Game();
 
+        engine.setUpdateFunction(&update);
         if(game->initialize())
         {
-
-          while(engine.running() && (!game->hasEnded()) )
+          engine.run();
+         /* while(engine.running() && (!game->hasEnded()) )
           {        
             game->update(); 
             engine.update();            
             engine.render();
-          }
+          }*/
         }
         Engine::setScene(nullptr,true);
         engine.update();
 
         if(game != nullptr)
           delete game;
+        game = nullptr;
 
       }
 	  else

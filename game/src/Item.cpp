@@ -76,7 +76,7 @@ void Item::doAction(Environment * env)
 
           Player::drainEnergy(25.0f,false);
           Player::refreshSparks();
-          SoundManager::addAndPlaySound("game/sounds/rustle19.flac");
+        //  SoundManager::addAndPlaySound("game/sounds/rustle19.flac");
         }
 
       }
@@ -91,20 +91,24 @@ void Item::doAction(Environment * env)
       dir.y=0.0f;
       if(getPlacement(&npos))
       {
-        //std::cout << npos.x << ", "<< npos.y << ", "<< npos.z << std::endl;
-        if(m_type == ITEM_ATTACK_PLANT_TOOL) 
-        {
-          env->addEnergySpark( m_object->getPosition(), npos, (unsigned int) PLANT_ATTACK_FLOWER);
-          //env->addPlant(Engine::getScene(), PLANT_ATTACK_FLOWER, npos);
-        }
-        if(m_type == ITEM_TRAP_PLANT_TOOL) 
-        {
-          env->addEnergySpark( m_object->getPosition(), npos, (unsigned int) PLANT_TRAP_FLOWER);
-          //env->addPlant(Engine::getScene(), PLANT_TRAP_FLOWER, npos);
-        }
-        SoundManager::addAndPlaySound("game/sounds/rustle19.flac");
-        Player::drainEnergy(15.0f,false);
-        Player::refreshSparks();
+		 Object * obj = Player::getClosestSpark(npos);
+		 if (obj != nullptr)
+		 {
+			 //std::cout << npos.x << ", "<< npos.y << ", "<< npos.z << std::endl;
+			 if (m_type == ITEM_ATTACK_PLANT_TOOL)
+			 {
+				 env->addEnergySpark(obj, npos, (unsigned int)PLANT_ATTACK_FLOWER);
+				 //env->addPlant(Engine::getScene(), PLANT_ATTACK_FLOWER, npos);
+			 }
+			 if (m_type == ITEM_TRAP_PLANT_TOOL)
+			 {
+				 env->addEnergySpark(obj, npos, (unsigned int)PLANT_TRAP_FLOWER);
+				 //env->addPlant(Engine::getScene(), PLANT_TRAP_FLOWER, npos);
+			 }
+			 // SoundManager::addAndPlaySound("game/sounds/rustle19.flac");
+			 Player::drainEnergy(15.0f, false);
+			 Player::refreshSparks();
+		 }
 
       }
     }

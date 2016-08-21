@@ -33,11 +33,11 @@ PhysicSubsystem::~PhysicSubsystem()
 void PhysicSubsystem::updateScene(Scene * scene, float delta)
 {
   SceneTreeElement * root = scene->getSceneRoot();
-  traverseScene(root,scene, delta);
+ // traverseScene(root,scene, delta);
   Camera * cam = scene->getCamera();  
   if(cam != nullptr)
   {
-    if(cam->isPhysicsApplied())
+    if(cam->isPhysicsApplied() && cam->shouldFallBeChecked() )
     {      
       glm::vec3 drop = glm::vec3(0,-98.1,0)* (delta/1000.0f);
 
@@ -49,6 +49,7 @@ void PhysicSubsystem::updateScene(Scene * scene, float delta)
       for(int k =0; k < objs.size();k++)
       {
         Object * o  = objs[k];
+      
         float dist;
         bool res = collisionRayObject( o, &ra , &dist);
         if( res )
@@ -63,7 +64,10 @@ void PhysicSubsystem::updateScene(Scene * scene, float delta)
         cam->applyDrop(drop);  
       }
       else
+      {
         cam->setFallVector(glm::vec3(0,0,0));
+        cam->unsetFallCheck();
+      }
     }
   }
   
@@ -76,7 +80,6 @@ void PhysicSubsystem::traverseScene( SceneTreeElement * element , Scene * scene,
   std::vector< Object *> objects = element->getObjects();
   for( int x=0;  x< objects.size(); x++)
   {
-
     Object * obj = objects.at(x);
     //if(obj->isPhysicsApplied() &&  !obj->shouldFallBeChecked() && ! obj->isPhysicsStatic()) 
      // std::cout << obj->getIdentifier()<<std::endl;

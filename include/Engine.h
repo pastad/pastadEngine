@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <string>
+#include <mutex>
 #include <glm/glm.hpp>
 
 #define NUM_TIME_SAMPLES 40
@@ -26,6 +27,8 @@ class EngineGUI;
 class Object;
 class Light;
 class SceneEditor;
+
+
 
 enum SubsystemType
 {
@@ -51,6 +54,7 @@ enum ShadowTechniqueType
 class Engine
 {
 public:
+  typedef void(*EXTERNALUPDATE)(float);
 
 	Engine();
 	~Engine();
@@ -79,6 +83,9 @@ public:
 
 	// renders the current set scene threw the render subsystem
 	static void render();
+  
+  // run method called by the user
+  static void run();
 	
 	// sets the scene 
 	static void setScene(Scene * scene, bool delete_old);
@@ -160,6 +167,13 @@ public:
 	static bool isKeyPressedAndReleased(int key_code);
 	static bool isMouseButtonReleasedAndPressed(int key_code);
 
+  // register the update callback function
+  static void setUpdateFunction(EXTERNALUPDATE callback_update);
+
+  // stops the running method
+  static void stopRunning();
+
+
 private:
 
 	// indicates if Engine is initialized
@@ -228,6 +242,12 @@ private:
 
 	// true if scene should be switched
 	static bool m_switch_scene;
+
+  // stores the external update function to be called 
+  static EXTERNALUPDATE m_external_update;
+  
+  // run method quitter
+  static bool m_run;
 
 	// starts the subsystems
 	static bool startUpSubsystems();

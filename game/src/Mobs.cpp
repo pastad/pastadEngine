@@ -83,6 +83,7 @@ void Mobs::update(Player * player, Environment * env)
   float delta = Engine::getTimeDelta();
   float step = delta *5.0f;
 
+
   for(std::vector<Mob*>::iterator it = m_mobs.begin(); it != m_mobs.end();)
   {
 
@@ -95,6 +96,7 @@ void Mobs::update(Player * player, Environment * env)
       player->drainEnergy((*it)->getHealth(), true);
 
       removeMob((*it), env);
+      it = m_mobs.end();
     }
     else
     {
@@ -149,8 +151,7 @@ void Mobs::removeMob(Mob * m, Environment * env)
       delete (*it)->getObject();
       delete *it;
       (*it ) = nullptr;
-      m_mobs.erase(it);
-      it = m_mobs.end();
+      it = m_mobs.erase(it);
     }
     else
       it++;

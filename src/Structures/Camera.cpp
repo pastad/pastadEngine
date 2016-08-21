@@ -38,6 +38,7 @@ Camera::Camera(float x, float y, float z): m_pos(x,y,z),m_rotation_allowed(false
   m_plane_right = new Plane();
   m_plane_front = new Plane();
   m_plane_back = new Plane();
+  m_should_fall_be_checked = true;
 
   m_bottom_offset = 0.0f;
   m_surrounding_offset =0.0f;
@@ -80,6 +81,8 @@ void Camera::movementWithCollisionCheck(glm::vec3 dir, float step)
     bottom_off_halfed = m_bottom_offset /2.0f;
 
   glm::vec3 npos =  m_pos + dir * step;
+
+  m_should_fall_be_checked = false;
   if( (physics_system != nullptr) && (scene != nullptr) )
   {
     Ray r(m_pos-glm::vec3(0,m_bottom_offset-0.1f,0), dir);
@@ -88,13 +91,17 @@ void Camera::movementWithCollisionCheck(glm::vec3 dir, float step)
     {        
       // if no collision update  
       m_pos = npos;
+      m_should_fall_be_checked = true;
       //std::cout << "no col"<< dir.x<<" , "<< dir.y<<" , "<< dir.z<<" , " <<std::endl;
     }
     else
     {
       // .. also update if there is enough space in front
       if(distance -step > 0.0f)
+      {
         m_pos = npos;
+        m_should_fall_be_checked = true;
+      }
       else
       {
         Ray r2(m_pos-glm::vec3(0,bottom_off_halfed,0), dir, 0.0f, m_surrounding_offset);
@@ -111,7 +118,10 @@ void Camera::movementWithCollisionCheck(glm::vec3 dir, float step)
           if(  physics_system->collisionRayScene(scene, &r3, &distance3))
           {
             if((bottom_off_halfed- distance3) < 0.2f)
-            m_pos += glm::vec3(0,  (bottom_off_halfed- distance3),0);
+            {
+              m_pos += glm::vec3(0,  (bottom_off_halfed- distance3),0);
+              m_should_fall_be_checked = true;
+            }
           }
         }     
       }
@@ -125,6 +135,7 @@ void Camera::movementWithCollisionCheck(glm::vec3 dir, float step)
     if(physics_system == nullptr)
       std::cout << "no phy sys"<<std::endl;*/
     m_pos = npos;
+    m_should_fall_be_checked = true;
   }
 }
 
@@ -165,6 +176,7 @@ void Camera::move(glm::vec3 step)
   //Engine::getLog()->log("Camera", "moved camera ");
   if(external_cameraMovedCallback != nullptr)
     external_cameraMovedCallback();
+  m_should_fall_be_checked = true;
 }
 
 
@@ -642,6 +654,18 @@ unsigned int Camera::insideFrustrum(BoundingBox * bb)
   return ret;
 }
 
+void Camera::setFallCheck()
+{
+  m_should_fall_be_checked = true;
+}
+void Camera::unsetFallCheck()
+{
+  m_should_fall_be_checked = false;
+}
+bool Camera::shouldFallBeChecked()
+{
+  return m_should_fall_be_checked;
+}
 
 //  callback register -------------------------------------------------
 

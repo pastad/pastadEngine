@@ -75,6 +75,9 @@ public:
   Object * addObject(std::string  path, bool static_object);
   Object * addObjectInstanced(std::string path, bool static_object);
 
+  // adds an object to the scripted ones  | should be called by object
+  void objectIsScripted(Object * obj);
+
   // adds a water effect to the scene
   Water * addWaterEffect(glm::vec3 pos, float size);
 
@@ -125,6 +128,12 @@ private:
   // holds pointers to the objects
   std::vector<Object *> m_objects_static;
   std::vector<Object *> m_objects_dynamic;
+
+  std::vector<Model * >m_models_instanced;
+  
+  // holds pointers to objects that need refreshing every update
+  std::vector<Object *> m_objects_animated;
+  std::vector<Object *> m_objects_scripted;
 
   // stores the models of the scene for rendering purposes
   std::map<std::string, Model *> m_models;

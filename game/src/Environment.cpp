@@ -9,6 +9,7 @@
 #include "Mob.h"
 #include "EnergyShot.h"
 #include "EnergySpark.h"
+#include "SoundManager.h"
 
 
 #include <iostream>
@@ -34,22 +35,22 @@ Environment::~Environment()
   for(std::vector<Plant*>::iterator it = m_plants.begin(); it != m_plants.end(); )
   {
     delete (*it);
-    m_plants.erase(it);
+   it = m_plants.erase(it);
   }
   for(std::vector<EnergyShot*>::iterator it = m_energy_shots.begin(); it != m_energy_shots.end(); )
   {
     delete (*it);
-    m_energy_shots.erase(it);
+	it = m_energy_shots.erase(it);
   }
   for(std::vector<Object *>::iterator it = m_energy_remains.begin(); it != m_energy_remains.end(); )
   {
     delete (*it);
-    m_energy_remains.erase(it);
+	it = m_energy_remains.erase(it);
   }
   for(std::vector<EnergySpark*>::iterator it = m_energy_sparks.begin(); it != m_energy_sparks.end(); )
   {
     delete (*it);
-    m_energy_sparks.erase(it);
+	it = m_energy_sparks.erase(it);
   }
 }
 
@@ -66,6 +67,7 @@ bool Environment::initialize(Scene * scene)
     float dist_f = dist +r;
     glm::vec3 d = glm::rotateY(glm::vec3(1,0,0), (float)random_variable) * (float) dist_f;
     Object * obj =  scene->addObjectInstanced("game/models/grass2.obj",d, false ); 
+    obj->dontApplyPhysics();
 
   }
 
@@ -75,6 +77,7 @@ bool Environment::initialize(Scene * scene)
 void Environment::addPlant(Scene * scene , unsigned int type, glm::vec3 pos)
 {
   Plant * plant =  new Plant(scene,type,pos);
+  SoundManager::addAndPlaySound("game/sounds/rustle19.flac");
   if(plant != nullptr)
     m_plants.push_back(plant);
 }
@@ -93,6 +96,7 @@ void Environment::addEnergySpark(glm::vec3 start, glm::vec3 target, unsigned int
   EnergySpark * spark = new EnergySpark();
   spark->initialize(Engine::getScene(), start, target, type);
   m_energy_sparks.push_back(spark);
+
 }
 
 void Environment::addEnergySpark( Object * object, glm::vec3 target, unsigned int type )
@@ -140,7 +144,7 @@ void Environment::update(float delta, float sun_strength, Player * player, Mobs 
       float amount = remain->getScale().x * ENERGY_AMOUNT;
       Engine::getScene()->removeObject(remain);
       delete remain;
-      m_energy_remains.erase(it);
+      it =  m_energy_remains.erase(it);
       player->gainEngery(amount );
     }  
     else
@@ -183,7 +187,7 @@ void Environment::update(float delta, float sun_strength, Player * player, Mobs 
         delete (*it)->getObject();      
         delete (*it);
         (*it) = nullptr;
-        m_energy_shots.erase(it);
+        it = m_energy_shots.erase(it);		
            //std::cout << "erased shot | left:"<<m_energy_shots.size()<<std::endl;
       }
       else
@@ -201,7 +205,7 @@ void Environment::update(float delta, float sun_strength, Player * player, Mobs 
       delete (*it)->getObject();      
       delete (*it);
       (*it) = nullptr;
-      m_energy_sparks.erase(it);
+	    it = m_energy_sparks.erase(it);	
     }
     else
       it++;
@@ -215,7 +219,7 @@ void Environment::update(float delta, float sun_strength, Player * player, Mobs 
       Engine::getScene()->removeObject((*it)->getObject());
       delete (*it);
       (*it) = nullptr;
-      m_energy_shots.erase(it);
+      it = m_energy_shots.erase(it);
     }
   }
 

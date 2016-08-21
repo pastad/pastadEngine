@@ -24,7 +24,7 @@ class Scene;
 class Object : public Transform
 {
 public:
-	Object(std::string identifier, Model * parent);
+	Object(std::string identifier, Model * parent, Scene * parent_scene);
 	~Object();
 
   // updates the object | called by "engine"
@@ -200,6 +200,9 @@ private:
 
   // the script of the object
   Script * m_script;
+    
+  // the scene the object is contained in
+  Scene * m_parent_scene;
 
   // returns the angle to ...
   float getAngleTo(glm::vec3 dir, glm::vec3 lp , glm::vec3 pos);

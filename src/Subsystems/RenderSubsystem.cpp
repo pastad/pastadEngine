@@ -451,26 +451,26 @@ void RenderSubsystem::startRender()
 
 void RenderSubsystem::render()
 {
-	//float now = float(glfwGetTime());
+//	float now = float(glfwGetTime());
 	//std::cout << "rb"<< now << std::endl;
 	startRender();
 	if( Engine::getScene() != nullptr)
 	{
-		//now = float(glfwGetTime());
-		//std::cout << now << std::endl;
+	//	now = float(glfwGetTime());
+		//std::cout<<"pre gb" << now << std::endl;
 		renderPassGBuffer();
-		//now = float(glfwGetTime());
-		//std::cout << now << std::endl;
+	//	now = float(glfwGetTime());
+	//	std::cout << "pre sb" << float(glfwGetTime())- now  << std::endl;
 		if(m_shadows_standard_enabled)
 			renderPassShadow();
-		//now = float(glfwGetTime());
-		//std::cout << now << std::endl;
+	//	now = float(glfwGetTime());
+	//	std::cout << now << std::endl;
 		renderPassLight();
-		//now = float(glfwGetTime());
+	//	now = float(glfwGetTime());
 		//std::cout << now << std::endl;
 		if(m_enable_bloom)
 			renderPassLightBlur();
-		//now = float(glfwGetTime());
+	  //now = float(glfwGetTime());
 		//std::cout << now << std::endl;
 		//renderSSAO();
 		renderPassPostProcess();

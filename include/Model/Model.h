@@ -35,7 +35,7 @@ public:
   Model& operator=(const Model& other) = delete;
 
 	// returns a new Instance pointers of the model
-	Object * getInstance();
+	Object * getInstance(Scene * scene);
 
 	// removes the instance from the model
 	void removeInstance( Object * obj);
@@ -67,6 +67,9 @@ public:
 
   // rebuffer if we have changed our objects
   void refreshBufferedMatrices(std::vector<Object *> instances);
+
+  // returns true if instanced
+  bool isInstanced();
 
 
 private:

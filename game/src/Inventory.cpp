@@ -16,7 +16,7 @@ Inventory::~Inventory()
   for(std::vector<Item *>::iterator it = m_items.begin(); it != m_items.end(); )
   {
     delete(*it);
-    m_items.erase(it);
+    it = m_items.erase(it);
   }  
 }
 
@@ -40,7 +40,8 @@ void Inventory::selectItem(unsigned int idx)
 void Inventory::scroll(double x)
 {
   //std::cout << x <<std::endl;
-  selectItem(m_selected_item + (int) x);
+	if( ( (x < 0) && ( -x <= m_selected_item )  )  || (x >0) )
+		selectItem(m_selected_item + (int) x);
 }
 
 Item * Inventory::getSelectedItem()

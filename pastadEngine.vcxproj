@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="external\gl_core_4_.hpp" />
     <ClInclude Include="game\include\EnergyShot.h" />
+    <ClInclude Include="game\include\EnergySpark.h" />
     <ClInclude Include="game\include\Environment.h" />
     <ClInclude Include="game\include\Game.h" />
     <ClInclude Include="game\include\GameMenu.h" />
@@ -95,6 +96,7 @@
   <ItemGroup>
     <ClCompile Include="external\gl_core_4_.cpp" />
     <ClCompile Include="game\src\EnergyShot.cpp" />
+    <ClCompile Include="game\src\EnergySpark.cpp" />
     <ClCompile Include="game\src\Environment.cpp" />
     <ClCompile Include="game\src\Game.cpp" />
     <ClCompile Include="game\src\GameMenu.cpp" />
@@ -215,6 +217,9 @@
     <SourcePath>C:\Users\pastad\Documents\pastadEngine\game\src;C:\Users\pastad\Documents\pastadEngine\src;C:\Users\pastad\Documents\pastadEngine\src\Subsystems;$(SourcePath)</SourcePath>
     <LibraryPath>C:\Users\pastad\Documents\libs\SFML-2.4.0\lib;C:\Users\pastad\Documents\libs\boost_1_61_0\stage\lib;C:\Users\pastad\Documents\libs\freetype-2.6.5\objs\vc2010\x64;C:\Users\pastad\Documents\libs\glfw_64\lib-vc2015;C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.14393.0\um\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\pastad\Documents\libs\boost_1_59_0;C:\Users\pastad\Documents\libs\SFML-2.4.0\include;C:\Users\pastad\Documents\pastadEngine\game\include;C:\Users\pastad\Documents\libs\freetype-2.6.5\include;C:\Users\pastad\Documents\libs\tinyxml2-master;C:\Users\pastad\Documents\libs\soil\src;C:\Users\pastad\Documents\libs\assimp\include;C:\Users\pastad\Documents\libs\glfw_64\include;C:\Users\pastad\Documents\pastadEngine\external;C:\Users\pastad\Documents\libs\glm;C:\Users\pastad\Documents\pastadEngine\include;C:\Users\pastad\Documents\pastadEngine\include\Structures;C:\Users\pastad\Documents\pastadEngine\include\Subsystems;C:\Users\pastad\Documents\pastadEngine\include\Shaders;C:\Users\pastad\Documents\pastadEngine\include\Script;C:\Users\pastad\Documents\pastadEngine\include\Scene;C:\Users\pastad\Documents\pastadEngine\include\Render;C:\Users\pastad\Documents\pastadEngine\include\Model;C:\Users\pastad\Documents\pastadEngine\include\GUI;C:\Users\pastad\Documents\pastadEngine\include\Geometric;C:\Users\pastad\Documents\pastadEngine\include\Extension;C:\Users\pastad\Documents\pastadEngine\include\Effects;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -229,7 +234,7 @@
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.14393.0\um\x64\opengl32.lib;assimp.lib;SOIL_64.lib;tinyxml2.lib;freetype265d.lib;boost_filesystem-vc140-mt-gd-1_59.lib;boost_system-vc140-mt-gd-1_59.lib;sfml-audio.lib;sfml-system.lib;kernel32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.14393.0\um\x64\opengl32.lib;assimp.lib;SOIL_64.lib;tinyxml2.lib;freetype265d.lib;boost_filesystem-vc140-mt-gd-1_59.lib;boost_system-vc140-mt-gd-1_59.lib;sfml-audio-d.lib;sfml-system-d.lib;kernel32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.14393.0\um\x64;C:\Users\pastad\Documents\libs\glfw_64\lib-vc2015;C:\Users\pastad\Documents\libs\assimp\lib64;C:\Users\pastad\Documents\libs\boost_1_59_0\lib64-msvc-14.0;C:\Users\pastad\Documents\libs\tinyxml2-master\tinyxml2\bin\x64-Debug-Dll;C:\Users\pastad\Documents\libs\SFML-2.4.0\lib;C:\Users\pastad\Documents\libs\soil\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <HeapCommitSize>10</HeapCommitSize>
@@ -259,6 +264,8 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.14393.0\um\x64;C:\Users\pastad\Documents\libs\glfw_64\lib-vc2015;C:\Users\pastad\Documents\libs\assimp\lib64;C:\Users\pastad\Documents\libs\boost_1_59_0\lib64-msvc-14.0;C:\Users\pastad\Documents\libs\tinyxml2-master\tinyxml2\bin\x64-Debug-Dll;C:\Users\pastad\Documents\libs\SFML-2.4.0\lib;C:\Users\pastad\Documents\libs\soil\lib\;C:\Users\pastad\Documents\libs\freetype-2.6.2\objs\vc2010\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.14393.0\um\x64\opengl32.lib;assimp.lib;SOIL_64.lib;tinyxml2.lib;freetype262MT.lib;boost_filesystem-vc140-mt-1_59.lib;boost_system-vc140-mt-1_59.lib;sfml-audio.lib;sfml-system.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

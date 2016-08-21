@@ -464,9 +464,9 @@ bool Model::isAnimated()
   return m_animated;
 }
 
-Object * Model::getInstance()
+Object * Model::getInstance(Scene * scene)
 {
-  Object * obj = new Object(m_path, this);
+  Object * obj = new Object(m_path, this,scene);
 
   m_instances.insert(m_instances.end(),obj);
   
@@ -478,8 +478,7 @@ void Model::removeInstance( Object * obj)
   {
     if( (*it) == obj)
     {
-      m_instances.erase(it);
-      it = m_instances.end();
+     it = m_instances.erase(it);
     }
     else
       it++;
@@ -514,4 +513,8 @@ void Model::refreshBufferedMatrices(std::vector<Object *> instances)
     }
 
   }
+}
+bool Model::isInstanced()
+{
+  return m_instanced;
 }

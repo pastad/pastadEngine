@@ -16,13 +16,14 @@
 #include <glm/gtx/transform.hpp>
 
 
-Object::Object(std::string identifier, Model * parent):Transform(glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(1,1,1)),m_identifier(identifier)
+Object::Object(std::string identifier, Model * parent, Scene * parent_scene):Transform(glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(1,1,1)),m_identifier(identifier)
 {	
   m_model = parent;
+  m_parent_scene = parent_scene;
   m_physics_static = false;
   refreshAABB();
   m_script = nullptr;
-  std::cout << "objct constructor done"<<std::endl;  
+ // std::cout << "objct constructor done"<<std::endl;  
 }
 
 Object::~Object()
@@ -549,6 +550,7 @@ bool Object::isPhysicsStatic()
 Script *  Object::addScript()
 {
   m_script = new Script();
+  m_parent_scene->objectIsScripted(this);
   return m_script;
 }
 

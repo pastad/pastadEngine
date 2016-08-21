@@ -231,6 +231,9 @@
     <ClInclude Include="external\gl_core_4_.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="game\include\EnergySpark.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Effects\Water.cpp">
@@ -429,6 +432,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="external\gl_core_4_.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game\src\EnergySpark.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

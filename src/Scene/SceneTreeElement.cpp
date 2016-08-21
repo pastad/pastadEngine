@@ -110,7 +110,7 @@ void SceneTreeElement::remove(Object * obj)
   {
     if( *it == obj )
     {
-      m_objects.erase(it);
+     it =  m_objects.erase(it);
     }
     else
       it++;

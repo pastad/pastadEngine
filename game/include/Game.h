@@ -6,7 +6,7 @@
 #include <SFML/Audio.hpp>
 
 
-#define DAY_LENGTH 90
+#define DAY_LENGTH 100
 #define DEG_PER_SEC 360.0f / DAY_LENGTH
 
 #define SHADOW_TIME 2

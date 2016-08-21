@@ -18,6 +18,10 @@
 #include <iostream>
 #include <future>
 #include <sstream>
+#include <algorithm>
+#include <iterator>
+#include <numeric>
+
 
 #include "tinyxml2.h"
 
@@ -81,12 +85,19 @@ void Scene::update(float delta)
 
   timeUpdate(delta * m_time_advance);
 
-  for (std::vector<Object *>::iterator it = m_objects_dynamic.begin(); it != m_objects_dynamic.end(); it++)
+  for (std::vector<Object *>::iterator it = m_objects_animated.begin(); it != m_objects_animated.end(); it++)
   {
-	 (*it)->update(delta, this);
+    (*it)->advanceAnimation(delta);
+  }
+  for (std::vector<Object *>::iterator it = m_objects_scripted.begin(); it != m_objects_scripted.end(); it++)
+  {
+    (*it)->update(delta, this);
   }
 }
 
+
+// maybe not relevent anymore
+/*
 void Scene::update(SceneTreeElement * element,  float delta)
 {
   std::vector< SceneTreeElement *> children = element->getChildren();
@@ -104,7 +115,7 @@ void Scene::update(SceneTreeElement * element,  float delta)
     update(children.at(x), delta /2.0f);
   }
 
-}
+}*/
 
 void Scene::timeUpdate(float delta)
 {
@@ -124,6 +135,11 @@ void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, R
   render_shader->setFog(m_fog_color,m_fog_factor,m_fog_offset);
 
  // float angle_mid = glm::orientedAngle(glm::vec2(1,1),  glm::vec2( v.x ,v.z)   );
+
+  for (std::vector<Model *>::iterator it = m_models_instanced.begin(); it != m_models_instanced.end(); it++)
+  {
+    (*it)->render((RenderBaseShader *)render_shader,true);
+  }
 
   // render the accumulated models
 	for(std::map<std::string, Model *>::iterator it = m_models.begin(); it != m_models.end();it++)
@@ -179,6 +195,13 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
         (*it)->bindForShadowRenderDirectional(shadow_shader);
         
 
+        // TODO make me faster
+        for (std::vector<Model *>::iterator it = m_models_instanced.begin(); it != m_models_instanced.end(); it++)
+        {
+          (*it)->render((RenderBaseShader *)shadow_shader, false);
+        }
+    
+
         for(std::map<std::string, Model *>::iterator it2 = m_models.begin(); it2 != m_models.end();it2++)
         {
           std::vector<Object *> objs = it2->second->getObjects();
@@ -199,7 +222,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
 
           //it2->second->render(shadow_shader, false);
         }
-        
+ 
 
         if(m_terrain != nullptr)
           m_terrain->renderWithoutMaterial(shadow_shader);
@@ -210,6 +233,12 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
       {       
         shadow_shader->use();
         (*it)->bindForShadowRenderDirectional(shadow_shader);
+
+        // TODO make me faster
+        for (std::vector<Model *>::iterator it = m_models_instanced.begin(); it != m_models_instanced.end(); it++)
+        {
+          (*it)->render((RenderBaseShader *)shadow_shader, false);
+        }
 
         for(std::map<std::string, Model *>::iterator it2= m_models.begin(); it2 != m_models.end();it2++)
           it2->second->render(shadow_shader, false);
@@ -225,6 +254,13 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
         for( int iteration =0; iteration <6; iteration++)
         {
           (*it)->bindForShadowRenderPoint(point_shadow_shader,iteration);
+
+          // TODO make me faster
+          for (std::vector<Model *>::iterator it = m_models_instanced.begin(); it != m_models_instanced.end(); it++)
+          {
+            (*it)->render((RenderBaseShader *)shadow_shader, false);
+          }
+
           for(std::map<std::string, Model *>::iterator it3 = m_models.begin(); it3 != m_models.end();it3++)
           {
             std::vector<Object *> objs = it3->second->getObjects();
@@ -308,7 +344,9 @@ void Scene::refreshRenderObjects()
   {
     (*ito)->unsetExtractionFlag();
   }
- // refreshRenderObjectsSceneTree();
+ 
+
+  //refreshRenderObjectsSceneTree();
   //std::cout << m_render_objects.size()<<std::endl;
   //m_render_objects.clear();
   glm::vec3 v = m_camera->getDirection();
@@ -345,16 +383,9 @@ void Scene::refreshRenderObjects()
   for (std::vector<Object *>::iterator it = m_objects_static.begin(); it != m_objects_static.end(); it++)
   {
 	  glm::vec3 dir_to_object = (*it)->getPosition() - m_camera->getPosition();
-	  //float angle_mid = std::acos(glm::dot( glm::vec2(dir_to_object.x,dir_to_object.z), glm::vec2( v.x ,v.z) ) / ( glm::length(glm::vec2(dir_to_object.x,dir_to_object.z)) * glm::length(glm::vec2( v.x ,v.z) )  )); 
-	  // angle_mid = glm::degrees(angle_mid);  
-	  // float angle_min = (*it)->getMinAngleToCamera(m_camera);  
 
-	  // tmp disable due to material flickers 
 	  if ((((*it)->getPriorityRender()) || m_camera->insideFrustrum((*it))) && ((*it)->isVisible()) && (!(*it)->isOnlyShadowRendered())) //(angle_min < m_camera->getFOV())
 	  {
-		  //std::cout << angle_mid << std::endl;
-		  //std::cout << (*it)->getIdentifier()<<std::endl;
-
 		  std::map< std::string, std::vector<Object *> >::iterator entry = m_render_objects.find((*it)->getIdentifier());
 		  if (entry != m_render_objects.end())
 		  {
@@ -366,7 +397,7 @@ void Scene::refreshRenderObjects()
 			  ins_vec.insert(ins_vec.end(), (*it));
 			  m_render_objects.insert(std::pair< std::string, std::vector<Object *> >((*it)->getIdentifier(), ins_vec));
 		  }
-	  } //tmp disable due to flickers 
+	  }
   }
   // QUICKFIX EnD
   //Engine::getLog()->log("Scene", "refreshed objects");*/
@@ -549,6 +580,7 @@ void Scene::removeLight(Light * l)
     {
       delete (*it);
       m_lights.erase(it);
+	  it = m_lights.end();
     }
     else
       it++;
@@ -588,6 +620,16 @@ Object * Scene::addObjectInstanced(std::string path, bool static_object)
 {
   return addObject(path,true, static_object);
 }
+
+// scripted
+
+void Scene::objectIsScripted(Object * obj)
+{
+  std::vector<Object *>::iterator it =std::find(m_objects_scripted.begin(), m_objects_scripted.end(), obj);
+  if(it == m_objects_scripted.end())
+    m_objects_scripted.push_back(obj);
+}
+
 // privates
 Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, bool insert_in_tree, bool static_object)
 {
@@ -595,22 +637,41 @@ Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, 
   Object * obj = nullptr;
   if(m != nullptr)
   {
-    obj = m->getInstance();
-    obj->setId(getObjectIdentification());
-    obj->setPosition(position);
-
-    if(static_object && (! Engine::isInEditMode()) && (!obj->isAnimated()) )
+    obj = m->getInstance(this);
+    if( obj!= nullptr)
     {
-      m_objects_static.push_back(obj);
-      obj->setStaticFlag();
-   
+      obj->setId(getObjectIdentification());
+      obj->setPosition(position);
+
+      if (obj->getModel()->isInstanced())
+      {
+        bool should_be_inserted = true;
+        for (int x = 0; x < m_models_instanced.size(); x++)
+        {
+          if(m_models_instanced[x] == obj->getModel() )
+            should_be_inserted = false;
+        }
+        if(should_be_inserted)
+          m_models_instanced.push_back(obj->getModel() );
+      }
+      else
+      {
+        if( obj->isAnimated())
+          m_objects_animated.push_back(obj);
+
+        if(static_object && (! Engine::isInEditMode()) && (!obj->isAnimated()) )
+        {
+          m_objects_static.push_back(obj);
+          obj->setStaticFlag();   
+        }
+        else
+          m_objects_dynamic.push_back(obj);
+        m_models[path] = m;
+        if(insert_in_tree )
+          m_tree_root->insert(obj);             
+        refreshRenderObjects();
+      }
     }
-    else
-      m_objects_dynamic.push_back(obj);
-    m_models[path] = m;
-    if(insert_in_tree )
-      m_tree_root->insert(obj);             
-    refreshRenderObjects();
   }
   else    
      Engine::getLog()->log("Scene", "Object is null");
@@ -624,18 +685,33 @@ Object * Scene::addObject(std::string path,  bool instanced ,  bool static_objec
   Object * obj  = nullptr;
   if( m != nullptr)
   {
-    obj = m->getInstance();
+    obj = m->getInstance(this);
     obj->setId(getObjectIdentification());
-    if(static_object && (! Engine::isInEditMode()) && (!obj->isAnimated()) )
+
+    if (obj->getModel()->isInstanced())
     {
-      obj->setStaticFlag();
-      m_objects_static.push_back(obj);
-      m_tree_root->insert(obj);
+      bool should_be_inserted = true;
+      for (int x = 0; x < m_models_instanced.size(); x++)
+      {
+        if (m_models_instanced[x] == obj->getModel())
+          should_be_inserted = false;
+      }
+      if (should_be_inserted)
+        m_models_instanced.push_back(obj->getModel());
     }
     else
-      m_objects_dynamic.push_back(obj);
-    //m_objects.insert(m_objects.end(),obj);
-    m_models[path] = m;
+    {
+      if(static_object && (! Engine::isInEditMode()) && (!obj->isAnimated()) )
+      {
+        obj->setStaticFlag();
+        m_objects_static.push_back(obj);
+        m_tree_root->insert(obj);
+      }
+      else
+        m_objects_dynamic.push_back(obj);
+      //m_objects.insert(m_objects.end(),obj);
+      m_models[path] = m;
+    }
 
     refreshRenderObjects();
   }
@@ -644,26 +720,62 @@ Object * Scene::addObject(std::string path,  bool instanced ,  bool static_objec
 
 void Scene::removeObject(Object * obj)
 {
-  for(std::vector<Object *>::iterator it = m_objects_static.begin(); it != m_objects_static.end(); )
+  if(obj == nullptr)
+    return;
+  if( obj->isStaticFlagSet() )
   {
-    if( (*it) == obj)
+    for(std::vector<Object *>::iterator it = m_objects_static.begin(); it != m_objects_static.end(); )
     {
-      m_objects_static.erase(it);
-      Engine::getLog()->log("Scene", "removed static object from scene");
+      if( (*it) == obj)
+      {
+        m_objects_static.erase(it);
+        Engine::getLog()->log("Scene", "removed static object from scene");
+	      it = m_objects_static.end();
+      }
+      else
+        it++; 
+    }
+  }
+  else
+  {
+    for(std::vector<Object *>::iterator it = m_objects_dynamic.begin(); it != m_objects_dynamic.end(); )
+    {
+      if( (*it) == obj)
+      {
+        m_objects_dynamic.erase(it);
+        Engine::getLog()->log("Scene", "removed dynamic object from scene");
+	    it = m_objects_dynamic.end();
+      }
+      else
+        it++; 
+    }
+  }
+  if (obj->isAnimated())
+  {
+    for (std::vector<Object *>::iterator it = m_objects_animated.begin(); it != m_objects_animated.end(); )
+    {
+      if ((*it) == obj)
+      {
+        m_objects_animated.erase(it);
+        Engine::getLog()->log("Scene", "removed animated object from scene");
+        it = m_objects_animated.end();
+      }
+      else
+        it++;
+    }
+  }
+  for (std::vector<Object *>::iterator it = m_objects_scripted.begin(); it != m_objects_scripted.end(); )
+  {
+    if ((*it) == obj)
+    {
+      m_objects_scripted.erase(it);
+      Engine::getLog()->log("Scene", "removed scripted object from scene");
+      it = m_objects_scripted.end();
     }
     else
-      it++; 
+      it++;
   }
-  for(std::vector<Object *>::iterator it = m_objects_dynamic.begin(); it != m_objects_dynamic.end(); )
-  {
-    if( (*it) == obj)
-    {
-      m_objects_dynamic.erase(it);
-      Engine::getLog()->log("Scene", "removed dynamic object from scene");
-    }
-    else
-      it++; 
-  }
+
   if (obj != nullptr)
   {
     m_tree_root->remove(obj);
