@@ -1,3 +1,0 @@
-/home/pastad/repos/pastadEngine/CMakeFiles/edit_cache.dir
-/home/pastad/repos/pastadEngine/CMakeFiles/rebuild_cache.dir
-/home/pastad/repos/pastadEngine/CMakeFiles/Engine.dir
