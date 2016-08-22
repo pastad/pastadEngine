@@ -226,6 +226,7 @@ void Game::update()
 		if (m_end_time > SHADOW_TIME)
     {
 			m_ended = true;
+      hasEnded();
       Engine::stopRunning();
     }
 		else
