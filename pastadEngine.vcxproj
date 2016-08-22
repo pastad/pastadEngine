@@ -20,18 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external\gl_core_4_.hpp" />
-    <ClInclude Include="game\include\EnergyShot.h" />
-    <ClInclude Include="game\include\EnergySpark.h" />
-    <ClInclude Include="game\include\Environment.h" />
-    <ClInclude Include="game\include\Game.h" />
-    <ClInclude Include="game\include\GameMenu.h" />
-    <ClInclude Include="game\include\Inventory.h" />
-    <ClInclude Include="game\include\Item.h" />
-    <ClInclude Include="game\include\Mob.h" />
-    <ClInclude Include="game\include\Mobs.h" />
-    <ClInclude Include="game\include\Plant.h" />
-    <ClInclude Include="game\include\Player.h" />
-    <ClInclude Include="game\include\SoundManager.h" />
     <ClInclude Include="include\Effects\Water.h" />
     <ClInclude Include="include\Effects\Wave.h" />
     <ClInclude Include="include\Engine.h" />
@@ -56,9 +44,6 @@
     <ClInclude Include="include\Model\Model.h" />
     <ClInclude Include="include\Model\Object.h" />
     <ClInclude Include="include\Model\Texture.h" />
-    <ClInclude Include="include\RenderStructures\DirectionalShadowBuffer.h" />
-    <ClInclude Include="include\RenderStructures\GBuffer.h" />
-    <ClInclude Include="include\RenderStructures\JitterTexture.h" />
     <ClInclude Include="include\RenderStructures\Quad.h" />
     <ClInclude Include="include\RenderStructures\RenderBuffer.h" />
     <ClInclude Include="include\Render\DirectionalShadowBuffer.h" />
@@ -94,18 +79,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="external\gl_core_4_.cpp" />
-    <ClCompile Include="game\src\EnergyShot.cpp" />
-    <ClCompile Include="game\src\EnergySpark.cpp" />
-    <ClCompile Include="game\src\Environment.cpp" />
-    <ClCompile Include="game\src\Game.cpp" />
-    <ClCompile Include="game\src\GameMenu.cpp" />
-    <ClCompile Include="game\src\Inventory.cpp" />
-    <ClCompile Include="game\src\Item.cpp" />
-    <ClCompile Include="game\src\Mob.cpp" />
-    <ClCompile Include="game\src\Mobs.cpp" />
-    <ClCompile Include="game\src\Plant.cpp" />
-    <ClCompile Include="game\src\Player.cpp" />
-    <ClCompile Include="game\src\SoundManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Effects\Water.cpp" />
     <ClCompile Include="src\Effects\Wave.cpp" />

@@ -87,15 +87,6 @@
     <ClInclude Include="include\Render\RenderBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\RenderStructures\DirectionalShadowBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RenderStructures\GBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RenderStructures\JitterTexture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\RenderStructures\Quad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -192,43 +183,7 @@
     <ClInclude Include="include\Shaders\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="game\include\EnergyShot.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game\include\Environment.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game\include\Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game\include\GameMenu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game\include\Inventory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game\include\Item.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game\include\Mob.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game\include\Mobs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game\include\Plant.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game\include\Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game\include\SoundManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="external\gl_core_4_.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game\include\EnergySpark.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -395,43 +350,7 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="game\src\EnergyShot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game\src\Environment.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game\src\Game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game\src\GameMenu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game\src\Inventory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game\src\Item.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game\src\Mob.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game\src\Mobs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game\src\Plant.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game\src\Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game\src\SoundManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="external\gl_core_4_.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game\src\EnergySpark.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
