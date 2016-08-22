@@ -1,2 +1,0 @@
-/home/pastad/lib/mxe/usr/bin/x86_64-w64-mingw32.static-ar qc libtinyxml2.a  CMakeFiles/tinyxml2static.dir/tinyxml2.cpp.obj
-/home/pastad/lib/mxe/usr/bin/x86_64-w64-mingw32.static-ranlib libtinyxml2.a

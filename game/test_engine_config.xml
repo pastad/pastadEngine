@@ -1,6 +1,0 @@
-<EngineConfig>
-    <Window width="1920" height="1080" fullscreen="1"/>
-    <EngineMode edit="0"/>
-    <Subsystems io="0" render="0" physic="0"/>
-    <Shadow technique="1"/>
-</EngineConfig>
