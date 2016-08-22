@@ -1,4 +1,4 @@
-# pastadEngine
+# pastadEngine - Windows 
 
 Requirements:
   - GL
@@ -19,23 +19,44 @@ Basic workflow
   First initialize the engine with the width and height of the screen, the subsystems to be initialized and a indication if fullscreen is intendet. The render and the IO subsystem are
   initialized every time because these subsystems are required for minimal functionallity.
 
+  engine.initialize("game/engine_config.xml"); or e.g. engine.initialize(1240, 720, RENDER_SUBSYSTEM , true, false);
+   
   Then create a Scene object where the objects, lights, etc. can be created from. 
   Also the scene contains a camera and a skybox can be set for it.
   The scene needs to be added to the engine so that it can be rendered and update functions
   can be applied.
 
+  Scene *  scene = new Scene();
+	scene->load("island-scene.xml");
+	engine.setScene(scene, false);
+
   After that the basic main loop could look like this:
 
   while(engine.running())
   {    
+    // Do your update here
     engine.update();
-
-    // DO SPECIFIC UPDATE
-
     engine.render();
   }
 
+  or this 
+
+  engine.run(); 
+
+  with a callback to a update(float time_delta) function registered before. 
+  
+  ... 
+  void update(float d)
+  {
+    ...
+  }
+  ...
+  engine.setUpdateFunction(&update);
+  ...
+
   In the end the engine should be shut down to clean everything up.
+
+  engine.shutDown();
   
 
 Lighting: 

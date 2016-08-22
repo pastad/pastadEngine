@@ -21,38 +21,16 @@
 #include <glm/glm.hpp>
 
 
-//#include "LuaScript.h"
-
-#include <thread>
-//#include <future>
-
-
-
-void test_callback(Button * b)
-{
-  std::cout << "woho callback"<<std::endl;
-}
-
-void update(float d)
-{
-
-}
-
 int main(void)
 {
-
   Engine engine;
 
-  unsigned int w = 1920;
-  unsigned int h = 1080; 
-
-  
+  // intit the engine
 	engine.initialize(1240, 720, RENDER_SUBSYSTEM , true, false);
+
+  // load and set the start scene
 	Scene *  scene = new Scene();
-
 	scene->load("island-scene.xml");
-	Helper::m_debug_float = 0.0f;
-
 	engine.setScene(scene, false);
 
   // run the main loop
@@ -61,7 +39,8 @@ int main(void)
     engine.update();
     engine.render();    
   }
-    
+   
+   // shut everything down
   engine.shutDown();
 
   if(scene != nullptr)
