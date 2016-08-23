@@ -8,7 +8,11 @@ that grow only in the sunlight. More info in the game under Instructions.
 
 https://youtu.be/a1IbdXEjKGE
 
-Requirements:
+Requirements for playing current build:
+  Newest graphics card driver.
+  Tested under Windows 10
+
+Requirements for Compiling:
   - GL
   - glfw3
   - assimp
