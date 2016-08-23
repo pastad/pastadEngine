@@ -1,4 +1,4 @@
-# Imballanced(test game) - pastadEngine - Windows
+# Imbalanced(test game) - pastadEngine - Windows
 
 Release in release folder
 
