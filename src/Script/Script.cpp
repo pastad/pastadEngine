@@ -21,7 +21,7 @@ void Script::update(float delta, Scene * scene,  Object * object)
     {
       (*it)->notifySuccessors();
       delete (*it); // ehmmmm nope
-      m_script_elements.erase(it);
+      it = m_script_elements.erase(it);
     }
     else
       it++;

@@ -271,52 +271,6 @@ void Model::readNodeHeirarchy(float animation_time, const aiNode* pNode, const g
 
 }
 
-/*
-<<<<<<< HEAD:src/Structures/Model.cpp
-unsigned int Model::findPosition(float animation_time, const aiNodeAnim* pNodeAnim)
-{
-  for (unsigned int i = 0 ; i < pNodeAnim->mNumPositionKeys - 1 ; i++)
-  {
-    if (animation_time < (float)pNodeAnim->mPositionKeys[i + 1].mTime)
-      return i;
-    
-  }
-  assert(0);
-
-  return 0;
-}
-
-unsigned int Model::findRotation(float animation_time, const aiNodeAnim* pNodeAnim)
-{
-  assert(pNodeAnim->mNumRotationKeys > 0);
-
-  for (unsigned int i = 0 ; i < pNodeAnim->mNumRotationKeys - 1 ; i++)
-  {
-    if (animation_time < (float)pNodeAnim->mRotationKeys[i + 1].mTime)
-      return i;    
-  }
-  assert(0);
-
-  return 0;
-}
-
-unsigned int Model::findScaling(float animation_time, const aiNodeAnim* pNodeAnim)
-{
-  assert(pNodeAnim->mNumScalingKeys > 0);
-
-  for (unsigned int i = 0 ; i < pNodeAnim->mNumScalingKeys - 1 ; i++)
-  {
-    if (animation_time < (float)pNodeAnim->mScalingKeys[i + 1].mTime)
-      return i;    
-  }
-  assert(0);
-
-  return 0;
-}
-
-=======
-//  calculations -------------------------------------------------
->>>>>>> master:src/Model/Model.cpp */
 
 void Model::calcInterpolatedPosition(aiVector3D& out, float animation_time, const aiNodeAnim* pNodeAnim)
 {

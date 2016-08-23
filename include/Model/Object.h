@@ -5,6 +5,7 @@
 
 #include <string>
 #include <vector>
+#include <mutex>
 
 #include <assimp/scene.h>
 
@@ -153,6 +154,10 @@ public:
 
   // removes and deletes the set script
   void removeScript();
+
+  // acquires the mutex lock or waits
+  bool acquireLock();
+  void releaseLock();
   
 private:
 
@@ -203,6 +208,10 @@ private:
     
   // the scene the object is contained in
   Scene * m_parent_scene;
+
+  // the mutex for thread safety
+  std::mutex m_mutex;
+
 
   // returns the angle to ...
   float getAngleTo(glm::vec3 dir, glm::vec3 lp , glm::vec3 pos);

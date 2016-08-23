@@ -741,9 +741,12 @@ bool Engine::isInEditMode()
 
 void Engine::windowSizeChangedCallback(GLFWwindow* window, int width, int height)
 {
-	m_win_width = width;
-	m_win_height = height;
-  gl::Viewport(0, 0, width, height);
+  if( m_window == window)
+  {
+  	m_win_width = width;
+	  m_win_height = height;
+    gl::Viewport(0, 0, width, height);
+  }
 }
 
 

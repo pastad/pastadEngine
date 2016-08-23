@@ -187,6 +187,10 @@ private:
   // returns a string of the current scene time
   std::string getTimeString();
 
+  // the update functions
+  static void updateObjectsScripts(std::vector<Object *> objs,  float delta, Scene * current);
+  static void updateObjectsAnimated(std::vector<Object *> objs, float delta );
+
 
 };
 

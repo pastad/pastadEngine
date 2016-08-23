@@ -5,6 +5,7 @@
 #include "Model.h"
 #include "Helper.h"
 #include "BoundingBox.h"
+#include "Log.h"
 
 #include "Light.h"
 #include "Camera.h"
@@ -573,4 +574,14 @@ void Object::setNotShadowRenderOnly()
 bool Object::isOnlyShadowRendered()
 {
   return m_shadow_render_only;
+}
+
+
+bool Object::acquireLock()
+{
+  return m_mutex.try_lock();
+}
+void Object::releaseLock()
+{
+  m_mutex.unlock();
 }

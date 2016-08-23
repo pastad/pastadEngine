@@ -85,13 +85,45 @@ void Scene::update(float delta)
 
   timeUpdate(delta * m_time_advance);
 
-  for (std::vector<Object *>::iterator it = m_objects_animated.begin(); it != m_objects_animated.end(); it++)
+  std::future<void> future_scriptupdate = std::async(updateObjectsScripts, m_objects_scripted, delta, this);
+  std::future<void> future_animateupdate = std::async(updateObjectsAnimated, m_objects_animated, delta);
+  future_scriptupdate.get();
+  future_animateupdate.get();
+
+}
+
+void Scene::updateObjectsScripts(std::vector<Object *> objs, float delta, Scene * current)
+{
+  while( objs.size() > 0 )
   {
-    (*it)->advanceAnimation(delta);
+    for (std::vector<Object *>::iterator it = objs.begin(); it != objs.end(); )
+    {
+      if ((*it)->acquireLock())
+      {
+        (*it)->update(delta, current);
+        (*it)->releaseLock();
+        it = objs.erase(it);
+      }
+      else
+        it++;
+    }
   }
-  for (std::vector<Object *>::iterator it = m_objects_scripted.begin(); it != m_objects_scripted.end(); it++)
+}
+void Scene::updateObjectsAnimated(std::vector<Object *> objs, float delta ) 
+{
+  while (objs.size() > 0)
   {
-    (*it)->update(delta, this);
+    for (std::vector<Object *>::iterator it = objs.begin(); it != objs.end(); )
+    {
+      if ((*it)->acquireLock())
+      {
+        (*it)->advanceAnimation(delta);
+        (*it)->releaseLock();
+        it = objs.erase(it);
+      }
+      else
+        it++;
+    }
   }
 }
 
@@ -184,7 +216,7 @@ void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, R
 
 void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* point_shadow_shader)
 {  
-  gl::ClearColor(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);
+
   for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end();it++)
   {
     if( (*it)->getShadowRefresh() && (*it)->isShadowEnabled())
@@ -194,6 +226,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
       {
         shadow_shader->use();
         (*it)->bindForShadowRenderDirectional(shadow_shader);
+        gl::ClearColor(0, 0, 0, 0);
         
 
         // TODO make me faster
@@ -234,6 +267,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
       {       
         shadow_shader->use();
         (*it)->bindForShadowRenderDirectional(shadow_shader);
+        gl::ClearColor(0, 0, 0, 0);
 
         // TODO make me faster
         for (std::vector<Model *>::iterator it = m_models_instanced.begin(); it != m_models_instanced.end(); it++)
@@ -255,6 +289,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
         for( int iteration =0; iteration <6; iteration++)
         {
           (*it)->bindForShadowRenderPoint(point_shadow_shader,iteration);
+          gl::ClearColor(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);
 
           // TODO make me faster
           for (std::vector<Model *>::iterator it = m_models_instanced.begin(); it != m_models_instanced.end(); it++)

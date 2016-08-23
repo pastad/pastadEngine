@@ -120,8 +120,6 @@ public:
   glm::vec2 getRotation();
   void rotate(glm::vec2 delta);
   void setRotation(glm::vec2 delta);
-
-
   
   // saves the light
   void save(tinyxml2::XMLNode * parent, tinyxml2::XMLDocument * doc);
