@@ -208,6 +208,7 @@ void Camera::update(float delta_time)
         if(physics_system->collisionMovement(scene, m_pos, f , step, m_surrounding_offset, m_bottom_offset, &npos))
         {
           m_pos = npos;
+          m_should_fall_be_checked = true;
           if(external_cameraMovedCallback != nullptr)
             external_cameraMovedCallback();
         }
@@ -235,6 +236,7 @@ void Camera::update(float delta_time)
           m_pos = npos;
           if(external_cameraMovedCallback != nullptr)
             external_cameraMovedCallback();
+          m_should_fall_be_checked = true;
         }
         moved = true;
       }
@@ -242,6 +244,7 @@ void Camera::update(float delta_time)
       {
         moved = true;
         m_pos =  m_pos + f * step;
+        m_should_fall_be_checked = true;
       }
     }
     if(IOSubsystem::isKeyPressed('A'))
@@ -255,6 +258,7 @@ void Camera::update(float delta_time)
           m_pos = npos;
           if(external_cameraMovedCallback != nullptr)
             external_cameraMovedCallback();
+          m_should_fall_be_checked = true;
         }
 
         moved = true;
@@ -263,6 +267,7 @@ void Camera::update(float delta_time)
       {
         moved = true;
         m_pos =  m_pos + -m_right * step;
+        m_should_fall_be_checked = true;
       }
 
       //m_pos -= right * step;
@@ -278,6 +283,7 @@ void Camera::update(float delta_time)
           m_pos = npos;
           if(external_cameraMovedCallback != nullptr)
             external_cameraMovedCallback();
+          m_should_fall_be_checked = true;
         }
 
         moved = true;
@@ -286,6 +292,7 @@ void Camera::update(float delta_time)
       {
         moved = true;
         m_pos =  m_pos + m_right * step;
+        m_should_fall_be_checked = true;
       }
     }
     if(IOSubsystem::isKeyPressed(' '))
