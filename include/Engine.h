@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <mutex>
+#include <future>
 #include <glm/glm.hpp>
 
 #define NUM_TIME_SAMPLES 40
@@ -27,6 +28,7 @@ class EngineGUI;
 class Object;
 class Light;
 class SceneEditor;
+class Editor;
 
 
 
@@ -50,6 +52,13 @@ enum ShadowTechniqueType
 	ST_STANDARD_RS = 3
 };
 
+enum EngineMode
+{
+  EM_NORMAL = 0,
+  EM_INTERNAL_EDITOR =1,
+  EM_EXTERNAL_EDITOR =2
+};
+
 
 class Engine
 {
@@ -60,7 +69,7 @@ public:
 	~Engine();
 
 	// Initializes Engine
-	static bool initialize(unsigned int width, unsigned int height, unsigned int types, bool edit_mode, bool fullscreen);
+	static bool initialize(unsigned int width, unsigned int height, unsigned int types, unsigned int edit_mode, bool fullscreen);
 	static bool initialize(std::string path);
 
 	// Shuts down Engine and it's components
@@ -92,6 +101,9 @@ public:
 
 	// returns the current set scene
 	static Scene * getScene();
+
+  // called by the editor
+  static Editor * getEditor();
 
 	// function to request a GUI
 	static GUI * addGUI();
@@ -146,10 +158,10 @@ public:
 	static IOSubsystem * getIOSubsystem();
 
 	// saves a config file
-	static bool saveConfig( std::string path, unsigned int width, unsigned int height, bool fullscreen, bool edit_mode, unsigned int system_flags , ShadowTechniqueType shadow_technique);
+	static bool saveConfig( std::string path, unsigned int width, unsigned int height, bool fullscreen, unsigned int edit_mode, unsigned int system_flags , ShadowTechniqueType shadow_technique);
 
 	// reads a config file and stores values into pointers
-	static bool readConfig( std::string path, unsigned int* width, unsigned int *height, bool *fullscreen, bool* edit_mode, unsigned int *system_flags , ShadowTechniqueType *shadow_technique);
+	static bool readConfig( std::string path, unsigned int* width, unsigned int *height, bool *fullscreen, unsigned int* edit_mode, unsigned int *system_flags , ShadowTechniqueType *shadow_technique);
 
 	// passing from subsystems
 
@@ -229,7 +241,7 @@ private:
 	static float m_render_update_delta ;
 
 	// true if engine is in editing mode
-	static bool m_edit_mode;
+	static unsigned int m_edit_mode;
 
 	// the editor for the scene
 	static SceneEditor * m_scene_editor;
@@ -249,6 +261,10 @@ private:
 	// run method quitter
 	static bool m_run;
 
+  // the new external editor
+  static Editor * m_editor;
+  static std::future<void> m_editor_future;
+
 	// starts the subsystems
 	static bool startUpSubsystems();
 
@@ -260,6 +276,7 @@ private:
 
 	// callbacks for opengl
 	static void windowSizeChangedCallback(GLFWwindow* window, int width, int height);
+  static void framebufferSizeChangedCallback(GLFWwindow* window, int width, int height);
 
 	// deletes windows if set and creates a new one
 	static void refreshWindow();
@@ -269,6 +286,9 @@ private:
 
 	// static for async button check
 	static bool buttonCheck(GUI *gui , float x, float y);
+
+  // starts the external editor
+ // static void startEditor();
 
 };
 

@@ -189,7 +189,10 @@
     <ClInclude Include="include\Editor\Editor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ui_mainwindow.h">
+    <ClInclude Include="QEditorExternal\QEditorExternal.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QEditorExternal\ui_QEditorExternal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -362,11 +365,14 @@
     <ClCompile Include="src\Editor\Editor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="QEditorExternal\QEditorExternal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Imballanced.zip">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Editor.ui" />
+    <None Include="QEditorExternal\QEditorExternal.ui" />
   </ItemGroup>
 </Project>

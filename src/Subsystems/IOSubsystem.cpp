@@ -240,6 +240,8 @@ void IOSubsystem::mouseButtonCallback(GLFWwindow * window, int button, int actio
     
     m_mouse_buttons[button] = false;
   }
+  if(m_external_mouseKeyCallback != nullptr)
+    m_external_mouseKeyCallback(button, action);
 
 }
 

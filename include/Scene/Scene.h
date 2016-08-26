@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <mutex>
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -123,6 +124,13 @@ public:
   //returns the time
   float getTime();
 
+  // sets how fast the scene plays
+  void setTimeAdvance(float speed);
+
+  // acquires the mutex lock
+  void acquireLock();
+  void releaseLock();
+
 private:
 
   // holds pointers to the objects
@@ -170,6 +178,10 @@ private:
   glm::vec3 m_fog_color;
   float m_fog_factor;
   float m_fog_offset;
+
+  // the mutex for thread safety
+  std::mutex m_mutex;
+
 
   // internal addObject request handling function ( with|without position)
   Object * addObject(std::string  path, glm::vec3 position, bool instanced, bool insert_in_tree, bool static_object);

@@ -940,3 +940,21 @@ void Scene::setFog(glm::vec3 color, float factor, float offset)
   m_fog_offset = offset;
 }
 
+// time 
+
+void Scene::setTimeAdvance(float speed)
+{
+  m_time_advance = speed;
+}
+
+// locking
+
+void Scene::acquireLock()
+{
+  return m_mutex.lock();
+}
+
+void Scene::releaseLock()
+{
+  m_mutex.unlock();
+}

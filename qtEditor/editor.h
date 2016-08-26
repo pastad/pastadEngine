@@ -42,7 +42,10 @@ private slots:
 
     void on_rb_object_shadow_only_clicked(bool checked);
 
-    void on_lv_objects_chooser_indexesMoved(const QModelIndexList &indexes);
+
+    void on_pb_scene_play_clicked(bool checked);
+
+    void on_pb_scene_pause_clicked(bool checked);
 
 private:
     Ui::Editor *ui;

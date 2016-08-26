@@ -4,6 +4,8 @@
 #include <sstream>
 #include <future>
 
+#include <QtWidgets/QApplication>
+
 #include "Log.h"
 #include "Scene.h"
 #include "GUI.h"
@@ -35,7 +37,7 @@ std::vector<GUI *> Engine::m_guis;
 unsigned int Engine::m_guis_id = 0;
 EngineGUI * Engine::m_engine_gui;
 SceneEditor * Engine::m_scene_editor = nullptr;
-bool Engine::m_edit_mode;
+unsigned int Engine::m_edit_mode;
 float Engine::m_time_last_render;
 float Engine::m_render_update_delta= 0.0f;
 bool Engine::m_render_update_needed;
@@ -43,6 +45,8 @@ bool Engine::m_fullscreen;
 bool Engine::m_gui_movement_lock = false;
 bool Engine::m_switch_scene =false;
 bool Engine::m_run;
+Editor * Engine::m_editor;
+std::future<void> Engine::m_editor_future;
 
 Engine::EXTERNALUPDATE Engine::m_external_update = nullptr;
 
@@ -67,7 +71,7 @@ Engine::~Engine()
 
 // start-up/shut-down functions ---------------------------------------------------------------------------------------
 
-bool Engine::initialize(unsigned int width, unsigned int height, unsigned int system_flags, bool edit, bool fullscreen)
+bool Engine::initialize(unsigned int width, unsigned int height, unsigned int system_flags, unsigned int edit, bool fullscreen)
 {
 	m_win_width = width;
 	m_win_height = height;	
@@ -96,41 +100,16 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 	}
 	
 	// initialize opengl
-	glfwInit();
-	/*glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,gl::TRUE);
-	glfwWindowHint(GLFW_DOUBLEBUFFER,gl::TRUE);
-	glfwWindowHint(GLFW_RESIZABLE,gl::FALSE);
-	glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
+	if( glfwInit() == gl::FALSE_)
+    return false;
 
-	// create gl context ..... -1 to fix black window bug
-	m_window = glfwCreateWindow(width-1, height-1, "Engine", nullptr, nullptr);
-	glfwMakeContextCurrent(m_window);	
-
-	// check window creation
-	if(m_window == nullptr)
-	{
-		glfwTerminate();
-  	return false;
-	}*/
 
 	refreshWindow();
 	if(m_window == nullptr)
 	{
 		glfwTerminate();
   		return false;
-	  }
-
-	// check opengl genderated headers
-	/*int loaded = ogl_LoadFunctions();
-	if(loaded == ogl_LOAD_FAILED)
-	{
-		m_log->log("Engine", "OpenGL function wrapper couldn't be loaded");
-		glfwTerminate();
-		delete m_log;
-		return false;
-	}*/
+	}
 
   gl::exts::LoadTest didLoad = gl::sys::LoadFunctions();
   if (!didLoad)
@@ -166,10 +145,11 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 
 	// set callback for resize
 	glfwSetWindowSizeCallback(m_window, windowSizeChangedCallback);
+  glfwSetFramebufferSizeCallback(m_window, framebufferSizeChangedCallback);
 
   // if in edit mode bind the cursor
-  if( ! isInEditMode() )
-    glfwSetInputMode(m_window,GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  //if(m_edit_mode == EM_NORMAL )
+  //  glfwSetInputMode(m_window,GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 
 	gl::DepthFunc(gl::LEQUAL);
@@ -179,10 +159,10 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
   m_engine_gui =  new EngineGUI();
   if(!m_engine_gui->initialize())
   	return false;  
-  if(!m_edit_mode)
+  if(m_edit_mode == EM_NORMAL)
   	m_engine_gui->setInactive();
 
-  if(m_edit_mode)
+  if(m_edit_mode == EM_INTERNAL_EDITOR)
   {
   	m_scene_editor =  new SceneEditor();
   	if(!m_scene_editor->initialize())
@@ -277,9 +257,10 @@ bool Engine::initialize(std::string path)
 
   // set callback for resize
   glfwSetWindowSizeCallback(m_window, windowSizeChangedCallback);
+  glfwSetFramebufferSizeCallback(m_window, framebufferSizeChangedCallback);
 
   // if in edit mode bind the cursor
-  if (!isInEditMode())
+  if (m_edit_mode == EM_NORMAL)
     glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 
@@ -290,15 +271,16 @@ bool Engine::initialize(std::string path)
   m_engine_gui = new EngineGUI();
   if (!m_engine_gui->initialize())
     return false;
-  if (!m_edit_mode)
+  if (m_edit_mode == EM_NORMAL)
     m_engine_gui->setInactive();
 
-  if (m_edit_mode)
+  if (m_edit_mode == EM_INTERNAL_EDITOR)
   {
     m_scene_editor = new SceneEditor();
     if (!m_scene_editor->initialize())
       return false;
   }
+
 
   m_render_system->setShadowTechnique((ShadowTechniqueType)shadow_technique);
 
@@ -317,6 +299,8 @@ void Engine::shutDown()
 
 		glfwTerminate();
 
+    
+
     if(m_log != nullptr)
 		  m_log->log("Engine", "shut down");
      if(m_scene != nullptr)
@@ -333,6 +317,7 @@ void Engine::shutDown()
     m_engine_gui = nullptr;
     m_scene_editor = nullptr;
 
+
     if(m_render_system != nullptr)
       delete m_render_system;
     if(m_io_system != nullptr)
@@ -348,7 +333,14 @@ void Engine::shutDown()
 			}
 		}
 		m_guis.clear();
+
+ 
+
 		m_initialized = false;
+
+
+
+    
 	}
 }
 
@@ -419,6 +411,8 @@ void Engine::refreshWindow()
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,gl::TRUE_);
   glfwWindowHint(GLFW_DOUBLEBUFFER,gl::TRUE_);
   glfwWindowHint(GLFW_RESIZABLE,gl::FALSE_);
+  glfwWindowHint(GLFW_FOCUSED, gl::TRUE_);
+  
   glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
 
   // create gl context ..... -1 to fix black window bug
@@ -452,9 +446,9 @@ void Engine::update()
 			if( m_system_flags & PHYSIC_SUBSYSTEM )
 				m_physic_system->updateScene(m_scene, m_time_delta);
 
-		}
-		if(m_edit_mode)
-			m_scene_editor->update();
+		  if(m_edit_mode == EM_INTERNAL_EDITOR)
+			  m_scene_editor->update();
+    }
 
 		IOSubsystem::clearKeys();
 
@@ -514,11 +508,17 @@ void Engine::run()
 {
   m_run = true;
   while (running() && m_run)
-  {
+  {  
+    if(m_scene != nullptr)
+      m_scene->acquireLock();
+
     if(m_external_update!= nullptr)
       m_external_update(getTimeDelta());
-    update();
-    render();
+    update();   
+    render();  
+    
+    if (m_scene != nullptr)
+      m_scene->releaseLock();
   }
 }
 
@@ -553,7 +553,7 @@ void Engine::render()
 	//std::cout << now << std::endl;
 	if(m_initialized)
 	{
-		if(m_render_update_needed)
+		if(m_render_update_needed && m_scene != nullptr)
 		{
 			m_render_system->render();
 			m_render_update_needed = false;
@@ -608,6 +608,14 @@ Log * Engine::getLog()
   return m_log;
 }
 
+// editor
+
+Editor *  Engine::getEditor()
+{
+  return m_editor;
+}
+
+
 // scene
 
 Scene * Engine::getScene()
@@ -620,6 +628,7 @@ void Engine::setScene(Scene * scene, bool delete_old)
   m_switch_scene = true;
 	m_scene_next = scene;
 	m_scene_next_delete = delete_old;
+ 
 	m_log->log("Engine", "scene was set");
 }
 
@@ -628,14 +637,20 @@ void Engine::sceneSwitch()
 	if(m_switch_scene)
 	{
 		Scene * t = m_scene;
+    if (m_scene_next != nullptr)
+      m_scene_next->acquireLock();
+    m_scene = m_scene_next;
+
+    if(m_scene != nullptr)
+      m_scene->releaseLock();
 		if(t != nullptr && m_scene_next_delete)
 		{
 			m_log->log("Engine", "old scene is deleted");
 			delete t;
 		}
-		m_scene = m_scene_next;
-		m_scene_next = nullptr;
-		m_log->log("Engine", "scene switched");
+	
+		m_scene_next = nullptr; 
+		m_log->log("Engine", "scene switched");   
     m_switch_scene = false;
 	}
 }
@@ -732,7 +747,7 @@ void Engine::setShadowTechnique(ShadowTechniqueType type)
 
 bool Engine::isInEditMode()
 {
-  return m_edit_mode;
+  return( m_edit_mode == EM_INTERNAL_EDITOR ) ? true : false ;
 }
 
 
@@ -745,8 +760,15 @@ void Engine::windowSizeChangedCallback(GLFWwindow* window, int width, int height
   {
   	m_win_width = width;
 	  m_win_height = height;
-    gl::Viewport(0, 0, width, height);
+  
   }
+  gl::Viewport(0, 0, m_win_width, m_win_height);
+  Engine::getLog()->log("Engine", "window resized");
+}
+void Engine::framebufferSizeChangedCallback(GLFWwindow* window, int width, int height)
+{
+  Engine::getLog()->log("Engine", "framebuffer resized");
+//  gl::Viewport(0, 0, width, height);
 }
 
 
@@ -811,7 +833,7 @@ bool Engine::checkGUIsForButtonPresses(float x, float y)
     
   if(m_engine_gui->checkButtonPressed(x,y))
     ret = true;
-  if(m_edit_mode)
+  if(m_edit_mode == EM_INTERNAL_EDITOR)
   {
     if(m_scene_editor->checkButtonPressed(x,y))
       ret = true;
@@ -891,7 +913,7 @@ void  Engine::setUpdateFunction(EXTERNALUPDATE callback_update)
 
 // saver  ---------------------------------------------------------------------------------------------------------
 
-bool Engine::saveConfig(std::string path, unsigned int width, unsigned int height, bool fullscreen, bool edit_mode, unsigned int system_flags, ShadowTechniqueType shadow_technique)
+bool Engine::saveConfig(std::string path, unsigned int width, unsigned int height, bool fullscreen, unsigned int edit_mode, unsigned int system_flags, ShadowTechniqueType shadow_technique)
 {
   Engine::getLog()->log("Engine", "saving config to", path);
   tinyxml2::XMLDocument document;
@@ -925,7 +947,7 @@ bool Engine::saveConfig(std::string path, unsigned int width, unsigned int heigh
   return true;
 }
 
-bool Engine::readConfig(std::string path, unsigned int* width, unsigned int *height, bool *fullscreen, bool* edit_mode, unsigned int *system_flags, ShadowTechniqueType *shadow_technique)
+bool Engine::readConfig(std::string path, unsigned int* width, unsigned int *height, bool *fullscreen, unsigned int* edit_mode, unsigned int *system_flags, ShadowTechniqueType *shadow_technique)
 {
 
   tinyxml2::XMLDocument document;
@@ -942,7 +964,7 @@ bool Engine::readConfig(std::string path, unsigned int* width, unsigned int *hei
 
   *fullscreen = false;
 
-  *edit_mode = false;
+  *edit_mode = 0;
 
   *system_flags = RENDER_SUBSYSTEM | IO_SUBSYSTEM;
 
@@ -966,7 +988,7 @@ bool Engine::readConfig(std::string path, unsigned int* width, unsigned int *hei
       }
       if (type == "EngineMode")
       {
-        *edit_mode = child->BoolAttribute("edit");
+        child->QueryUnsignedAttribute("edit", edit_mode);
       }
       if (type == "Subsystems")
       {
@@ -1000,3 +1022,21 @@ bool Engine::readConfig(std::string path, unsigned int* width, unsigned int *hei
   }
   return true;
 }
+/*
+void Engine::startEditor()
+{
+  char* dummy_args[] = {  NULL };
+  int dummy_argc = 0;
+  QApplication app(dummy_argc, dummy_args);
+
+  m_editor = new Editor();
+
+  m_editor->setupUi(m_editor);
+  m_editor->setScene(getScene());
+
+
+  m_editor->show();
+
+  app.exec();
+}*/
+

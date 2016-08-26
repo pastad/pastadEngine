@@ -12,8 +12,7 @@
 #include "IOSubsystem.h"
 
 #include "Helper.h"
-
-#include "Editor.h"
+#include "QEditorExternal.hpp"
 
 #include "GUI.h"
 #include "Text.h"
@@ -21,24 +20,35 @@
 #include "Button.h"
 #include <glm/glm.hpp>
 #include <future>
+#include <windows.h>
 
 #include <QtWidgets/QApplication>
 
-static void startEditor(int argc, char *argv[])
+/*static void startEditor(int argc, char *argv[])
 {
   QApplication app(argc, argv);
   Editor w;
   w.show();
 
   app.exec();
-}
+}*/
 
 int main(int argc, char *argv[])
 {
+ // QApplication app(argc, argv);
+ //// QEditorExternal w;
+ // w.show();
+//
+ // app.exec();
+
   Engine engine;
 
   // intit the engine
-	engine.initialize(1240, 720, RENDER_SUBSYSTEM , true, false);
+	engine.initialize("engine_config.xml");//1680, 840, RENDER_SUBSYSTEM , 2, false);
+  
+  engine.setPostProcessing(PP_FXAA, true);
+  engine.setPostProcessing(PP_HDR, true);
+  engine.setPostProcessing(PP_BLOOM, true);
 
   // load and set the start scene
 	Scene *  scene = new Scene();
@@ -65,20 +75,22 @@ int main(int argc, char *argv[])
 
 	engine.setScene(scene, false);
 
-  std::future<void> future_editor = std::async(startEditor, argc, argv);
+  //std::future<void> future_editor = std::async(startEditor, argc, argv);
   
 
   // run the main loop
   while(engine.running())
   {
+    scene->acquireLock();
     engine.update();
-    engine.render();    
+    engine.render();   
+    scene->releaseLock();
   }
    
    // shut everything down
   engine.shutDown();
 
-  future_editor.get();
+  //future_editor.get();
 
   if(scene != nullptr)
     delete scene;  
