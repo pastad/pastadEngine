@@ -7,6 +7,7 @@
 #include "DirectionalShadowBuffer.h"
 #include "PointShadowBuffer.h"
 #include "RenderBaseShader.h"
+#include "RenderSubsystem.h"
 #include "RenderShader.h"
 #include "Model.h"
 #include "Object.h"
@@ -119,9 +120,17 @@ bool Light::setDirectional(glm::vec3 direction, glm::vec3 col_am ,glm::vec3 col_
       if(m_num_directional_shadows+1 < MAX_NUM_DIRECTIONAL_SHADOWS)
       {
         m_directional_buffer = new DirectionalShadowBuffer();        
-        m_num_directional_shadows++;
+        m_num_directional_shadows++;       
+
+        Engine::getRenderSubsystem()->acquireRenderLock("Light");
         if( !m_directional_buffer->initialize( DIR_BUFFER_SIZE_X, DIR_BUFFER_SIZE_Z ))
+        {
+          Engine::getRenderSubsystem()->releaseRenderLock("Light");
           return false;
+        }
+
+        Engine::getRenderSubsystem()->releaseRenderLock("Light");
+        std::cout << "init2" << std::endl;
       }
       else
         Engine::getLog()->log("Light", "Too many directional shadows allready enabled");
@@ -139,6 +148,7 @@ bool Light::setDirectional(glm::vec3 direction, glm::vec3 col_am ,glm::vec3 col_
         m_directional_object->setScale(glm::vec3(0.2f,0.2f,0.2f));
       }
     }    
+
     return true;
   }
   return false;

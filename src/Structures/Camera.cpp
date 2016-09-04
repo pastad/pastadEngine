@@ -210,6 +210,7 @@ void Camera::update(float delta_time)
           m_pos = npos;
           if(external_cameraMovedCallback != nullptr)
             external_cameraMovedCallback();
+          m_should_fall_be_checked = true;
         }
         moved = true;
       }
@@ -235,6 +236,7 @@ void Camera::update(float delta_time)
           m_pos = npos;
           if(external_cameraMovedCallback != nullptr)
             external_cameraMovedCallback();
+          m_should_fall_be_checked = true;
         }
         moved = true;
       }
@@ -255,6 +257,7 @@ void Camera::update(float delta_time)
           m_pos = npos;
           if(external_cameraMovedCallback != nullptr)
             external_cameraMovedCallback();
+          m_should_fall_be_checked = true;
         }
 
         moved = true;
@@ -278,6 +281,7 @@ void Camera::update(float delta_time)
           m_pos = npos;
           if(external_cameraMovedCallback != nullptr)
             external_cameraMovedCallback();
+          m_should_fall_be_checked = true;
         }
 
         moved = true;

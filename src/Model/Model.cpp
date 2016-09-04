@@ -11,6 +11,7 @@
 #include "RenderShader.h"
 #include "RenderBaseShader.h"
 #include "RessourceManager.h"
+#include "RenderSubsystem.h"
 
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -79,7 +80,7 @@ void Model::render(RenderBaseShader * render_shader, std::vector<Object *> objec
           m_materials.at((*it)->getMaterialIndex())->bind(0, (RenderShader *) render_shader);     
         for(std::vector<Object *>::iterator it2 = objects.begin(); it2 != objects.end();it2++)
         {
-          if( (*it2)->isVisible() )
+          if( (*it2)->getVisibility() == V_All )
           {
             render_shader->setNotInstanced( (*it2)->getModelMatrix() );
             render_shader->setIndentifcation((*it2)->getId());
@@ -99,7 +100,7 @@ void Model::render(RenderBaseShader * render_shader, std::vector<Object *> objec
 
     for(std::vector<Object *>::iterator it_objs = m_instances.begin(); it_objs != m_instances.end();it_objs++)
     {
-      if( (*it_objs)->isVisible() )
+      if( (*it_objs)->getVisibility() == V_All )
       {
         render_shader->setNotInstanced((*it_objs)->getModelMatrix() );
         render_shader->setIndentifcation((*it_objs)->getId());
@@ -128,6 +129,9 @@ void Model::render(RenderBaseShader * render_shader, std::vector<Object *> objec
 
 bool Model::load()
 {
+  m_mutex.lock();
+  Engine::getLog()->log("Model", "Loading model ", m_path);
+
   m_animated = false;
   std::ifstream fin(m_path.c_str());
   if(!fin.fail())
@@ -135,6 +139,7 @@ bool Model::load()
   else
   {
     Engine::getLog()->log("Model", "Couldn't open file");
+    m_mutex.unlock();
     return false;
   }
 
@@ -145,6 +150,7 @@ bool Model::load()
   if( !m_scene)
   {
     Engine::getLog()->log("Model","Loading error", m_importer.GetErrorString());
+    m_mutex.unlock();
     return false;
   }
 
@@ -152,6 +158,7 @@ bool Model::load()
   m_GlobalInverseTransform.Inverse();
 
   processScene();
+  m_mutex.unlock();
 	return true;
 }
 
@@ -420,14 +427,19 @@ bool Model::isAnimated()
 
 Object * Model::getInstance(Scene * scene)
 {
+  m_mutex.lock();
+  Engine::getRenderSubsystem()->acquireRenderLock("Model");
   Object * obj = new Object(m_path, this,scene);
 
   m_instances.insert(m_instances.end(),obj);
-  
+  Engine::getRenderSubsystem()->releaseRenderLock("Model");
+  m_mutex.unlock();
   return obj;
 }
 void Model::removeInstance( Object * obj)
 {
+  m_mutex.lock();
+  Engine::getRenderSubsystem()->acquireRenderLock("Model");
   for(std::vector<Object *>::iterator it = m_instances.begin(); it != m_instances.end();)
   {
     if( (*it) == obj)
@@ -437,6 +449,8 @@ void Model::removeInstance( Object * obj)
     else
       it++;
   }
+  Engine::getRenderSubsystem()->releaseRenderLock("Model");
+  m_mutex.unlock();
 }
 
 std::map<int,Material *> Model::getMaterials()
@@ -451,7 +465,7 @@ void Model::refreshBufferedMatrices(std::vector<Object *> instances)
   std::vector<glm::mat4> matrices;
   for(std::vector<Object *>::iterator it = instances.begin(); it != instances.end();it++)
   {
-    if( (*it)->isVisible() )
+    if( (*it)->getVisibility() == V_All)
       matrices.insert(matrices.end(),  (*it)->getModelMatrix()  );
   }
   if( !m_animated )

@@ -189,9 +189,6 @@
     <ClInclude Include="include\Editor\Editor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="QEditorExternal\QEditorExternal.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="QEditorExternal\ui_QEditorExternal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -363,9 +360,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\Editor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="QEditorExternal\QEditorExternal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

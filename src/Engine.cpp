@@ -81,7 +81,7 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 	Engine::m_time_delta = 0.0f;
 	Engine::m_time_last = -1.0f;
 
-	m_log = new Log();
+  m_log = new Log(LF_Editor);
 	m_log->debugMode();
 
 	m_render_system =  new RenderSubsystem();
@@ -176,7 +176,7 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 bool Engine::initialize(std::string path)
 {
 
-  m_log = new Log();
+  m_log = new Log( LF_Editor);
   m_log->debugMode();
 
   tinyxml2::XMLDocument document;
@@ -510,7 +510,7 @@ void Engine::run()
   while (running() && m_run)
   {  
     if(m_scene != nullptr)
-      m_scene->acquireLock();
+      m_scene->acquireLock("EngineRun");
 
     if(m_external_update!= nullptr)
       m_external_update(getTimeDelta());
@@ -518,7 +518,7 @@ void Engine::run()
     render();  
     
     if (m_scene != nullptr)
-      m_scene->releaseLock();
+      m_scene->releaseLock("EngineRun");
   }
 }
 
@@ -638,11 +638,11 @@ void Engine::sceneSwitch()
 	{
 		Scene * t = m_scene;
     if (m_scene_next != nullptr)
-      m_scene_next->acquireLock();
+      m_scene_next->acquireLock("EngineSceneSwitch");
     m_scene = m_scene_next;
 
-    if(m_scene != nullptr)
-      m_scene->releaseLock();
+    if(t != nullptr)
+      t->releaseLock("EngineSceneSwitch");
 		if(t != nullptr && m_scene_next_delete)
 		{
 			m_log->log("Engine", "old scene is deleted");
@@ -717,6 +717,11 @@ PhysicSubsystem * Engine::getPhysicSubsystem()
     return m_physic_system;
 
   return nullptr;
+}
+RenderSubsystem * Engine::getRenderSubsystem()
+{
+  if (m_render_system->systemCheck())
+    return m_render_system;
 }
 
 

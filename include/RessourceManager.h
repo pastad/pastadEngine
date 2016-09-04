@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <mutex>
 
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -45,6 +46,9 @@ private:
 
    // holds the loaded materials
   static std::map<std::string, Material *> m_materials;
+
+  // the lock for mt
+  static std::mutex m_lock;
   
 
 };

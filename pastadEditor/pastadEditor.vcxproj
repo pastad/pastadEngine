@@ -1,0 +1,350 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B12702AD-ABFB-343A-A199-8E24837244A3}</ProjectGuid>
+    <Keyword>Qt4VSv1.0</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>14.0.25123.0</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IncludePath>C:\Users\pastad\Documents\pastadEngine\include\Editor;C:\Qt\5.7\msvc2015_64\include;C:\Users\pastad\Documents\libs\boost_1_59_0;C:\Users\pastad\Documents\libs\SFML-2.4.0\include;C:\Users\pastad\Documents\pastadEngine\game\include;C:\Users\pastad\Documents\libs\freetype-2.6.5\include;C:\Users\pastad\Documents\libs\tinyxml2-master;C:\Users\pastad\Documents\libs\soil\src;C:\Users\pastad\Documents\libs\assimp\include;C:\Users\pastad\Documents\libs\glfw_64\include;C:\Users\pastad\Documents\pastadEngine\external;C:\Users\pastad\Documents\libs\glm;C:\Users\pastad\Documents\pastadEngine\include;C:\Users\pastad\Documents\pastadEngine\include\Structures;C:\Users\pastad\Documents\pastadEngine\include\Subsystems;C:\Users\pastad\Documents\pastadEngine\include\Shaders;C:\Users\pastad\Documents\pastadEngine\include\Script;C:\Users\pastad\Documents\pastadEngine\include\Scene;C:\Users\pastad\Documents\pastadEngine\include\Render;C:\Users\pastad\Documents\pastadEngine\include\Model;C:\Users\pastad\Documents\pastadEngine\include\GUI;C:\Users\pastad\Documents\pastadEngine\include\Geometric;C:\Users\pastad\Documents\pastadEngine\include\Extension;C:\Users\pastad\Documents\pastadEngine\include\Effects;$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\pastad\Documents\pastadEngine\QEditorExternal;C:\Qt\5.7\msvc2015_64\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\pastad\Documents\libs\boost_1_59_0;C:\Users\pastad\Documents\libs\SFML-2.4.0\include;C:\Users\pastad\Documents\pastadEngine\game\include;C:\Users\pastad\Documents\libs\freetype-2.6.5\include;C:\Users\pastad\Documents\libs\tinyxml2-master;C:\Users\pastad\Documents\libs\soil\src;C:\Users\pastad\Documents\libs\assimp\include;C:\Users\pastad\Documents\libs\glfw_64\include;C:\Users\pastad\Documents\pastadEngine\external;C:\Users\pastad\Documents\libs\glm;C:\Users\pastad\Documents\pastadEngine\include;C:\Users\pastad\Documents\pastadEngine\include\Structures;C:\Users\pastad\Documents\pastadEngine\include\Subsystems;C:\Users\pastad\Documents\pastadEngine\include\Shaders;C:\Users\pastad\Documents\pastadEngine\include\Script;C:\Users\pastad\Documents\pastadEngine\include\Scene;C:\Users\pastad\Documents\pastadEngine\include\Render;C:\Users\pastad\Documents\pastadEngine\include\Model;C:\Users\pastad\Documents\pastadEngine\include\GUI;C:\Users\pastad\Documents\pastadEngine\include\Geometric;C:\Users\pastad\Documents\pastadEngine\include\Extension;C:\Users\pastad\Documents\pastadEngine\include\Effects;</IncludePath>
+    <LibraryPath>C:\Qt\5.7\msvc2015_64\lib;C:\Users\pastad\Documents\libs\SFML-2.4.0\lib;C:\Users\pastad\Documents\libs\boost_1_61_0\stage\lib;C:\Users\pastad\Documents\libs\freetype-2.6.5\objs\vc2010\x64;C:\Users\pastad\Documents\libs\glfw_64\lib-vc2015;C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.14393.0\um\x64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IncludePath>C:\Users\pastad\Documents\pastadEngine\QEditorExternal;C:\Qt\5.7\msvc2015_64\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\pastad\Documents\libs\boost_1_59_0;C:\Users\pastad\Documents\libs\SFML-2.4.0\include;C:\Users\pastad\Documents\pastadEngine\game\include;C:\Users\pastad\Documents\libs\freetype-2.6.5\include;C:\Users\pastad\Documents\libs\tinyxml2-master;C:\Users\pastad\Documents\libs\soil\src;C:\Users\pastad\Documents\libs\assimp\include;C:\Users\pastad\Documents\libs\glfw_64\include;C:\Users\pastad\Documents\pastadEngine\external;C:\Users\pastad\Documents\libs\glm;C:\Users\pastad\Documents\pastadEngine\include;C:\Users\pastad\Documents\pastadEngine\include\Structures;C:\Users\pastad\Documents\pastadEngine\include\Subsystems;C:\Users\pastad\Documents\pastadEngine\include\Shaders;C:\Users\pastad\Documents\pastadEngine\include\Script;C:\Users\pastad\Documents\pastadEngine\include\Scene;C:\Users\pastad\Documents\pastadEngine\include\Render;C:\Users\pastad\Documents\pastadEngine\include\Model;C:\Users\pastad\Documents\pastadEngine\include\GUI;C:\Users\pastad\Documents\pastadEngine\include\Geometric;C:\Users\pastad\Documents\pastadEngine\include\Extension;C:\Users\pastad\Documents\pastadEngine\include\Effects;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>UNICODE;WIN32;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_OPENGL_LIB;QT_WIDGETS_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtOpenGL;$(QTDIR)\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>qtmaind.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5OpenGLd.lib;opengl32.lib;glu32.lib;Qt5Widgetsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>UNICODE;WIN32;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_OPENGL_LIB;QT_WIDGETS_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtOpenGL;$(QTDIR)\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+    </ClCompile>
+    <Link>
+      <SubSystem>NotSet</SubSystem>
+      <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>C:\Qt\5.7\msvc2015_64\lib;C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.14393.0\um\x64;C:\Users\pastad\Documents\libs\glfw_64\lib-vc2015;C:\Users\pastad\Documents\libs\assimp\lib64;C:\Users\pastad\Documents\libs\boost_1_59_0\lib64-msvc-14.0;C:\Users\pastad\Documents\libs\tinyxml2-master\tinyxml2\bin\x64-Debug-Dll;C:\Users\pastad\Documents\libs\SFML-2.4.0\lib;C:\Users\pastad\Documents\libs\soil\lib\;$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.14393.0\um\x64\opengl32.lib;assimp.lib;SOIL_64.lib;tinyxml2.lib;freetype265d.lib;boost_filesystem-vc140-mt-gd-1_59.lib;boost_system-vc140-mt-gd-1_59.lib;sfml-audio-d.lib;sfml-system-d.lib;kernel32.lib;glfw3.lib;qtmaind.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5OpenGLd.lib;opengl32.lib;glu32.lib;Qt5Widgetsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>UNICODE;WIN32;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_OPENGL_LIB;QT_WIDGETS_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtOpenGL;$(QTDIR)\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat />
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalDependencies>qtmain.lib;Qt5Core.lib;Qt5Gui.lib;Qt5OpenGL.lib;opengl32.lib;glu32.lib;Qt5Widgets.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>UNICODE;WIN32;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_OPENGL_LIB;QT_WIDGETS_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtOpenGL;$(QTDIR)\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat />
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+    </ClCompile>
+    <Link>
+      <SubSystem>NotSet</SubSystem>
+      <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>C:\Qt\5.7\msvc2015_64\lib;C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.14393.0\um\x64;C:\Users\pastad\Documents\libs\glfw_64\lib-vc2015;C:\Users\pastad\Documents\libs\assimp\lib64;C:\Users\pastad\Documents\libs\boost_1_59_0\lib64-msvc-14.0;C:\Users\pastad\Documents\libs\tinyxml2-master\tinyxml2\bin\x64-Debug-Dll;C:\Users\pastad\Documents\libs\SFML-2.4.0\lib;C:\Users\pastad\Documents\libs\soil\lib\;C:\Users\pastad\Documents\libs\freetype-2.6.2\objs\vc2010\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.14393.0\um\x64\opengl32.lib;assimp.lib;SOIL_64.lib;tinyxml2.lib;freetype262MT.lib;boost_filesystem-vc140-mt-1_59.lib;boost_system-vc140-mt-1_59.lib;sfml-audio.lib;sfml-system.lib;glfw3.lib;qtfreetype.lib;qtmain.lib;Qt5Core.lib;Qt5Gui.lib;Qt5OpenGL.lib;opengl32.lib;glu32.lib;Qt5Widgets.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\external\gl_core_4_.cpp" />
+    <ClCompile Include="..\src\Effects\Water.cpp" />
+    <ClCompile Include="..\src\Effects\Wave.cpp" />
+    <ClCompile Include="..\src\Engine.cpp" />
+    <ClCompile Include="..\src\Extension\Skybox.cpp" />
+    <ClCompile Include="..\src\Extension\Terrain.cpp" />
+    <ClCompile Include="..\src\Geometric\BoundingBox.cpp" />
+    <ClCompile Include="..\src\Geometric\Plane.cpp" />
+    <ClCompile Include="..\src\Geometric\Ray.cpp" />
+    <ClCompile Include="..\src\GUI\Button.cpp" />
+    <ClCompile Include="..\src\GUI\EditText.cpp" />
+    <ClCompile Include="..\src\GUI\EngineGUI.cpp" />
+    <ClCompile Include="..\src\GUI\FileViewer.cpp" />
+    <ClCompile Include="..\src\GUI\GUI.cpp" />
+    <ClCompile Include="..\src\GUI\Image.cpp" />
+    <ClCompile Include="..\src\GUI\Text.cpp" />
+    <ClCompile Include="..\src\Helper.cpp" />
+    <ClCompile Include="..\src\Log.cpp" />
+    <ClCompile Include="..\src\Model\AnimationMesh.cpp" />
+    <ClCompile Include="..\src\Model\IndexedRepresentation.cpp" />
+    <ClCompile Include="..\src\Model\Material.cpp" />
+    <ClCompile Include="..\src\Model\Mesh.cpp" />
+    <ClCompile Include="..\src\Model\Model.cpp" />
+    <ClCompile Include="..\src\Model\Object.cpp" />
+    <ClCompile Include="..\src\Model\Texture.cpp" />
+    <ClCompile Include="..\src\Render\DirectionalShadowBuffer.cpp" />
+    <ClCompile Include="..\src\Render\GBuffer.cpp" />
+    <ClCompile Include="..\src\Render\JitterTexture.cpp" />
+    <ClCompile Include="..\src\Render\PointShadowBuffer.cpp" />
+    <ClCompile Include="..\src\Render\Quad.cpp" />
+    <ClCompile Include="..\src\Render\RenderBuffer.cpp" />
+    <ClCompile Include="..\src\RessourceManager.cpp" />
+    <ClCompile Include="..\src\Scene\Scene.cpp" />
+    <ClCompile Include="..\src\Scene\SceneEditor.cpp" />
+    <ClCompile Include="..\src\Scene\SceneTreeElement.cpp" />
+    <ClCompile Include="..\src\Script\ExternalTriggerScriptElement.cpp" />
+    <ClCompile Include="..\src\Script\RotationScriptElement.cpp" />
+    <ClCompile Include="..\src\Script\Script.cpp" />
+    <ClCompile Include="..\src\Script\ScriptElement.cpp" />
+    <ClCompile Include="..\src\Shaders\ImageShader.cpp" />
+    <ClCompile Include="..\src\Shaders\PostProcessingShader.cpp" />
+    <ClCompile Include="..\src\Shaders\RenderBaseShader.cpp" />
+    <ClCompile Include="..\src\Shaders\RenderShader.cpp" />
+    <ClCompile Include="..\src\Shaders\Shader.cpp" />
+    <ClCompile Include="..\src\Shaders\ShadowShader.cpp" />
+    <ClCompile Include="..\src\Shaders\SkyboxShader.cpp" />
+    <ClCompile Include="..\src\Shaders\TextShader.cpp" />
+    <ClCompile Include="..\src\Structures\Camera.cpp" />
+    <ClCompile Include="..\src\Structures\Light.cpp" />
+    <ClCompile Include="..\src\Structures\Transform.cpp" />
+    <ClCompile Include="..\src\Subsystems\IOSubsystem.cpp" />
+    <ClCompile Include="..\src\Subsystems\PhysicSubsystem.cpp" />
+    <ClCompile Include="..\src\Subsystems\RenderSubsystem.cpp" />
+    <ClCompile Include="..\src\Subsystems\Subsystem.cpp" />
+    <ClCompile Include="GeneratedFiles\Debug\moc_PastadEditor.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\qrc_PastadEditor.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_PastadEditor.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="ObjectDatabase.cpp" />
+    <ClCompile Include="PastadEditor.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="PastadEditor.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing PastadEditor.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtOpenGL" "-I$(QTDIR)\include\QtWidgets"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing PastadEditor.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtOpenGL" "-I$(QTDIR)\include\QtWidgets"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing PastadEditor.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtOpenGL" "-I$(QTDIR)\include\QtWidgets"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing PastadEditor.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtOpenGL" "-I$(QTDIR)\include\QtWidgets"</Command>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="PastadEditor.ui">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\external\gl_core_4_.hpp" />
+    <ClInclude Include="..\include\Effects\Water.h" />
+    <ClInclude Include="..\include\Effects\Wave.h" />
+    <ClInclude Include="..\include\Engine.h" />
+    <ClInclude Include="..\include\Extension\Skybox.h" />
+    <ClInclude Include="..\include\Extension\Terrain.h" />
+    <ClInclude Include="..\include\Geometric\BoundingBox.h" />
+    <ClInclude Include="..\include\Geometric\Plane.h" />
+    <ClInclude Include="..\include\Geometric\Ray.h" />
+    <ClInclude Include="..\include\GUI\Button.h" />
+    <ClInclude Include="..\include\GUI\EditText.h" />
+    <ClInclude Include="..\include\GUI\EngineGUI.h" />
+    <ClInclude Include="..\include\GUI\FileViewer.h" />
+    <ClInclude Include="..\include\GUI\GUI.h" />
+    <ClInclude Include="..\include\GUI\Image.h" />
+    <ClInclude Include="..\include\GUI\Text.h" />
+    <ClInclude Include="..\include\Helper.h" />
+    <ClInclude Include="..\include\Log.h" />
+    <ClInclude Include="..\include\Model\AnimationMesh.h" />
+    <ClInclude Include="..\include\Model\IndexedRepresentation.h" />
+    <ClInclude Include="..\include\Model\Material.h" />
+    <ClInclude Include="..\include\Model\Mesh.h" />
+    <ClInclude Include="..\include\Model\Model.h" />
+    <ClInclude Include="..\include\Model\Object.h" />
+    <ClInclude Include="..\include\Model\Texture.h" />
+    <ClInclude Include="..\include\Render\DirectionalShadowBuffer.h" />
+    <ClInclude Include="..\include\Render\GBuffer.h" />
+    <ClInclude Include="..\include\Render\JitterTexture.h" />
+    <ClInclude Include="..\include\Render\PointShadowBuffer.h" />
+    <ClInclude Include="..\include\Render\Quad.h" />
+    <ClInclude Include="..\include\Render\RenderBuffer.h" />
+    <ClInclude Include="..\include\RessourceManager.h" />
+    <ClInclude Include="..\include\Scene\Scene.h" />
+    <ClInclude Include="..\include\Scene\SceneEditor.h" />
+    <ClInclude Include="..\include\Scene\SceneTreeElement.h" />
+    <ClInclude Include="..\include\Script\ExternalTriggerScriptElement.h" />
+    <ClInclude Include="..\include\Script\RotationScriptElement.h" />
+    <ClInclude Include="..\include\Script\Script.h" />
+    <ClInclude Include="..\include\Script\ScriptElement.h" />
+    <ClInclude Include="..\include\Shaders\ImageShader.h" />
+    <ClInclude Include="..\include\Shaders\PostProcessingShader.h" />
+    <ClInclude Include="..\include\Shaders\RenderBaseShader.h" />
+    <ClInclude Include="..\include\Shaders\RenderShader.h" />
+    <ClInclude Include="..\include\Shaders\Shader.h" />
+    <ClInclude Include="..\include\Shaders\ShadowShader.h" />
+    <ClInclude Include="..\include\Shaders\SkyboxShader.h" />
+    <ClInclude Include="..\include\Shaders\TextShader.h" />
+    <ClInclude Include="..\include\Structures\Camera.h" />
+    <ClInclude Include="..\include\Structures\Light.h" />
+    <ClInclude Include="..\include\Structures\Transform.h" />
+    <ClInclude Include="..\include\Subsystems\IOSubsystem.h" />
+    <ClInclude Include="..\include\Subsystems\PhysicSubsystem.h" />
+    <ClInclude Include="..\include\Subsystems\RenderSubsystem.h" />
+    <ClInclude Include="..\include\Subsystems\Subsystem.h" />
+    <ClInclude Include="..\include\ui_editor.h" />
+    <ClInclude Include="..\include\ui_mainwindow.h" />
+    <ClInclude Include="GeneratedFiles\ui_PastadEditor.h" />
+    <ClInclude Include="ObjectDatabase.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="PastadEditor.qrc">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(FullPath);%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Rcc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\qrc_%(Filename).cpp;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\rcc.exe" -name "%(Filename)" -no-compress "%(FullPath)" -o .\GeneratedFiles\qrc_%(Filename).cpp</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(FullPath);%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Rcc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\qrc_%(Filename).cpp;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\rcc.exe" -name "%(Filename)" -no-compress "%(FullPath)" -o .\GeneratedFiles\qrc_%(Filename).cpp</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FullPath);%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Rcc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\qrc_%(Filename).cpp;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\rcc.exe" -name "%(Filename)" -no-compress "%(FullPath)" -o .\GeneratedFiles\qrc_%(Filename).cpp</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(FullPath);%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Rcc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\qrc_%(Filename).cpp;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\rcc.exe" -name "%(Filename)" -no-compress "%(FullPath)" -o .\GeneratedFiles\qrc_%(Filename).cpp</Command>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="pastadEditor.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties MocDir=".\GeneratedFiles\$(ConfigurationName)" UicDir=".\GeneratedFiles" RccDir=".\GeneratedFiles" lupdateOptions="" lupdateOnBuild="0" lreleaseOptions="" Qt5Version_x0020_x64="msvc2015_64" MocOptions="" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

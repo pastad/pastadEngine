@@ -5,6 +5,7 @@
 #include "Texture.h"
 
 #include <sstream>
+#include <iostream>
 
 DirectionalShadowBuffer::DirectionalShadowBuffer()
 {  
@@ -24,10 +25,11 @@ bool DirectionalShadowBuffer::initialize(  int width ,  int height)
   GLfloat border[] = {1.0f, 0.0f,0.0f,0.0f };
   m_width = width;
   m_height = height;
-  
+   
   gl::GenTextures(1, &m_depth_texture);
   gl::BindTexture(gl::TEXTURE_2D, m_depth_texture);
   gl::TexStorage2D(gl::TEXTURE_2D, 1, gl::DEPTH_COMPONENT24, width, height);
+  std::cout << "done st" << std::endl;
   gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::LINEAR);
   gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::LINEAR);
   gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::CLAMP_TO_BORDER);
@@ -35,6 +37,8 @@ bool DirectionalShadowBuffer::initialize(  int width ,  int height)
   gl::TexParameterfv(gl::TEXTURE_2D, gl::TEXTURE_BORDER_COLOR, border);
   gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_COMPARE_MODE, gl::COMPARE_REF_TO_TEXTURE);
   gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_COMPARE_FUNC, gl::LESS);
+
+  std::cout << "start" << std::endl;
 
   gl::ActiveTexture(gl::TEXTURE0);
   gl::BindTexture(gl::TEXTURE_2D, m_depth_texture);
@@ -54,7 +58,6 @@ bool DirectionalShadowBuffer::initialize(  int width ,  int height)
   }
 
   gl::BindFramebuffer(gl::FRAMEBUFFER,0);
-
   return true;
 }
 

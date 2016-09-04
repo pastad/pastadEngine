@@ -7,10 +7,13 @@
 #include "Engine.h"
 #include "Log.h"
 
+#include <iostream>
+
 
 std::map<std::string, Model *> RessourceManager::m_models;
 std::map<std::string, Texture *> RessourceManager::m_textures;
 std::map<std::string, Material *> RessourceManager::m_materials;
+std::mutex RessourceManager::m_lock;
 
 RessourceManager::RessourceManager()
 {
@@ -32,18 +35,20 @@ Model * RessourceManager::loadModel(std::string path, bool instanced)
 {	
 	Model * model = nullptr;
 
-	std::map<std::string, Model *>::iterator it = m_models.find(path);
-	
+  m_lock.lock();
+  Engine::getLog()->log("RessourceManager", "loading model", path);
+
+	std::map<std::string, Model *>::iterator it = m_models.find(path);	
+
 	if( it != m_models.end() )
 	{
 		model = it->second;
-		//Engine::getLog()->log("RessourceManager","found model",path);
+		Engine::getLog()->log("RessourceManager","found model",path);
 	}
 	else
 	{
 		model =  new Model(path, instanced);
 		bool success  = model->load();
-		
 		if (success)
 		{
 			m_models[path] = model;
@@ -56,7 +61,8 @@ Model * RessourceManager::loadModel(std::string path, bool instanced)
 			model = nullptr;
 		}
 	}
-
+  m_lock.unlock();
+  Engine::getLog()->log("RessourceManager", "done");
 	return model;
 }
 

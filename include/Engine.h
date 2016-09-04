@@ -155,6 +155,7 @@ public:
 
 	// returns the physics,io subsystem or nullptr if not running
 	static PhysicSubsystem * getPhysicSubsystem();
+  static RenderSubsystem * getRenderSubsystem();
 	static IOSubsystem * getIOSubsystem();
 
 	// saves a config file

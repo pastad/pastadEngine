@@ -443,10 +443,11 @@ void RenderSubsystem::startRender()
 
   if(m_initialized)
   {
+    acquireRenderLock("RenderSubsystem");
+    Engine::getLog()->log(LF_Main,"RenderSubsystem", "start render");
     gl::ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     m_shader->reset();
   }
-  //Engine::getLog()->log("RenderSubsystem", "start render");
 }
 
 void RenderSubsystem::render()
@@ -489,8 +490,10 @@ void RenderSubsystem::endRender()
 	{		
 		glfwSwapBuffers(m_window);
 		m_shader->reset();
+
+    Engine::getLog()->log(LF_Main, "RenderSubsystem", "end render");
+    releaseRenderLock("RenderSubsystem");
 	}
-	//Engine::getLog()->log("RenderSubsystem", "end render");
 }
 
 
@@ -557,4 +560,29 @@ Light * RenderSubsystem::pickLightAt(glm::vec2 p)
 {
 	int id  = m_gbuffer->pickObjectAt(p);
 	return  Engine::getScene()->getLight(id);
+}
+
+// lock methods ------------------------------------------
+
+void RenderSubsystem::acquireRenderLock(std::string who)
+{
+  Engine::getLog()->log(LF_TS, "RenderSubsystem","lock wanted by ", who);
+ // std::cout << &m_render_mutex <<std::endl;
+  try
+  {  m_render_mutex.lock(); }
+  catch (std::exception ex)
+  {
+    Engine::getLog()->log("EXCEPTION", "locking");
+  }
+  Engine::getLog()->log(LF_TS, "RenderSubsystem", "lock acquired by ", who);
+}
+void RenderSubsystem::releaseRenderLock(std::string who)
+{
+  try
+  {  m_render_mutex.unlock();  }
+  catch (std::exception ex)
+  {
+    Engine::getLog()->log("EXCEPTION", "locking");
+  }
+  Engine::getLog()->log(LF_TS, "RenderSubsystem", "lock released by ", who);
 }

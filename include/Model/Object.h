@@ -11,6 +11,14 @@
 
 #include "tinyxml2.h"
 
+enum Visibility
+{
+  V_None,
+  V_Shadow,
+  V_All
+};
+
+
 // the representation of an Model to the user
 
 // the animation was inspired by the ogldev tutorial | the extent is not know due to adaption from previous project
@@ -53,11 +61,6 @@ public:
   void setPriorityRender();
   void unsetPriorityRender();
   bool getPriorityRender();
-
-  // visble getter setters
-  void setVisible();
-  void setInvisible();
-  bool isVisible();
 
   // physics getter setters
   void dontApplyPhysics();
@@ -119,11 +122,9 @@ public:
   void unsetStaticFlag();
   bool isStaticFlagSet();
 
-  // shadow render only getter setter
-  void setShadowRenderOnly();
-  void setNotShadowRenderOnly();
-  bool isOnlyShadowRendered();
-
+  // visibility getter setter
+  void setVisibility(Visibility);
+  Visibility getVisibility();
 
   //using  Transform::setPosition;  
   using  Transform::getPosition;
@@ -175,6 +176,9 @@ private:
 
   // true if only the shadow should be rendered
   bool m_shadow_render_only = false;
+
+  // the visibility state 
+  Visibility m_visibility = V_All;  
 
   // determines is physics should be applied
   bool m_physics_enabled = false;

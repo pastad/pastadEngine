@@ -77,13 +77,11 @@
     <ClInclude Include="include\Subsystems\PhysicSubsystem.h" />
     <ClInclude Include="include\Subsystems\RenderSubsystem.h" />
     <ClInclude Include="include\Subsystems\Subsystem.h" />
-    <ClInclude Include="QEditorExternal\QEditorExternal.hpp" />
     <ClInclude Include="QEditorExternal\ui_QEditorExternal.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="external\gl_core_4_.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="QEditorExternal\QEditorExternal.cpp" />
     <ClCompile Include="src\Editor\Editor.cpp" />
     <ClCompile Include="src\Effects\Water.cpp" />
     <ClCompile Include="src\Effects\Wave.cpp" />

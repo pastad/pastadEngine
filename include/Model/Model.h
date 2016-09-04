@@ -9,6 +9,8 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <mutex>
+
 
 #include <glm/glm.hpp>
 
@@ -113,6 +115,8 @@ private:
 	// the number of instanced matrices
 	unsigned int m_num_instanced_buffered_matrices;
 
+  // the mutex for thread safety
+  std::mutex m_mutex;
 
 	// processes the scene
 	void processScene();

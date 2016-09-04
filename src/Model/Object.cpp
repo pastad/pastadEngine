@@ -100,7 +100,7 @@ void Object::save(tinyxml2::XMLNode * parent, tinyxml2::XMLDocument* document)
 
   element = document->NewElement("Visibility");
   element_object->InsertEndChild(element);
-  element->SetAttribute("value", isVisible());
+  element->SetAttribute("value", getVisibility());
 
   element = document->NewElement("Static");
   element_object->InsertEndChild(element);
@@ -115,14 +115,14 @@ bool Object::load( tinyxml2::XMLElement *  element)
 
   bool physics_enabled = false;
   bool physics_static = false;
-  bool visible = true;
+  unsigned int visible = V_All;
   bool static_flag = false;
 
 
   tinyxml2::XMLElement *child = element->FirstChildElement("Visibility");
   if( child != nullptr)
   {    
-    visible = child->BoolAttribute("value");   
+    visible = child->UnsignedAttribute("value");   
   } 
   child = element->FirstChildElement("PhysicsEnabled");
   if( child != nullptr)
@@ -166,16 +166,14 @@ bool Object::load( tinyxml2::XMLElement *  element)
   else
     dontApplyPhysicsStatic();
 
-  if(visible)
-    setVisible();
-  else
-    setInvisible();
+  std::cout << visible <<std::endl;
+  setVisibility( (Visibility) visible);
 
   if(static_flag)
     setStaticFlag();
   else
     unsetStaticFlag();
-  std::cout << "objct loading done"<<std::endl; 
+  //std::cout << "objct loading done"<<std::endl; 
   return true;
 }
 
@@ -500,7 +498,7 @@ std::string Object::getIdentifier()
 
 // visibility
 
-void Object::setVisible()
+/*void Object::setVisible()
 {
   m_visible = true;
   if( Engine::getScene() != nullptr)
@@ -515,6 +513,21 @@ void Object::setInvisible()
 bool Object::isVisible()
 {
   return m_visible;
+}*/
+
+void Object::setVisibility(Visibility visibility)
+{  
+  if( m_visibility != visibility )
+  {
+    if (Engine::getScene() != nullptr)
+      Engine::getScene()->refreshRenderObjects();
+  }
+  m_visibility = visibility;
+}
+
+Visibility Object::getVisibility()
+{
+  return m_visibility;
 }
 
 // physics
@@ -561,6 +574,7 @@ void  Object::removeScript()
   m_script = nullptr;
 }
 
+/*
 void Object::setShadowRenderOnly()
 {
   m_shadow_render_only = true;
@@ -574,7 +588,7 @@ void Object::setNotShadowRenderOnly()
 bool Object::isOnlyShadowRendered()
 {
   return m_shadow_render_only;
-}
+}*/
 
 
 bool Object::acquireLock()

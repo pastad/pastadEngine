@@ -97,6 +97,9 @@ public:
   // retrieves a vector with objects having ident as identifier
   std::vector<Object *> getObjects(std::string ident);
 
+  // returns all objects
+  std::vector<Object *> getObjects();
+
   // returns objects which are physics objects that are static
   std::vector<Object *> getPhysicsStaticObjects();
 
@@ -128,8 +131,8 @@ public:
   void setTimeAdvance(float speed);
 
   // acquires the mutex lock
-  void acquireLock();
-  void releaseLock();
+  void acquireLock(std::string who);
+  void releaseLock(std::string who);
 
 private:
 

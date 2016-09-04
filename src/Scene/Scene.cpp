@@ -1,6 +1,7 @@
 #include "Scene.h"
 
 #include "RessourceManager.h"
+#include "RenderSubsystem.h"
 #include "RenderShader.h"
 #include "RenderBaseShader.h"
 #include "Model.h"
@@ -245,7 +246,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
             float angle = (*it3)->getMinAngleToLight( (*it) );
             glm::vec3 p = (*it3)->getMinBBDistantPoint( (*it)->getPosition() ) ;
             //std::cout <<angle<<std::endl;
-            if( (! (*it)->isInRange(p) ) || (angle > (*it)->getCutoffAngle() ) ||  ( !(*it3)->isVisible() ) )
+            if( (! (*it)->isInRange(p) ) || (angle > (*it)->getCutoffAngle() ) ||  ( (*it3)->getVisibility() != V_All) )
               objs.erase(it3);
             else
               it3++;
@@ -303,7 +304,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
             for(std::vector<Object *>::iterator it2 = objs.begin(); it2 != objs.end();)
             {
               glm::vec3 p = (*it2)->getMinBBDistantPoint( (*it)->getPosition() ) ;
-              if(! (*it)->isInRange(p) || (! (*it2)->isVisible()) )
+              if(! (*it)->isInRange(p) || ( (*it2)->getVisibility() == V_None ) )
                 objs.erase(it2);
               else
                 it2++;
@@ -396,7 +397,7 @@ void Scene::refreshRenderObjects()
    // float angle_min = (*it)->getMinAngleToCamera(m_camera);  
 
     // tmp disable due to material flickers 
-    if( ( ((*it)->getPriorityRender() ) || m_camera->insideFrustrum((*it)) )  && ((*it)->isVisible()) && (!(*it)->isOnlyShadowRendered()) ) //(angle_min < m_camera->getFOV())
+    if( ( ((*it)->getPriorityRender() ) || m_camera->insideFrustrum((*it)) )  && (  (*it)->getVisibility() == V_All) ) //(angle_min < m_camera->getFOV())
     {
       //std::cout << angle_mid << std::endl;
       //std::cout << (*it)->getIdentifier()<<std::endl;
@@ -420,7 +421,7 @@ void Scene::refreshRenderObjects()
   {
 	  glm::vec3 dir_to_object = (*it)->getPosition() - m_camera->getPosition();
 
-	  if ((((*it)->getPriorityRender()) || m_camera->insideFrustrum((*it))) && ((*it)->isVisible()) && (!(*it)->isOnlyShadowRendered())) //(angle_min < m_camera->getFOV())
+	  if ((((*it)->getPriorityRender()) || m_camera->insideFrustrum((*it))) && ((*it)->getVisibility() == V_All) ) //(angle_min < m_camera->getFOV())
 	  {
 		  std::map< std::string, std::vector<Object *> >::iterator entry = m_render_objects.find((*it)->getIdentifier());
 		  if (entry != m_render_objects.end())
@@ -485,14 +486,15 @@ void Scene::save(std::string path)
 
 bool Scene::load(std::string path)
 {
+ // acquireLock();
+
   tinyxml2::XMLDocument document;
   tinyxml2::XMLError result = document.LoadFile(path.c_str() );
-
-
-
+  
   if(result != tinyxml2::XML_SUCCESS)
   {
     Engine::getLog()->log("Scene", "couldn't load scene file");
+    releaseLock("load");
     return false;
   }
 
@@ -510,11 +512,14 @@ bool Scene::load(std::string path)
       if( type == "Light")
       {
         Light * new_light = addLight();
-		if (new_light != nullptr)
-		{
-			if (!new_light->load(child))
-				removeLight(new_light);
-		}
+		    if (new_light != nullptr)
+		    {
+
+          Engine::getLog()->log("Scene", "adding light to scene");
+			    if (!new_light->load(child))
+				    removeLight(new_light);
+          Engine::getLog()->log("Scene", "Light added");
+		    }
       }
       if( type == "Object")
       {
@@ -566,6 +571,7 @@ bool Scene::load(std::string path)
   else  
     Engine::getLog()->log("Scene", "no children in scene file");    
   
+ // releaseLock();
   return true;
 }
 
@@ -602,6 +608,7 @@ SceneTreeElement * Scene::getSceneRoot()
 
 Light * Scene::addLight()
 {
+ 
   Light * light = new Light();
   m_lights.insert(m_lights.end(), light);  
   return light; 
@@ -669,54 +676,67 @@ void Scene::objectIsScripted(Object * obj)
 // privates
 Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, bool insert_in_tree, bool static_object)
 {
-  Model * m = RessourceManager::loadModel(path, instanced);
-  Object * obj = nullptr;
-  if(m != nullptr)
-  {
-    obj = m->getInstance(this);
-    if( obj!= nullptr)
+  try
+  {  
+    acquireLock("addObject");
+    Engine::getLog()->log("Scene", "adding Object");
+    Model * m = RessourceManager::loadModel(path, instanced);
+    Object * obj = nullptr;
+    if(m != nullptr)
     {
-      obj->setId(getObjectIdentification());
-      obj->setPosition(position);
-
-      if (obj->getModel()->isInstanced())
+      obj = m->getInstance(this);
+      if( obj!= nullptr)
       {
-        bool should_be_inserted = true;
-        for (int x = 0; x < m_models_instanced.size(); x++)
-        {
-          if(m_models_instanced[x] == obj->getModel() )
-            should_be_inserted = false;
-        }
-        if(should_be_inserted)
-          m_models_instanced.push_back(obj->getModel() );
-      }
-      else
-      {
-        if( obj->isAnimated())
-          m_objects_animated.push_back(obj);
+        obj->setId(getObjectIdentification());
+        obj->setPosition(position);
 
-        if(static_object && (! Engine::isInEditMode()) && (!obj->isAnimated()) )
+        if (obj->getModel()->isInstanced())
         {
-          m_objects_static.push_back(obj);
-          obj->setStaticFlag();   
+          bool should_be_inserted = true;
+          for (int x = 0; x < m_models_instanced.size(); x++)
+          {
+            if(m_models_instanced[x] == obj->getModel() )
+              should_be_inserted = false;
+          }
+          if(should_be_inserted)
+            m_models_instanced.push_back(obj->getModel() );
         }
         else
-          m_objects_dynamic.push_back(obj);
-        m_models[path] = m;
-        if(insert_in_tree )
-          m_tree_root->insert(obj);             
-        refreshRenderObjects();
+        {
+          if( obj->isAnimated())
+            m_objects_animated.push_back(obj);
+
+          if(static_object && (! Engine::isInEditMode()) && (!obj->isAnimated()) )
+          {
+            m_objects_static.push_back(obj);
+            obj->setStaticFlag();   
+          }
+          else
+            m_objects_dynamic.push_back(obj);
+          m_models[path] = m;
+          if(insert_in_tree )
+            m_tree_root->insert(obj);             
+          refreshRenderObjects();
+        }
       }
     }
-  }
-  else    
-     Engine::getLog()->log("Scene", "Object is null");
+    else    
+       Engine::getLog()->log("Scene", "Object is null");
 
-  return obj;
+    releaseLock("addObject");
+
+    return obj;
+  }
+  catch (...)
+  {
+
+  }
+  return nullptr;
 }
 Object * Scene::addObject(std::string path,  bool instanced ,  bool static_object)
 {
- // Engine::getLog()->log("Scene", "adding Object");
+  acquireLock("addObject");
+  Engine::getLog()->log("Scene", "adding Object");
   Model * m = RessourceManager::loadModel(path, instanced);
   Object * obj  = nullptr;
   if( m != nullptr)
@@ -751,11 +771,13 @@ Object * Scene::addObject(std::string path,  bool instanced ,  bool static_objec
 
     refreshRenderObjects();
   }
+  releaseLock("addObject");
   return obj;
 }
 
 void Scene::removeObject(Object * obj)
 {
+  acquireLock("removeObject");
   if(obj == nullptr)
     return;
   if( obj->isStaticFlagSet() )
@@ -818,6 +840,8 @@ void Scene::removeObject(Object * obj)
     obj->getModel()->removeInstance(obj);
     refreshRenderObjects();
   }
+
+  releaseLock("removeObject");
 }
 
 std::vector<Object *> Scene::getPhysicsStaticObjects()
@@ -852,6 +876,14 @@ std::vector<Object *> Scene::getObjects(std::string ident)
   }
   return objs;
 }
+
+std::vector<Object *> Scene::getObjects()
+{
+  std::vector<Object *> objs = m_objects_static;
+  objs.insert(std::end(objs), std::begin(m_objects_dynamic), std::end(m_objects_dynamic));
+  return objs;
+}
+
 
 Object * Scene::getObject(int id)
 {
@@ -949,12 +981,15 @@ void Scene::setTimeAdvance(float speed)
 
 // locking
 
-void Scene::acquireLock()
+void Scene::acquireLock(std::string who)
 {
-  return m_mutex.lock();
+  Engine::getLog()->log(LF_TS, "Scene", "lock wanted by ", who);
+  m_mutex.lock();
+  Engine::getLog()->log(LF_TS, "Scene", "lock acquired by ", who);
 }
 
-void Scene::releaseLock()
+void Scene::releaseLock(std::string who)
 {
   m_mutex.unlock();
+  Engine::getLog()->log(LF_TS, "Scene", "lock unlocked by ", who);
 }
