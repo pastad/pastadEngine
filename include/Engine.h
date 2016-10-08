@@ -29,7 +29,9 @@ class Object;
 class Light;
 class SceneEditor;
 class Editor;
+class PastadEditor;
 
+class EngineRequest;
 
 
 enum SubsystemType
@@ -42,12 +44,12 @@ enum PostprocessType
 {
 	PP_FXAA = 1,
 	PP_HDR = 2,
-	PP_BLOOM = 3
+	PP_BLOOM = 4
 };
 enum ShadowTechniqueType
 {	
-	ST_NONE =0,
-	ST_STANDARD =1,
+	ST_NONE = 0,
+	ST_STANDARD = 1,
 	ST_STANDARD_PCF = 2,
 	ST_STANDARD_RS = 3
 };
@@ -58,6 +60,7 @@ enum EngineMode
   EM_INTERNAL_EDITOR =1,
   EM_EXTERNAL_EDITOR =2
 };
+
 
 
 class Engine
@@ -133,6 +136,7 @@ public:
 
 	// returns true if in edit mode
 	static bool isInEditMode();
+  static bool isInExternalEditMode();
 
 	// refreshes the shaders
 	static void refreshShaders();
@@ -185,6 +189,17 @@ public:
 
   // stops the running method
   static void stopRunning();
+
+  // adds a request | for threads
+  static void addRequest(EngineRequest * er);
+
+  // sets the ext editor
+  static void setPastadEditor(PastadEditor * editor);
+
+  // returns the ext editor
+  static PastadEditor * getPastadEditor();
+
+
 
 
 private:
@@ -266,6 +281,12 @@ private:
   static Editor * m_editor;
   static std::future<void> m_editor_future;
 
+  // engine requests
+  static std::vector<EngineRequest *> m_requests;
+
+  // holds a pointer to the editor i active
+  static PastadEditor * m_pastad_editor;
+
 	// starts the subsystems
 	static bool startUpSubsystems();
 
@@ -287,6 +308,9 @@ private:
 
 	// static for async button check
 	static bool buttonCheck(GUI *gui , float x, float y);
+
+  // handles add requests from the editor
+  static void handleEditorRequests();
 
   // starts the external editor
  // static void startEditor();

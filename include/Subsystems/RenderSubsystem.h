@@ -129,6 +129,10 @@ private:
 	// true if standard shadows are enabled
 	bool m_shadows_standard_enabled;
 
+  // the shadow technique
+  ShadowTechniqueType m_shadow_techniques;
+  PostprocessType m_pp_techniques;
+
 	// true if hdr is set
 	bool m_enable_hdr;
 

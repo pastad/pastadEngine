@@ -190,6 +190,10 @@ private:
     glm::vec3 m_fall_vector;
     bool m_should_fall_be_checked;
 
+    // the path the camera should take
+    std::vector<glm::vec3 > m_path;
+    
+
     // stores the callback function for movement
     void (*external_cameraMovedCallback)();
 

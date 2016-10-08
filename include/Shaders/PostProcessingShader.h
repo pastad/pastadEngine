@@ -15,7 +15,6 @@ enum
   PASS_BLUR_1 = 3,
   PASS_BLUR_2 = 4,
   PASS_SSAO = 5
-
 };
 
 

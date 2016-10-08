@@ -25,6 +25,8 @@
 #include "EngineGUI.h"
 #include "SceneEditor.h"
 
+#include "Helper.h"
+
 #include <sstream>
 #include <iostream>
 
@@ -206,6 +208,22 @@ bool RenderSubsystem::refreshShaders()
 	m_pp_shader->setGaussSize(20);
 	m_pp_shader->setBloomThreshold(0.6f);
 	m_pp_shader->setSSAOSamples();
+
+  setShadowTechnique(m_shadow_techniques);
+
+  m_pp_shader->use();
+  if (m_pp_techniques | PP_FXAA)
+    m_pp_shader->setFXAA(true);
+  if (m_pp_techniques | PP_HDR)
+  {
+    m_pp_shader->setHDR(true);
+    m_enable_hdr = true;
+  }
+  if (m_pp_techniques | PP_BLOOM)
+  {
+    m_pp_shader->setBloom(true);
+    m_enable_bloom = true;
+  } 
 
 	return true;
 }
@@ -440,13 +458,13 @@ void RenderSubsystem::renderUI()
 
 void RenderSubsystem::startRender()
 {
-
   if(m_initialized)
   {
-    acquireRenderLock("RenderSubsystem");
+   // acquireRenderLock("RenderSubsystem");
     Engine::getLog()->log(LF_Main,"RenderSubsystem", "start render");
     gl::ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     m_shader->reset();
+    Helper::checkGLError("startRender");
   }
 }
 
@@ -491,8 +509,9 @@ void RenderSubsystem::endRender()
 		glfwSwapBuffers(m_window);
 		m_shader->reset();
 
+    Helper::checkGLError("end Render");
     Engine::getLog()->log(LF_Main, "RenderSubsystem", "end render");
-    releaseRenderLock("RenderSubsystem");
+   // releaseRenderLock("RenderSubsystem");
 	}
 }
 
@@ -514,6 +533,15 @@ TextShader * RenderSubsystem::getTextShader()
 
 void RenderSubsystem::setPostProcessing(PostprocessType type, bool enable)
 {
+  if (enable)  
+    m_pp_techniques != type;  
+  else  
+  {
+    unsigned int  t  = m_pp_techniques & (!(unsigned int)type);
+    m_pp_techniques = (PostprocessType) t;
+  }
+  
+
 	m_pp_shader->use();
 	if( type == PP_FXAA)
 		m_pp_shader->setFXAA(enable);
@@ -530,6 +558,7 @@ void RenderSubsystem::setPostProcessing(PostprocessType type, bool enable)
 }
 void RenderSubsystem::setShadowTechnique(ShadowTechniqueType type)
 {
+  m_shadow_techniques = type;
 	m_shader->use();
 	m_shader->setShadows(type);
 	if(type == ST_NONE)

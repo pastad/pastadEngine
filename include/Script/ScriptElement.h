@@ -6,14 +6,24 @@
 
 #include <glm/glm.hpp>
 
+#include "tinyxml2.h"
+
 class Scene;
 class Object;
+
+enum ScriptElementType
+{
+  SE_ROTATION,
+  SE_TRANSLATION,
+  SE_EXTERNAL
+};
 
 enum
 {
   TRIGGER_ALWAYS,
   TRIGGER_FROM_TO,
-  TRIGGER_ON_OFF
+  TRIGGER_ON_OFF, 
+  TRIGGER_WAIT
 };
 
 // class for script elements
@@ -22,7 +32,7 @@ class ScriptElement
 {
 
 public:
-  ScriptElement();
+  ScriptElement(ScriptElementType type);
   ~ScriptElement();
 
   ScriptElement(const ScriptElement& other) = delete;
@@ -50,9 +60,40 @@ public:
 
   // true if script has ended
   bool isEnded();
+    
+  // returns the type of the script element
+  ScriptElementType getType();
+
+  // saves the element base
+  void save(tinyxml2::XMLElement * element);
+
+  // loads the element base
+  bool load(tinyxml2::XMLElement * element);
+
+  // returns a short description string
+  std::string getDescription();
+
+  // returns the successors
+  std::vector< ScriptElement *> getSuccessors();
+
+  // returns the set trigger
+  int getTrigger();
+
+  // time getters
+  float getStartTime();
+  float getEndTime();
+  float getTimeSpanOn();
+  float getTimeSpanOff();
+
+  // resets the script element
+  void reset();
+
+private:
+  ScriptElementType m_type;
 
 protected:  
-
+  
+  
   // the trigger
   int m_trigger;
 

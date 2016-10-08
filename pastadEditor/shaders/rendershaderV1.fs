@@ -150,7 +150,7 @@ uniform int EnableShadows;
 
 layout(binding=19) uniform sampler3D JitterTex;
 
-float calcDirShadowPCF(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap, float bias)
+float calcDirShadowPCF(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap, float bias, bool spot)
 {
   vec4 ShadowCoord = shadowMat * vec4(pos,1);  
   float sum = 1.0;
@@ -160,40 +160,53 @@ float calcDirShadowPCF(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap, float 
 
   if(ShadowCoord.z  >= 0)
   {    
-
+    float offset = 1;
     //float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.015);
     sum = 0.0;
     float ts = textureProjOffset(shadowMap, ShadowCoord,ivec2(1,0));   
     vec4 tShadowCoord = ShadowCoord;
 
-    tShadowCoord.xy +=   vec2(-1, -1) * texelSize;
+    tShadowCoord.xy +=   vec2(-offset, -offset) * texelSize;
     ts = textureProj(shadowMap, tShadowCoord );
+    if(spot)
+      ts = LinearizeDepth(ts);
     if(! (tShadowCoord.z-bias  > ts) )
         sum += 1;    
 
     tShadowCoord = ShadowCoord;
-    tShadowCoord.xy +=  vec2(1, -1) * texelSize;
+    tShadowCoord.xy +=  vec2(offset, -offset) * texelSize;
     ts = textureProj(shadowMap, tShadowCoord );
+    if(spot)
+      ts = LinearizeDepth(ts);
+    if(spot)
+      ts = LinearizeDepth(ts);
     if(! (tShadowCoord.z+bias  > ts) )
-        sum += 1;    
+       sum += 1;    
+
     tShadowCoord = ShadowCoord;
-    tShadowCoord.xy +=  vec2(-1, 1) * texelSize;
+    tShadowCoord.xy +=  vec2(-offset, offset) * texelSize;
     ts = textureProj(shadowMap, tShadowCoord );
+    if(spot)
+      ts = LinearizeDepth(ts);
     if(! (tShadowCoord.z+bias  > ts) )
         sum += 1;   
 
     tShadowCoord = ShadowCoord;
-    tShadowCoord.xy +=  vec2(1, 1) * texelSize;
+    tShadowCoord.xy +=  vec2(offset, offset) * texelSize;
     ts = textureProj(shadowMap, tShadowCoord );
+    if(spot)
+      ts = LinearizeDepth(ts);
     if(! (tShadowCoord.z+bias  > ts) )
-        sum += 1;   
+        sum += 1; 
 
     tShadowCoord = ShadowCoord;
     tShadowCoord.xy +=  vec2(0, 0) * texelSize;
     ts = textureProj(shadowMap, tShadowCoord );
+    if(spot)
+      ts = LinearizeDepth(ts);
     if(! (tShadowCoord.z+bias  > ts) )
         sum += 1;      
-  
+
     sum *= 0.20; 
   }
 
@@ -254,7 +267,7 @@ float calcDirShadowRandomSampling(vec3 pos,mat4 shadowMat,sampler2DShadow shadow
 }
 
 
-float calcSingleDirectionalShadow(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap, float bias)
+float calcSingleDirectionalShadow(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap, float bias, bool spot)
 { 
   float sum = 1.0;
 
@@ -264,26 +277,28 @@ float calcSingleDirectionalShadow(vec3 pos,mat4 shadowMat,sampler2DShadow shadow
   {
     if(EnableShadows == 2 )
     {
-      sum = calcDirShadowPCF(pos,shadowMat, shadowMap, bias);
+      sum = calcDirShadowPCF(pos,shadowMat, shadowMap, bias, spot);  
     }
     if(EnableShadows == 3)
     {
-      sum = calcDirShadowRandomSampling(pos,shadowMat, shadowMap,bias);
+      sum = calcDirShadowRandomSampling(pos,shadowMat, shadowMap,bias);       
     }
     if(EnableShadows == 1)
     { 
-      if(ShadowCoord.z  >= 0)
-      { 
+    //  if(ShadowCoord.z  >= 0)
+     // { 
         sum =  textureProj(shadowMap, ShadowCoord ) ;  
-        if(ShadowCoord.z+0.01  > sum )
-          sum = 0;   
-        else
-          sum = 1;  
-      }
+        if(spot)
+          sum = LinearizeDepth(sum);
+         if(ShadowCoord.z+bias > sum )
+           sum = 0;   
+         else
+           sum = 1;  
+    //  }
     }
     
   }  
-  
+
   return sum;
 }
 
@@ -322,7 +337,7 @@ float calcSinglePointShadow(vec3 lightPos,vec3 fragPos, samplerCube sam)
       float lightDistance = length(lightDir);
 
       float closestDepth = texture(sam, -lightDir).r; 
-      if(lightDistance+0.001 >= closestDepth)
+      if(lightDistance-0.001 >= closestDepth)
         shadow =0.5f;
     }
     if(EnableShadows == 2 )
@@ -373,7 +388,7 @@ float calcPointShadowfactor(int idx,vec3 lightPos, vec3 fragPos)
   return ret;
 }  
 
-float calcSpotShadowFactor(int idx, float bias)
+float calcSpotShadowFactor(int idx, float bias, bool spot)
 {
   float ret = 0.0;
   vec3 pos = vec3( texture( Tex1, TexCoord ) );
@@ -381,37 +396,37 @@ float calcSpotShadowFactor(int idx, float bias)
   if( EnableShadows > 0 )
   {
     if(idx == 0 )  
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[0], ShadowData0,bias);  
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[0], ShadowData0,bias, spot);  
     if(idx == 1 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[1], ShadowData1,bias);  
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[1], ShadowData1,bias, spot);  
     if(idx == 2 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[2], ShadowData2,bias);  
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[2], ShadowData2,bias, spot);  
     if(idx == 3 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[3], ShadowData3,bias);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[3], ShadowData3,bias, spot);
     if(idx == 4 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[4], ShadowData4,bias);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[4], ShadowData4,bias, spot);
     if(idx == 5 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[5], ShadowData5,bias);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[5], ShadowData5,bias, spot);
     if(idx == 6 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[6], ShadowData6,bias);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[6], ShadowData6,bias, spot);
     if(idx == 7 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[7], ShadowData7,bias);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[7], ShadowData7,bias, spot);
     if(idx == 8 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[8], ShadowData8,bias);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[8], ShadowData8,bias, spot);
     if(idx == 9 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[9], ShadowData9,bias);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[9], ShadowData9,bias, spot);
     if(idx == 10 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[10], ShadowData10,bias);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[10], ShadowData10,bias, spot);
     if(idx == 11 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[11], ShadowData11,bias);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[11], ShadowData11,bias, spot);
     if(idx == 12 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[12], ShadowData12,bias);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[12], ShadowData12,bias, spot);
     if(idx == 13 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[13], ShadowData13,bias);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[13], ShadowData13,bias, spot);
     if(idx == 14 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[14], ShadowData14,bias);
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[14], ShadowData14,bias, spot);
     if(idx == 15 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[15], ShadowData15,bias);    
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[15], ShadowData15,bias, spot);    
   }
   else
     ret =1.0;
@@ -453,7 +468,7 @@ vec4 calcDirectionalLight(int idx, Material mat, vec3 pos, vec3 normal)
  
   float shadowFactor = 1.0f;
  // if(length( vec2(pos.x,pos.z) - vec2(CameraPosition.x,CameraPosition.z )) <10 )
-   shadowFactor = calcSpotShadowFactor(l.ShadowMapIndex, bias);
+   shadowFactor = calcSpotShadowFactor(l.ShadowMapIndex, bias, false);
 
   return vec4(diffuse* shadowFactor * l.Base.Intensity + ambient* l.Base.Intensity + specular* shadowFactor * l.Base.Intensity,1) ;
 }
@@ -494,7 +509,6 @@ vec4 calcSpotLight(int idx, Material mat, vec3 pos, vec3 normal)
   vec3 ambient = l.Pointlight.Base.AmbientColor * mat.AmbientColor;
   float attenuation = 1.0f / (l.Pointlight.Attenuation.Constant + l.Pointlight.Attenuation.Linear * distance + l.Pointlight.Attenuation.Quadratic * (distance * distance));
 
-
   if (angle < cutoff)
   {
     vec4 color;
@@ -507,12 +521,12 @@ vec4 calcSpotLight(int idx, Material mat, vec3 pos, vec3 normal)
     float spec = pow(max(dot(h, norm), 0.0), mat.Shininess);
 
     vec3 specular =    l.Pointlight.Base.SpecularColor * spec * mat.SpecularColor;
-    float bias = max(0.05 * (1.0 - dot(norm, lightToPixel)), 0.1);
-    float shadowFactor = calcSpotShadowFactor(l.ShadowMapIndex,bias);
+    float bias = 0.01; //  max(0.05 * (1.0 - dot(norm, lightToPixel)), 0.1);
+    float shadowFactor = calcSpotShadowFactor(l.ShadowMapIndex,bias, true);
 
     float delta = cutoff - angle; // maybe use different smoothing
 
-    color = vec4( (diffuse* l.Pointlight.Base.Intensity*shadowFactor  * delta + ambient* l.Pointlight.Base.Intensity * spotFactor + specular* shadowFactor * delta* l.Pointlight.Base.Intensity  * spotFactor ) *attenuation,1) ;
+    color = vec4( (diffuse* l.Pointlight.Base.Intensity*0  * delta + ambient* l.Pointlight.Base.Intensity * spotFactor * shadowFactor + specular* shadowFactor * delta* l.Pointlight.Base.Intensity  * spotFactor ) *attenuation,1) ;
     
     return color;
   }

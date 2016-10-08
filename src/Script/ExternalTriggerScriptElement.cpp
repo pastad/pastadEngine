@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-ExternatTriggerScriptElement::ExternatTriggerScriptElement(): ScriptElement()
+ExternatTriggerScriptElement::ExternatTriggerScriptElement(): ScriptElement(SE_EXTERNAL)
 {
   external_callback = nullptr;
 }

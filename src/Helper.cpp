@@ -12,6 +12,7 @@
 #include <sstream>
 
 #include "Engine.h"
+#include "Log.h"
 
 #include "tinyxml2.h"
 
@@ -141,4 +142,23 @@ void Helper::readFromElement(tinyxml2::XMLElement * element,glm::vec2 * v)
 {
   element->QueryFloatAttribute("x", &v->x);
   element->QueryFloatAttribute("y", &v->y);
+}
+
+void Helper::checkGLError(std::string who )
+{
+  GLenum error = gl::GetError();
+  while (error != gl::NO_ERROR_)
+  {
+    if (error == gl::INVALID_ENUM)    
+      Engine::getLog()->log(who, "invalid enum");
+    if (error == gl::INVALID_VALUE)
+      Engine::getLog()->log(who, "invalid value");
+    if (error == gl::INVALID_OPERATION)
+      Engine::getLog()->log(who, "invalid operation");
+    if (error == gl::INVALID_FRAMEBUFFER_OPERATION)
+      Engine::getLog()->log(who, "invalid framebuffer op");
+    if (error == gl::OUT_OF_MEMORY)
+      Engine::getLog()->log(who, "oom");      
+    error = gl::GetError();
+  }
 }

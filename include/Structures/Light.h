@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 
+#include <string>
 
 #include "tinyxml2.h"
 
@@ -120,6 +121,9 @@ public:
   glm::vec2 getRotation();
   void rotate(glm::vec2 delta);
   void setRotation(glm::vec2 delta);
+
+  // setter for intensity
+  void setIntensity(float f);
   
   // saves the light
   void save(tinyxml2::XMLNode * parent, tinyxml2::XMLDocument * doc);
@@ -129,6 +133,9 @@ public:
 
   // returns true if still in light range
   bool isInRange(glm::vec3 p);
+
+  // returns a description of the light
+  std::string getDescription();
 
 
 protected:

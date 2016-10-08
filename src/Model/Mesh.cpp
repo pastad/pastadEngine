@@ -2,6 +2,7 @@
 
 #include "Engine.h"
 #include "Log.h"
+#include "Helper.h"
 #include "BoundingBox.h"
 
 #include <iostream>
@@ -72,7 +73,7 @@ Mesh::Mesh(const  IndexedRepresentation& model, int mat_index)
 
 Mesh::~Mesh()
 {
-    gl::DeleteVertexArrays(1, &m_vertex_array_object);
+  gl::DeleteVertexArrays(1, &m_vertex_array_object);
   if(m_bounding_box != nullptr)
     delete m_bounding_box;
 }
@@ -83,7 +84,11 @@ Mesh::~Mesh()
 void  Mesh::initMesh(const  IndexedRepresentation& model)
 {
   m_draw_count = model.m_indices.size();
+  Helper::checkGLError("initMesh");
   gl::GenVertexArrays(1, &m_vertex_array_object);
+
+  Helper::checkGLError("initMesh");
+
   gl::BindVertexArray(m_vertex_array_object);
 
   gl::GenBuffers(NUM_BUFFERS, m_vertex_array_buffers);

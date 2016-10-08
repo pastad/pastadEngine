@@ -428,11 +428,11 @@ bool Model::isAnimated()
 Object * Model::getInstance(Scene * scene)
 {
   m_mutex.lock();
-  Engine::getRenderSubsystem()->acquireRenderLock("Model");
+  //Engine::getRenderSubsystem()->acquireRenderLock("Model");
   Object * obj = new Object(m_path, this,scene);
 
   m_instances.insert(m_instances.end(),obj);
-  Engine::getRenderSubsystem()->releaseRenderLock("Model");
+  //Engine::getRenderSubsystem()->releaseRenderLock("Model");
   m_mutex.unlock();
   return obj;
 }

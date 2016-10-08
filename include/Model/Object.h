@@ -133,7 +133,7 @@ public:
   //using  Transform::setScale;
   using  Transform::getScale;
 
-  // setters
+  // setters | should be used for starting poses
   void setPosition(glm::vec3 p);
   void setRotation(glm::vec3 r);
   void setScale(glm::vec3 s);
@@ -150,16 +150,26 @@ public:
   // true if fall should be checked;
   bool shouldFallBeChecked();
 
+  // flags the object for fall check
+  void setFallShouldBeChecked();
+
   // adds a script to the object
   Script * addScript();
+
+  // returns the script
+  Script * getScript();
 
   // removes and deletes the set script
   void removeScript();
 
   // acquires the mutex lock or waits
   bool acquireLock();
+  void acquireLockHard();
   void releaseLock();
   
+  // resets the object to the start
+  void resetToStart();
+
 private:
 
   // pointer to the "parent" model
@@ -216,9 +226,16 @@ private:
   // the mutex for thread safety
   std::mutex m_mutex;
 
+  // starting rotation and position for script resets
+  glm::vec3 m_start_position;
+  glm::vec3 m_start_rotation;
 
   // returns the angle to ...
   float getAngleTo(glm::vec3 dir, glm::vec3 lp , glm::vec3 pos);
+
+  // internal set position without start reset
+  void setPositionIntern(glm::vec3 p);
+  void setRotationIntern(glm::vec3 r);
 
 };
 

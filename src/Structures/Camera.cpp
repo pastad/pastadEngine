@@ -54,6 +54,7 @@ Camera::Camera(float x, float y, float z): m_pos(x,y,z),m_rotation_allowed(false
   m_up_down_movement_allowed = true;
 
   external_cameraRotatedCallback = nullptr;
+  external_cameraMovedCallback = nullptr;
 
   recalculateMatrices();
 }

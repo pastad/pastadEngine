@@ -6,8 +6,11 @@
 
 #include <glm/glm.hpp>
 
+#include "tinyxml2.h"
+
 class ScriptElement;
 class RotationScriptElement;
+class TranslationScriptElement;
 class Object;
 class Scene;
 
@@ -29,6 +32,23 @@ public:
   // adds a RotationScript
   RotationScriptElement * addRotationScript();
 
+  // adds a TranslationScript
+  TranslationScriptElement * addTranslationScript();
+
+  // returns all script elements
+  std::vector<ScriptElement *> getScriptElements();
+
+  // removes a script element
+  void removeScriptElement(ScriptElement * se);
+
+  // saves the script
+  void save(tinyxml2::XMLElement * element, tinyxml2::XMLDocument* document);
+
+  // loads the script
+  bool load(tinyxml2::XMLElement *  element);
+
+  // resets all scripts
+  void reset();
 
 protected:  
 

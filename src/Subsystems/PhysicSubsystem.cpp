@@ -32,8 +32,10 @@ PhysicSubsystem::~PhysicSubsystem()
 
 void PhysicSubsystem::updateScene(Scene * scene, float delta)
 {
+  delta *= scene->getTimeAdvance();
+//  std::cout << delta <<std::endl;
   SceneTreeElement * root = scene->getSceneRoot();
- // traverseScene(root,scene, delta);
+  traverseScene(root,scene, delta);
   Camera * cam = scene->getCamera();  
   if(cam != nullptr)
   {
@@ -103,7 +105,10 @@ void PhysicSubsystem::traverseScene( SceneTreeElement * element , Scene * scene,
           if(  ( distance - obj->getFallVector().y-drop.y -0.1f  ) > 0 )
           {
             //cam->applyDrop(drop);  
-            obj->applyDrop(drop  );    
+            if(delta != 0.0f)
+              obj->applyDrop(drop  ); 
+             else
+              obj->setFallShouldBeChecked();
           }
           else
             obj->setDropVector(glm::vec3(0,0,0));

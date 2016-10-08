@@ -61,6 +61,7 @@ protected:
 	// prints the active uniforms
 	void printUniforms();
 
+
 private:
 
 	// the program handle

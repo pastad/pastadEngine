@@ -43,6 +43,9 @@ public:
 
   // interolation function
   static GLfloat lerp(GLfloat a, GLfloat b, GLfloat c);
+  
+  //checks uniform errors
+  static void checkGLError(std::string who);
 
   static float m_debug_float;
 

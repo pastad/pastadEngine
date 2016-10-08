@@ -124,11 +124,15 @@ public:
   // loads the scene specified by path
   bool load(std::string path);
     
-  //returns the time
+  // returns/sets the time
   float getTime();
+  void setTime(float time);
 
   // sets how fast the scene plays
   void setTimeAdvance(float speed);
+
+  // returns the time advance speed
+  float getTimeAdvance();
 
   // acquires the mutex lock
   void acquireLock(std::string who);

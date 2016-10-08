@@ -19,6 +19,7 @@
 #include <glm/gtx/vector_angle.hpp>
 
 #include  <iostream>
+#include  <sstream>
 
 #define MIN_LIGHT_THRESHOLD 0.1
 
@@ -138,7 +139,7 @@ bool Light::setDirectional(glm::vec3 direction, glm::vec3 col_am ,glm::vec3 col_
     else
         Engine::getLog()->log("Light", "Too many directional lights allready set");
 
-    if(Engine::isInEditMode())
+    if(Engine::isInEditMode() || Engine::isInExternalEditMode())
     {
       m_model = RessourceManager::loadModel("resources/cylinder.obj",false);
     
@@ -188,14 +189,14 @@ bool Light::setPoint(glm::vec3 positon, glm::vec3 col_am ,glm::vec3 col_dif, glm
     }
     m_refresh_shadow =true;
 
-    if(Engine::isInEditMode())
+    if(Engine::isInEditMode() || Engine::isInExternalEditMode())
     {
       m_model = RessourceManager::loadModel("resources/sphere.obj",false);
     
       if(m_point_object == nullptr)
       {
-        m_point_object = m_model->getInstance(nullptr);
-        m_point_object->setScale(glm::vec3(0.2f,0.2f,0.2f));
+     //   m_point_object = m_model->getInstance(nullptr);
+     //   m_point_object->setScale(glm::vec3(0.2f,0.2f,0.2f));
       }
     }
     return true;
@@ -243,14 +244,14 @@ bool Light::setSpot(glm::vec3 position, glm::vec3 col_am ,glm::vec3 col_dif, glm
     }
     m_refresh_shadow =true;
 
-    if(Engine::isInEditMode())
+    if(Engine::isInEditMode() || Engine::isInExternalEditMode())
     {
       m_model = RessourceManager::loadModel("resources/cone.obj",false);
     
       if(m_spot_object == nullptr)
       {
-        m_spot_object = m_model->getInstance(nullptr);
-        m_spot_object->setScale(glm::vec3(0.2f,0.2f,0.2f));
+   //     m_spot_object = m_model->getInstance(nullptr);
+    //    m_spot_object->setScale(glm::vec3(0.2f,0.2f,0.2f));
       }
     }   
 
@@ -728,7 +729,7 @@ void Light::bindForShadowRenderPoint( RenderBaseShader * point_shadow_shader, in
     if( iteration == 1)
     {
       m_point_buffer->bindForInput(gl::TEXTURE_CUBE_MAP_NEGATIVE_X);
-      point_shadow_shader->setViewMatrix(getView(glm::vec3(-1.0f,0.0f,0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));      
+      point_shadow_shader->setViewMatrix(getView(glm::vec3(-1.0f,0.0f,0.0f), glm::vec3(0.0f,-1.0f, 0.0f)));      
     }
     if( iteration == 2)
     {
@@ -817,4 +818,23 @@ void Light::bindForRender(RenderShader * render_shader)
       m_point_buffer->bindForOutput(num);    
     }
   }
+}
+
+void Light::setIntensity(float f)
+{
+  m_intensity = f;
+}
+
+std::string Light::getDescription()
+{
+  std::stringstream ss;
+  if(m_type == LIGHT_DIRECTIONAL)
+    ss<< "Directional ";
+  if (m_type == LIGHT_SPOT)
+    ss << "Spot ";
+  if (m_type == LIGHT_POINT)
+    ss << "Point ";
+  ss << " "<< m_id -1000 <<"("<<m_color_ambient.x<<"," << m_color_ambient.y << "," << m_color_ambient.z << ")";
+
+  return ss.str();
 }

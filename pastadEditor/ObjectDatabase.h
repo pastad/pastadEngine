@@ -6,10 +6,12 @@
 
 struct ObjectDatabaseEntry
 {
+  unsigned int m_id;
   std::string m_name;
   std::string m_path;
   std::string m_icon_path;
   std::string m_description;
+  
 };
 
 // class that stores the objects for easier scene adding
@@ -28,7 +30,18 @@ public:
   bool save();
 
   // adds an entry to the db
-  void addEntry();
+  void addExistingEntry(ObjectDatabaseEntry entry);
+  void addNewEntry(ObjectDatabaseEntry entry);
+
+  // updates an entry
+  void updateEntry(ObjectDatabaseEntry entry);
+
+  // removes an entry from the db
+  void removeEntry(ObjectDatabaseEntry entry);
+  void removeEntry(ObjectDatabaseEntry * entry);
+
+  // returns all entries
+  std::vector<ObjectDatabaseEntry> getEntries();
 
 private:
   
@@ -37,6 +50,9 @@ private:
     
   // the entries in the database
   std::vector<ObjectDatabaseEntry> m_entries;
+
+  // id count
+  unsigned int m_id_count =1;
 
 };
 

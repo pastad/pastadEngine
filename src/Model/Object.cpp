@@ -38,7 +38,7 @@ Object::~Object()
 
 void Object::move(glm::vec3 direction)
 {
-  setPosition( getPosition() + direction  ); 
+  setPositionIntern( getPosition() + direction  );
 }
 
 void Object::rotate(glm::vec3 delta)
@@ -62,7 +62,7 @@ void Object::rotate(glm::vec3 delta)
   if(rot.z < 0.0f)  
     rot.z += 360.0f;
 
-  setRotation( rot );
+  setRotationIntern( rot );
   refreshAABB();
 }
 
@@ -105,6 +105,14 @@ void Object::save(tinyxml2::XMLNode * parent, tinyxml2::XMLDocument* document)
   element = document->NewElement("Static");
   element_object->InsertEndChild(element);
   element->SetAttribute("value", isStaticFlagSet());
+
+  if (m_script != nullptr)
+  {
+    element = document->NewElement("Script");
+    element_object->InsertEndChild(element);
+    m_script->save(element, document);
+  }
+
 }
 
 bool Object::load( tinyxml2::XMLElement *  element)
@@ -153,6 +161,21 @@ bool Object::load( tinyxml2::XMLElement *  element)
   if( child != nullptr)
     Helper::readFromElement(child, &scale);
 
+  child = element->FirstChildElement("Script");
+  if (child != nullptr)
+  {
+  //std::cout << "Script tag found" <<std::endl;
+    m_script =  new Script();
+    if (!m_script->load(child))
+    {
+      std::cout << "Script couldnt be loaded" << std::endl;
+      delete m_script;
+      m_script = nullptr;
+    }
+  }
+  else
+    m_script = nullptr;
+
   setPosition(position);
   setRotation(rotation);
   setScale(scale);
@@ -166,7 +189,6 @@ bool Object::load( tinyxml2::XMLElement *  element)
   else
     dontApplyPhysicsStatic();
 
-  std::cout << visible <<std::endl;
   setVisibility( (Visibility) visible);
 
   if(static_flag)
@@ -174,6 +196,10 @@ bool Object::load( tinyxml2::XMLElement *  element)
   else
     unsetStaticFlag();
   //std::cout << "objct loading done"<<std::endl; 
+
+
+
+
   return true;
 }
 
@@ -364,20 +390,37 @@ bool Object::isStaticFlagSet()
 
 void Object::setPosition(glm::vec3 p)
 {
-    if (this == NULL)
-        std::cout << "wtf" << std::endl;
   Transform::setPosition(p);
+  m_start_position =p;
   refreshAABB();
   m_needs_fall_check = true;
   if(Engine::getScene() != nullptr)
     Engine::getScene()->refreshLights();
 }
 
+void Object::setPositionIntern(glm::vec3 p)
+{
+  Transform::setPosition(p);
+  refreshAABB();
+  m_needs_fall_check = true;
+  if (Engine::getScene() != nullptr)
+    Engine::getScene()->refreshLights();
+}
+
 void Object::setRotation(glm::vec3 r)
 {
   Transform::setRotation(r);
+  m_start_rotation = r;
   refreshAABB();
   if(Engine::getScene() != nullptr)
+    Engine::getScene()->refreshLights();
+}
+
+void Object::setRotationIntern(glm::vec3 r)
+{
+  Transform::setRotation(r);
+  refreshAABB();
+  if (Engine::getScene() != nullptr)
     Engine::getScene()->refreshLights();
 }
 
@@ -567,6 +610,10 @@ Script *  Object::addScript()
   m_parent_scene->objectIsScripted(this);
   return m_script;
 }
+Script * Object::getScript()
+{
+  return m_script;
+}
 
 void  Object::removeScript()
 {
@@ -595,7 +642,21 @@ bool Object::acquireLock()
 {
   return m_mutex.try_lock();
 }
+void Object::acquireLockHard()
+{
+  m_mutex.lock();
+}
 void Object::releaseLock()
 {
   m_mutex.unlock();
+}
+void Object::setFallShouldBeChecked()
+{
+  m_needs_fall_check = true;
+}
+
+void Object::resetToStart()
+{
+  setPosition(m_start_position);
+  setRotation(m_start_rotation);
 }

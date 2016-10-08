@@ -14,15 +14,17 @@
 #include "SkyboxShader.h"
 #include "Terrain.h"
 #include "Water.h"
+#include "Helper.h"
 #include "SceneTreeElement.h"
+#include "PastadEditor.h"
 
 #include <iostream>
+#include <iomanip>
 #include <future>
 #include <sstream>
 #include <algorithm>
 #include <iterator>
 #include <numeric>
-
 
 #include "tinyxml2.h"
 
@@ -86,8 +88,8 @@ void Scene::update(float delta)
 
   timeUpdate(delta * m_time_advance);
 
-  std::future<void> future_scriptupdate = std::async(updateObjectsScripts, m_objects_scripted, delta, this);
-  std::future<void> future_animateupdate = std::async(updateObjectsAnimated, m_objects_animated, delta);
+  std::future<void> future_scriptupdate = std::async(updateObjectsScripts, m_objects_scripted, delta * m_time_advance, this);
+  std::future<void> future_animateupdate = std::async(updateObjectsAnimated, m_objects_animated, delta * m_time_advance);
   future_scriptupdate.get();
   future_animateupdate.get();
 
@@ -153,6 +155,10 @@ void Scene::update(SceneTreeElement * element,  float delta)
 void Scene::timeUpdate(float delta)
 {
   m_time_line_seconds += delta;
+  
+  if(Engine::getPastadEditor() != nullptr)
+    Engine::getPastadEditor()->setTime(getTimeString());
+
   //std::cout <<delta <<std::endl;
   //std::cout << getTimeString() <<std::endl;
 }
@@ -186,11 +192,11 @@ void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, R
   }
   int c = 0;
 
-  if(Engine::isInEditMode())
+  if(Engine::isInEditMode() || Engine::isInExternalEditMode())
   {
     for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end();it++)
     {
-      (*it)->editRender(render_shader,c);
+     // (*it)->editRender(render_shader,c);
       if((*it)->getType()  == LIGHT_DIRECTIONAL)
         c++;
     }
@@ -227,8 +233,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
       {
         shadow_shader->use();
         (*it)->bindForShadowRenderDirectional(shadow_shader);
-        gl::ClearColor(0, 0, 0, 0);
-        
+        gl::ClearColor(0, 0, 0, 0);       
 
         // TODO make me faster
         for (std::vector<Model *>::iterator it = m_models_instanced.begin(); it != m_models_instanced.end(); it++)
@@ -247,7 +252,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
             glm::vec3 p = (*it3)->getMinBBDistantPoint( (*it)->getPosition() ) ;
             //std::cout <<angle<<std::endl;
             if( (! (*it)->isInRange(p) ) || (angle > (*it)->getCutoffAngle() ) ||  ( (*it3)->getVisibility() != V_All) )
-              objs.erase(it3);
+              it3 = objs.erase(it3);
             else
               it3++;
             
@@ -289,8 +294,9 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
         point_shadow_shader->use();
         for( int iteration =0; iteration <6; iteration++)
         {
-          (*it)->bindForShadowRenderPoint(point_shadow_shader,iteration);
           gl::ClearColor(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);
+          (*it)->bindForShadowRenderPoint(point_shadow_shader,iteration);
+        
 
           // TODO make me faster
           for (std::vector<Model *>::iterator it = m_models_instanced.begin(); it != m_models_instanced.end(); it++)
@@ -305,7 +311,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
             {
               glm::vec3 p = (*it2)->getMinBBDistantPoint( (*it)->getPosition() ) ;
               if(! (*it)->isInRange(p) || ( (*it2)->getVisibility() == V_None ) )
-                objs.erase(it2);
+                it2 = objs.erase(it2);
               else
                 it2++;
             }
@@ -570,7 +576,7 @@ bool Scene::load(std::string path)
   }
   else  
     Engine::getLog()->log("Scene", "no children in scene file");    
-  
+  Helper::checkGLError("SceneLoad");
  // releaseLock();
   return true;
 }
@@ -593,8 +599,13 @@ std::string Scene::getTimeString()
   std::stringstream ss;
   float mins = (int)m_time_line_seconds / 60;
   float secs = (int)m_time_line_seconds % 60;
-  ss << mins << ":" <<secs;
+  ss << std::setfill('0') << std::setw(2) << mins << ":" << std::setfill('0') << std::setw(2) <<secs;
   return ss.str();
+}
+
+void Scene::setTime(float time)
+{
+  m_time_line_seconds  = time;
 }
 
 //root
@@ -677,8 +688,13 @@ void Scene::objectIsScripted(Object * obj)
 Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, bool insert_in_tree, bool static_object)
 {
   try
-  {  
+  {
     acquireLock("addObject");
+    if( this == Engine::getScene())
+      Engine::getRenderSubsystem()->acquireRenderLock("PastadEditorAddObject");
+
+    Helper::checkGLError("add Object");
+
     Engine::getLog()->log("Scene", "adding Object");
     Model * m = RessourceManager::loadModel(path, instanced);
     Object * obj = nullptr;
@@ -723,6 +739,9 @@ Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, 
     else    
        Engine::getLog()->log("Scene", "Object is null");
 
+    if (this == Engine::getScene())
+      Engine::getRenderSubsystem()->releaseRenderLock("PastadEditorAddObject");
+
     releaseLock("addObject");
 
     return obj;
@@ -736,6 +755,9 @@ Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, 
 Object * Scene::addObject(std::string path,  bool instanced ,  bool static_object)
 {
   acquireLock("addObject");
+  if (this == Engine::getScene())
+    Engine::getRenderSubsystem()->acquireRenderLock("PastadEditorAddObject");
+ 
   Engine::getLog()->log("Scene", "adding Object");
   Model * m = RessourceManager::loadModel(path, instanced);
   Object * obj  = nullptr;
@@ -771,7 +793,12 @@ Object * Scene::addObject(std::string path,  bool instanced ,  bool static_objec
 
     refreshRenderObjects();
   }
+
+  if (this == Engine::getScene())
+    Engine::getRenderSubsystem()->releaseRenderLock("PastadEditorAddObject");
+
   releaseLock("addObject");
+
   return obj;
 }
 
@@ -983,13 +1010,32 @@ void Scene::setTimeAdvance(float speed)
 
 void Scene::acquireLock(std::string who)
 {
-  Engine::getLog()->log(LF_TS, "Scene", "lock wanted by ", who);
-  m_mutex.lock();
-  Engine::getLog()->log(LF_TS, "Scene", "lock acquired by ", who);
+  try
+  {
+    Engine::getLog()->log(LF_TS, "Scene", "lock wanted by ", who);
+    m_mutex.lock();
+    Engine::getLog()->log(LF_TS, "Scene", "lock acquired by ", who);
+  }
+  catch (std::exception ex)
+  {
+    Engine::getLog()->log(LF_TS, "EXCEPTION", "locking");
+  }
 }
 
 void Scene::releaseLock(std::string who)
 {
-  m_mutex.unlock();
-  Engine::getLog()->log(LF_TS, "Scene", "lock unlocked by ", who);
+  try
+  {
+    m_mutex.unlock();
+    Engine::getLog()->log(LF_TS, "Scene", "lock unlocked by ", who);
+  }
+  catch (std::exception ex)
+  {
+    Engine::getLog()->log(LF_TS, "EXCEPTION", "locking");
+  }
+}
+
+float Scene::getTimeAdvance()
+{
+  return m_time_advance;
 }

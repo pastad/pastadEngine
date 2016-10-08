@@ -108,6 +108,9 @@ int GBuffer::pickObjectAt(glm::vec2 pos)
 
   m_material_texture->bind(0);
   gl::GetTexImage(gl::TEXTURE_2D, 0, gl::RGB, gl::FLOAT, texData);
+  if( p >= size *3)
+    return 0;
+
   int ret = texData[p];
   //std::cout << "chosen: "<<ret <<" left: "<< texData[p-1] <<" right: "<< texData[p+1]<<std::endl;
 
