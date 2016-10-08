@@ -1,0 +1,6 @@
+<ObjectDatabase>
+    <ObjectDatabaseEntry id="1" name="bush2" path="game/models/bush2.obj" icon_path="models/bush2.PNG" description="low poly bush
+selfmade"/>
+    <ObjectDatabaseEntry id="2" name="flower" path="models/flower.obj" icon_path="Not set" description="a low poly flower
+red pedals, green stem"/>
+</ObjectDatabase>
