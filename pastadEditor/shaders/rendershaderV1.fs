@@ -58,6 +58,7 @@ uniform vec4 Color;
 uniform int NumDirectionalLights;
 uniform int NumSpotLights;
 uniform int NumPointLights;
+uniform int NormalMapActive;
 
 uniform vec3 CameraPosition;
 uniform int MaterialIndex;
@@ -468,7 +469,10 @@ vec4 calcDirectionalLight(int idx, Material mat, vec3 pos, vec3 normal)
  
   float shadowFactor = 1.0f;
  // if(length( vec2(pos.x,pos.z) - vec2(CameraPosition.x,CameraPosition.z )) <10 )
-   shadowFactor = calcSpotShadowFactor(l.ShadowMapIndex, bias, false);
+
+
+  if(l.ShadowMapIndex != -1)
+     shadowFactor = calcSpotShadowFactor(l.ShadowMapIndex, bias, false);
 
   return vec4(diffuse* shadowFactor * l.Base.Intensity + ambient* l.Base.Intensity + specular* shadowFactor * l.Base.Intensity,1) ;
 }
@@ -490,7 +494,11 @@ vec4 calcPointLights(int idx, Material mat, vec3 pos, vec3 normal)
   vec3 specular = calcSpecularColor(lightDir, l.Base.SpecularColor, mat,pos,normal);
 
   float attenuation = 1.0f / (l.Attenuation.Constant + l.Attenuation.Linear * distance + l.Attenuation.Quadratic * (distance * distance));
-  float  shadowFactor  = calcPointShadowfactor(l.ShadowMapIndex,l.Position, pos.xyz);
+
+  float  shadowFactor  = 1.0;
+  if(l.ShadowMapIndex != -1)
+      shadowFactor = calcPointShadowfactor(l.ShadowMapIndex,l.Position, pos.xyz);
+
   return vec4( (diffuse* l.Base.Intensity* shadowFactor  + ambient* 1* l.Base.Intensity + specular* shadowFactor * l.Base.Intensity ) * attenuation,1) ;
 }
 
@@ -522,7 +530,10 @@ vec4 calcSpotLight(int idx, Material mat, vec3 pos, vec3 normal)
 
     vec3 specular =    l.Pointlight.Base.SpecularColor * spec * mat.SpecularColor;
     float bias = 0.01; //  max(0.05 * (1.0 - dot(norm, lightToPixel)), 0.1);
-    float shadowFactor = calcSpotShadowFactor(l.ShadowMapIndex,bias, true);
+    float shadowFactor = 1.0;
+
+    if(l.ShadowMapIndex != -1)
+      shadowFactor = calcSpotShadowFactor(l.ShadowMapIndex,bias, true);
 
     float delta = cutoff - angle; // maybe use different smoothing
 
@@ -556,6 +567,13 @@ void pass1()
 
   PositionData = Position;
   NormalData = normalize(Normal);
+
+  if(NormalMapActive == 1 )
+  {
+    NormalData= vec3( texture( Tex5, TexCoord ) );
+    NormalData = normalize(NormalData * 2.0 - 1.0  );   
+  }
+
   ColorData = vec3(color);
   MaterialData = vec3(MaterialIndex,ObjectId,  LinearizeDepth(gl_FragCoord.z)); // if there is a /1000 delete it , just for testing
 }

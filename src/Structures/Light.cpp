@@ -422,9 +422,12 @@ void Light::setShadowIndex( unsigned int idx)
 {
   m_shadow_index = idx;
 }
-unsigned int Light::getShadowIndex()
+int Light::getShadowIndex()
 {
-  return m_shadow_index;
+  if( m_shadow_index )
+    return m_shadow_index;  
+  else
+    return -1;
 }
 bool Light::isShadowEnabled()
 {
@@ -806,16 +809,23 @@ void Light::bindForRender(RenderShader * render_shader)
       0.0, 0.0, 0.5, 0.0,
       0.5, 0.5, 0.5, 1.0
       );
-      int num = render_shader->setShadowMap(biasMatrix * getProjection() * getView());
-     // std::cout << num <<std::endl;
-      m_shadow_index = num;
-      m_directional_buffer->bindForOutput(num);
+      if( m_shadow_enabled )
+      {
+        int num = render_shader->setShadowMap(biasMatrix * getProjection() * getView());
+       // std::cout << num <<std::endl;
+        m_shadow_index = num;
+        m_directional_buffer->bindForOutput(num);
+      }
+
     }
     if( getType() == LIGHT_POINT)
     {
-      int num = render_shader->setPointShadow();
-      m_shadow_index = num;
-      m_point_buffer->bindForOutput(num);    
+      if (m_shadow_enabled)
+      {
+        int num = render_shader->setPointShadow();
+        m_shadow_index = num;
+        m_point_buffer->bindForOutput(num);    
+      }
     }
   }
 }

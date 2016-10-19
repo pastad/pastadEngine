@@ -29,7 +29,7 @@ Camera::Camera(float x, float y, float z): m_pos(x,y,z),m_rotation_allowed(false
   m_fov = 45.0f;
   m_rot_2 =0.0f;
   m_rot_1 = 90.0f;
-  m_speed = 10.0f;
+  m_speed = 5.0f;
   m_rotation_speed = 0.2f;  
   m_exposure = 1.0f;
   m_plane_top = new Plane();
@@ -39,6 +39,7 @@ Camera::Camera(float x, float y, float z): m_pos(x,y,z),m_rotation_allowed(false
   m_plane_front = new Plane();
   m_plane_back = new Plane();
   m_should_fall_be_checked = true;
+  m_movement_check = true;
 
   m_bottom_offset = 0.0f;
   m_surrounding_offset =0.0f;
@@ -203,7 +204,7 @@ void Camera::update(float delta_time)
       glm::vec3 f = m_forward;
       if( !isUpDownTranslationAllowed()) // dont allow running upwards ...
         f.y = 0.0f;
-      if(physics_system != nullptr)
+      if(physics_system != nullptr && m_movement_check)
       {
         glm::vec3 npos;
         if(physics_system->collisionMovement(scene, m_pos, f , step, m_surrounding_offset, m_bottom_offset, &npos))
@@ -229,7 +230,7 @@ void Camera::update(float delta_time)
       if( !isUpDownTranslationAllowed()) // or downwards
         f.y = 0.0f;
      // movementWithCollisionCheck(-m_forward, step);
-      if(physics_system != nullptr)
+      if(physics_system != nullptr && m_movement_check)
       {
         glm::vec3 npos;
         if(physics_system->collisionMovement(scene, m_pos, f , step, m_surrounding_offset, m_bottom_offset, &npos))
@@ -250,7 +251,7 @@ void Camera::update(float delta_time)
     if(IOSubsystem::isKeyPressed('A'))
     {
      // movementWithCollisionCheck(-right, step);
-      if(physics_system != nullptr)
+      if(physics_system != nullptr && m_movement_check)
       {
         glm::vec3 npos;
         if(physics_system->collisionMovement(scene, m_pos, -m_right , step, m_surrounding_offset, m_bottom_offset, &npos))
@@ -274,7 +275,7 @@ void Camera::update(float delta_time)
     if(IOSubsystem::isKeyPressed('D'))
     {
       //movementWithCollisionCheck(right, step);
-      if(physics_system != nullptr)
+      if(physics_system != nullptr && m_movement_check)
       {
         glm::vec3 npos;
         if(physics_system->collisionMovement(scene, m_pos, m_right , step, m_surrounding_offset, m_bottom_offset, &npos))
@@ -672,6 +673,15 @@ bool Camera::shouldFallBeChecked()
   return m_should_fall_be_checked;
 }
 
+void Camera::setMovementCollisionCheck()
+{
+  m_movement_check = true;
+}
+void Camera::unsetMovementCollisionCheck()
+{
+  m_movement_check = false;
+}
+
 //  callback register -------------------------------------------------
 
 void Camera::registerMovedCallback( void  (*callback)(void)   )
@@ -683,3 +693,4 @@ void Camera::registerRotatedCallback( void  (*callback)(void)   )
 {
   external_cameraRotatedCallback = callback;
 }
+

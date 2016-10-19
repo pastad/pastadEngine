@@ -122,6 +122,10 @@ public:
     // register rotation callback function
     void registerRotatedCallback( void  (*callback)()   );
 
+    // movement collision check getter setter
+    void setMovementCollisionCheck();
+    void unsetMovementCollisionCheck();
+
  
 private:
 
@@ -189,6 +193,7 @@ private:
     bool m_apply_physics;
     glm::vec3 m_fall_vector;
     bool m_should_fall_be_checked;
+    bool m_movement_check;
 
     // the path the camera should take
     std::vector<glm::vec3 > m_path;

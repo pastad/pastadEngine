@@ -386,6 +386,11 @@ void RenderShader::setFog(glm::vec3 color, float factor,float offset)
   setUniform("FogOffset",offset );
 }
 
+void RenderShader::setNormalMapActive(int active)
+{
+  setUniform("NormalMapActive", active);
+}
+
 //  use/reset -------------------------------------------------
 
 void RenderShader::use()

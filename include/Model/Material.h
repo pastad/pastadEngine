@@ -60,6 +60,9 @@ private:
   std::map<int,Texture*> m_diffuse_textures;
   std::map<int, int > m_diffuse_texture_strengths;
 
+  // the normal texture of the material
+  Texture* m_normal_texture = nullptr;
+
   // the material color specs for lightinf
   MaterialColorSpecs m_material_specs;
 

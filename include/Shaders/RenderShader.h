@@ -49,8 +49,11 @@ public:
 
   // material and lights -----------------------------------------
 
-  /// determines if material is only a color
+  // determines if material is only a color
   void setColorOnly(bool color_only);
+
+  // activates the normal map usage
+  void setNormalMapActive(int active);
 
   // sets the material that should be used
   void setMaterial(std::string name, MaterialColorSpecs specs);
@@ -65,6 +68,8 @@ public:
   void setLights(std::vector<Light*> * lights);
 
   std::vector<int> getEmmissiveMaterialIndices();
+
+
 
 
   // shadow specific ---------------------------------------------

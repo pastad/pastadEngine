@@ -106,7 +106,7 @@ public:
 
   // getter and setter for shadow index
   void setShadowIndex( unsigned int idx);
-  unsigned int getShadowIndex();
+  int getShadowIndex();
 
   // renders the light as a sphere 
   void editRender(RenderShader * render_shader, int c);

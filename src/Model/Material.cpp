@@ -30,6 +30,13 @@ Material::Material(aiMaterial * pMaterial, std::string dir)
   m_base_texture_set = false;
 
   unsigned int num_diffuse_textures = pMaterial->GetTextureCount(aiTextureType_DIFFUSE);
+  unsigned int num_ambient_textures = pMaterial->GetTextureCount(aiTextureType_AMBIENT);
+  unsigned int num_normal_textures = pMaterial->GetTextureCount(aiTextureType_NORMALS);
+  unsigned int num_unkown_textures = pMaterial->GetTextureCount(aiTextureType_HEIGHT);
+  std::cout << "Loading "<< num_diffuse_textures <<" diffuse textures"<<std::endl;
+  std::cout << "Listed " << num_ambient_textures << " ambient textures" << std::endl;
+  std::cout << "Listed " << num_normal_textures << " normal textures" << std::endl;
+  std::cout << "Listed " << num_unkown_textures << " height textures" << std::endl;
 
   // load diffuse texturess
   for(int x=0; x< num_diffuse_textures;x++)
@@ -50,6 +57,15 @@ Material::Material(aiMaterial * pMaterial, std::string dir)
 
       std::string path = dir + "/" + p2;
 
+      std::string t("C:");
+
+      if (p2.compare(0, t.length(), t) == 0)
+      {
+        path = p2;
+      }
+
+      std::cout << path << std::endl;
+
       // load it and store it in our mapping
       Texture * tex = RessourceManager::loadTexture(path);
       m_diffuse_textures.insert(m_diffuse_textures.end(),std::pair<int ,Texture *>(x,tex));
@@ -57,6 +73,26 @@ Material::Material(aiMaterial * pMaterial, std::string dir)
       m_base_texture_set = true;
     }
   }  
+
+  aiString Path;
+  float strength;
+
+  if (pMaterial->GetTexture(aiTextureType_NORMALS, 0, &Path, NULL, NULL, &strength, NULL, NULL) == AI_SUCCESS)
+  {
+    std::string fi(Path.data);
+    std::string::size_type slashpos2 = fi.find_last_of("/");
+    std::string p2;
+    if (slashpos2 != std::string::npos)
+      p2 = fi.substr(slashpos2 + 1, fi.size());
+    else
+      p2 = fi;
+
+    std::string path = dir + "/" + p2;
+
+    // load it and store it in our mapping
+    m_normal_texture = RessourceManager::loadTexture(path);
+    m_base_texture_set = true;
+  }
  
   aiColor4D diffuse,specular,ambient,emmissive;
   float opacity,shininess;
@@ -96,8 +132,21 @@ void Material::bind(int unit, RenderShader * render_shader)
   if(m_base_texture_set)
   {    
     render_shader->setColorOnly(false); 
-    for(int x=0; x < m_diffuse_textures.size();x++)
+    int c =0;
+
+    for(int x=0; x < m_diffuse_textures.size() && (x <4) ;x++)
+    {
       m_diffuse_textures.at(x)->bind(unit+x);
+      c++;
+    }
+    if( m_normal_texture != nullptr)
+    {      
+      m_normal_texture->bind(4);
+      render_shader->setNormalMapActive(1);
+     // std::cout << "set norm" <<std::endl; 
+    }
+    else
+      render_shader->setNormalMapActive(0);
   }
   else
   {
