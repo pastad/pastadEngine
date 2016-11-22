@@ -143,6 +143,10 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 		m_shader->use();
 		m_shader->setShadowsDirectional(ST_STANDARD_PCF);
     m_shader->setShadowsPoint(ST_STANDARD_PCF);
+    m_shader->setSSAO(true);
+    m_shadow_ssao = true;
+    m_shadow_techniques = ST_STANDARD_PCF;
+    m_shadow_technique_point = ST_STANDARD_PCF;
 
 		m_shadows_standard_directional_enabled = m_shadows_standard_point_enabled = true;
 
