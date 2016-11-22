@@ -6,6 +6,7 @@ layout( location = 2 ) in vec3 VertexNormal;
 layout( location = 4 ) in mat4 ModelMatrix;
 
 out vec2 TexCoord;
+out mat4 ProjMatrix;
 
 uniform mat4 ViewMat;
 uniform mat4 ProjectionMat;

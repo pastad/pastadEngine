@@ -1022,8 +1022,14 @@ void PastadEditor::on_pb_light_remove_clicked()
 void PastadEditor::on_cb_shadow_type_currentIndexChanged(int idx)
 {
 //  std::cout << idx <<std::endl;
-  SetShadowTechniqueRequest * sstr = new SetShadowTechniqueRequest( (ShadowTechniqueType) idx);
+  SetShadowTechniqueDirectionalRequest * sstr = new SetShadowTechniqueDirectionalRequest( (ShadowTechniqueType) idx);
   Engine::addRequest( (EngineRequest *) sstr );
+}
+void PastadEditor::on_cb_shadow_type_point_currentIndexChanged(int idx)
+{
+  //  std::cout << idx <<std::endl;
+  SetShadowTechniquePointRequest * sstr = new SetShadowTechniquePointRequest((ShadowTechniqueType)idx);
+  Engine::addRequest((EngineRequest *)sstr);
 }
 
 void PastadEditor::on_cb_sc_trigger_currentIndexChanged(int idx)
@@ -1081,6 +1087,11 @@ void PastadEditor::on_rb_bloom_clicked(bool value)
     SetPPTechniqueRequest * spptr = new SetPPTechniqueRequest(PP_BLOOM, false);
     Engine::addRequest((EngineRequest *)spptr);
   }
+}
+void PastadEditor::on_rb_ssao_clicked(bool value)
+{
+  SetShadowTechniqueAdditionalRequest * sstr = new SetShadowTechniqueAdditionalRequest( value ?  ST_SSAO : ST_NONE);
+  Engine::addRequest((EngineRequest *)sstr);
 }
 
 void PastadEditor::on_pb_add_script_clicked()

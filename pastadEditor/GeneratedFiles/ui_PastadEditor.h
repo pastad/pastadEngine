@@ -140,6 +140,10 @@ public:
     QRadioButton *rb_hdr;
     QLabel *label_25;
     QRadioButton *rb_bloom;
+    QComboBox *cb_shadow_type_point;
+    QLabel *label_30;
+    QRadioButton *rb_ssao;
+    QLabel *label_31;
     QLabel *lbl_time;
     QPushButton *pb_refresh_shaders;
     QPushButton *pb_scene_reset;
@@ -174,7 +178,7 @@ public:
         pb_scene_play->setGeometry(QRect(10, 10, 31, 23));
         tabWidget = new QTabWidget(centralWidget);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
-        tabWidget->setGeometry(QRect(10, 40, 701, 771));
+        tabWidget->setGeometry(QRect(10, 50, 701, 771));
         tabWidget->setLayoutDirection(Qt::LeftToRight);
         tabWidget->setTabShape(QTabWidget::Rounded);
         tabWidget->setTabsClosable(false);
@@ -463,30 +467,44 @@ public:
         tab_3->setObjectName(QStringLiteral("tab_3"));
         cb_shadow_type = new QComboBox(tab_3);
         cb_shadow_type->setObjectName(QStringLiteral("cb_shadow_type"));
-        cb_shadow_type->setGeometry(QRect(120, 40, 91, 22));
+        cb_shadow_type->setGeometry(QRect(140, 41, 91, 31));
         label_22 = new QLabel(tab_3);
         label_22->setObjectName(QStringLiteral("label_22"));
-        label_22->setGeometry(QRect(30, 42, 47, 21));
+        label_22->setGeometry(QRect(30, 42, 101, 31));
         label_23 = new QLabel(tab_3);
         label_23->setObjectName(QStringLiteral("label_23"));
-        label_23->setGeometry(QRect(30, 82, 61, 21));
+        label_23->setGeometry(QRect(30, 130, 91, 31));
         cb_anti_aliasing = new QComboBox(tab_3);
         cb_anti_aliasing->setObjectName(QStringLiteral("cb_anti_aliasing"));
-        cb_anti_aliasing->setGeometry(QRect(120, 82, 91, 22));
+        cb_anti_aliasing->setGeometry(QRect(140, 131, 91, 31));
         label_24 = new QLabel(tab_3);
         label_24->setObjectName(QStringLiteral("label_24"));
-        label_24->setGeometry(QRect(30, 120, 61, 31));
+        label_24->setGeometry(QRect(30, 170, 91, 31));
         rb_hdr = new QRadioButton(tab_3);
         rb_hdr->setObjectName(QStringLiteral("rb_hdr"));
-        rb_hdr->setGeometry(QRect(120, 130, 82, 17));
+        rb_hdr->setGeometry(QRect(140, 170, 91, 31));
         rb_hdr->setAutoExclusive(false);
         label_25 = new QLabel(tab_3);
         label_25->setObjectName(QStringLiteral("label_25"));
-        label_25->setGeometry(QRect(30, 160, 61, 31));
+        label_25->setGeometry(QRect(30, 210, 61, 31));
         rb_bloom = new QRadioButton(tab_3);
         rb_bloom->setObjectName(QStringLiteral("rb_bloom"));
-        rb_bloom->setGeometry(QRect(120, 170, 82, 17));
+        rb_bloom->setGeometry(QRect(140, 210, 91, 31));
         rb_bloom->setAutoExclusive(false);
+        cb_shadow_type_point = new QComboBox(tab_3);
+        cb_shadow_type_point->setObjectName(QStringLiteral("cb_shadow_type_point"));
+        cb_shadow_type_point->setGeometry(QRect(360, 40, 91, 31));
+        label_30 = new QLabel(tab_3);
+        label_30->setObjectName(QStringLiteral("label_30"));
+        label_30->setGeometry(QRect(270, 40, 91, 31));
+        rb_ssao = new QRadioButton(tab_3);
+        rb_ssao->setObjectName(QStringLiteral("rb_ssao"));
+        rb_ssao->setGeometry(QRect(140, 80, 91, 31));
+        rb_ssao->setChecked(true);
+        rb_ssao->setAutoExclusive(false);
+        label_31 = new QLabel(tab_3);
+        label_31->setObjectName(QStringLiteral("label_31"));
+        label_31->setGeometry(QRect(30, 80, 91, 31));
         tabWidget->addTab(tab_3, QString());
         lbl_time = new QLabel(centralWidget);
         lbl_time->setObjectName(QStringLiteral("lbl_time"));
@@ -523,9 +541,10 @@ public:
 
         retranslateUi(PastadEditorClass);
 
-        tabWidget->setCurrentIndex(2);
+        tabWidget->setCurrentIndex(3);
         cb_shadow_type->setCurrentIndex(2);
         cb_anti_aliasing->setCurrentIndex(1);
+        cb_shadow_type_point->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(PastadEditorClass);
@@ -623,7 +642,7 @@ public:
          << QApplication::translate("PastadEditorClass", "PCF", 0)
          << QApplication::translate("PastadEditorClass", "RandomSampling", 0)
         );
-        label_22->setText(QApplication::translate("PastadEditorClass", "Shadows", 0));
+        label_22->setText(QApplication::translate("PastadEditorClass", "Shadows Directional", 0));
         label_23->setText(QApplication::translate("PastadEditorClass", "Anti-aliasing", 0));
         cb_anti_aliasing->clear();
         cb_anti_aliasing->insertItems(0, QStringList()
@@ -634,6 +653,15 @@ public:
         rb_hdr->setText(QString());
         label_25->setText(QApplication::translate("PastadEditorClass", "Bloom", 0));
         rb_bloom->setText(QString());
+        cb_shadow_type_point->clear();
+        cb_shadow_type_point->insertItems(0, QStringList()
+         << QApplication::translate("PastadEditorClass", "off", 0)
+         << QApplication::translate("PastadEditorClass", "Standard", 0)
+         << QApplication::translate("PastadEditorClass", "PCF", 0)
+        );
+        label_30->setText(QApplication::translate("PastadEditorClass", "Shadows Point", 0));
+        rb_ssao->setText(QString());
+        label_31->setText(QApplication::translate("PastadEditorClass", "SSAO", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("PastadEditorClass", "EngineOptions", 0));
         lbl_time->setText(QApplication::translate("PastadEditorClass", "time", 0));
         pb_refresh_shaders->setText(QApplication::translate("PastadEditorClass", "refresh shaders", 0));

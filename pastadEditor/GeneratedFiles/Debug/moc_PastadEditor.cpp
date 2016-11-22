@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_PastadEditor_t {
-    QByteArrayData data[75];
-    char stringdata0[1892];
+    QByteArrayData data[77];
+    char stringdata0[1955];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -101,9 +101,11 @@ QT_MOC_LITERAL(68, 1717, 17), // "saveScriptElement"
 QT_MOC_LITERAL(69, 1735, 36), // "on_cb_sc_trigger_currentIndex..."
 QT_MOC_LITERAL(70, 1772, 3), // "idx"
 QT_MOC_LITERAL(71, 1776, 37), // "on_cb_shadow_type_currentInde..."
-QT_MOC_LITERAL(72, 1814, 39), // "on_cb_anti_aliasing_currentIn..."
-QT_MOC_LITERAL(73, 1854, 17), // "on_rb_hdr_clicked"
-QT_MOC_LITERAL(74, 1872, 19) // "on_rb_bloom_clicked"
+QT_MOC_LITERAL(72, 1814, 43), // "on_cb_shadow_type_point_curre..."
+QT_MOC_LITERAL(73, 1858, 39), // "on_cb_anti_aliasing_currentIn..."
+QT_MOC_LITERAL(74, 1898, 17), // "on_rb_hdr_clicked"
+QT_MOC_LITERAL(75, 1916, 19), // "on_rb_bloom_clicked"
+QT_MOC_LITERAL(76, 1936, 18) // "on_rb_ssao_clicked"
 
     },
     "PastadEditor\0on_actionLoadScene_triggered\0"
@@ -162,8 +164,10 @@ QT_MOC_LITERAL(74, 1872, 19) // "on_rb_bloom_clicked"
     "saveScriptElement\0"
     "on_cb_sc_trigger_currentIndexChanged\0"
     "idx\0on_cb_shadow_type_currentIndexChanged\0"
+    "on_cb_shadow_type_point_currentIndexChanged\0"
     "on_cb_anti_aliasing_currentIndexChanged\0"
-    "on_rb_hdr_clicked\0on_rb_bloom_clicked"
+    "on_rb_hdr_clicked\0on_rb_bloom_clicked\0"
+    "on_rb_ssao_clicked"
 };
 #undef QT_MOC_LITERAL
 
@@ -173,7 +177,7 @@ static const uint qt_meta_data_PastadEditor[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      66,   14, // methods
+      68,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -181,72 +185,74 @@ static const uint qt_meta_data_PastadEditor[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,  344,    2, 0x0a /* Public */,
-       3,    0,  345,    2, 0x0a /* Public */,
-       4,    0,  346,    2, 0x0a /* Public */,
-       5,    0,  347,    2, 0x0a /* Public */,
-       6,    0,  348,    2, 0x0a /* Public */,
-       7,    0,  349,    2, 0x0a /* Public */,
-       8,    0,  350,    2, 0x0a /* Public */,
-       9,    0,  351,    2, 0x0a /* Public */,
-      10,    0,  352,    2, 0x0a /* Public */,
-      11,    1,  353,    2, 0x0a /* Public */,
-      14,    0,  356,    2, 0x0a /* Public */,
-      15,    0,  357,    2, 0x0a /* Public */,
-      16,    0,  358,    2, 0x0a /* Public */,
-      17,    0,  359,    2, 0x0a /* Public */,
-      18,    0,  360,    2, 0x0a /* Public */,
-      19,    0,  361,    2, 0x0a /* Public */,
-      20,    0,  362,    2, 0x0a /* Public */,
-      21,    0,  363,    2, 0x0a /* Public */,
-      22,    1,  364,    2, 0x0a /* Public */,
-      24,    1,  367,    2, 0x0a /* Public */,
-      25,    0,  370,    2, 0x0a /* Public */,
-      26,    0,  371,    2, 0x0a /* Public */,
-      27,    0,  372,    2, 0x0a /* Public */,
-      28,    0,  373,    2, 0x0a /* Public */,
-      29,    0,  374,    2, 0x0a /* Public */,
-      30,    0,  375,    2, 0x0a /* Public */,
-      31,    1,  376,    2, 0x0a /* Public */,
-      33,    1,  379,    2, 0x0a /* Public */,
-      34,    1,  382,    2, 0x0a /* Public */,
-      35,    1,  385,    2, 0x0a /* Public */,
-      36,    1,  388,    2, 0x0a /* Public */,
-      37,    0,  391,    2, 0x0a /* Public */,
-      38,    0,  392,    2, 0x0a /* Public */,
-      39,    0,  393,    2, 0x0a /* Public */,
-      40,    0,  394,    2, 0x0a /* Public */,
-      41,    0,  395,    2, 0x0a /* Public */,
-      42,    1,  396,    2, 0x0a /* Public */,
-      43,    0,  399,    2, 0x0a /* Public */,
-      44,    0,  400,    2, 0x0a /* Public */,
-      45,    0,  401,    2, 0x0a /* Public */,
-      46,    0,  402,    2, 0x0a /* Public */,
-      47,    0,  403,    2, 0x0a /* Public */,
-      48,    0,  404,    2, 0x0a /* Public */,
-      49,    1,  405,    2, 0x0a /* Public */,
-      51,    1,  408,    2, 0x0a /* Public */,
-      52,    1,  411,    2, 0x0a /* Public */,
-      53,    1,  414,    2, 0x0a /* Public */,
-      55,    0,  417,    2, 0x0a /* Public */,
-      56,    0,  418,    2, 0x0a /* Public */,
-      57,    0,  419,    2, 0x0a /* Public */,
-      58,    0,  420,    2, 0x0a /* Public */,
-      59,    0,  421,    2, 0x0a /* Public */,
-      60,    1,  422,    2, 0x0a /* Public */,
-      61,    1,  425,    2, 0x0a /* Public */,
-      62,    0,  428,    2, 0x0a /* Public */,
-      63,    0,  429,    2, 0x0a /* Public */,
-      64,    0,  430,    2, 0x0a /* Public */,
-      65,    0,  431,    2, 0x0a /* Public */,
-      66,    0,  432,    2, 0x0a /* Public */,
-      67,    0,  433,    2, 0x0a /* Public */,
-      68,    0,  434,    2, 0x0a /* Public */,
-      69,    1,  435,    2, 0x0a /* Public */,
-      71,    1,  438,    2, 0x0a /* Public */,
-      72,    1,  441,    2, 0x0a /* Public */,
-      73,    1,  444,    2, 0x0a /* Public */,
-      74,    1,  447,    2, 0x0a /* Public */,
+       1,    0,  354,    2, 0x0a /* Public */,
+       3,    0,  355,    2, 0x0a /* Public */,
+       4,    0,  356,    2, 0x0a /* Public */,
+       5,    0,  357,    2, 0x0a /* Public */,
+       6,    0,  358,    2, 0x0a /* Public */,
+       7,    0,  359,    2, 0x0a /* Public */,
+       8,    0,  360,    2, 0x0a /* Public */,
+       9,    0,  361,    2, 0x0a /* Public */,
+      10,    0,  362,    2, 0x0a /* Public */,
+      11,    1,  363,    2, 0x0a /* Public */,
+      14,    0,  366,    2, 0x0a /* Public */,
+      15,    0,  367,    2, 0x0a /* Public */,
+      16,    0,  368,    2, 0x0a /* Public */,
+      17,    0,  369,    2, 0x0a /* Public */,
+      18,    0,  370,    2, 0x0a /* Public */,
+      19,    0,  371,    2, 0x0a /* Public */,
+      20,    0,  372,    2, 0x0a /* Public */,
+      21,    0,  373,    2, 0x0a /* Public */,
+      22,    1,  374,    2, 0x0a /* Public */,
+      24,    1,  377,    2, 0x0a /* Public */,
+      25,    0,  380,    2, 0x0a /* Public */,
+      26,    0,  381,    2, 0x0a /* Public */,
+      27,    0,  382,    2, 0x0a /* Public */,
+      28,    0,  383,    2, 0x0a /* Public */,
+      29,    0,  384,    2, 0x0a /* Public */,
+      30,    0,  385,    2, 0x0a /* Public */,
+      31,    1,  386,    2, 0x0a /* Public */,
+      33,    1,  389,    2, 0x0a /* Public */,
+      34,    1,  392,    2, 0x0a /* Public */,
+      35,    1,  395,    2, 0x0a /* Public */,
+      36,    1,  398,    2, 0x0a /* Public */,
+      37,    0,  401,    2, 0x0a /* Public */,
+      38,    0,  402,    2, 0x0a /* Public */,
+      39,    0,  403,    2, 0x0a /* Public */,
+      40,    0,  404,    2, 0x0a /* Public */,
+      41,    0,  405,    2, 0x0a /* Public */,
+      42,    1,  406,    2, 0x0a /* Public */,
+      43,    0,  409,    2, 0x0a /* Public */,
+      44,    0,  410,    2, 0x0a /* Public */,
+      45,    0,  411,    2, 0x0a /* Public */,
+      46,    0,  412,    2, 0x0a /* Public */,
+      47,    0,  413,    2, 0x0a /* Public */,
+      48,    0,  414,    2, 0x0a /* Public */,
+      49,    1,  415,    2, 0x0a /* Public */,
+      51,    1,  418,    2, 0x0a /* Public */,
+      52,    1,  421,    2, 0x0a /* Public */,
+      53,    1,  424,    2, 0x0a /* Public */,
+      55,    0,  427,    2, 0x0a /* Public */,
+      56,    0,  428,    2, 0x0a /* Public */,
+      57,    0,  429,    2, 0x0a /* Public */,
+      58,    0,  430,    2, 0x0a /* Public */,
+      59,    0,  431,    2, 0x0a /* Public */,
+      60,    1,  432,    2, 0x0a /* Public */,
+      61,    1,  435,    2, 0x0a /* Public */,
+      62,    0,  438,    2, 0x0a /* Public */,
+      63,    0,  439,    2, 0x0a /* Public */,
+      64,    0,  440,    2, 0x0a /* Public */,
+      65,    0,  441,    2, 0x0a /* Public */,
+      66,    0,  442,    2, 0x0a /* Public */,
+      67,    0,  443,    2, 0x0a /* Public */,
+      68,    0,  444,    2, 0x0a /* Public */,
+      69,    1,  445,    2, 0x0a /* Public */,
+      71,    1,  448,    2, 0x0a /* Public */,
+      72,    1,  451,    2, 0x0a /* Public */,
+      73,    1,  454,    2, 0x0a /* Public */,
+      74,    1,  457,    2, 0x0a /* Public */,
+      75,    1,  460,    2, 0x0a /* Public */,
+      76,    1,  463,    2, 0x0a /* Public */,
 
  // slots: parameters
     QMetaType::Void,
@@ -313,6 +319,8 @@ static const uint qt_meta_data_PastadEditor[] = {
     QMetaType::Void, QMetaType::Int,   70,
     QMetaType::Void, QMetaType::Int,   70,
     QMetaType::Void, QMetaType::Int,   70,
+    QMetaType::Void, QMetaType::Int,   70,
+    QMetaType::Void, QMetaType::Bool,   32,
     QMetaType::Void, QMetaType::Bool,   32,
     QMetaType::Void, QMetaType::Bool,   32,
 
@@ -388,9 +396,11 @@ void PastadEditor::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         case 60: _t->saveScriptElement(); break;
         case 61: _t->on_cb_sc_trigger_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 62: _t->on_cb_shadow_type_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 63: _t->on_cb_anti_aliasing_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 64: _t->on_rb_hdr_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 65: _t->on_rb_bloom_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 63: _t->on_cb_shadow_type_point_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 64: _t->on_cb_anti_aliasing_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 65: _t->on_rb_hdr_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 66: _t->on_rb_bloom_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 67: _t->on_rb_ssao_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -421,13 +431,13 @@ int PastadEditor::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 66)
+        if (_id < 68)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 66;
+        _id -= 68;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 66)
+        if (_id < 68)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 66;
+        _id -= 68;
     }
     return _id;
 }

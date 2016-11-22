@@ -353,30 +353,54 @@ int RenderShader::setPointShadow()
   return ret;
 }
 
-void RenderShader::setShadows(ShadowTechniqueType tech)
+void RenderShader::setShadowsDirectional(ShadowTechniqueType tech)
 {
   if(tech == ST_NONE)
   {
-    setUniform("EnableShadows",0 );
+    setUniform("EnableShadowsDirectional",0 );
     resetShadowMapping();
     Engine::getLog()->log("RenderShader", "Disable Shadows");     
   }
   if(tech == ST_STANDARD)
   {
-    setUniform("EnableShadows",1 );
+    setUniform("EnableShadowsDirectional",1 );
     Engine::getLog()->log("RenderShader", "Enable Standard Shadows");     
   }
   if(tech == ST_STANDARD_PCF)
   {
-    setUniform("EnableShadows",2 );
+    setUniform("EnableShadowsDirectional",2 );
     Engine::getLog()->log("RenderShader", "Enable Standard PCF Shadows");     
   }
   if(tech == ST_STANDARD_RS)
   {
-    setUniform("EnableShadows",3 );
+    setUniform("EnableShadowsDirectional",3 );
     Engine::getLog()->log("RenderShader", "Enable Standard RandomSampling Shadows");     
   }
   checkUniformError("set standard shadows");
+}
+void RenderShader::setShadowsPoint(ShadowTechniqueType tech)
+{
+  if (tech == ST_NONE)
+  {
+    setUniform("EnableShadowsPoint", 0);
+    resetShadowMapping();
+    Engine::getLog()->log("RenderShader", "Disable Shadows");
+  }
+  if (tech == ST_STANDARD)
+  {
+    setUniform("EnableShadowsPoint", 1);
+    Engine::getLog()->log("RenderShader", "Enable Standard Shadows");
+  }
+  if (tech == ST_STANDARD_PCF)
+  {
+    setUniform("EnableShadowsPoint", 2);
+    Engine::getLog()->log("RenderShader", "Enable Standard PCF Shadows");
+  }
+  checkUniformError("set standard shadows");
+}
+void RenderShader::setSSAO(bool val)
+{
+  setUniform("EnableSSAO", val ? 1 : 0 );
 }
 
 void RenderShader::setFog(glm::vec3 color, float factor,float offset)

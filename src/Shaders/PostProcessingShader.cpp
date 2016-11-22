@@ -163,9 +163,10 @@ void PostProcessingShader::setSSAOSamples()
   for (GLuint i = 0; i < 64; ++i)
   {
     std::stringstream ss;
-    float x = randomFloats(gen) * 2.0 - 1.0;
-    float y = randomFloats(gen) * 2.0 - 1.0; 
-    float z = randomFloats(gen);
+    float offset = 0.25;
+    float x = randomFloats(gen) * ( 2.0 - (2*offset) )  - (1.0 -offset) ;
+    float y = randomFloats(gen) * (2.0 - (2 * offset)) - (1.0 - offset);
+    float z = randomFloats(gen) - offset;
    
     glm::vec3 one_samle( x,y,z );
 

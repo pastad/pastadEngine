@@ -424,7 +424,7 @@ void Light::setShadowIndex( unsigned int idx)
 }
 int Light::getShadowIndex()
 {
-  if( m_shadow_index )
+  if(m_shadow_enabled)
     return m_shadow_index;  
   else
     return -1;
@@ -665,6 +665,8 @@ bool Light::load( tinyxml2::XMLElement *  element)
   if( child != nullptr)
   {    
     child->QueryBoolAttribute("value", &shadow_enabled);
+    if (shadow_enabled)
+      Engine::getLog()->log("Light", "shadows enabled");
   } 
 
   if( type == LIGHT_DIRECTIONAL)

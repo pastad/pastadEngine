@@ -221,7 +221,7 @@ void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, R
 
 }
 
-void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* point_shadow_shader)
+void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* point_shadow_shader, bool directional_enabled, bool point_enabled)
 {  
 
   for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end();it++)
@@ -229,7 +229,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
     if( (*it)->getShadowRefresh() && (*it)->isShadowEnabled())
     {
       //Engine::getLog()->log("Scene", "re-render light");
-      if( (*it)->getType() == LIGHT_SPOT )  
+      if( directional_enabled && ( (*it)->getType() == LIGHT_SPOT ) )
       {
         shadow_shader->use();
         (*it)->bindForShadowRenderDirectional(shadow_shader);
@@ -251,7 +251,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
             float angle = (*it3)->getMinAngleToLight( (*it) );
             glm::vec3 p = (*it3)->getMinBBDistantPoint( (*it)->getPosition() ) ;
             //std::cout <<angle<<std::endl;
-            if( (! (*it)->isInRange(p) ) || (angle > (*it)->getCutoffAngle() ) ||  ( (*it3)->getVisibility() != V_All) )
+            if( false) // (angle > (*it)->getCutoffAngle() ) ||  ( (*it3)->getVisibility() != V_All) )// (! (*it)->isInRange(p) ) ||
               it3 = objs.erase(it3);
             else
               it3++;
@@ -269,8 +269,8 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
 
         (*it)->unbindFromShadowRender();
       }
-      if( (*it)->getType() == LIGHT_DIRECTIONAL )  
-      {       
+      if( directional_enabled && ( (*it)->getType() == LIGHT_DIRECTIONAL ) )
+      {             
         shadow_shader->use();
         (*it)->bindForShadowRenderDirectional(shadow_shader);
         gl::ClearColor(0, 0, 0, 0);
@@ -289,7 +289,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
 
         (*it)->unbindFromShadowRender();
       }
-      if( (*it)->getType() == LIGHT_POINT )
+      if( point_enabled && ( (*it)->getType() == LIGHT_POINT ) )
       {        
         point_shadow_shader->use();
         for( int iteration =0; iteration <6; iteration++)
@@ -310,7 +310,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
             for(std::vector<Object *>::iterator it2 = objs.begin(); it2 != objs.end();)
             {
               glm::vec3 p = (*it2)->getMinBBDistantPoint( (*it)->getPosition() ) ;
-              if(! (*it)->isInRange(p) || ( (*it2)->getVisibility() == V_None ) )
+              if( ( (*it2)->getVisibility() == V_None ) ) //! (*it)->isInRange(p) ||
                 it2 = objs.erase(it2);
               else
                 it2++;

@@ -153,11 +153,13 @@ public slots:
        
     //combo boxes
     void on_cb_shadow_type_currentIndexChanged(int idx);
+    void on_cb_shadow_type_point_currentIndexChanged(int idx);
     void on_cb_anti_aliasing_currentIndexChanged(int idx);
 
     //radio buttons
     void on_rb_hdr_clicked(bool value);
     void on_rb_bloom_clicked(bool value);
+    void on_rb_ssao_clicked(bool value);
 
 private:
 

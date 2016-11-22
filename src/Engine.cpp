@@ -198,8 +198,9 @@ bool Engine::initialize(std::string path)
   }
 
   ShadowTechniqueType shadow_technique;
+  ShadowTechniqueType shadow_technique_point = (ShadowTechniqueType) 99;
 
-  if (!readConfig(path, &m_win_width, &m_win_height, &m_fullscreen, &m_edit_mode, &m_system_flags, &shadow_technique))
+  if (!readConfig(path, &m_win_width, &m_win_height, &m_fullscreen, &m_edit_mode, &m_system_flags, &shadow_technique, &shadow_technique_point))
     return false;
 
   m_current_time_sample = 0;
@@ -291,7 +292,8 @@ bool Engine::initialize(std::string path)
   }
 
 
-  m_render_system->setShadowTechnique((ShadowTechniqueType)shadow_technique);
+  m_render_system->setShadowTechniqueDirectional((ShadowTechniqueType)shadow_technique);
+  m_render_system->setShadowTechniquePoint((ShadowTechniqueType)shadow_technique);
 
   m_initialized = true;
   m_log->log("Engine", "initialized");
@@ -767,10 +769,18 @@ void Engine::setPostProcessing(PostprocessType type, bool enable)
   m_render_system->setPostProcessing(type,enable);
 }
 
-void Engine::setShadowTechnique(ShadowTechniqueType type)
+void Engine::setShadowTechniquePoint(ShadowTechniqueType type)
 {
-  m_render_system->setShadowTechnique(type);
+  m_render_system->setShadowTechniquePoint(type);
 } 
+void Engine::setShadowTechniqueDirectional(ShadowTechniqueType type)
+{
+  m_render_system->setShadowTechniqueDirectional(type);
+}
+void Engine::setShadowTechniqueSSAO(ShadowTechniqueType type)
+{
+  m_render_system->setShadowSSAO(type);
+}
 
 bool Engine::isInEditMode()
 {
@@ -943,7 +953,7 @@ void  Engine::setUpdateFunction(EXTERNALUPDATE callback_update)
 
 // saver  ---------------------------------------------------------------------------------------------------------
 
-bool Engine::saveConfig(std::string path, unsigned int width, unsigned int height, bool fullscreen, unsigned int edit_mode, unsigned int system_flags, ShadowTechniqueType shadow_technique)
+bool Engine::saveConfig(std::string path, unsigned int width, unsigned int height, bool fullscreen, unsigned int edit_mode, unsigned int system_flags, ShadowTechniqueType shadow_technique, ShadowTechniqueType shadow_technique_point)
 {
   Engine::getLog()->log("Engine", "saving config to", path);
   tinyxml2::XMLDocument document;
@@ -967,17 +977,22 @@ bool Engine::saveConfig(std::string path, unsigned int width, unsigned int heigh
   element_subsystems->SetAttribute("render", (system_flags & RENDER_SUBSYSTEM) ? 1 : 0);
   element_subsystems->SetAttribute("physic", (system_flags & PHYSIC_SUBSYSTEM) ? 1 : 0);
 
-  tinyxml2::XMLElement * element_shadow_tech = document.NewElement("Shadow");
+  tinyxml2::XMLElement * element_shadow_tech = document.NewElement("ShadowDirectional");
   root->InsertEndChild(element_shadow_tech);
 
   element_shadow_tech->SetAttribute("technique", (unsigned int)shadow_technique);
+
+  element_shadow_tech = document.NewElement("ShadowPoint");
+  root->InsertEndChild(element_shadow_tech);
+
+  element_shadow_tech->SetAttribute("technique", (unsigned int)shadow_technique_point);
 
   tinyxml2::XMLError eResult = document.SaveFile(path.c_str());
 
   return true;
 }
 
-bool Engine::readConfig(std::string path, unsigned int* width, unsigned int *height, bool *fullscreen, unsigned int* edit_mode, unsigned int *system_flags, ShadowTechniqueType *shadow_technique)
+bool Engine::readConfig(std::string path, unsigned int* width, unsigned int *height, bool *fullscreen, unsigned int* edit_mode, unsigned int *system_flags, ShadowTechniqueType *shadow_technique, ShadowTechniqueType *shadow_technique_point)
 {
 
   tinyxml2::XMLDocument document;
@@ -1040,6 +1055,25 @@ bool Engine::readConfig(std::string path, unsigned int* width, unsigned int *hei
         if (tech <= ST_STANDARD_RS)
         {
           *shadow_technique = (ShadowTechniqueType)tech;
+          *shadow_technique_point = (ShadowTechniqueType)tech;
+        }
+      }
+      if (type == "ShadowDirectional")
+      {
+        unsigned int tech;
+        child->QueryUnsignedAttribute("technique", &tech);
+        if (tech <= ST_STANDARD_RS)
+        {
+          *shadow_technique = (ShadowTechniqueType)tech;
+        }
+      }
+      if (type == "ShadowPoint")
+      {
+        unsigned int tech;
+        child->QueryUnsignedAttribute("technique", &tech);
+        if (tech <= ST_STANDARD_RS)
+        {
+          *shadow_technique_point = (ShadowTechniqueType)tech;
         }
       }
 
@@ -1108,9 +1142,17 @@ void Engine::handleEditorRequests()
         m_scene->removeLight(((RemoveLightRequest *)(*it))->getLight());
         m_pastad_editor->refreshLightList();
       }
-      if ((*it)->getType() == ERT_SET_SHADOW_TECHNIQUE)
+      if ((*it)->getType() == ERT_SET_SHADOW_TECHNIQUE_DIRECTIONAL)
       {
-        setShadowTechnique(((SetShadowTechniqueRequest *)(*it))->getShadowTechnique() );
+        setShadowTechniqueDirectional(((SetShadowTechniqueDirectionalRequest *)(*it))->getShadowTechnique() );
+      }
+      if ((*it)->getType() == ERT_SET_SHADOW_TECHNIQUE_POINT)
+      {
+        setShadowTechniquePoint(((SetShadowTechniquePointRequest *)(*it))->getShadowTechnique());
+      }
+      if ((*it)->getType() == ERT_SET_SHADOW_TECHNIQUE_SSAO)
+      {
+        setShadowTechniqueSSAO(((SetShadowTechniqueAdditionalRequest *)(*it))->getShadowTechnique());
       }
       if ((*it)->getType() == ERT_SET_PP_TECHNIQUE)
       {

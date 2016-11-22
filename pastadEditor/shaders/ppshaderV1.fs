@@ -14,6 +14,8 @@ layout(binding=0) uniform sampler2D Tex1;
 layout(binding=1) uniform sampler2D Tex2; 
 layout(binding=2) uniform sampler2D Tex3; 
 layout(binding=3) uniform sampler2D Tex4; 
+layout(binding=4) uniform sampler2D Tex5; 
+layout(binding=5) uniform sampler2D Tex6; 
 
 layout(binding=10) uniform sampler2D TexJitter;
 
@@ -32,6 +34,7 @@ uniform int EnableBloom;
 
 uniform mat4 CameraProjection;
 uniform mat4 CameraView;
+
 
 const int MAX_NUM_MATERIALS =  20;
 
@@ -144,7 +147,7 @@ void passStandard()
   else
     FragColor = color ;//
 
-  //FragColor = ssao;
+ // FragColor = ssao*0.3;
  
 }
 
@@ -173,12 +176,12 @@ void passBright()
 subroutine (RenderPassType)
 void passBlur()
 {
-  vec4 color = texture2D(Tex1, TexCoord );
+  vec4 color = texture2D(Tex1, TexCoord ) *GaussKernel[0];
   vec2 off = 1.0 / textureSize(Tex1, 0); 
-  for(int i = 1; i < 10; i++)
+  for(int i = 1; i < 4; i++)
   {
-    color += texture2D(Tex1, TexCoord + vec2(off.x * i, 0.0)) * GaussKernel[i-1];
-    color += texture2D(Tex1, TexCoord - vec2(off.x * i, 0.0)) * GaussKernel[i-1];
+    color += texture2D(Tex1, TexCoord + vec2(off.x * i, 0.0)) * GaussKernel[i];
+    color += texture2D(Tex1, TexCoord - vec2(off.x * i, 0.0)) * GaussKernel[i];
   }
 
   FragColor = color;
@@ -186,75 +189,61 @@ void passBlur()
 subroutine (RenderPassType)
 void passBlur2()
 {
-  vec4 color = texture2D(Tex1, TexCoord );
+  vec4 color = texture2D(Tex1, TexCoord )* GaussKernel[0];
   vec2 off = 1.0 / textureSize(Tex1, 0); 
-  for(int i = 1; i < 10; i++)
+  for(int i = 1; i < 4; i++)
   {
-    color += texture2D(Tex1, TexCoord + vec2(0.0, off.y * i)) * GaussKernel[i-1];
-    color += texture2D(Tex1, TexCoord - vec2(0.0, off.y * i)) * GaussKernel[i-1];
+    color += texture2D(Tex1, TexCoord + vec2(0.0, off.y * i)) * GaussKernel[i];
+    color += texture2D(Tex1, TexCoord - vec2(0.0, off.y * i)) * GaussKernel[i];
   }
   FragColor = color;
 }
-
 subroutine (RenderPassType)
 void passSSAO()
 {
+  vec2 ws = 1.0 / TextureScale;
+  const vec2 noiseScale = vec2(ws.x/6.0, ws.y/6.0); 
+   
   vec3 pos = vec3( texture( Tex1, TexCoord ) );
-  vec3 normal = vec3( texture( Tex2, TexCoord ) );
+  vec3 norm = vec3( texture( Tex2, TexCoord ) );
   vec3 diffColor = vec3( texture(Tex3, TexCoord) );
   vec3 material = vec3( texture(Tex4, TexCoord) );
-  float rad  = 0.1;
-  vec3 randVec = vec3(0,1,0);
+  vec3 noise = vec3( texture(Tex6, TexCoord* noiseScale) );
 
-  vec3 t2 = normal;
-  t2.y = - normal.z;
-  t2.z = normal.y;
+  vec3 tan = normalize(noise - norm* dot(noise, norm));
+  vec3 bitan = cross(norm, tan);
+  mat3 trans = mat3(tan, bitan, norm);  
 
-  vec3 tangent = normalize(randVec - normal * dot(randVec, normal));
-  tangent = t2;
-  vec3 bitangent = cross(normal, tangent);
-  mat3 tangent_to_view = mat3(tangent, bitangent, normal);
+  float occ = 0.0;
 
-  float occlusion = 0.0;
+  vec4 fp = -1.0 * CameraView*  texture( Tex1, TexCoord ) ;
+  
 
-  for(int c = 0; c < 64; c++)
+  for( int x=0; x< 64; x++)
   {
-    vec3 one_sample =   ( SSAOSamples[c]  );
-    one_sample = pos + one_sample * rad; // 1.0 is the radius 
+	  vec3 sam = trans * SSAOSamples[x];
+    float radius = 1.0;
+	  sam = fp.xyz+ sam *radius; // 1.0 radius
 
-   
-    vec4 off = vec4(one_sample, 1.0);
-    vec3 oc = vec3(CameraView * off);
-    off = CameraProjection * CameraView  * off; 
-    off.xyz /= off.w;
-    off.xyz = off.xyz * 0.5 + 0.5;    
+	  vec4 off = vec4(sam,1.0);
+	  off = CameraProjection * off;
+	  off.xyz /= off.w;
+	  off.xyz = off.xyz *0.5 +0.5;
 
-    float one_sample_depth = vec3( texture(Tex4, off.xy) ).z;    
-  
-    float range = smoothstep(0.0, 1.0, rad / abs(material.z - one_sample_depth )); // 1.0 / ...  is radius
-     // FragColor = vec4(one_sample_depth,one_sample_depth,one_sample_depth,1);
-    occlusion += ( one_sample_depth > material.z ? 1.0 : 0.0);// *range;  
-      //FragColor = vec4(one_sample_depth/1000,0,one_sample_depth/1000,1);        
+	  float depth = texture(Tex4, off.xy ).z; // the depth from the camera
+	
+
+	  float range = smoothstep(0.0,1.0, radius/ abs(fp.z-depth) );
+	  occ += ( depth >= sam.z ? 1.0 : 0.0 ) *range;	
   }
- // occlusion = 1.0 -  (occlusion / 64.0);// 
 
+  float depth = texture(Tex4, TexCoord ).y;
+  occ = (occ /64.0);
 
-  vec3 ts =  tangent_to_view * SSAOSamples[1];
-  ts = pos + ts * 1.0; // 1.0 is the radius 
-  
-  vec4 test = vec4( vec3(texture( Tex1, TexCoord )), 1.0) ;
-  test =  CameraProjection *CameraView * vec4(ts,1.0);
-  test.xyz /= test.w;
-  test.xyz = test.xyz* 0.5 + 0.5;  
-  vec3 diffColor2 = vec3( texture(Tex3, test.xy) );
-  //FragColor = vec4(diffColor.x,diffColor.y,diffColor.z,1);
-
-
-  FragColor = vec4(occlusion,occlusion,occlusion,1.0) ;
-  //FragColor = vec4(material.z/1000,0,material.z/1000,1);
-  if( (normal.x==0) && (normal.y==0) && (normal.z==0) )
-   FragColor = vec4(0,0,0,0);
+  FragColor  = vec4(occ,occ,occ,1.0);
 }
+
+
 
 void main()
 {

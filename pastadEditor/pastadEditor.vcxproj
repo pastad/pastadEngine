@@ -168,6 +168,7 @@
     <ClCompile Include="..\src\Render\DirectionalShadowBuffer.cpp" />
     <ClCompile Include="..\src\Render\GBuffer.cpp" />
     <ClCompile Include="..\src\Render\JitterTexture.cpp" />
+    <ClCompile Include="..\src\Render\NoiseTexture.cpp" />
     <ClCompile Include="..\src\Render\PointShadowBuffer.cpp" />
     <ClCompile Include="..\src\Render\Quad.cpp" />
     <ClCompile Include="..\src\Render\RenderBuffer.cpp" />
@@ -305,6 +306,7 @@
     <ClInclude Include="..\include\Render\DirectionalShadowBuffer.h" />
     <ClInclude Include="..\include\Render\GBuffer.h" />
     <ClInclude Include="..\include\Render\JitterTexture.h" />
+    <ClInclude Include="..\include\Render\NoiseTexture.h" />
     <ClInclude Include="..\include\Render\PointShadowBuffer.h" />
     <ClInclude Include="..\include\Render\Quad.h" />
     <ClInclude Include="..\include\Render\RenderBuffer.h" />

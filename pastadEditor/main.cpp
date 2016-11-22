@@ -36,7 +36,8 @@ int main(int argc, char *argv[])
     if( !engine.initialize(1680, 840, RENDER_SUBSYSTEM | PHYSIC_SUBSYSTEM , 0, false) )
       return -1;
 
-    engine.setShadowTechnique(ST_STANDARD );
+    engine.setShadowTechniqueDirectional(ST_STANDARD );
+    engine.setShadowTechniquePoint(ST_STANDARD);
 
     engine.setPostProcessing(PP_FXAA, true);
     engine.setPostProcessing(PP_HDR, true);

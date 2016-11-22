@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_PastadEditor_t {
-    QByteArrayData data[31];
-    char stringdata0[770];
+    QByteArrayData data[75];
+    char stringdata0[1892];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -32,43 +32,94 @@ static const qt_meta_stringdata_PastadEditor_t qt_meta_stringdata_PastadEditor =
 QT_MOC_LITERAL(0, 0, 12), // "PastadEditor"
 QT_MOC_LITERAL(1, 13, 28), // "on_actionLoadScene_triggered"
 QT_MOC_LITERAL(2, 42, 0), // ""
-QT_MOC_LITERAL(3, 43, 36), // "on_actionNewObjectDatabase_tr..."
-QT_MOC_LITERAL(4, 80, 37), // "on_actionLoadObjectDatabase_t..."
-QT_MOC_LITERAL(5, 118, 37), // "on_actionEditObjectDatabase_t..."
-QT_MOC_LITERAL(6, 156, 21), // "refreshObjectDatabase"
-QT_MOC_LITERAL(7, 178, 15), // "refreshSelected"
-QT_MOC_LITERAL(8, 194, 17), // "refreshObjectList"
-QT_MOC_LITERAL(9, 212, 7), // "savePos"
-QT_MOC_LITERAL(10, 220, 7), // "saveRot"
-QT_MOC_LITERAL(11, 228, 15), // "saveObjectSpecs"
-QT_MOC_LITERAL(12, 244, 25), // "on_pb_objects_add_clicked"
-QT_MOC_LITERAL(13, 270, 38), // "on_lw_objects_active_currentR..."
-QT_MOC_LITERAL(14, 309, 3), // "row"
-QT_MOC_LITERAL(15, 313, 39), // "on_lw_objects_chooser_current..."
-QT_MOC_LITERAL(16, 353, 31), // "on_le_obj_pos_x_editingFinished"
-QT_MOC_LITERAL(17, 385, 31), // "on_le_obj_pos_y_editingFinished"
-QT_MOC_LITERAL(18, 417, 31), // "on_le_obj_pos_z_editingFinished"
-QT_MOC_LITERAL(19, 449, 31), // "on_le_obj_rot_x_editingFinished"
-QT_MOC_LITERAL(20, 481, 31), // "on_le_obj_rot_y_editingFinished"
-QT_MOC_LITERAL(21, 513, 31), // "on_le_obj_rot_z_editingFinished"
-QT_MOC_LITERAL(22, 545, 23), // "on_rb_obj_fixed_clicked"
-QT_MOC_LITERAL(23, 569, 5), // "value"
-QT_MOC_LITERAL(24, 575, 30), // "on_rb_obj_apply_physic_clicked"
-QT_MOC_LITERAL(25, 606, 31), // "on_rb_obj_physic_static_clicked"
-QT_MOC_LITERAL(26, 638, 25), // "on_rb_obj_visible_clicked"
-QT_MOC_LITERAL(27, 664, 29), // "on_rb_obj_shadow_only_clicked"
-QT_MOC_LITERAL(28, 694, 24), // "on_pb_lights_add_clicked"
-QT_MOC_LITERAL(29, 719, 24), // "on_pb_scene_play_clicked"
-QT_MOC_LITERAL(30, 744, 25) // "on_pb_scene_pause_clicked"
+QT_MOC_LITERAL(3, 43, 28), // "on_actionSaveScene_triggered"
+QT_MOC_LITERAL(4, 72, 36), // "on_actionNewObjectDatabase_tr..."
+QT_MOC_LITERAL(5, 109, 37), // "on_actionLoadObjectDatabase_t..."
+QT_MOC_LITERAL(6, 147, 37), // "on_actionEditObjectDatabase_t..."
+QT_MOC_LITERAL(7, 185, 24), // "on_pb_scene_play_clicked"
+QT_MOC_LITERAL(8, 210, 25), // "on_pb_scene_pause_clicked"
+QT_MOC_LITERAL(9, 236, 25), // "on_pb_scene_reset_clicked"
+QT_MOC_LITERAL(10, 262, 29), // "on_pb_refresh_shaders_clicked"
+QT_MOC_LITERAL(11, 292, 7), // "setTime"
+QT_MOC_LITERAL(12, 300, 11), // "std::string"
+QT_MOC_LITERAL(13, 312, 4), // "time"
+QT_MOC_LITERAL(14, 317, 7), // "savePos"
+QT_MOC_LITERAL(15, 325, 7), // "saveRot"
+QT_MOC_LITERAL(16, 333, 15), // "saveObjectSpecs"
+QT_MOC_LITERAL(17, 349, 15), // "refreshSelected"
+QT_MOC_LITERAL(18, 365, 17), // "refreshObjectList"
+QT_MOC_LITERAL(19, 383, 21), // "refreshObjectDatabase"
+QT_MOC_LITERAL(20, 405, 25), // "on_pb_objects_add_clicked"
+QT_MOC_LITERAL(21, 431, 27), // "on_pb_object_remove_clicked"
+QT_MOC_LITERAL(22, 459, 38), // "on_lw_objects_active_currentR..."
+QT_MOC_LITERAL(23, 498, 3), // "row"
+QT_MOC_LITERAL(24, 502, 39), // "on_lw_objects_chooser_current..."
+QT_MOC_LITERAL(25, 542, 31), // "on_le_obj_pos_x_editingFinished"
+QT_MOC_LITERAL(26, 574, 31), // "on_le_obj_pos_y_editingFinished"
+QT_MOC_LITERAL(27, 606, 31), // "on_le_obj_pos_z_editingFinished"
+QT_MOC_LITERAL(28, 638, 31), // "on_le_obj_rot_x_editingFinished"
+QT_MOC_LITERAL(29, 670, 31), // "on_le_obj_rot_y_editingFinished"
+QT_MOC_LITERAL(30, 702, 31), // "on_le_obj_rot_z_editingFinished"
+QT_MOC_LITERAL(31, 734, 23), // "on_rb_obj_fixed_clicked"
+QT_MOC_LITERAL(32, 758, 5), // "value"
+QT_MOC_LITERAL(33, 764, 30), // "on_rb_obj_apply_physic_clicked"
+QT_MOC_LITERAL(34, 795, 31), // "on_rb_obj_physic_static_clicked"
+QT_MOC_LITERAL(35, 827, 25), // "on_rb_obj_visible_clicked"
+QT_MOC_LITERAL(36, 853, 29), // "on_rb_obj_shadow_only_clicked"
+QT_MOC_LITERAL(37, 883, 12), // "saveLightPos"
+QT_MOC_LITERAL(38, 896, 12), // "saveLightRot"
+QT_MOC_LITERAL(39, 909, 16), // "refreshLightList"
+QT_MOC_LITERAL(40, 926, 24), // "on_pb_lights_add_clicked"
+QT_MOC_LITERAL(41, 951, 26), // "on_pb_light_remove_clicked"
+QT_MOC_LITERAL(42, 978, 37), // "on_lw_lights_active_currentRo..."
+QT_MOC_LITERAL(43, 1016, 33), // "on_le_light_pos_x_editingFini..."
+QT_MOC_LITERAL(44, 1050, 33), // "on_le_light_pos_y_editingFini..."
+QT_MOC_LITERAL(45, 1084, 33), // "on_le_light_pos_z_editingFini..."
+QT_MOC_LITERAL(46, 1118, 33), // "on_le_light_rot_x_editingFini..."
+QT_MOC_LITERAL(47, 1152, 33), // "on_le_light_rot_y_editingFini..."
+QT_MOC_LITERAL(48, 1186, 33), // "on_le_light_rot_z_editingFini..."
+QT_MOC_LITERAL(49, 1220, 26), // "on_sb_light_r_valueChanged"
+QT_MOC_LITERAL(50, 1247, 1), // "i"
+QT_MOC_LITERAL(51, 1249, 26), // "on_sb_light_g_valueChanged"
+QT_MOC_LITERAL(52, 1276, 26), // "on_sb_light_b_valueChanged"
+QT_MOC_LITERAL(53, 1303, 34), // "on_sb_light_intensity_valueCh..."
+QT_MOC_LITERAL(54, 1338, 1), // "d"
+QT_MOC_LITERAL(55, 1340, 14), // "refreshScripts"
+QT_MOC_LITERAL(56, 1355, 20), // "refreshScriptElement"
+QT_MOC_LITERAL(57, 1376, 24), // "on_pb_add_script_clicked"
+QT_MOC_LITERAL(58, 1401, 27), // "on_pb_remove_script_clicked"
+QT_MOC_LITERAL(59, 1429, 27), // "on_pb_add_successor_clicked"
+QT_MOC_LITERAL(60, 1457, 34), // "on_lw_sc_objects_currentRowCh..."
+QT_MOC_LITERAL(61, 1492, 42), // "on_lw_sc_script_elements_curr..."
+QT_MOC_LITERAL(62, 1535, 29), // "on_le_sc_val1_editingFinished"
+QT_MOC_LITERAL(63, 1565, 29), // "on_le_sc_val2_editingFinished"
+QT_MOC_LITERAL(64, 1595, 29), // "on_le_sc_val3_editingFinished"
+QT_MOC_LITERAL(65, 1625, 29), // "on_le_sc_from_editingFinished"
+QT_MOC_LITERAL(66, 1655, 27), // "on_le_sc_to_editingFinished"
+QT_MOC_LITERAL(67, 1683, 33), // "on_le_sc_duration_editingFini..."
+QT_MOC_LITERAL(68, 1717, 17), // "saveScriptElement"
+QT_MOC_LITERAL(69, 1735, 36), // "on_cb_sc_trigger_currentIndex..."
+QT_MOC_LITERAL(70, 1772, 3), // "idx"
+QT_MOC_LITERAL(71, 1776, 37), // "on_cb_shadow_type_currentInde..."
+QT_MOC_LITERAL(72, 1814, 39), // "on_cb_anti_aliasing_currentIn..."
+QT_MOC_LITERAL(73, 1854, 17), // "on_rb_hdr_clicked"
+QT_MOC_LITERAL(74, 1872, 19) // "on_rb_bloom_clicked"
 
     },
     "PastadEditor\0on_actionLoadScene_triggered\0"
-    "\0on_actionNewObjectDatabase_triggered\0"
+    "\0on_actionSaveScene_triggered\0"
+    "on_actionNewObjectDatabase_triggered\0"
     "on_actionLoadObjectDatabase_triggered\0"
     "on_actionEditObjectDatabase_triggered\0"
-    "refreshObjectDatabase\0refreshSelected\0"
-    "refreshObjectList\0savePos\0saveRot\0"
-    "saveObjectSpecs\0on_pb_objects_add_clicked\0"
+    "on_pb_scene_play_clicked\0"
+    "on_pb_scene_pause_clicked\0"
+    "on_pb_scene_reset_clicked\0"
+    "on_pb_refresh_shaders_clicked\0setTime\0"
+    "std::string\0time\0savePos\0saveRot\0"
+    "saveObjectSpecs\0refreshSelected\0"
+    "refreshObjectList\0refreshObjectDatabase\0"
+    "on_pb_objects_add_clicked\0"
+    "on_pb_object_remove_clicked\0"
     "on_lw_objects_active_currentRowChanged\0"
     "row\0on_lw_objects_chooser_currentRowChanged\0"
     "on_le_obj_pos_x_editingFinished\0"
@@ -82,9 +133,37 @@ QT_MOC_LITERAL(30, 744, 25) // "on_pb_scene_pause_clicked"
     "on_rb_obj_physic_static_clicked\0"
     "on_rb_obj_visible_clicked\0"
     "on_rb_obj_shadow_only_clicked\0"
+    "saveLightPos\0saveLightRot\0refreshLightList\0"
     "on_pb_lights_add_clicked\0"
-    "on_pb_scene_play_clicked\0"
-    "on_pb_scene_pause_clicked"
+    "on_pb_light_remove_clicked\0"
+    "on_lw_lights_active_currentRowChanged\0"
+    "on_le_light_pos_x_editingFinished\0"
+    "on_le_light_pos_y_editingFinished\0"
+    "on_le_light_pos_z_editingFinished\0"
+    "on_le_light_rot_x_editingFinished\0"
+    "on_le_light_rot_y_editingFinished\0"
+    "on_le_light_rot_z_editingFinished\0"
+    "on_sb_light_r_valueChanged\0i\0"
+    "on_sb_light_g_valueChanged\0"
+    "on_sb_light_b_valueChanged\0"
+    "on_sb_light_intensity_valueChanged\0d\0"
+    "refreshScripts\0refreshScriptElement\0"
+    "on_pb_add_script_clicked\0"
+    "on_pb_remove_script_clicked\0"
+    "on_pb_add_successor_clicked\0"
+    "on_lw_sc_objects_currentRowChanged\0"
+    "on_lw_sc_script_elements_currentRowChanged\0"
+    "on_le_sc_val1_editingFinished\0"
+    "on_le_sc_val2_editingFinished\0"
+    "on_le_sc_val3_editingFinished\0"
+    "on_le_sc_from_editingFinished\0"
+    "on_le_sc_to_editingFinished\0"
+    "on_le_sc_duration_editingFinished\0"
+    "saveScriptElement\0"
+    "on_cb_sc_trigger_currentIndexChanged\0"
+    "idx\0on_cb_shadow_type_currentIndexChanged\0"
+    "on_cb_anti_aliasing_currentIndexChanged\0"
+    "on_rb_hdr_clicked\0on_rb_bloom_clicked"
 };
 #undef QT_MOC_LITERAL
 
@@ -94,7 +173,7 @@ static const uint qt_meta_data_PastadEditor[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      27,   14, // methods
+      66,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -102,33 +181,72 @@ static const uint qt_meta_data_PastadEditor[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,  149,    2, 0x0a /* Public */,
-       3,    0,  150,    2, 0x0a /* Public */,
-       4,    0,  151,    2, 0x0a /* Public */,
-       5,    0,  152,    2, 0x0a /* Public */,
-       6,    0,  153,    2, 0x0a /* Public */,
-       7,    0,  154,    2, 0x0a /* Public */,
-       8,    0,  155,    2, 0x0a /* Public */,
-       9,    0,  156,    2, 0x0a /* Public */,
-      10,    0,  157,    2, 0x0a /* Public */,
-      11,    0,  158,    2, 0x0a /* Public */,
-      12,    0,  159,    2, 0x0a /* Public */,
-      13,    1,  160,    2, 0x0a /* Public */,
-      15,    1,  163,    2, 0x0a /* Public */,
-      16,    0,  166,    2, 0x0a /* Public */,
-      17,    0,  167,    2, 0x0a /* Public */,
-      18,    0,  168,    2, 0x0a /* Public */,
-      19,    0,  169,    2, 0x0a /* Public */,
-      20,    0,  170,    2, 0x0a /* Public */,
-      21,    0,  171,    2, 0x0a /* Public */,
-      22,    1,  172,    2, 0x0a /* Public */,
-      24,    1,  175,    2, 0x0a /* Public */,
-      25,    1,  178,    2, 0x0a /* Public */,
-      26,    1,  181,    2, 0x0a /* Public */,
-      27,    1,  184,    2, 0x0a /* Public */,
-      28,    0,  187,    2, 0x0a /* Public */,
-      29,    0,  188,    2, 0x0a /* Public */,
-      30,    0,  189,    2, 0x0a /* Public */,
+       1,    0,  344,    2, 0x0a /* Public */,
+       3,    0,  345,    2, 0x0a /* Public */,
+       4,    0,  346,    2, 0x0a /* Public */,
+       5,    0,  347,    2, 0x0a /* Public */,
+       6,    0,  348,    2, 0x0a /* Public */,
+       7,    0,  349,    2, 0x0a /* Public */,
+       8,    0,  350,    2, 0x0a /* Public */,
+       9,    0,  351,    2, 0x0a /* Public */,
+      10,    0,  352,    2, 0x0a /* Public */,
+      11,    1,  353,    2, 0x0a /* Public */,
+      14,    0,  356,    2, 0x0a /* Public */,
+      15,    0,  357,    2, 0x0a /* Public */,
+      16,    0,  358,    2, 0x0a /* Public */,
+      17,    0,  359,    2, 0x0a /* Public */,
+      18,    0,  360,    2, 0x0a /* Public */,
+      19,    0,  361,    2, 0x0a /* Public */,
+      20,    0,  362,    2, 0x0a /* Public */,
+      21,    0,  363,    2, 0x0a /* Public */,
+      22,    1,  364,    2, 0x0a /* Public */,
+      24,    1,  367,    2, 0x0a /* Public */,
+      25,    0,  370,    2, 0x0a /* Public */,
+      26,    0,  371,    2, 0x0a /* Public */,
+      27,    0,  372,    2, 0x0a /* Public */,
+      28,    0,  373,    2, 0x0a /* Public */,
+      29,    0,  374,    2, 0x0a /* Public */,
+      30,    0,  375,    2, 0x0a /* Public */,
+      31,    1,  376,    2, 0x0a /* Public */,
+      33,    1,  379,    2, 0x0a /* Public */,
+      34,    1,  382,    2, 0x0a /* Public */,
+      35,    1,  385,    2, 0x0a /* Public */,
+      36,    1,  388,    2, 0x0a /* Public */,
+      37,    0,  391,    2, 0x0a /* Public */,
+      38,    0,  392,    2, 0x0a /* Public */,
+      39,    0,  393,    2, 0x0a /* Public */,
+      40,    0,  394,    2, 0x0a /* Public */,
+      41,    0,  395,    2, 0x0a /* Public */,
+      42,    1,  396,    2, 0x0a /* Public */,
+      43,    0,  399,    2, 0x0a /* Public */,
+      44,    0,  400,    2, 0x0a /* Public */,
+      45,    0,  401,    2, 0x0a /* Public */,
+      46,    0,  402,    2, 0x0a /* Public */,
+      47,    0,  403,    2, 0x0a /* Public */,
+      48,    0,  404,    2, 0x0a /* Public */,
+      49,    1,  405,    2, 0x0a /* Public */,
+      51,    1,  408,    2, 0x0a /* Public */,
+      52,    1,  411,    2, 0x0a /* Public */,
+      53,    1,  414,    2, 0x0a /* Public */,
+      55,    0,  417,    2, 0x0a /* Public */,
+      56,    0,  418,    2, 0x0a /* Public */,
+      57,    0,  419,    2, 0x0a /* Public */,
+      58,    0,  420,    2, 0x0a /* Public */,
+      59,    0,  421,    2, 0x0a /* Public */,
+      60,    1,  422,    2, 0x0a /* Public */,
+      61,    1,  425,    2, 0x0a /* Public */,
+      62,    0,  428,    2, 0x0a /* Public */,
+      63,    0,  429,    2, 0x0a /* Public */,
+      64,    0,  430,    2, 0x0a /* Public */,
+      65,    0,  431,    2, 0x0a /* Public */,
+      66,    0,  432,    2, 0x0a /* Public */,
+      67,    0,  433,    2, 0x0a /* Public */,
+      68,    0,  434,    2, 0x0a /* Public */,
+      69,    1,  435,    2, 0x0a /* Public */,
+      71,    1,  438,    2, 0x0a /* Public */,
+      72,    1,  441,    2, 0x0a /* Public */,
+      73,    1,  444,    2, 0x0a /* Public */,
+      74,    1,  447,    2, 0x0a /* Public */,
 
  // slots: parameters
     QMetaType::Void,
@@ -140,24 +258,63 @@ static const uint qt_meta_data_PastadEditor[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void,
-    QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,   14,
-    QMetaType::Void, QMetaType::Int,   14,
+    QMetaType::Void, 0x80000000 | 12,   13,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Bool,   23,
-    QMetaType::Void, QMetaType::Bool,   23,
-    QMetaType::Void, QMetaType::Bool,   23,
-    QMetaType::Void, QMetaType::Bool,   23,
-    QMetaType::Void, QMetaType::Bool,   23,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,   23,
+    QMetaType::Void, QMetaType::Int,   23,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Bool,   32,
+    QMetaType::Void, QMetaType::Bool,   32,
+    QMetaType::Void, QMetaType::Bool,   32,
+    QMetaType::Void, QMetaType::Bool,   32,
+    QMetaType::Void, QMetaType::Bool,   32,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,   23,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,   50,
+    QMetaType::Void, QMetaType::Int,   50,
+    QMetaType::Void, QMetaType::Int,   50,
+    QMetaType::Void, QMetaType::Double,   54,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,   23,
+    QMetaType::Void, QMetaType::Int,   23,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,   70,
+    QMetaType::Void, QMetaType::Int,   70,
+    QMetaType::Void, QMetaType::Int,   70,
+    QMetaType::Void, QMetaType::Bool,   32,
+    QMetaType::Void, QMetaType::Bool,   32,
 
        0        // eod
 };
@@ -169,32 +326,71 @@ void PastadEditor::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->on_actionLoadScene_triggered(); break;
-        case 1: _t->on_actionNewObjectDatabase_triggered(); break;
-        case 2: _t->on_actionLoadObjectDatabase_triggered(); break;
-        case 3: _t->on_actionEditObjectDatabase_triggered(); break;
-        case 4: _t->refreshObjectDatabase(); break;
-        case 5: _t->refreshSelected(); break;
-        case 6: _t->refreshObjectList(); break;
-        case 7: _t->savePos(); break;
-        case 8: _t->saveRot(); break;
-        case 9: _t->saveObjectSpecs(); break;
-        case 10: _t->on_pb_objects_add_clicked(); break;
-        case 11: _t->on_lw_objects_active_currentRowChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 12: _t->on_lw_objects_chooser_currentRowChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 13: _t->on_le_obj_pos_x_editingFinished(); break;
-        case 14: _t->on_le_obj_pos_y_editingFinished(); break;
-        case 15: _t->on_le_obj_pos_z_editingFinished(); break;
-        case 16: _t->on_le_obj_rot_x_editingFinished(); break;
-        case 17: _t->on_le_obj_rot_y_editingFinished(); break;
-        case 18: _t->on_le_obj_rot_z_editingFinished(); break;
-        case 19: _t->on_rb_obj_fixed_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 20: _t->on_rb_obj_apply_physic_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 21: _t->on_rb_obj_physic_static_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 22: _t->on_rb_obj_visible_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 23: _t->on_rb_obj_shadow_only_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 24: _t->on_pb_lights_add_clicked(); break;
-        case 25: _t->on_pb_scene_play_clicked(); break;
-        case 26: _t->on_pb_scene_pause_clicked(); break;
+        case 1: _t->on_actionSaveScene_triggered(); break;
+        case 2: _t->on_actionNewObjectDatabase_triggered(); break;
+        case 3: _t->on_actionLoadObjectDatabase_triggered(); break;
+        case 4: _t->on_actionEditObjectDatabase_triggered(); break;
+        case 5: _t->on_pb_scene_play_clicked(); break;
+        case 6: _t->on_pb_scene_pause_clicked(); break;
+        case 7: _t->on_pb_scene_reset_clicked(); break;
+        case 8: _t->on_pb_refresh_shaders_clicked(); break;
+        case 9: _t->setTime((*reinterpret_cast< std::string(*)>(_a[1]))); break;
+        case 10: _t->savePos(); break;
+        case 11: _t->saveRot(); break;
+        case 12: _t->saveObjectSpecs(); break;
+        case 13: _t->refreshSelected(); break;
+        case 14: _t->refreshObjectList(); break;
+        case 15: _t->refreshObjectDatabase(); break;
+        case 16: _t->on_pb_objects_add_clicked(); break;
+        case 17: _t->on_pb_object_remove_clicked(); break;
+        case 18: _t->on_lw_objects_active_currentRowChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 19: _t->on_lw_objects_chooser_currentRowChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 20: _t->on_le_obj_pos_x_editingFinished(); break;
+        case 21: _t->on_le_obj_pos_y_editingFinished(); break;
+        case 22: _t->on_le_obj_pos_z_editingFinished(); break;
+        case 23: _t->on_le_obj_rot_x_editingFinished(); break;
+        case 24: _t->on_le_obj_rot_y_editingFinished(); break;
+        case 25: _t->on_le_obj_rot_z_editingFinished(); break;
+        case 26: _t->on_rb_obj_fixed_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 27: _t->on_rb_obj_apply_physic_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 28: _t->on_rb_obj_physic_static_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 29: _t->on_rb_obj_visible_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 30: _t->on_rb_obj_shadow_only_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 31: _t->saveLightPos(); break;
+        case 32: _t->saveLightRot(); break;
+        case 33: _t->refreshLightList(); break;
+        case 34: _t->on_pb_lights_add_clicked(); break;
+        case 35: _t->on_pb_light_remove_clicked(); break;
+        case 36: _t->on_lw_lights_active_currentRowChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 37: _t->on_le_light_pos_x_editingFinished(); break;
+        case 38: _t->on_le_light_pos_y_editingFinished(); break;
+        case 39: _t->on_le_light_pos_z_editingFinished(); break;
+        case 40: _t->on_le_light_rot_x_editingFinished(); break;
+        case 41: _t->on_le_light_rot_y_editingFinished(); break;
+        case 42: _t->on_le_light_rot_z_editingFinished(); break;
+        case 43: _t->on_sb_light_r_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 44: _t->on_sb_light_g_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 45: _t->on_sb_light_b_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 46: _t->on_sb_light_intensity_valueChanged((*reinterpret_cast< double(*)>(_a[1]))); break;
+        case 47: _t->refreshScripts(); break;
+        case 48: _t->refreshScriptElement(); break;
+        case 49: _t->on_pb_add_script_clicked(); break;
+        case 50: _t->on_pb_remove_script_clicked(); break;
+        case 51: _t->on_pb_add_successor_clicked(); break;
+        case 52: _t->on_lw_sc_objects_currentRowChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 53: _t->on_lw_sc_script_elements_currentRowChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 54: _t->on_le_sc_val1_editingFinished(); break;
+        case 55: _t->on_le_sc_val2_editingFinished(); break;
+        case 56: _t->on_le_sc_val3_editingFinished(); break;
+        case 57: _t->on_le_sc_from_editingFinished(); break;
+        case 58: _t->on_le_sc_to_editingFinished(); break;
+        case 59: _t->on_le_sc_duration_editingFinished(); break;
+        case 60: _t->saveScriptElement(); break;
+        case 61: _t->on_cb_sc_trigger_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 62: _t->on_cb_shadow_type_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 63: _t->on_cb_anti_aliasing_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 64: _t->on_rb_hdr_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 65: _t->on_rb_bloom_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -225,13 +421,13 @@ int PastadEditor::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 27)
+        if (_id < 66)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 27;
+        _id -= 66;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 27)
+        if (_id < 66)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 27;
+        _id -= 66;
     }
     return _id;
 }

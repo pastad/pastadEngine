@@ -8,6 +8,7 @@
 #include "RenderBuffer.h"
 #include "GBuffer.h"
 #include "JitterTexture.h"
+#include "NoiseTexture.h"
 #include "Texture.h"
 
 
@@ -64,6 +65,8 @@ RenderSubsystem::~RenderSubsystem()
 		delete m_ssao_buffer;
 	if(m_jitter != nullptr)
 		delete m_jitter;
+  if (m_noise_texture != nullptr)
+    delete m_noise_texture;
 	if(m_terrain_shader != nullptr)
 		delete m_terrain_shader;
   if(m_water_shader != nullptr)
@@ -92,6 +95,7 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 		m_ssao_buffer = new RenderBuffer();							
 		m_render_quad = new Quad();
 		m_jitter =  new JitterTexture();
+    m_noise_texture = new NoiseTexture();
 
 	  if( ! m_shader->load("shaders/rendershaderV1") )
 			return false;
@@ -125,6 +129,8 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 			return false;
 		if( !m_jitter->load())
 			return false;
+    if (!m_noise_texture->create())
+      return false;
 		
     if(Engine::isInEditMode())
     {
@@ -135,9 +141,10 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
     }	
 
 		m_shader->use();
-		m_shader->setShadows(ST_STANDARD_PCF);
+		m_shader->setShadowsDirectional(ST_STANDARD_PCF);
+    m_shader->setShadowsPoint(ST_STANDARD_PCF);
 
-		m_shadows_standard_enabled = true;
+		m_shadows_standard_directional_enabled = m_shadows_standard_point_enabled = true;
 
 		m_pp_shader->setGaussSize(10);
 		m_pp_shader->setBloomThreshold(0.8f);
@@ -185,7 +192,8 @@ bool RenderSubsystem::refreshShaders()
 	m_point_shadow_shader = new RenderBaseShader();
 	m_skybox_shader = new SkyboxShader();
 	m_terrain_shader = new RenderBaseShader();
-	 m_water_shader = new RenderBaseShader();
+	m_water_shader = new RenderBaseShader();
+
 	if( ! m_shader->load("shaders/rendershaderV1") )
 		return false;
 	if( ! m_text_shader->load("shaders/textshaderV1") )
@@ -209,7 +217,8 @@ bool RenderSubsystem::refreshShaders()
 	m_pp_shader->setBloomThreshold(0.6f);
 	m_pp_shader->setSSAOSamples();
 
-  setShadowTechnique(m_shadow_techniques);
+  setShadowTechniqueDirectional(m_shadow_techniques);
+  setShadowTechniquePoint(m_shadow_technique_point);
 
   m_pp_shader->use();
   if (m_pp_techniques | PP_FXAA)
@@ -281,7 +290,7 @@ void RenderSubsystem::renderPassLight()
 
   Scene * scene = Engine::getScene();
 
-  if(m_shadows_standard_enabled)
+  //if(m_shadows_standard_enabled  )
     scene->setupLightsForShadingPass(m_shader);
 
 
@@ -290,6 +299,8 @@ void RenderSubsystem::renderPassLight()
 
   m_shader->setIdentityMatrices();
   m_shader->setAllMaterialsForRenderPass();
+
+  m_ssao_buffer->bindForOutput(5);
 
   m_shader->setRenderPass(2);
 
@@ -309,7 +320,7 @@ void RenderSubsystem::renderPassShadow()
   Scene * scene = Engine::getScene();
 
   if(scene != nullptr)
-    scene->renderShadow(m_shadow_shader,m_point_shadow_shader);
+    scene->renderShadow(m_shadow_shader,m_point_shadow_shader, m_shadows_standard_directional_enabled, m_shadows_standard_point_enabled);
   //Engine::getLog()->log("RenderSubsystem", "shadow pass");
 
    gl::CullFace(gl::BACK);
@@ -411,17 +422,16 @@ void RenderSubsystem::renderPassLightBlur()
 void RenderSubsystem::renderSSAO()
 {
 	m_pp_shader->use();
-
-	m_ssao_buffer->bindForInput();
-	m_jitter->bind(10);
-	m_gbuffer->bindForOutput();
-
-	m_pp_shader->setIdentityMatrices();
-	Camera * cam = Engine::getScene()->getCamera();
- 	m_pp_shader->setProjectionMatrix(cam->getProjection());
- 	m_pp_shader->setViewMatrix(cam->getView());
-
   m_pp_shader->setRenderPass(PASS_SSAO);
+
+  Camera * cam = Engine::getScene()->getCamera();
+  m_pp_shader->setProjectionMatrix(cam->getProjection());
+  m_pp_shader->setViewMatrix(cam->getView());
+
+  m_gbuffer->bindForOutput();
+  m_noise_texture->bind(5);
+  m_ssao_buffer->bindForInput();
+ 
 	gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
   gl::Disable(gl::DEPTH_TEST);
  
@@ -430,6 +440,43 @@ void RenderSubsystem::renderSSAO()
 	gl::Finish();
 
 	m_ssao_buffer->unbindFromInput();
+  
+  // blur 1
+
+  m_pp_shader->setRenderPass(PASS_BLUR_1);
+
+  m_pp_shader->setIdentityMatrices();
+  m_pp_shader->setTextureScaling(glm::vec2(1.0f / (float)Engine::getWindowWidth(), 1.0f / (float)Engine::getWindowHeight()));
+
+  m_ssao_buffer->bindForOutput(0);
+
+  m_blur_buffer->bindForInput();
+
+  gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
+  gl::Disable(gl::DEPTH_TEST);
+
+  m_render_quad->render();
+
+  gl::Finish();
+  m_blur_buffer->unbindFromInput();
+
+  // blur 2
+
+  m_pp_shader->setIdentityMatrices();
+
+  m_pp_shader->setRenderPass(PASS_BLUR_2);
+
+  m_blur_buffer->bindForOutput(0);
+  m_ssao_buffer->bindForInput();
+
+  gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
+  gl::Disable(gl::DEPTH_TEST);
+
+  m_render_quad->render();
+
+  gl::Finish();
+
+  m_ssao_buffer->unbindFromInput();
 }
 
 void RenderSubsystem::renderUI()
@@ -480,10 +527,13 @@ void RenderSubsystem::render()
 		renderPassGBuffer();
 	//	now = float(glfwGetTime());
 	//	std::cout << "pre sb" << float(glfwGetTime())- now  << std::endl;
-		if(m_shadows_standard_enabled)
+		if(m_shadows_standard_directional_enabled || m_shadows_standard_point_enabled)
 			renderPassShadow();
 	//	now = float(glfwGetTime());
 	//	std::cout << now << std::endl;
+
+    renderSSAO();
+
 		renderPassLight();
 	//	now = float(glfwGetTime());
 		//std::cout << now << std::endl;
@@ -491,7 +541,7 @@ void RenderSubsystem::render()
 			renderPassLightBlur();
 	  //now = float(glfwGetTime());
 		//std::cout << now << std::endl;
-		//renderSSAO();
+
 		renderPassPostProcess();
 		//now = float(glfwGetTime());
 		//std::cout <<"rb end "<< now << std::endl;
@@ -556,15 +606,35 @@ void RenderSubsystem::setPostProcessing(PostprocessType type, bool enable)
 		m_enable_bloom = enable;
 	}
 }
-void RenderSubsystem::setShadowTechnique(ShadowTechniqueType type)
+void RenderSubsystem::setShadowTechniqueDirectional(ShadowTechniqueType type)
 {
   m_shadow_techniques = type;
 	m_shader->use();
-	m_shader->setShadows(type);
+	m_shader->setShadowsDirectional(type);
 	if(type == ST_NONE)
-		m_shadows_standard_enabled = false;
+		m_shadows_standard_directional_enabled = false;
 	else
-		m_shadows_standard_enabled = true;
+    m_shadows_standard_directional_enabled = true;
+}
+void RenderSubsystem::setShadowTechniquePoint(ShadowTechniqueType type)
+{
+  m_shadow_techniques = type;
+  m_shader->use();
+  m_shader->setShadowsPoint(type);
+  if (type == ST_NONE)
+    m_shadows_standard_point_enabled = false;
+  else
+    m_shadows_standard_point_enabled = true;
+}
+void RenderSubsystem::setShadowSSAO(ShadowTechniqueType type)
+{
+  if (type == ST_NONE)
+    m_shadow_ssao = false;
+  else
+    m_shadow_ssao = true;
+  m_shader->use();
+  m_shader->setSSAO(m_shadow_ssao);
+
 }
 
 

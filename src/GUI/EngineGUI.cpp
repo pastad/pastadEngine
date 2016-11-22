@@ -286,7 +286,8 @@ void EngineGUI::mouseButtonCallback(Button * btn)
     if(btn->isToggled())
     {
       m_tb_shadow_standard->togglOn();
-      Engine::setShadowTechnique(ST_STANDARD_PCF);
+      Engine::setShadowTechniqueDirectional(ST_STANDARD_PCF);
+      Engine::setShadowTechniquePoint(ST_STANDARD_PCF);
       if(m_tb_shadow_rs->isToggled())
       {
         m_tb_shadow_rs->togglOff();
@@ -296,7 +297,8 @@ void EngineGUI::mouseButtonCallback(Button * btn)
     {
       if( m_tb_shadow_standard->isToggled())
       {
-        Engine::setShadowTechnique(ST_STANDARD);
+        Engine::setShadowTechniqueDirectional(ST_STANDARD);
+        Engine::setShadowTechniquePoint(ST_STANDARD);
       }
     }
   }
@@ -305,7 +307,8 @@ void EngineGUI::mouseButtonCallback(Button * btn)
     if(btn->isToggled())
     {
       m_tb_shadow_standard->togglOn();
-      Engine::setShadowTechnique(ST_STANDARD_RS);
+      Engine::setShadowTechniqueDirectional(ST_STANDARD_RS);
+      Engine::setShadowTechniquePoint(ST_STANDARD_RS);
       if(m_tb_shadow_pcf->isToggled())
       {
         m_tb_shadow_pcf->togglOff();
@@ -315,7 +318,8 @@ void EngineGUI::mouseButtonCallback(Button * btn)
     {
       if( m_tb_shadow_standard->isToggled())
       {
-        Engine::setShadowTechnique(ST_STANDARD);
+        Engine::setShadowTechniqueDirectional(ST_STANDARD);
+        Engine::setShadowTechniquePoint(ST_STANDARD);
       }
     }
 
@@ -328,20 +332,26 @@ void EngineGUI::mouseButtonCallback(Button * btn)
 
       if( m_tb_shadow_pcf->isToggled())
       {
-        Engine::setShadowTechnique(ST_STANDARD_PCF);
+        Engine::setShadowTechniqueDirectional(ST_STANDARD_PCF);
+        Engine::setShadowTechniquePoint(ST_STANDARD_PCF);
         set = true;
       }
       if( m_tb_shadow_pcf->isToggled())
       {
-        Engine::setShadowTechnique(ST_STANDARD_RS);
+        Engine::setShadowTechniqueDirectional(ST_STANDARD_RS);
+        Engine::setShadowTechniquePoint(ST_STANDARD_RS);
         set = true;
       }
-      if(!set)
-        Engine::setShadowTechnique(ST_STANDARD);
+      if (!set)
+      {
+        Engine::setShadowTechniqueDirectional(ST_STANDARD);
+        Engine::setShadowTechniquePoint(ST_STANDARD);
+      }
     }
     else
     {
-      Engine::setShadowTechnique(ST_NONE);
+      Engine::setShadowTechniqueDirectional(ST_NONE);
+      Engine::setShadowTechniquePoint(ST_NONE);
       if( m_tb_shadow_pcf->isToggled())
         m_tb_shadow_pcf->togglOff();
       if( m_tb_shadow_rs->isToggled())

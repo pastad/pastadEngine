@@ -239,6 +239,9 @@
     <ClCompile Include="..\src\Script\TranslationScriptElement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Render\NoiseTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="PastadEditor.h">
@@ -448,6 +451,9 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\Script\TranslationScriptElement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Render\NoiseTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

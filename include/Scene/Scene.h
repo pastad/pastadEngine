@@ -40,7 +40,7 @@ public:
 	void render(RenderShader * render_shader, SkyboxShader * skybox_shader, RenderBaseShader * terrain_shader, RenderBaseShader * water_shader);
 
   // renders the scene for the shadow passes
-  void renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* point_shadow_shader);
+  void renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* point_shadow_shader, bool directional_enabled, bool point_enabled);
 
   // renders the skybox of the scene
   void renderSkybox(SkyboxShader * sybox_shader);

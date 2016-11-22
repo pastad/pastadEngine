@@ -51,7 +51,8 @@ enum ShadowTechniqueType
 	ST_NONE = 0,
 	ST_STANDARD = 1,
 	ST_STANDARD_PCF = 2,
-	ST_STANDARD_RS = 3
+	ST_STANDARD_RS = 3,
+  ST_SSAO = 4
 };
 
 enum EngineMode
@@ -132,7 +133,9 @@ public:
 	static void setPostProcessing(PostprocessType type, bool enable);
 
 	// sets a shadow property
-	static void setShadowTechnique(ShadowTechniqueType type);
+	static void setShadowTechniquePoint(ShadowTechniqueType type);
+  static void setShadowTechniqueDirectional(ShadowTechniqueType type);
+  static void setShadowTechniqueSSAO(ShadowTechniqueType type);
 
 	// returns true if in edit mode
 	static bool isInEditMode();
@@ -163,10 +166,10 @@ public:
 	static IOSubsystem * getIOSubsystem();
 
 	// saves a config file
-	static bool saveConfig( std::string path, unsigned int width, unsigned int height, bool fullscreen, unsigned int edit_mode, unsigned int system_flags , ShadowTechniqueType shadow_technique);
+	static bool saveConfig( std::string path, unsigned int width, unsigned int height, bool fullscreen, unsigned int edit_mode, unsigned int system_flags , ShadowTechniqueType shadow_technique_directional, ShadowTechniqueType shadow_technique_point);
 
 	// reads a config file and stores values into pointers
-	static bool readConfig( std::string path, unsigned int* width, unsigned int *height, bool *fullscreen, unsigned int* edit_mode, unsigned int *system_flags , ShadowTechniqueType *shadow_technique);
+	static bool readConfig( std::string path, unsigned int* width, unsigned int *height, bool *fullscreen, unsigned int* edit_mode, unsigned int *system_flags , ShadowTechniqueType *shadow_technique_directional , ShadowTechniqueType *shadow_technique_point);
 
 	// passing from subsystems
 

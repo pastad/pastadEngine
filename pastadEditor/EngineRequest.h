@@ -13,7 +13,9 @@ enum EngineRequestType
   ERT_REMOVE_OBJECT,
   ERT_ADD_LIGHT,
   ERT_REMOVE_LIGHT, 
-  ERT_SET_SHADOW_TECHNIQUE,
+  ERT_SET_SHADOW_TECHNIQUE_DIRECTIONAL,
+  ERT_SET_SHADOW_TECHNIQUE_POINT,
+  ERT_SET_SHADOW_TECHNIQUE_SSAO,
   ERT_SET_PP_TECHNIQUE,
   ERT_LOAD_SCENE
 };
@@ -99,16 +101,38 @@ private:
   Light * m_light;
 };
 
-class SetShadowTechniqueRequest : EngineRequest
+class SetShadowTechniqueDirectionalRequest : EngineRequest
 {
 public:
-  SetShadowTechniqueRequest(ShadowTechniqueType tech);
-  ~SetShadowTechniqueRequest();
+  SetShadowTechniqueDirectionalRequest(ShadowTechniqueType tech);
+  ~SetShadowTechniqueDirectionalRequest();
 
   ShadowTechniqueType  getShadowTechnique();
 private:
   ShadowTechniqueType m_technique;
 };
+class SetShadowTechniquePointRequest : EngineRequest
+{
+public:
+  SetShadowTechniquePointRequest(ShadowTechniqueType tech);
+  ~SetShadowTechniquePointRequest();
+
+  ShadowTechniqueType  getShadowTechnique();
+private:
+  ShadowTechniqueType m_technique;
+}; 
+
+class SetShadowTechniqueAdditionalRequest : EngineRequest
+{
+public:
+  SetShadowTechniqueAdditionalRequest(ShadowTechniqueType tech);
+  ~SetShadowTechniqueAdditionalRequest();
+
+  ShadowTechniqueType  getShadowTechnique();
+private:
+  ShadowTechniqueType m_technique;
+};
+
 
 class SetPPTechniqueRequest : EngineRequest
 {

@@ -74,17 +74,41 @@ Light * RemoveLightRequest::getLight()
   return m_light;
 }
 
-SetShadowTechniqueRequest::SetShadowTechniqueRequest(ShadowTechniqueType tech) : EngineRequest(ERT_SET_SHADOW_TECHNIQUE)
+SetShadowTechniqueDirectionalRequest::SetShadowTechniqueDirectionalRequest(ShadowTechniqueType tech) : EngineRequest(ERT_SET_SHADOW_TECHNIQUE_DIRECTIONAL)
 {
   m_technique = tech;
 }
-SetShadowTechniqueRequest::~SetShadowTechniqueRequest()
+SetShadowTechniqueDirectionalRequest::~SetShadowTechniqueDirectionalRequest()
 {
 }
-ShadowTechniqueType SetShadowTechniqueRequest::getShadowTechnique() 
+ShadowTechniqueType SetShadowTechniqueDirectionalRequest::getShadowTechnique()
 {
   return m_technique;
 }
+SetShadowTechniquePointRequest::SetShadowTechniquePointRequest(ShadowTechniqueType tech) : EngineRequest(ERT_SET_SHADOW_TECHNIQUE_POINT)
+{
+  m_technique = tech;
+}
+SetShadowTechniquePointRequest::~SetShadowTechniquePointRequest()
+{
+}
+ShadowTechniqueType SetShadowTechniquePointRequest::getShadowTechnique()
+{
+  return m_technique;
+}
+
+SetShadowTechniqueAdditionalRequest::SetShadowTechniqueAdditionalRequest(ShadowTechniqueType tech) : EngineRequest(ERT_SET_SHADOW_TECHNIQUE_SSAO)
+{
+  m_technique = tech;
+}
+SetShadowTechniqueAdditionalRequest::~SetShadowTechniqueAdditionalRequest()
+{
+}
+ShadowTechniqueType  SetShadowTechniqueAdditionalRequest::getShadowTechnique()
+{
+  return m_technique;
+}
+
 
 SetPPTechniqueRequest::SetPPTechniqueRequest(PostprocessType tech, bool state) : EngineRequest(ERT_SET_PP_TECHNIQUE), m_state(state)
 {

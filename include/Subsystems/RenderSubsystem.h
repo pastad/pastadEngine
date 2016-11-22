@@ -19,6 +19,7 @@ class Quad;
 class DirectionalShadowBuffer;
 class RenderBuffer;
 class JitterTexture;
+class NoiseTexture;
 
 // Subsystem that is used for rendering
 
@@ -52,7 +53,9 @@ public:
 	void setPostProcessing(PostprocessType type, bool enable);
 
 	// sets a shading technique property
-	void setShadowTechnique(ShadowTechniqueType type);
+	void setShadowTechniqueDirectional(ShadowTechniqueType type);
+  void setShadowTechniquePoint(ShadowTechniqueType type);
+  void setShadowSSAO(ShadowTechniqueType type);
 
 	// reloads the shaders
 	bool refreshShaders();
@@ -126,11 +129,17 @@ private:
 	// the jitter texture to smooth shadows
 	JitterTexture * m_jitter;
 
+  // the texture for the noisein the ssao
+  NoiseTexture * m_noise_texture;
+
 	// true if standard shadows are enabled
-	bool m_shadows_standard_enabled;
+	bool m_shadows_standard_directional_enabled;
+  bool m_shadows_standard_point_enabled;
 
   // the shadow technique
   ShadowTechniqueType m_shadow_techniques;
+  ShadowTechniqueType m_shadow_technique_point;
+  bool m_shadow_ssao;
   PostprocessType m_pp_techniques;
 
 	// true if hdr is set

@@ -87,7 +87,9 @@ public:
   // technique setters -------------------------------------------
 
     // enable shadows
-  void setShadows(ShadowTechniqueType tech);
+  void setShadowsDirectional(ShadowTechniqueType tech);
+  void setShadowsPoint(ShadowTechniqueType tech);
+  void setSSAO(bool val);
 
   using RenderBaseShader::setAnimation;
   using RenderBaseShader::unsetAnimation;
