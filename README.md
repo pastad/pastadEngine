@@ -1,5 +1,5 @@
 # pastadEngine - Windows 
-![Alt text](/Release/screenshot.png?raw=true "Optional Title")
+![Alt text](/Release/screenshot.PNG?raw=true "Optional Title")
 
 
 Requirements:
