@@ -22,6 +22,7 @@ public:
 
   // returns true if succeeded
   bool initialize();
+  bool initializeWithDepth();
 
   // bind and unbind
   void bindForInput();
@@ -36,6 +37,7 @@ private:
 
   // the handle for the buffer
   GLuint m_buffer_handle;
+  GLuint m_depth_handle;
 
   // the texture
   Texture *  m_buffer_texture;

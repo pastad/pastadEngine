@@ -33,10 +33,12 @@ Material::Material(aiMaterial * pMaterial, std::string dir)
   unsigned int num_ambient_textures = pMaterial->GetTextureCount(aiTextureType_AMBIENT);
   unsigned int num_normal_textures = pMaterial->GetTextureCount(aiTextureType_NORMALS);
   unsigned int num_unkown_textures = pMaterial->GetTextureCount(aiTextureType_HEIGHT);
+  unsigned int num_opacity_textures = pMaterial->GetTextureCount(aiTextureType_OPACITY);
   std::cout << "Loading "<< num_diffuse_textures <<" diffuse textures"<<std::endl;
   std::cout << "Listed " << num_ambient_textures << " ambient textures" << std::endl;
   std::cout << "Listed " << num_normal_textures << " normal textures" << std::endl;
   std::cout << "Listed " << num_unkown_textures << " height textures" << std::endl;
+  std::cout << "Listed " << num_opacity_textures << " opacity textures" << std::endl;
 
   // load diffuse texturess
   for(int x=0; x< num_diffuse_textures;x++)
@@ -74,8 +76,8 @@ Material::Material(aiMaterial * pMaterial, std::string dir)
     }
   }  
 
-  aiString Path;
-  float strength;
+  aiString Path, Path2;
+  float strength, strength2;
 
   if (pMaterial->GetTexture(aiTextureType_NORMALS, 0, &Path, NULL, NULL, &strength, NULL, NULL) == AI_SUCCESS)
   {
@@ -91,6 +93,22 @@ Material::Material(aiMaterial * pMaterial, std::string dir)
 
     // load it and store it in our mapping
     m_normal_texture = RessourceManager::loadTexture(path);
+    m_base_texture_set = true;
+  }
+  if (pMaterial->GetTexture(aiTextureType_OPACITY, 0, &Path2, NULL, NULL, &strength2, NULL, NULL) == AI_SUCCESS)
+  {
+    std::string fi(Path2.data);
+    std::string::size_type slashpos2 = fi.find_last_of("/");
+    std::string p2;
+    if (slashpos2 != std::string::npos)
+      p2 = fi.substr(slashpos2 + 1, fi.size());
+    else
+      p2 = fi;
+
+    std::string path = dir + "/" + p2;
+
+    // load it and store it in our mapping
+    m_opacity_texture = RessourceManager::loadTexture(path);
     m_base_texture_set = true;
   }
  
@@ -147,6 +165,15 @@ void Material::bind(int unit, RenderShader * render_shader)
     }
     else
       render_shader->setNormalMapActive(0);
+
+    if (m_opacity_texture != nullptr)
+    {
+      m_opacity_texture->bind(5);
+      render_shader->setOpacityMapActive(1);
+      // std::cout << "set norm" <<std::endl; 
+    }
+    else
+      render_shader->setOpacityMapActive(0);
   }
   else
   {
@@ -160,7 +187,7 @@ void Material::bind(int unit, RenderShader * render_shader)
 
 bool Material::isTransparent()
 {
-  if(m_material_specs.m_opacity != 1.0)
+  if(  (m_material_specs.m_opacity != 1.0) || (m_opacity_texture != nullptr) )
     return true;
   return false;
 }

@@ -88,6 +88,11 @@ void PostProcessingShader::setViewMatrix(glm::mat4 view)
   setUniform("CameraView",view);
 }
 
+void PostProcessingShader::setCameraPosition(glm::vec3 coord)
+{
+  setUniform("CameraPosition", coord);
+}
+
 void PostProcessingShader::setTextureScaling(glm::vec2 scale)
 {
   setUniform("TextureScale",scale);    

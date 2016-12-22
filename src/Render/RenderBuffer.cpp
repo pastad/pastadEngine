@@ -25,7 +25,7 @@ bool RenderBuffer::initialize()
   gl::BindFramebuffer(gl::FRAMEBUFFER, m_buffer_handle);
 
   m_buffer_texture = new Texture();
-  m_buffer_texture->create(0, gl::RGB32F,Engine::getWindowWidth(),  Engine::getWindowHeight());
+  m_buffer_texture->create(0, gl::RGBA32F,Engine::getWindowWidth(),  Engine::getWindowHeight());
   m_buffer_texture->bindToFramebuffer(gl::COLOR_ATTACHMENT0);
   
   GLenum drawBuffers[] = { gl::COLOR_ATTACHMENT0};
@@ -35,6 +35,33 @@ bool RenderBuffer::initialize()
 
   return true;
 }
+
+
+bool RenderBuffer::initializeWithDepth()
+{
+
+  gl::GenFramebuffers(1, &m_buffer_handle);
+  gl::BindFramebuffer(gl::FRAMEBUFFER, m_buffer_handle);
+
+  gl::GenRenderbuffers(1, &m_depth_handle);
+  gl::BindRenderbuffer(gl::RENDERBUFFER, m_depth_handle);
+  gl::RenderbufferStorage(gl::RENDERBUFFER, gl::DEPTH_COMPONENT, Engine::getWindowWidth(), Engine::getWindowHeight());
+
+  gl::FramebufferRenderbuffer(gl::FRAMEBUFFER, gl::DEPTH_ATTACHMENT, gl::RENDERBUFFER, m_depth_handle);
+
+  m_buffer_texture = new Texture();
+  m_buffer_texture->create(0, gl::RGBA32F, Engine::getWindowWidth(), Engine::getWindowHeight());
+
+  m_buffer_texture->bindToFramebuffer(gl::COLOR_ATTACHMENT0);
+
+  GLenum drawBuffers[] = { gl::COLOR_ATTACHMENT0 };
+  gl::DrawBuffers(1, drawBuffers);
+
+  gl::BindFramebuffer(gl::FRAMEBUFFER, 0);
+
+  return true;
+}
+
 
 
 //  getter/setter -------------------------------------------------

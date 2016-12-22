@@ -25,6 +25,7 @@ public:
 
     // bind and unbind
     void bindForInput();
+    void bindForOutput(int offset);
     void unbindFromInput();
     void bindForOutput();
     void bindMaterialTextureForOutput(unsigned int off);

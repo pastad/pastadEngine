@@ -197,6 +197,13 @@ private:
   static Object * m_spot_object;
   static Object * m_point_object;
 
+  // buffer sizes
+  static unsigned int m_directional_buffer_width;
+  static unsigned int m_directional_buffer_height;
+  static unsigned int m_spot_buffer_width;
+  static unsigned int m_spot_buffer_height;
+  static unsigned int m_point_buffer_size;
+
   // returns the next id of the light numbering
   unsigned int getNextId();
 

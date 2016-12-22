@@ -53,6 +53,9 @@ public:
   // sets the view matrix
   void setViewMatrix(glm::mat4 view);
 
+  // sets the camera position
+  void setCameraPosition(glm::vec3 coord);
+
   // pass true if fxaa should be enabled
   void setFXAA(bool enable);
 

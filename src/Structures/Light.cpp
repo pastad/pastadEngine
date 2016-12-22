@@ -36,6 +36,12 @@ unsigned int Light::m_num_point_shadows = 0;
 
 unsigned int Light::m_light_index_counter = 1000;
 
+unsigned int Light::m_directional_buffer_width = 1240*10;
+unsigned int Light::m_directional_buffer_height = 720*10;
+unsigned int Light::m_spot_buffer_width = 1240;
+unsigned int Light::m_spot_buffer_height = 720;
+unsigned int Light::m_point_buffer_size = 1000;
+
 Object * Light::m_point_object = nullptr;
 Object * Light::m_spot_object = nullptr;
 Object * Light::m_directional_object = nullptr;
@@ -124,7 +130,7 @@ bool Light::setDirectional(glm::vec3 direction, glm::vec3 col_am ,glm::vec3 col_
         m_num_directional_shadows++;       
 
         Engine::getRenderSubsystem()->acquireRenderLock("Light");
-        if( !m_directional_buffer->initialize( DIR_BUFFER_SIZE_X, DIR_BUFFER_SIZE_Z ))
+        if( !m_directional_buffer->initialize(m_directional_buffer_width, m_directional_buffer_height))
         {
           Engine::getRenderSubsystem()->releaseRenderLock("Light");
           return false;
@@ -181,7 +187,7 @@ bool Light::setPoint(glm::vec3 positon, glm::vec3 col_am ,glm::vec3 col_dif, glm
         m_point_buffer = new PointShadowBuffer();        
         
         m_num_point_shadows++;
-        if( !m_point_buffer->initialize(1000, 1000))
+        if( !m_point_buffer->initialize(m_point_buffer_size, m_point_buffer_size))
           return false;
       }
       else
@@ -235,8 +241,8 @@ bool Light::setSpot(glm::vec3 position, glm::vec3 col_am ,glm::vec3 col_dif, glm
       {
         m_directional_buffer = new DirectionalShadowBuffer();        
         m_num_directional_shadows++;
-        if( !m_directional_buffer->initialize(Engine::getWindowWidth(),
-            Engine::getWindowHeight()  ) ) 
+        if( !m_directional_buffer->initialize(m_spot_buffer_width,
+          m_spot_buffer_height) )
           return false;
       }
       else
@@ -364,7 +370,7 @@ glm::mat4 Light::getView(glm::vec3 dir, glm::vec3 up)
 glm::mat4 Light::getProjection()
 {
   if( getType() == LIGHT_SPOT )
-    return glm::perspective( m_cutoff_angle* 2.0f, 1.0f, 0.1f, 100.0f );
+    return glm::perspective( m_cutoff_angle* 2.0f, (float)m_directional_buffer->getWidth() / (float)m_directional_buffer->getHeight(), 0.1f, 100.0f );
   if( getType() == LIGHT_POINT )
     return glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 100.0f );
   if( getType() == LIGHT_DIRECTIONAL )
@@ -705,7 +711,7 @@ void Light::bindForShadowRenderDirectional(RenderBaseShader * shadow_shader)
     gl::Enable(gl::DEPTH_TEST);
 
     gl::Enable(gl::POLYGON_OFFSET_FILL);
-    gl::PolygonOffset(4, 3);
+    gl::PolygonOffset(2,1);
 
     shadow_shader->setProjectionMatrix(getProjection());    
     shadow_shader->setViewMatrix(getView() ); 

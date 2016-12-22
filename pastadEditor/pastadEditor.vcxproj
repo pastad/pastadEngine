@@ -172,6 +172,7 @@
     <ClCompile Include="..\src\Render\PointShadowBuffer.cpp" />
     <ClCompile Include="..\src\Render\Quad.cpp" />
     <ClCompile Include="..\src\Render\RenderBuffer.cpp" />
+    <ClCompile Include="..\src\Render\TransparentBuffer.cpp" />
     <ClCompile Include="..\src\RessourceManager.cpp" />
     <ClCompile Include="..\src\Scene\Scene.cpp" />
     <ClCompile Include="..\src\Scene\SceneEditor.cpp" />
@@ -310,6 +311,7 @@
     <ClInclude Include="..\include\Render\PointShadowBuffer.h" />
     <ClInclude Include="..\include\Render\Quad.h" />
     <ClInclude Include="..\include\Render\RenderBuffer.h" />
+    <ClInclude Include="..\include\Render\TransparentBuffer.h" />
     <ClInclude Include="..\include\RessourceManager.h" />
     <ClInclude Include="..\include\Scene\Scene.h" />
     <ClInclude Include="..\include\Scene\SceneEditor.h" />

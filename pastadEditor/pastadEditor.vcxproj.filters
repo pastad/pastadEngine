@@ -242,6 +242,9 @@
     <ClCompile Include="..\src\Render\NoiseTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Render\TransparentBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="PastadEditor.h">
@@ -454,6 +457,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\Render\NoiseTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Render\TransparentBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

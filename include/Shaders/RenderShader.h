@@ -46,6 +46,9 @@ public:
   // setter for the fog
   void setFog(glm::vec3 color, float factor, float offset);
 
+  // sets the size of the gbuffer
+  void setGBufferSize(glm::vec2 size);
+
 
   // material and lights -----------------------------------------
 
@@ -54,6 +57,9 @@ public:
 
   // activates the normal map usage
   void setNormalMapActive(int active);
+
+  // activates the opacity map usage
+  void setOpacityMapActive(int active);
 
   // sets the material that should be used
   void setMaterial(std::string name, MaterialColorSpecs specs);

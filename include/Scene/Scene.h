@@ -37,7 +37,7 @@ public:
   void update(float delta);
 
   //renders the scene
-	void render(RenderShader * render_shader, SkyboxShader * skybox_shader, RenderBaseShader * terrain_shader, RenderBaseShader * water_shader);
+	void render(RenderShader * render_shader, SkyboxShader * skybox_shader, RenderBaseShader * terrain_shader, RenderBaseShader * water_shader, bool transparent);
 
   // renders the scene for the shadow passes
   void renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* point_shadow_shader, bool directional_enabled, bool point_enabled);

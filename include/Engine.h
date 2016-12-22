@@ -14,7 +14,7 @@
 #define NUM_TIME_SAMPLES 40
 
 #define NEAR_CLIPPING_PLANE 0.1f
-#define FAR_CLIPPING_PLANE 1000.0f
+#define FAR_CLIPPING_PLANE 500.0f
 
 // Engine class ... nothing more .. nothing less
 

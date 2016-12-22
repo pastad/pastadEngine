@@ -18,6 +18,7 @@ class GBuffer;
 class Quad;
 class DirectionalShadowBuffer;
 class RenderBuffer;
+class TransparentBuffer;
 class JitterTexture;
 class NoiseTexture;
 
@@ -126,6 +127,9 @@ private:
 	// buffer for the ssao texture
 	RenderBuffer * m_ssao_buffer;
 
+  // buffer for the transparent texture
+  TransparentBuffer * m_transparent_buffer;
+
 	// the jitter texture to smooth shadows
 	JitterTexture * m_jitter;
 
@@ -160,6 +164,7 @@ private:
 	// the render passess
 	void renderPassGBuffer();
 	void renderPassLight();
+  void renderPassTransparent();
 
 	// postprocessing passes
 	void renderPassPostProcess();

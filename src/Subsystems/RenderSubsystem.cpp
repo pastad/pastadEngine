@@ -6,6 +6,7 @@
 
 #include "DirectionalShadowBuffer.h"
 #include "RenderBuffer.h"
+#include "TransparentBuffer.h"
 #include "GBuffer.h"
 #include "JitterTexture.h"
 #include "NoiseTexture.h"
@@ -63,6 +64,8 @@ RenderSubsystem::~RenderSubsystem()
 		delete m_blur_buffer;
 	if(m_ssao_buffer != nullptr)
 		delete m_ssao_buffer;
+  if (m_transparent_buffer != nullptr)
+    delete m_transparent_buffer;
 	if(m_jitter != nullptr)
 		delete m_jitter;
   if (m_noise_texture != nullptr)
@@ -92,7 +95,8 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 		m_pp_buffer = new RenderBuffer();
 		m_light_buffer = new RenderBuffer();
 		m_blur_buffer = new RenderBuffer();		
-		m_ssao_buffer = new RenderBuffer();							
+		m_ssao_buffer = new RenderBuffer();					
+    m_transparent_buffer = new TransparentBuffer();
 		m_render_quad = new Quad();
 		m_jitter =  new JitterTexture();
     m_noise_texture = new NoiseTexture();
@@ -127,6 +131,8 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 			return false;
 		if( !m_ssao_buffer->initialize())
 			return false;
+    if (!m_transparent_buffer->initialize())
+      return false;
 		if( !m_jitter->load())
 			return false;
     if (!m_noise_texture->create())
@@ -266,6 +272,9 @@ void RenderSubsystem::renderPassGBuffer()
   m_water_shader->setViewMatrix(cam->getView());
   m_water_shader->setUniform("Delta", Engine::getScene()->getTime());
 
+  gl::Enable(gl::BLEND);
+  gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
+
 
   m_shader->use();
   Scene * scene = Engine::getScene();
@@ -273,7 +282,9 @@ void RenderSubsystem::renderPassGBuffer()
   m_shader->setRenderPass(1);
 
   if(scene != nullptr)
-    scene->render(m_shader, m_skybox_shader, m_terrain_shader,m_water_shader);
+    scene->render(m_shader, m_skybox_shader, m_terrain_shader,m_water_shader, false);
+
+  gl::Disable(gl::BLEND);
 
   gl::Finish();
   m_gbuffer->unbindFromInput();
@@ -301,19 +312,63 @@ void RenderSubsystem::renderPassLight()
   gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
   gl::Disable(gl::DEPTH_TEST);
 
+
+  gl::Enable(gl::BLEND);
+  gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
+
   m_shader->setIdentityMatrices();
   m_shader->setAllMaterialsForRenderPass();
 
   m_ssao_buffer->bindForOutput(5);
+  m_transparent_buffer->bindForOutput(6);
 
   m_shader->setRenderPass(2);
 
   m_render_quad->render();  
 
+  gl::Disable(gl::BLEND);
+
   gl::Finish();
 
   m_pp_buffer->unbindFromInput();
   //Engine::getLog()->log("RenderSubsystem", "light pass");
+}
+
+void RenderSubsystem::renderPassTransparent()
+{
+  m_shader->use();
+
+  m_shader->setGBufferSize(glm::vec2(Engine::getWindowWidth(), Engine::getWindowHeight()));
+  m_gbuffer->bindForOutput(6);
+  m_transparent_buffer->bindForInput();
+
+  gl::ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+  gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
+  gl::Enable(gl::DEPTH_TEST);
+
+
+  Camera * cam = Engine::getScene()->getCamera();
+  m_shader->setProjectionMatrix(cam->getProjection());
+  m_shader->setViewMatrix(cam->getView());
+  m_shader->setCameraPosition(cam->getPosition());
+
+  gl::Enable(gl::BLEND); 
+  gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
+
+
+  Scene * scene = Engine::getScene();
+
+  m_shader->setRenderPass(4);
+
+  if (scene != nullptr)
+    scene->render(m_shader, nullptr, nullptr, nullptr, true);
+
+  gl::Finish();
+  m_transparent_buffer->unbindFromInput();
+  //Engine::getLog()->log("RenderSubsystem", "gbuffer passs");
+
+  gl::Disable(gl::BLEND);
+  gl::Disable(gl::DEPTH_TEST);
 }
 
 void RenderSubsystem::renderPassShadow()
@@ -431,9 +486,11 @@ void RenderSubsystem::renderSSAO()
   Camera * cam = Engine::getScene()->getCamera();
   m_pp_shader->setProjectionMatrix(cam->getProjection());
   m_pp_shader->setViewMatrix(cam->getView());
+  m_pp_shader->setCameraPosition(cam->getPosition());
 
   m_gbuffer->bindForOutput();
   m_noise_texture->bind(5);
+  m_transparent_buffer->bindForOutput(6);
   m_ssao_buffer->bindForInput();
  
 	gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
@@ -513,7 +570,7 @@ void RenderSubsystem::startRender()
   {
    // acquireRenderLock("RenderSubsystem");
     Engine::getLog()->log(LF_Main,"RenderSubsystem", "start render");
-    gl::ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    gl::ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     m_shader->reset();
     Helper::checkGLError("startRender");
   }
@@ -536,9 +593,13 @@ void RenderSubsystem::render()
 	//	now = float(glfwGetTime());
 	//	std::cout << now << std::endl;
 
-    renderSSAO();
+    renderPassTransparent();
+
+    renderSSAO();   
 
 		renderPassLight();
+
+
 	//	now = float(glfwGetTime());
 		//std::cout << now << std::endl;
 		if(m_enable_bloom)

@@ -166,7 +166,7 @@ void Scene::timeUpdate(float delta)
 
 //  render -------------------------------------------------
 
-void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, RenderBaseShader * terrain_shader , RenderBaseShader *  water_shader)
+void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, RenderBaseShader * terrain_shader , RenderBaseShader *  water_shader, bool transparent)
 {  
 
   render_shader->setLights(&m_lights);
@@ -177,7 +177,7 @@ void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, R
 
   for (std::vector<Model *>::iterator it = m_models_instanced.begin(); it != m_models_instanced.end(); it++)
   {
-    (*it)->render((RenderBaseShader *)render_shader,true);
+    (*it)->renderTransparent((RenderBaseShader *)render_shader,true, transparent);
   }
 
   // render the accumulated models
@@ -186,8 +186,8 @@ void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, R
     std::map<std::string, std::vector<Object *>>::iterator objs =m_render_objects.find(it->first);
     if(objs !=  m_render_objects.end() )
     {
-      if(objs->second.size() >0)
-        it->second->render((RenderBaseShader *)render_shader ,objs->second, true);
+      if(objs->second.size() >0  )
+        it->second->render((RenderBaseShader *)render_shader ,objs->second, true, transparent, true);
     }
   }
   int c = 0;
@@ -210,8 +210,9 @@ void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, R
   
 
   //glDisable(GL_BLEND);
-
-  renderSkybox(skybox_shader);
+    
+  if(skybox_shader != nullptr)
+    renderSkybox(skybox_shader);
 
  // water_shader->setUniform("delta", m_time_line_seconds);
   for(std::vector<Water *>::iterator it = m_water_effects.begin(); it != m_water_effects.end();it++)

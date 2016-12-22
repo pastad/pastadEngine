@@ -63,6 +63,9 @@ private:
   // the normal texture of the material
   Texture* m_normal_texture = nullptr;
 
+  // the key texture of the material
+  Texture* m_opacity_texture = nullptr;
+
   // the material color specs for lightinf
   MaterialColorSpecs m_material_specs;
 

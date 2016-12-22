@@ -16,6 +16,8 @@ layout(binding=2) uniform sampler2D Tex3;
 layout(binding=3) uniform sampler2D Tex4; 
 layout(binding=4) uniform sampler2D Tex5; 
 layout(binding=5) uniform sampler2D Tex6; 
+layout(binding=6) uniform sampler2D Tex7; 
+layout(binding=7) uniform sampler2D Tex8; 
 
 layout(binding=10) uniform sampler2D TexJitter;
 
@@ -34,6 +36,7 @@ uniform int EnableBloom;
 
 uniform mat4 CameraProjection;
 uniform mat4 CameraView;
+uniform vec3 CameraPosition;
 
 
 const int MAX_NUM_MATERIALS =  20;
@@ -205,6 +208,10 @@ void passSSAO()
   const vec2 noiseScale = vec2(ws.x/6.0, ws.y/6.0); 
    
   vec3 pos = vec3( texture( Tex1, TexCoord ) );
+  if( texture(Tex7, TexCoord).xyz != vec3(0,0,0) )
+    pos  =  texture(Tex8, TexCoord).xyz;
+
+
   vec3 norm = vec3( texture( Tex2, TexCoord ) );
   vec3 diffColor = vec3( texture(Tex3, TexCoord) );
   vec3 material = vec3( texture(Tex4, TexCoord) );
@@ -216,7 +223,7 @@ void passSSAO()
 
   float occ = 0.0;
 
-  vec4 fp = -1.0 * CameraView*  texture( Tex1, TexCoord ) ;
+  vec4 fp = -1.0 * CameraView* vec4( pos ,1);
   
 
   for( int x=0; x< 64; x++)
@@ -231,7 +238,12 @@ void passSSAO()
 	  off.xyz = off.xyz *0.5 +0.5;
 
 	  float depth = texture(Tex4, off.xy ).z; // the depth from the camera
-	
+    // TODO change depth if transparent
+    if( texture(Tex7, off.xy).xyz != vec3(0,0,0) )
+      depth  = distance (texture(Tex8, off.xy).xyz, CameraPosition);
+   // else
+   //   depth  = distance (texture(Tex1, off.xy).xyz, CameraPosition);
+  
 
 	  float range = smoothstep(0.0,1.0, radius/ abs(fp.z-depth) );
 	  occ += ( depth >= sam.z ? 1.0 : 0.0 ) *range;	

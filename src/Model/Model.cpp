@@ -43,12 +43,22 @@ Model::~Model()
 
 //  render -------------------------------------------------
 
+void Model::renderTransparent(RenderBaseShader * render_shader, bool with_material, bool transparent)
+{
+  render(render_shader, m_instances, with_material, transparent, true);
+}
+
 void Model::render(RenderBaseShader * render_shader, bool with_material)
 {
-  render(render_shader, m_instances, with_material);
+  render(render_shader, m_instances, with_material, false, false);
 }
 
 void Model::render(RenderBaseShader * render_shader, std::vector<Object *> objects, bool with_material)
+{
+  render(render_shader,  objects, with_material, false, false);
+}
+
+void Model::render(RenderBaseShader * render_shader, std::vector<Object *> objects, bool with_material, bool transparent, bool transparent_enabled)
 {
 /*  std::vector<glm::mat4> matrices;
   for(std::vector<Object *>::iterator it = objects.begin(); it != objects.end();it++)
@@ -69,7 +79,13 @@ void Model::render(RenderBaseShader * render_shader, std::vector<Object *> objec
         if( with_material )
           m_materials.at((*it)->getMaterialIndex())->bind(0, (RenderShader *) render_shader);
 
-        (*it)->render(m_num_instanced_buffered_matrices); 
+        if (transparent_enabled)
+        {
+          if ((m_materials.at((*it)->getMaterialIndex())->isTransparent() == transparent))
+            (*it)->render(m_num_instanced_buffered_matrices);
+        }
+        else
+          (*it)->render(m_num_instanced_buffered_matrices);
       }
     }
     else
@@ -77,14 +93,26 @@ void Model::render(RenderBaseShader * render_shader, std::vector<Object *> objec
       for(std::vector<Mesh *>::iterator it = m_meshes.begin(); it != m_meshes.end(); it++)
       {
         if( with_material )
-          m_materials.at((*it)->getMaterialIndex())->bind(0, (RenderShader *) render_shader);     
-        for(std::vector<Object *>::iterator it2 = objects.begin(); it2 != objects.end();it2++)
+          m_materials.at((*it)->getMaterialIndex())->bind(0, (RenderShader *) render_shader); 
+        bool ren = false;
+
+        if (transparent_enabled)
         {
-          if( (*it2)->getVisibility() == V_All )
+          if ((m_materials.at((*it)->getMaterialIndex())->isTransparent() == transparent))
+            ren = true;
+        }
+        else
+          ren = true;
+        if(ren)
+        {
+          for (std::vector<Object *>::iterator it2 = objects.begin(); it2 != objects.end(); it2++)
           {
-            render_shader->setNotInstanced( (*it2)->getModelMatrix() );
-            render_shader->setIndentifcation((*it2)->getId());
-            (*it)->render();
+            if ((*it2)->getVisibility() == V_All)
+            {
+              render_shader->setNotInstanced((*it2)->getModelMatrix());
+              render_shader->setIndentifcation((*it2)->getId());
+              (*it)->render();
+            }
           }
         }
       }
@@ -115,8 +143,13 @@ void Model::render(RenderBaseShader * render_shader, std::vector<Object *> objec
 
           if( with_material )
             m_materials.at((*it)->getMaterialIndex())->bind(0, (RenderShader *) render_shader); 
-
-          (*it)->render(); 
+          if (transparent_enabled)
+          {
+            if ((m_materials.at((*it)->getMaterialIndex())->isTransparent() == transparent))
+              (*it)->render();
+          }
+          else
+            (*it)->render();
         } 
       }
     }
@@ -485,4 +518,13 @@ void Model::refreshBufferedMatrices(std::vector<Object *> instances)
 bool Model::isInstanced()
 {
   return m_instanced;
+}
+bool Model::isTransparent()
+{
+  for (std::map<int, Material*>::iterator it = m_materials.begin(); it != m_materials.end(); it++)
+  {
+    if (it->second->isTransparent())
+      return true;
+  }
+  return false;
 }

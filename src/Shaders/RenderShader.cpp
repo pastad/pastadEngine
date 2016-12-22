@@ -61,6 +61,11 @@ void RenderShader::setRenderPass(unsigned int pass)
     setRenderPassSubroutine("pass3");
     setUniform("ScreenSpaceRender",1);
   }
+  if (pass == 4)
+  {
+    setRenderPassSubroutine("passTransparent");
+    setUniform("ScreenSpaceRender", 0);
+  }
 
   checkUniformError("set Subroutine");
   //printUniforms();
@@ -413,6 +418,16 @@ void RenderShader::setFog(glm::vec3 color, float factor,float offset)
 void RenderShader::setNormalMapActive(int active)
 {
   setUniform("NormalMapActive", active);
+}
+
+void RenderShader::setOpacityMapActive(int active)
+{
+  setUniform("OpacityMapActive", active);
+}
+
+void RenderShader::setGBufferSize(glm::vec2 size)
+{
+  setUniform("GBufferSize", size);
 }
 
 //  use/reset -------------------------------------------------

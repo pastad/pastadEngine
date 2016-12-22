@@ -40,7 +40,7 @@ bool GBuffer::initialize()
   m_normal_texture->create(0, gl::RGB32F,Engine::getWindowWidth(),  Engine::getWindowHeight());
   
   m_color_texture =  new Texture();
-  m_color_texture->create(0, gl::RGB8,Engine::getWindowWidth(),  Engine::getWindowHeight());
+  m_color_texture->create(0, gl::RGBA8,Engine::getWindowWidth(),  Engine::getWindowHeight());
   
   m_material_texture =  new Texture();
   m_material_texture->create(0, gl::RGB32F,Engine::getWindowWidth(),  Engine::getWindowHeight());
@@ -77,10 +77,15 @@ void GBuffer::unbindFromInput()
 
 void GBuffer::bindForOutput()
 {
-  m_position_texture->bind(0);
-  m_normal_texture->bind(1);
-  m_color_texture->bind(2);
-  m_material_texture->bind(3);
+  bindForOutput(0);
+}
+
+void GBuffer::bindForOutput(int offset)
+{
+  m_position_texture->bind(0 + offset);
+  m_normal_texture->bind(1 + offset);
+  m_color_texture->bind(2 + offset);
+  m_material_texture->bind(3 + offset);
 }
 
 void GBuffer::bindMaterialTextureForOutput(unsigned int off)

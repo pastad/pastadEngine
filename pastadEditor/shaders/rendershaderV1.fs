@@ -13,7 +13,7 @@ in vec4 ModelPos;
 layout(location = 0 ) out vec4 FragColor;
 layout(location = 1 ) out vec3 PositionData;
 layout(location = 2 ) out vec3 NormalData;
-layout(location = 3 ) out vec3 ColorData;
+layout(location = 3 ) out vec4 ColorData;
 layout(location = 4 ) out vec3 MaterialData;
 
 layout(binding=0) uniform sampler2D Tex1; 
@@ -22,6 +22,11 @@ layout(binding=2) uniform sampler2D Tex3;
 layout(binding=3) uniform sampler2D Tex4; 
 layout(binding=4) uniform sampler2D Tex5; 
 layout(binding=5) uniform sampler2D Tex6; 
+layout(binding=6) uniform sampler2D Tex7; 
+layout(binding=7) uniform sampler2D Tex8; 
+layout(binding=8) uniform sampler2D Tex9; 
+layout(binding=9) uniform sampler2D Tex10; 
+layout(binding=10) uniform sampler2D Tex11; 
 
 layout(binding=20) uniform sampler2DShadow ShadowData0; 
 layout(binding=21) uniform sampler2DShadow ShadowData1; 
@@ -34,11 +39,6 @@ layout(binding=27) uniform sampler2DShadow ShadowData7;
 layout(binding=28) uniform sampler2DShadow ShadowData8; 
 layout(binding=29) uniform sampler2DShadow ShadowData9; 
 layout(binding=30) uniform sampler2DShadow ShadowData10; 
-layout(binding=31) uniform sampler2DShadow ShadowData11; 
-layout(binding=32) uniform sampler2DShadow ShadowData12; 
-layout(binding=33) uniform sampler2DShadow ShadowData13; 
-layout(binding=34) uniform sampler2DShadow ShadowData14; 
-layout(binding=35) uniform sampler2DShadow ShadowData15; 
 
 layout(binding=40) uniform samplerCube PointShadowData00; 
 layout(binding=41) uniform samplerCube PointShadowData01; 
@@ -59,11 +59,14 @@ uniform int NumDirectionalLights;
 uniform int NumSpotLights;
 uniform int NumPointLights;
 uniform int NormalMapActive;
+uniform int OpacityMapActive;
 
 uniform vec3 CameraPosition;
 uniform int MaterialIndex;
 
 uniform int ObjectId;
+
+uniform vec2 GBufferSize;
 
 // MATERIAL -----------------------------------------------------------
 
@@ -138,7 +141,7 @@ uniform SpotLight        SpotLights[MAX_SPOT_LIGHTS];
 
 float LinearizeDepth(float depth)
 {
-  float far_plane_dist = 1000.0f;
+  float far_plane_dist = 500.0f;
   float near_plane_dist = 0.1f;
   float z = depth *2.0 -1.0; 
   return (2.0 * near_plane_dist * far_plane_dist) / (far_plane_dist + near_plane_dist - z * (far_plane_dist - near_plane_dist));  
@@ -152,6 +155,7 @@ uniform int EnableShadowsPoint;
 uniform int EnableSSAO;
 
 layout(binding=19) uniform sampler3D JitterTex;
+
 
 float calcDirShadowPCF(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap, float bias, bool spot)
 {
@@ -215,7 +219,7 @@ float calcDirShadowPCF(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap, float 
 
   return sum;
 }
-float calcDirShadowRandomSampling(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap, float bias)
+float calcDirShadowRandomSampling(vec3 pos,mat4 shadowMat,sampler2DShadow shadowMap, float bias, bool spot)
 {
   float sum = 0.0;
   float ergeb = 1.0;
@@ -238,10 +242,14 @@ float calcDirShadowRandomSampling(vec3 pos,mat4 shadowMat,sampler2DShadow shadow
 
       tShadowCoord.xy = ShadowCoord.xy + jitteredOffset.xy;
       float ts =  textureProj(shadowMap, tShadowCoord);
+      if(spot)
+        ts = LinearizeDepth(ts);
       if(! (tShadowCoord.z+bias  > ts) )
         sum+=1;
       tShadowCoord.xy = ShadowCoord.xy + jitteredOffset.zw;
       ts =  textureProj(shadowMap, tShadowCoord);
+      if(spot)
+        ts = LinearizeDepth(ts);
       if(! (tShadowCoord.z+bias  > ts) )
         sum+=1;
     }
@@ -255,10 +263,14 @@ float calcDirShadowRandomSampling(vec3 pos,mat4 shadowMat,sampler2DShadow shadow
 
       tShadowCoord.xy = ShadowCoord.xy + jitteredOffset.xy;       
       float ts =  textureProj(shadowMap, tShadowCoord);
+      if(spot)
+        ts = LinearizeDepth(ts);
       if(! (tShadowCoord.z+bias  > ts) )
         sum+=1;
       tShadowCoord.xy = ShadowCoord.xy + jitteredOffset.zw;
       ts =  textureProj(shadowMap, tShadowCoord);
+      if(spot)
+        ts = LinearizeDepth(ts);
       if(! (tShadowCoord.z+bias  > ts) )
         sum+=1;
  
@@ -284,7 +296,7 @@ float calcSingleDirectionalShadow(vec3 pos,mat4 shadowMat,sampler2DShadow shadow
     }
     if(EnableShadowsDirectional == 3)
     {
-      sum = calcDirShadowRandomSampling(pos,shadowMat, shadowMap,bias);       
+      sum = calcDirShadowRandomSampling(pos,shadowMat, shadowMap,bias, true);       
     }
     if(EnableShadowsDirectional == 1)
     { 
@@ -410,17 +422,7 @@ float calcSpotShadowFactor(int idx, float bias, bool spot)
     if(idx == 9 )
       ret += calcSingleDirectionalShadow(pos, ShadowMatrices[9], ShadowData9,bias, spot);
     if(idx == 10 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[10], ShadowData10,bias, spot);
-    if(idx == 11 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[11], ShadowData11,bias, spot);
-    if(idx == 12 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[12], ShadowData12,bias, spot);
-    if(idx == 13 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[13], ShadowData13,bias, spot);
-    if(idx == 14 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[14], ShadowData14,bias, spot);
-    if(idx == 15 )
-      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[15], ShadowData15,bias, spot);    
+      ret += calcSingleDirectionalShadow(pos, ShadowMatrices[10], ShadowData10,bias, spot); 
   }
   else
     ret = 1.0;
@@ -455,7 +457,7 @@ vec4 calcDirectionalLight(int idx, Material mat, vec3 pos, vec3 normal)
 
   float bias = max(0.05 * (1.0 - dot(norm, lightDir)), 0.015);
 
-  vec3 ambient =  l.Base.AmbientColor * mat.AmbientColor *1.5;//l.Base.AmbientColor * mat.AmbientColor;
+  vec3 ambient =  l.Base.AmbientColor   ;//l.Base.AmbientColor * mat.AmbientColor;
   if(EnableSSAO == 1)
    ambient =  (texture(Tex6, TexCoord).xyz  )  ;
   
@@ -484,8 +486,8 @@ vec4 calcPointLights(int idx, Material mat, vec3 pos, vec3 normal)
   float diff = max(dot(norm, lightDir), 0.0);
   vec3 diffuse = diff * l.Base.DiffuseColor ;
 
-  vec3 ambient =  l.Base.AmbientColor  ;//l.Base.AmbientColor * mat.AmbientColor;
-  if(EnableSSAO == 1)
+  vec3 ambient =  l.Base.AmbientColor  * 0.1   ;//l.Base.AmbientColor * mat.AmbientColor;
+  if(EnableSSAO == 1 && (texture(Tex7, TexCoord).xyz == vec3(0,0,0) ) )
    ambient =  (texture(Tex6, TexCoord).xyz  )  ;
 
   vec3 specular = calcSpecularColor(lightDir, l.Base.SpecularColor, mat,pos,normal);
@@ -511,7 +513,12 @@ vec4 calcSpotLight(int idx, Material mat, vec3 pos, vec3 normal)
 
   float distance   = length(l.Pointlight.Position - pos.xyz);
 
-  vec3 ambient =  (texture(Tex6, TexCoord).xyz  ) ;//* mat.AmbientColor;
+  vec3 ambient =  l.Pointlight.Base.AmbientColor * 0.2  ;//l.Base.AmbientColor * mat.AmbientColor;
+
+  if(EnableSSAO == 1 && (texture(Tex7, TexCoord).xyz == vec3(0,0,0) ) )
+   ambient =  (texture(Tex6, TexCoord).xyz  )  ;
+
+  
   float attenuation = 1.0f / (l.Pointlight.Attenuation.Constant + l.Pointlight.Attenuation.Linear * distance + l.Pointlight.Attenuation.Quadratic * (distance * distance));
 
   if (angle < cutoff)
@@ -548,9 +555,6 @@ vec4 calcSpotLight(int idx, Material mat, vec3 pos, vec3 normal)
 
 // PASS 1     --------------------------------------------------------
 
-
-
-
 subroutine (RenderPassType)
 void pass1()
 {
@@ -571,11 +575,16 @@ void pass1()
     NormalData= vec3( texture( Tex5, TexCoord ) );
     NormalData = normalize(NormalData * 2.0 - 1.0  );   
   }
+  if(OpacityMapActive == 1 )
+  {    
+    color.w = texture( Tex6, TexCoord ).x;    
+  }
 
-  ColorData = vec3(color);
+  ColorData = color;
   MaterialData = vec3(MaterialIndex,ObjectId,  LinearizeDepth(gl_FragCoord.z)); // if there is a /1000 delete it , just for testing
 }
 // PASS 1 END    -----------------------------------------------------
+
 
 
 // PASS 2     --------------------------------------------------------
@@ -584,12 +593,22 @@ void pass2()
 {
   vec3 pos = vec3( texture( Tex1, TexCoord ) );
   vec3 norm = vec3( texture( Tex2, TexCoord ) );
-  vec3 diffColor = vec3( texture(Tex3, TexCoord) );
+  vec4 diffColor = texture(Tex3, TexCoord) ;
   vec3 materialIndex = vec3( texture(Tex4, TexCoord) );
   int matIdx = int(materialIndex.x);
 
-  vec4 color = vec4(diffColor,1.0);
+  if( texture(Tex7, TexCoord).xyz != vec3(0,0,0) )
+   pos =  texture(Tex8, TexCoord).xyz ;
+
+  vec4 color = diffColor;
   vec4 light = vec4(0,0,0,0);
+
+  if( texture(Tex7, TexCoord).xyz != vec3(0,0,0) )
+  {
+    color = diffColor * (1 - texture(Tex7, TexCoord).w);
+    color  =  texture(Tex7, TexCoord)* texture(Tex7, TexCoord).w; 
+    color.w = 1.0;
+  }
  
   // prevent flicker because of not set texture
   if( (norm.x==0) && (norm.y==0) && (norm.z==0) )
@@ -605,14 +624,17 @@ void pass2()
     for(int x=0; x< NumSpotLights; x++ )
       light += calcSpotLight(x,mat,pos,norm);
 
-    FragColor = color *light ;
+   
+    color =color *light ; 
+    FragColor = color  ;
+    
 
     float len = length(CameraPosition - pos);
     if( len > FogOffset )
     {      
       vec3 fac = FogColor *len*len  *FogFactor;
 
-      FragColor+=vec4(fac.x,fac.y,fac.z,1);
+      FragColor+=vec4(fac.x,fac.y,fac.z,diffColor.w);
     }
 
     //FragColor = vec4(0,shadow,0,1.0);
@@ -620,11 +642,67 @@ void pass2()
 
  //FragColor =  texture(Tex6, TexCoord);
 
+ //color.w = diffColor.w;
+
  if(matIdx ==99999)
   FragColor = color;  
 
+
+
+ //FragColor = vec4(pos,1);
+// FragColor  =  texture(Tex6, TexCoord);
+
+
+
 }
 // PASS 2 END    -----------------------------------------------------
+
+// PASS TRANSPARENT     --------------------------------------------------------
+
+subroutine (RenderPassType)
+void passTransparent()
+{
+  vec4 color;
+  vec4 light = vec4(0,0,0,0);
+  Material mat = Materials[MaterialIndex]; 
+
+  if(ColorOnly == 1)
+    color = vec4(mat.DiffuseColor,1.0);
+  else
+    color = texture(Tex1, TexCoord);
+  
+  vec2 cc = gl_FragCoord.xy;
+ 
+  cc = vec2(gl_FragCoord.x/GBufferSize.x,gl_FragCoord.y/GBufferSize.y);
+
+  vec3 pos = vec3( texture( Tex7, cc) );
+  vec3 materialIndex = vec3( texture(Tex10, cc) );
+
+  float d1 = distance(CameraPosition, pos);
+  float d2 = distance(CameraPosition, Position);
+
+  if(OpacityMapActive == 1 )
+  {      
+    color.w =  texture( Tex6, TexCoord ).x;
+  }
+  else
+    color.w =0.0;
+
+  if(d1 < d2)
+    color.x =color.y =color.z = color.w = 0;
+
+  if(color.a < 0.2)
+    discard;
+  else
+  {
+    PositionData = Position;
+  }
+
+  ColorData = color;
+  NormalData = color.xyz;
+  FragColor = color;
+}
+// PASS TRANSPARENT END    -----------------------------------------------------
 
 
 // PASS LIGHT   ------------------------------------------------------

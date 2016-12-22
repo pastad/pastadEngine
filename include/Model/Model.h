@@ -46,8 +46,10 @@ public:
 	bool load();
 
 	// render functions for the scene
-	void render(RenderBaseShader * render_shader, bool with_material);
-	void render(RenderBaseShader * render_shader, std::vector<Object *> objects, bool with_material);
+  void render(RenderBaseShader * render_shader, bool with_material);
+	void renderTransparent(RenderBaseShader * render_shader, bool with_material, bool transparent);
+  void render(RenderBaseShader * render_shader, std::vector<Object *> objects, bool with_material);
+	void render(RenderBaseShader * render_shader, std::vector<Object *> objects, bool with_material, bool transparent, bool transparent_enabled);
 
 	// returns the assimp scene that the model belontgs
 	const aiScene * getAssimpScene();
@@ -72,6 +74,9 @@ public:
 
   // returns true if instanced
   bool isInstanced();
+
+  // returns true if transparent
+  bool isTransparent();
 
 
 private:
