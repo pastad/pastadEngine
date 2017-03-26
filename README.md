@@ -1,6 +1,6 @@
 # pastadEngine - Windows 
 ![Alt text](/Release/screenshot.PNG?raw=true "Optional Title")
-![Alt text](/Release/screenshot_3.PNG?raw=true "Optional Title")
+![Alt text](/Release/screenshot_3.JPG?raw=true "Optional Title")
 
 Requirements:
   - GL
