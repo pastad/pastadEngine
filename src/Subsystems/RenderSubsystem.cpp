@@ -320,7 +320,7 @@ void RenderSubsystem::renderPassLight()
   m_shader->setAllMaterialsForRenderPass();
 
   m_ssao_buffer->bindForOutput(5);
-  m_transparent_buffer->bindForOutput(6);
+  //m_transparent_buffer->bindForOutput(6);
 
   m_shader->setRenderPass(2);
 
@@ -490,7 +490,7 @@ void RenderSubsystem::renderSSAO()
 
   m_gbuffer->bindForOutput();
   m_noise_texture->bind(5);
-  m_transparent_buffer->bindForOutput(6);
+ // m_transparent_buffer->bindForOutput(6);
   m_ssao_buffer->bindForInput();
  
 	gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
@@ -593,7 +593,7 @@ void RenderSubsystem::render()
 	//	now = float(glfwGetTime());
 	//	std::cout << now << std::endl;
 
-    renderPassTransparent();
+   // renderPassTransparent();
 
     renderSSAO();   
 

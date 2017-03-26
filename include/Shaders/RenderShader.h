@@ -55,8 +55,14 @@ public:
   // determines if material is only a color
   void setColorOnly(bool color_only);
 
+  // activates the specular map usage
+  void setSpecularMapActive(int active);
+
   // activates the normal map usage
   void setNormalMapActive(int active);
+
+  // activates the bump map usage
+  void setBumpMapActive(int active);
 
   // activates the opacity map usage
   void setOpacityMapActive(int active);

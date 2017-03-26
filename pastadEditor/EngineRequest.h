@@ -55,13 +55,23 @@ private:
 class AddObjectRequest : EngineRequest
 {
 public:
-  AddObjectRequest(std::string path);
+  AddObjectRequest(std::string path, bool is_static, bool shadow_only,bool is_visible, bool apply_pysics, bool physics_static);
   ~AddObjectRequest();
 
   std::string getPath();
+  bool getStatic();
+  bool getShadowOnly();
+  bool getApplyPhysics();
+  bool getPhysicsStatic();
+  bool getVisible();
 
 private:
   std::string m_path;
+  bool m_is_static;
+  bool m_shadow_only;
+  bool m_is_visible;
+  bool m_apply_physics;
+  bool m_physics_static;
 };
 
 

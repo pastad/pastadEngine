@@ -15,6 +15,7 @@ layout(location = 1 ) out vec3 PositionData;
 layout(location = 2 ) out vec3 NormalData;
 layout(location = 3 ) out vec4 ColorData;
 layout(location = 4 ) out vec3 MaterialData;
+layout(location = 5 ) out vec4 ColorData2;
 
 layout(binding=0) uniform sampler2D Tex1; 
 layout(binding=1) uniform sampler2D Tex2; 
@@ -58,8 +59,11 @@ uniform vec4 Color;
 uniform int NumDirectionalLights;
 uniform int NumSpotLights;
 uniform int NumPointLights;
+
+uniform int SpecularMapActive;
 uniform int NormalMapActive;
 uniform int OpacityMapActive;
+uniform int BumpMapActive;
 
 uniform vec3 CameraPosition;
 uniform int MaterialIndex;
@@ -351,7 +355,7 @@ float calcSinglePointShadow(vec3 lightPos,vec3 fragPos, samplerCube sam)
       float lightDistance = length(lightDir);
 
       float closestDepth = texture(sam, -lightDir).r; 
-      if(lightDistance-0.001 >= closestDepth)
+      if(lightDistance+0.001 >= closestDepth)
         shadow =0.5f;
     }
     if(EnableShadowsPoint == 2 )
@@ -440,9 +444,9 @@ vec3 calcSpecularColor(vec3 lightDirection, vec3 specularColor, Material mat, ve
   vec3 norm =       normalize(normal);
   vec3 viewDir =    normalize(CameraPosition - pos.xyz);
   vec3 reflectDir = reflect(-lightDirection, norm);
-  float spec =      pow(max(dot(viewDir, reflectDir), 0.0), mat.Shininess);
+  float spec =      pow(max(dot(viewDir, reflectDir), 0.0), mat.Shininess/20);
 
-  vec3 specular =   specularColor * spec * 0.1;
+  vec3 specular =   specularColor * spec ;
   return specular;
 }
 
@@ -453,15 +457,20 @@ vec4 calcDirectionalLight(int idx, Material mat, vec3 pos, vec3 normal)
   vec3  norm     = normalize(normal);
   vec3  lightDir = normalize(-l.Direction);
   float diff     = max(dot(norm, lightDir), 0.0);
-  vec3 diffuse = diff * l.Base.DiffuseColor;
+  vec3 diffuse = texture(Tex3, TexCoord).xyz *  diff * l.Base.DiffuseColor ;
+ // vec4 diffColor = texture(Tex3, TexCoord) ;
 
   float bias = max(0.05 * (1.0 - dot(norm, lightDir)), 0.015);
 
   vec3 ambient =  l.Base.AmbientColor   ;//l.Base.AmbientColor * mat.AmbientColor;
-  if(EnableSSAO == 1)
+  if(EnableSSAO == 1)// && (texture(Tex7, TexCoord).xyz == vec3(0,0,0) ))
    ambient =  (texture(Tex6, TexCoord).xyz  )  ;
+
+  vec3 specColor =  l.Base.SpecularColor;
+
+  specColor = texture(Tex4, TexCoord).xyz *  l.Base.SpecularColor  ;
   
-  vec3  specular   = calcSpecularColor(lightDir, l.Base.SpecularColor, mat,pos,normal);
+  vec3  specular   = calcSpecularColor(lightDir, specColor, mat,pos,normal);
 
  
   float shadowFactor = 1.0f;
@@ -471,7 +480,7 @@ vec4 calcDirectionalLight(int idx, Material mat, vec3 pos, vec3 normal)
   if(l.ShadowMapIndex != -1)
      shadowFactor = calcSpotShadowFactor(l.ShadowMapIndex, bias, false);
 
-  return vec4(diffuse* shadowFactor * l.Base.Intensity  +ambient* l.Base.Intensity + specular* shadowFactor * l.Base.Intensity,1) ;
+  return vec4(diffuse* shadowFactor * l.Base.Intensity  +ambient* l.Base.Intensity *0.1+ specular* shadowFactor * l.Base.Intensity,1) ;
 }
 
 // pointLight calculation
@@ -484,13 +493,16 @@ vec4 calcPointLights(int idx, Material mat, vec3 pos, vec3 normal)
   float distance   = length(l.Position - pos.xyz);
 
   float diff = max(dot(norm, lightDir), 0.0);
-  vec3 diffuse = diff * l.Base.DiffuseColor ;
-
-  vec3 ambient =  l.Base.AmbientColor  * 0.1   ;//l.Base.AmbientColor * mat.AmbientColor;
-  if(EnableSSAO == 1 && (texture(Tex7, TexCoord).xyz == vec3(0,0,0) ) )
+  vec3 diffuse =  texture(Tex3, TexCoord).xyz *  diff * l.Base.DiffuseColor ;
+  
+  vec3 ambient =  l.Base.AmbientColor  *0.1 *  texture(Tex3, TexCoord).xyz  ;//l.Base.AmbientColor * mat.AmbientColor;
+  if(EnableSSAO == 1)// && (texture(Tex7, TexCoord).xyz == vec3(0,0,0) ) )
    ambient =  (texture(Tex6, TexCoord).xyz  )  ;
 
-  vec3 specular = calcSpecularColor(lightDir, l.Base.SpecularColor, mat,pos,normal);
+  vec3 specColor = texture(Tex5, TexCoord).xyz * l.Base.SpecularColor  ;
+  
+  vec3  specular   = calcSpecularColor(lightDir, specColor, mat,pos,normal);
+  
 
   float attenuation = 1.0f / (l.Attenuation.Constant + l.Attenuation.Linear * distance + l.Attenuation.Quadratic * (distance * distance));
 
@@ -498,7 +510,7 @@ vec4 calcPointLights(int idx, Material mat, vec3 pos, vec3 normal)
   if(l.ShadowMapIndex != -1)
       shadowFactor = calcPointShadowfactor(l.ShadowMapIndex,l.Position, pos.xyz);
 
-  return vec4( (diffuse* l.Base.Intensity* shadowFactor  + specular* shadowFactor * l.Base.Intensity   ) * attenuation + ambient* l.Base.Intensity,1)  ;
+  return vec4( (diffuse* l.Base.Intensity* shadowFactor + ambient* shadowFactor* l.Base.Intensity*0.1  + specular* shadowFactor * l.Base.Intensity   ) * attenuation,1)  ;
 }
 
 // spotLight calculationds
@@ -515,7 +527,7 @@ vec4 calcSpotLight(int idx, Material mat, vec3 pos, vec3 normal)
 
   vec3 ambient =  l.Pointlight.Base.AmbientColor * 0.2  ;//l.Base.AmbientColor * mat.AmbientColor;
 
-  if(EnableSSAO == 1 && (texture(Tex7, TexCoord).xyz == vec3(0,0,0) ) )
+  if(EnableSSAO == 1 )//&& (texture(Tex7, TexCoord).xyz == vec3(0,0,0) ) )
    ambient =  (texture(Tex6, TexCoord).xyz  )  ;
 
   
@@ -526,13 +538,14 @@ vec4 calcSpotLight(int idx, Material mat, vec3 pos, vec3 normal)
     vec4 color;
     vec3 norm = normalize(normal);       
 
-    vec3 diffuse =  spotFactor* l.Pointlight.Base.DiffuseColor  ; 
+    vec3 diffuse =   texture(Tex3, TexCoord).xyz * spotFactor* l.Pointlight.Base.DiffuseColor  ; 
 
     vec3 v = normalize( vec3(-pos.xyz));
     vec3 h = normalize( v +lightToPixel );
-    float spec = pow(max(dot(h, norm), 0.0), mat.Shininess);
+    float spec = pow(max(dot(h, norm), 0.0), mat.Shininess); 
 
-    vec3 specular =    l.Pointlight.Base.SpecularColor * spec ;
+
+    vec3 specular =    l.Pointlight.Base.SpecularColor * spec  * texture(Tex5, TexCoord).xyz ;
     float bias = 0.01; //  max(0.05 * (1.0 - dot(norm, lightToPixel)), 0.1);
     float shadowFactor = 1.0;
 
@@ -567,18 +580,36 @@ void pass1()
   else
     color = texture(Tex1, TexCoord);
 
+  if( SpecularMapActive == 1 )
+    ColorData2 = texture(Tex10, TexCoord);
+  else
+  {
+    if(ColorOnly == 1)
+      ColorData2  = vec4(mat.SpecularColor,1.0);
+    else
+      ColorData2  = texture(Tex1, TexCoord);
+  }
+
+
   PositionData = Position;
   NormalData = normalize(Normal);
 
   if(NormalMapActive == 1 )
   {
-    NormalData= vec3( texture( Tex5, TexCoord ) );
+    NormalData= vec3( texture( Tex8, TexCoord ) );
     NormalData = normalize(NormalData * 2.0 - 1.0  );   
   }
+  if(BumpMapActive == 1 )
+  {
+  //  PositionData = Position + vec3( texture( Tex7, TexCoord ) );
+  }
+  
   if(OpacityMapActive == 1 )
   {    
     color.w = texture( Tex6, TexCoord ).x;    
   }
+
+
 
   ColorData = color;
   MaterialData = vec3(MaterialIndex,ObjectId,  LinearizeDepth(gl_FragCoord.z)); // if there is a /1000 delete it , just for testing
@@ -597,18 +628,18 @@ void pass2()
   vec3 materialIndex = vec3( texture(Tex4, TexCoord) );
   int matIdx = int(materialIndex.x);
 
-  if( texture(Tex7, TexCoord).xyz != vec3(0,0,0) )
-   pos =  texture(Tex8, TexCoord).xyz ;
+ // if( texture(Tex7, TexCoord).xyz != vec3(0,0,0) )
+ //  pos =  texture(Tex8, TexCoord).xyz ;
 
   vec4 color = diffColor;
   vec4 light = vec4(0,0,0,0);
 
-  if( texture(Tex7, TexCoord).xyz != vec3(0,0,0) )
-  {
-    color = diffColor * (1 - texture(Tex7, TexCoord).w);
-    color  =  texture(Tex7, TexCoord)* texture(Tex7, TexCoord).w; 
-    color.w = 1.0;
-  }
+  //if( texture(Tex7, TexCoord).xyz != vec3(0,0,0) )
+ // {
+  //  color = diffColor * (1 - texture(Tex7, TexCoord).w);
+  //  color  =  texture(Tex7, TexCoord)* texture(Tex7, TexCoord).w; 
+ //   color.w = 1.0;
+ // }
  
   // prevent flicker because of not set texture
   if( (norm.x==0) && (norm.y==0) && (norm.z==0) )
@@ -625,7 +656,7 @@ void pass2()
       light += calcSpotLight(x,mat,pos,norm);
 
    
-    color =color *light ; 
+    color =light ; 
     FragColor = color  ;
     
 

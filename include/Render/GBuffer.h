@@ -43,6 +43,7 @@ private:
     Texture * m_position_texture; 
     Texture * m_normal_texture;
     Texture * m_color_texture;
+    Texture * m_color_texture_2;
     Texture * m_material_texture;
 };
 

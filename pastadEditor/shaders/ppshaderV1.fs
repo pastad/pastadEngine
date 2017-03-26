@@ -208,8 +208,8 @@ void passSSAO()
   const vec2 noiseScale = vec2(ws.x/6.0, ws.y/6.0); 
    
   vec3 pos = vec3( texture( Tex1, TexCoord ) );
-  if( texture(Tex7, TexCoord).xyz != vec3(0,0,0) )
-    pos  =  texture(Tex8, TexCoord).xyz;
+ // if( texture(Tex7, TexCoord).xyz != vec3(0,0,0) )
+ //   pos  =  texture(Tex8, TexCoord).xyz;
 
 
   vec3 norm = vec3( texture( Tex2, TexCoord ) );
@@ -239,14 +239,15 @@ void passSSAO()
 
 	  float depth = texture(Tex4, off.xy ).z; // the depth from the camera
     // TODO change depth if transparent
-    if( texture(Tex7, off.xy).xyz != vec3(0,0,0) )
-      depth  = distance (texture(Tex8, off.xy).xyz, CameraPosition);
+  //  if( texture(Tex7, off.xy).xyz != vec3(0,0,0) )
+    //  depth  = distance (texture(Tex8, off.xy).xyz, CameraPosition);
    // else
    //   depth  = distance (texture(Tex1, off.xy).xyz, CameraPosition);
-  
+    
+    depth+= 0.15;
 
 	  float range = smoothstep(0.0,1.0, radius/ abs(fp.z-depth) );
-	  occ += ( depth >= sam.z ? 1.0 : 0.0 ) *range;	
+	  occ += ( ( (depth >= sam.z) && ( (depth- sam.z)  < radius)  )  ? 1.0 : 0.0 ) *range;	
   }
 
   float depth = texture(Tex4, TexCoord ).y;

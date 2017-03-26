@@ -27,7 +27,11 @@ bool NoiseTexture::create()
 
   for(int i = 0; i < 36;i++)
   {
-    glm::vec3 n(rf(dre) * 2.0 - 1.0, rf(dre) * 2.0 - 1.0, 0.0f);
+    float offset = 0.3;
+    float x = rf(dre) * (2.0 - (2 * offset)) - (1.0 - offset);
+    float y = rf(dre) * (2.0 - (2 * offset)) - (1.0 - offset);
+
+    glm::vec3 n(x, y, 0.0f);
     noise.push_back(n);
   }
   gl::GenTextures(1, &m_texture);

@@ -805,13 +805,16 @@ Object * Scene::addObject(std::string path,  bool instanced ,  bool static_objec
 
 void Scene::removeObject(Object * obj)
 {
+
   acquireLock("removeObject");
   if(obj == nullptr)
     return;
   if( obj->isStaticFlagSet() )
   {
+    std::cout << obj << " " << obj->isStaticFlagSet() <<" "<< m_objects_static.size() << std::endl;
     for(std::vector<Object *>::iterator it = m_objects_static.begin(); it != m_objects_static.end(); )
     {
+      std::cout << (*it)<< std::endl;
       if( (*it) == obj)
       {
         m_objects_static.erase(it);

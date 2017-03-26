@@ -29,6 +29,8 @@ public:
 
     void refreshAll();
 
+    void loadDatatbase(std::string path);
+
 public slots:
 
     //scene menu
@@ -59,7 +61,7 @@ public slots:
 
     //refreshs
     static void refreshSelected();
-    void refreshObjectList();
+    static void refreshObjectList();
     void refreshObjectDatabase();
 
     //buttons

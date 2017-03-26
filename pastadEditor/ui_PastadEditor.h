@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'PastadEditorp23220.ui'
+** Form generated from reading UI file 'PastadEditorp13352.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef PASTADEDITORP23220_H
-#define PASTADEDITORP23220_H
+#ifndef PASTADEDITORP13352_H
+#define PASTADEDITORP13352_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
@@ -252,10 +252,13 @@ public:
         rb_obj_fixed = new QRadioButton(gb_obj);
         rb_obj_fixed->setObjectName(QStringLiteral("rb_obj_fixed"));
         rb_obj_fixed->setGeometry(QRect(130, 150, 82, 17));
+        rb_obj_fixed->setChecked(true);
         rb_obj_fixed->setAutoExclusive(false);
         rb_obj_visible = new QRadioButton(gb_obj);
         rb_obj_visible->setObjectName(QStringLiteral("rb_obj_visible"));
         rb_obj_visible->setGeometry(QRect(130, 210, 82, 17));
+        rb_obj_visible->setChecked(true);
+        rb_obj_visible->setAutoRepeat(false);
         rb_obj_visible->setAutoExclusive(false);
         rb_obj_shadow_only = new QRadioButton(gb_obj);
         rb_obj_shadow_only->setObjectName(QStringLiteral("rb_obj_shadow_only"));
@@ -541,7 +544,7 @@ public:
 
         retranslateUi(PastadEditorClass);
 
-        tabWidget->setCurrentIndex(3);
+        tabWidget->setCurrentIndex(0);
         cb_shadow_type->setCurrentIndex(2);
         cb_anti_aliasing->setCurrentIndex(1);
         cb_shadow_type_point->setCurrentIndex(2);
@@ -678,4 +681,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // PASTADEDITORP23220_H
+#endif // PASTADEDITORP13352_H

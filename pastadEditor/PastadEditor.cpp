@@ -47,6 +47,8 @@ PastadEditor::PastadEditor(QWidget *parent)
   ui.le_sc_val1->setVisible(false);
   ui.le_sc_val2->setVisible(false);
   ui.le_sc_val3->setVisible(false);
+
+ // loadDatatbase("object_database.xml");
 }
 
 PastadEditor::~PastadEditor()
@@ -87,19 +89,19 @@ void PastadEditor::keyPressed(int key, bool b)
       m_object->setPosition(m_object->getPosition() + glm::vec3(0, -0.1, 0));
 
     if (key == 321)
-      m_object->setRotation( m_object->getRotation() + glm::vec3(0,0,1));
+      m_object->setRotation( m_object->getRotationDegrees() + glm::vec3(0,0,1));
     if (key == 323)
-      m_object->setRotation(m_object->getRotation() + glm::vec3(0, 0, -1));
+      m_object->setRotation(m_object->getRotationDegrees() + glm::vec3(0, 0, -1));
    
     if (key == 327)
-      m_object->setRotation(m_object->getRotation() + glm::vec3(1, 0, 0));
+      m_object->setRotation(m_object->getRotationDegrees() + glm::vec3(1, 0, 0));
     if (key == 329)
-      m_object->setRotation(m_object->getRotation() + glm::vec3(-1, 0, 0));
+      m_object->setRotation(m_object->getRotationDegrees() + glm::vec3(-1, 0, 0));
 
     if (key == 320)
-      m_object->setRotation(m_object->getRotation() + glm::vec3(0, 1, 0));
+      m_object->setRotation(m_object->getRotationDegrees() + glm::vec3(0, 1, 0));
     if (key == 330)
-      m_object->setRotation(m_object->getRotation() + glm::vec3(0, -1, 0));
+      m_object->setRotation(m_object->getRotationDegrees() + glm::vec3(0, -1, 0));
 
     
   }
@@ -137,6 +139,7 @@ void PastadEditor::changeObject(Object * obj)
   m_object =obj;
   m_object_scripts = obj;
   refreshSelected();
+  refreshObjectList();
 }
 void PastadEditor::changeLight(Light * light)
 {
@@ -238,6 +241,18 @@ void PastadEditor::on_actionLoadObjectDatabase_triggered()
     refreshObjectDatabase();
   }
 }
+void PastadEditor::loadDatatbase(std::string path)
+{
+  if (m_object_database != nullptr)
+    delete m_object_database;
+
+  if (path != "")
+  {
+    m_object_database = new ObjectDatabase(path);
+    m_object_database->load();
+    refreshObjectDatabase();
+  }
+}
 
 
 //refreshers
@@ -253,15 +268,18 @@ void PastadEditor::refreshObjectList()
   Scene * scene = Engine::getScene();
   if (scene != nullptr)
   {
-    scene->acquireLock("refreshObjectList");
+   // scene->acquireLock("refreshObjectList");
     m_objects = scene->getObjects();
    
     for (std::vector<Object *>::iterator it = m_objects.begin(); it != m_objects.end(); it++)
     {
-      ui.lw_objects_active->insertItem(ui.lw_objects_active->count(),   QString::fromUtf8( (*it)->getIdentifier().c_str()));
-      ui.lw_sc_objects->insertItem(ui.lw_sc_objects->count(), QString::fromUtf8((*it)->getIdentifier().c_str()));
+      if ( (*it) != nullptr)
+      {
+        ui.lw_objects_active->insertItem(ui.lw_objects_active->count(), QString::fromUtf8((*it)->getIdentifier().c_str()));
+        ui.lw_sc_objects->insertItem(ui.lw_sc_objects->count(), QString::fromUtf8((*it)->getIdentifier().c_str()));
+      }
     }
-    scene->releaseLock("refreshObjectList");
+  //  scene->releaseLock("refreshObjectList");
   }
 }
 
@@ -736,7 +754,8 @@ void PastadEditor::on_lw_objects_chooser_currentRowChanged(int row)
   std::cout <<"orcc"<< row << std::endl;
   if( m_object_database != nullptr )
   {
-    int cr = ui.lw_objects_active->currentRow();
+    int cr = ui.lw_objects_chooser->currentRow();
+    std::cout << "orcc _" << cr << std::endl;
     if ( (cr< m_object_database->getEntries().size() ) && (cr >= 0))
     {
       ObjectDatabaseEntry entry = m_object_database->getEntries()[ui.lw_objects_chooser->currentRow()];
@@ -747,7 +766,7 @@ void PastadEditor::on_lw_objects_chooser_currentRowChanged(int row)
       int w = ui.lbl_objectdb_selected->width();
       int h = ui.lbl_objectdb_selected->height();
       ui.lbl_objectdb_selected->setPixmap(pix.scaled(w, h, Qt::IgnoreAspectRatio));
-
+ 
     }
   }
 }
@@ -826,7 +845,7 @@ void PastadEditor::on_pb_objects_add_clicked()
     if (scene != nullptr )
     {    
      // Engine::requestObjectLoad(entry.m_path);
-      AddObjectRequest * aor = new AddObjectRequest(entry.m_path);
+      AddObjectRequest * aor = new AddObjectRequest(entry.m_path, ui.rb_obj_fixed->isChecked(), ui.rb_obj_shadow_only->isChecked(), ui.rb_obj_visible->isChecked(), ui.rb_obj_apply_physic->isChecked(), ui.rb_obj_physic_static->isChecked());
       Engine::addRequest( (EngineRequest *) aor );
     }
     refreshSelected();
@@ -1004,7 +1023,10 @@ void PastadEditor::on_pb_object_remove_clicked()
     m_object = nullptr;
     refreshSelected();
   //  refreshObjectList();
-
+  }
+  else
+  {
+    Engine::getLog()->log("PastadEditor", "couldn't remove object");
   }
 }
 void PastadEditor::on_pb_light_remove_clicked()

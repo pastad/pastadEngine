@@ -28,6 +28,7 @@ struct MaterialColorSpecs
 
   // if the material is emmissive
   float m_emmissive;
+
 };
 
 class Material
@@ -60,8 +61,17 @@ private:
   std::map<int,Texture*> m_diffuse_textures;
   std::map<int, int > m_diffuse_texture_strengths;
 
+  // the ambient texture of the material
+  Texture* m_ambient_texture = nullptr;
+
+  // the specular texture of the material
+  Texture* m_specular_texture = nullptr;
+
   // the normal texture of the material
   Texture* m_normal_texture = nullptr;
+
+  // the height texture of the material
+  Texture* m_height_texture = nullptr;
 
   // the key texture of the material
   Texture* m_opacity_texture = nullptr;

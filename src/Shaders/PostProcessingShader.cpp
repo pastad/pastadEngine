@@ -168,10 +168,10 @@ void PostProcessingShader::setSSAOSamples()
   for (GLuint i = 0; i < 64; ++i)
   {
     std::stringstream ss;
-    float offset = 0.25;
+    float offset = 0.3;
     float x = randomFloats(gen) * ( 2.0 - (2*offset) )  - (1.0 -offset) ;
     float y = randomFloats(gen) * (2.0 - (2 * offset)) - (1.0 - offset);
-    float z = randomFloats(gen) - offset;
+    float z = randomFloats(gen) -offset;
    
     glm::vec3 one_samle( x,y,z );
 
@@ -182,7 +182,7 @@ void PostProcessingShader::setSSAOSamples()
     scale = Helper::lerp(0.1f, 1.0f, scale * scale);
     one_samle *= scale;
     ss<< "SSAOSamples["<<i<<"]";
-    //std::cout << one_samle.x <<","<<one_samle.y<<","<<one_samle.z<<std::endl;
+    std::cout << one_samle.x <<","<<one_samle.y<<","<<one_samle.z<<std::endl;
     setUniform(ss.str(), one_samle);
   }
 

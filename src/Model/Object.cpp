@@ -22,6 +22,7 @@ Object::Object(std::string identifier, Model * parent, Scene * parent_scene):Tra
   m_model = parent;
   m_parent_scene = parent_scene;
   m_physics_static = false;
+  m_static = false;
   refreshAABB();
   m_script = nullptr;
  // std::cout << "objct constructor done"<<std::endl;  

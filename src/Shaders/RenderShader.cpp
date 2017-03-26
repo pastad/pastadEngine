@@ -415,9 +415,19 @@ void RenderShader::setFog(glm::vec3 color, float factor,float offset)
   setUniform("FogOffset",offset );
 }
 
+void RenderShader::setSpecularMapActive(int active)
+{
+  setUniform("SpecularMapActive", active);
+}
+
 void RenderShader::setNormalMapActive(int active)
 {
   setUniform("NormalMapActive", active);
+}
+
+void RenderShader::setBumpMapActive(int active)
+{
+  setUniform("BumpMapActive", active);
 }
 
 void RenderShader::setOpacityMapActive(int active)

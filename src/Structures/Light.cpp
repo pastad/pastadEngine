@@ -38,9 +38,9 @@ unsigned int Light::m_light_index_counter = 1000;
 
 unsigned int Light::m_directional_buffer_width = 1240*10;
 unsigned int Light::m_directional_buffer_height = 720*10;
-unsigned int Light::m_spot_buffer_width = 1240;
-unsigned int Light::m_spot_buffer_height = 720;
-unsigned int Light::m_point_buffer_size = 1000;
+unsigned int Light::m_spot_buffer_width = 1240*5;
+unsigned int Light::m_spot_buffer_height = 720*5;
+unsigned int Light::m_point_buffer_size = 2000;
 
 Object * Light::m_point_object = nullptr;
 Object * Light::m_spot_object = nullptr;
@@ -707,6 +707,7 @@ void Light::bindForShadowRenderDirectional(RenderBaseShader * shadow_shader)
   {     
     shadow_shader->use();
     m_directional_buffer->bindForInput();
+    gl::ClearColor(1000, 0, 0, 0);
     gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
     gl::Enable(gl::DEPTH_TEST);
 
@@ -717,7 +718,7 @@ void Light::bindForShadowRenderDirectional(RenderBaseShader * shadow_shader)
     shadow_shader->setViewMatrix(getView() ); 
 
     gl::Viewport(0,0, m_directional_buffer->getWidth() ,m_directional_buffer->getHeight());
-    gl::ClearColor(1000,0,0,0);
+
     gl::Enable(gl::CULL_FACE);
     gl::CullFace(gl::BACK);
 
@@ -767,7 +768,7 @@ void Light::bindForShadowRenderPoint( RenderBaseShader * point_shadow_shader, in
 
     point_shadow_shader->setProjectionMatrix(getProjection());  
     point_shadow_shader->setUniform("LightPosition",getPosition());  
-    gl::Viewport(0,0, 1000 ,1000);
+    gl::Viewport(0,0, m_point_buffer_size , m_point_buffer_size);
 
     gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
     gl::Enable(gl::DEPTH_TEST);
@@ -780,29 +781,36 @@ void Light::bindForShadowRenderPoint( RenderBaseShader * point_shadow_shader, in
 }
 
 void Light::unbindFromShadowRender()
-{
-
-  if( ( getType() == LIGHT_SPOT) || ( getType() == LIGHT_DIRECTIONAL) )
+{  
+  if ((m_type == LIGHT_SPOT) || (m_type == LIGHT_DIRECTIONAL))
   {
-   
+
     gl::Flush();
     gl::Finish();
-    gl::PolygonOffset(0.0f,0.0f);
+    gl::PolygonOffset(0.0f, 0.0f);
     gl::Disable(gl::POLYGON_OFFSET_FILL);
 
     m_directional_buffer->unbindFromInput();
-    gl::Viewport(0,0, Engine::getWindowWidth(),Engine::getWindowHeight());
+    gl::Viewport(0, 0, Engine::getWindowWidth(), Engine::getWindowHeight());
+
   }
-  if( getType() == LIGHT_POINT)
-  {    
+  if (getType() == LIGHT_POINT)
+  {
     gl::Flush();
     gl::Finish();
     gl::Disable(gl::CULL_FACE);
     m_point_buffer->unbindFromInput();
-    gl::Viewport(0,0, Engine::getWindowWidth(),Engine::getWindowHeight());
-  }  
-  gl::CullFace(gl::BACK);
-   gl::Disable(gl::CULL_FACE);
+    gl::Viewport(0, 0, Engine::getWindowWidth(), Engine::getWindowHeight());
+  }
+ 
+
+  gl::Viewport(0, 0, Engine::getWindowWidth(), Engine::getWindowHeight());
+   gl::CullFace(gl::BACK);
+   gl::Enable(gl::CULL_FACE);
+   gl::ClearColor(0, 0, 0, 0);
+   gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
+
+
 }
 
 void Light::bindForRender(RenderShader * render_shader)

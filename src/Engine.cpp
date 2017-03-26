@@ -16,6 +16,7 @@
 #include "SceneEditor.h"
 #include "Light.h"
 #include "Camera.h"
+#include "Object.h"
 #include "Helper.h"
 #include "PastadEditor.h"
 
@@ -671,8 +672,8 @@ void Engine::sceneSwitch()
 
     if (m_pastad_editor != nullptr)
     {
-      std::cout << "refresh editor" << std::endl;
-      m_pastad_editor->refreshAll();
+     // std::cout << "refresh editor" << std::endl;
+     // m_pastad_editor->refreshAll();
     }
     if (m_scene != nullptr)
       m_scene->acquireLock("EngineSceneSwitch");
@@ -1099,11 +1100,26 @@ void Engine::handleEditorRequests()
       }
       if ((*it)->getType() == ERT_ADD_OBJECT)
       {
-        Object * obj = m_scene->addObject( ( (AddObjectRequest *)(*it))->getPath(), glm::vec3(0, 0, 0), false);   
+        AddObjectRequest * aor = ((AddObjectRequest *)(*it));
+        Object * obj = m_scene->addObject( aor->getPath(), glm::vec3(0, 0, 0), aor->getStatic());
+
+        if (aor->getShadowOnly())
+          obj->setVisibility(Visibility::V_Shadow);
+        if(!aor->getVisible())
+          obj->setVisibility(Visibility::V_None);
+
+
+        if (aor->getApplyPhysics())
+          obj->applyPhysics();
+        if (aor->getPhysicsStatic() )
+          obj->applyPhysicsStatic();
+
+        
         m_pastad_editor->changeObject(obj);
       }
       if ((*it)->getType() == ERT_REMOVE_OBJECT)
       {
+        getLog()->log("Engine", "rem object");
         m_scene->removeObject(((RemoveObjectRequest *)(*it))->getObject());
         m_pastad_editor->refreshObjectList();
       }

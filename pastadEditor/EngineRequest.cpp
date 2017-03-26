@@ -23,7 +23,7 @@ RefresShaderRequest::~RefresShaderRequest()
 {
 }
 
-AddObjectRequest::AddObjectRequest(std::string path) : EngineRequest(ERT_ADD_OBJECT), m_path(path)
+AddObjectRequest::AddObjectRequest(std::string path, bool is_static, bool shadow_only, bool is_visible, bool apply_pysics, bool physics_static) : EngineRequest(ERT_ADD_OBJECT), m_path(path), m_is_static(is_static), m_shadow_only(shadow_only), m_is_visible(is_visible), m_apply_physics(apply_pysics),m_physics_static(physics_static)
 {
 }
 AddObjectRequest::~AddObjectRequest() 
@@ -32,6 +32,26 @@ AddObjectRequest::~AddObjectRequest()
 std::string AddObjectRequest::getPath()
 {
   return m_path;
+}
+bool AddObjectRequest::getStatic()
+{
+  return m_is_static;
+}
+bool AddObjectRequest::getShadowOnly()
+{
+  return m_shadow_only;
+}
+bool AddObjectRequest::getVisible()
+{
+  return m_is_visible;
+}
+bool AddObjectRequest::getApplyPhysics()
+{
+  return m_apply_physics;
+}
+bool AddObjectRequest::getPhysicsStatic()
+{
+  return m_physics_static;
 }
 
 RemoveObjectRequest::RemoveObjectRequest(Object * object) : EngineRequest(ERT_REMOVE_OBJECT)
