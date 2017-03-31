@@ -7,22 +7,26 @@ Screenshots:
 ![Alt text](/Release/screenshot.PNG?raw=true "Optional Title")
 ![Alt text](/Release/screenshot_3.JPG?raw=true "Optional Title")
 
-Requirements:
+
+This is a rendering engine project. It includes an editor to maipulate the scene (place object, lights, ... )
+It is based on C++ and OpenGL. 
+
+Requirements for compilation: 
+  - C++
   - GL
   - glfw3
   - assimp
   - SOIL     (place in external)
   - freetype
-  - tinyxml2 (place in external)
-  
+  - tinyxml2 (place in external)  
  
 
 gl-loader-file generated with https://bitbucket.org/alfonse/glloadgen/wiki/Home 
 
 Some code parts inspired by openGl 4 shading cookbook due to the fact that 
-the subjects where studied with it
+the subjects where studied with it.
 
-Basic workflow
+Basic workflow for using the engine:
   First initialize the engine with the width and height of the screen, the subsystems to be initialized and a indication if fullscreen is intendet. The render and the IO subsystem are
   initialized every time because these subsystems are required for minimal functionallity.
 
@@ -63,11 +67,39 @@ Basic workflow
 
   In the end the engine should be shut down to clean everything up.
 
-  engine.shutDown();
-  
+  engine.shutDown();  
 
-Lighting: 
-  uses deferred rendering
+
+
+
+Done:
+  - DeferredLighting
+  - Shadows (Point/Spot/Directional)
+    - PCF (for all light types)
+    - RandomSampling ( for Directional/Spot)
+  - FXAA
+  - SSAO
+  - Basic Scripting
+  - Simple Physics(falling)
+  - Picking
+  - Objects
+    - Skybox
+    - AnimatedObjects (Bone-Animation)
+  - SceneEditor
+    - Add/Delete Lights
+    - Add/Delete Objects    
+  - Scene
+    - Loading/Saveing
+    - Object/Light- Management
+    
+Partially done ( improvements should be done) :
+
+  - GUI 
+    - EditText
+    - Image
+    - Button
+  - SceneEditor
+    - Add Skybox
 
 
 TODO:
@@ -75,10 +107,7 @@ TODO:
 Structural:
   - screen space culling ( material flickering when activated )
   - write doc
-
-General:
-  - lua scripting
-
+  
 Graphical:
   - water
   - ambient oclusion
@@ -92,31 +121,6 @@ GUI:
 
 Customizability:
   - setting specifactions (MULTI_SAMPLES,...)
-
-Partially done ( improvements should be done) :
-  - Shadows (Point/Spot/Directional)
-    - PCF (for all light types)
-    - RandomSampling ( for Directional/Spot)
-  - GUI 
-    - EditText
-    - Image
-    - Button
-  - SceneEditor
-    - Add/Delete Lights
-    - Add/Delete Objects
-    - Add Skybox
-  - Scene
-    - Loading/Saveing
-    - Object/Light- Management
-
-
-Done:
-  - DeferredLighting
-  - FXAA
-  - Picking
-  - Objects
-    - Skybox
-    - AnimatedObjects (Bone-Animation)
 
 
 "personal note for xcompile  ./../../lib/mxe/usr/bin/x86_64-w64-mingw32.static-cmake ."
