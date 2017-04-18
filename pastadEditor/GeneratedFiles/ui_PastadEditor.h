@@ -544,7 +544,7 @@ public:
 
         retranslateUi(PastadEditorClass);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
         cb_shadow_type->setCurrentIndex(2);
         cb_anti_aliasing->setCurrentIndex(1);
         cb_shadow_type_point->setCurrentIndex(2);

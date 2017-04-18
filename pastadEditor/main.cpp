@@ -46,8 +46,7 @@ int main(int argc, char *argv[])
   
 
     Scene * scene = new Scene();
-    if( ! scene->load("sponza.xml") )
-      return -1;
+  
     engine.setScene(scene, false);
     scene->getCamera()->dontApplyPhysicsDrop();
     scene->getCamera()->unsetMovementCollisionCheck();

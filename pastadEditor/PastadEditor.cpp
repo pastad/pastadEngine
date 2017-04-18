@@ -48,7 +48,7 @@ PastadEditor::PastadEditor(QWidget *parent)
   ui.le_sc_val2->setVisible(false);
   ui.le_sc_val3->setVisible(false);
 
- // loadDatatbase("object_database.xml");
+  loadDatatbase("object_database.xml");
 }
 
 PastadEditor::~PastadEditor()
@@ -259,12 +259,17 @@ void PastadEditor::loadDatatbase(std::string path)
 
 void PastadEditor::refreshObjectList()
 {
-  while (ui.lw_objects_active->count()>0)
-    ui.lw_objects_active->takeItem(0);
+  std::cout << "ref obj list" << std::endl;
+ // while (ui.lw_objects_active->count()>0)
+ //   ui.lw_objects_active->takeItem(0);
 
-  while (ui.lw_sc_objects->count()>0)
-    ui.lw_sc_objects->takeItem(0);
-
+  //while (ui.lw_sc_objects->count()>0)
+  //  ui.lw_sc_objects->takeItem(0);
+  ui.lw_sc_objects->reset();
+  ui.lw_objects_active->reset();
+  ui.lw_sc_objects->clear();
+  ui.lw_objects_active->clear();
+  std::cout << "ref obj list del" << std::endl;
   Scene * scene = Engine::getScene();
   if (scene != nullptr)
   {
@@ -281,6 +286,7 @@ void PastadEditor::refreshObjectList()
     }
   //  scene->releaseLock("refreshObjectList");
   }
+  std::cout << "ref obj list end" << std::endl;
 }
 
 void PastadEditor::refreshLightList()
@@ -848,8 +854,8 @@ void PastadEditor::on_pb_objects_add_clicked()
       AddObjectRequest * aor = new AddObjectRequest(entry.m_path, ui.rb_obj_fixed->isChecked(), ui.rb_obj_shadow_only->isChecked(), ui.rb_obj_visible->isChecked(), ui.rb_obj_apply_physic->isChecked(), ui.rb_obj_physic_static->isChecked());
       Engine::addRequest( (EngineRequest *) aor );
     }
-    refreshSelected();
-    refreshObjectList();
+   // refreshSelected();
+   // refreshObjectList();
   }
 }
 

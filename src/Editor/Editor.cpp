@@ -42,7 +42,7 @@ void Editor::on_pushButton_clicked()
 void Editor::on_le_obj_pos_x_editingFinished()
 {
   std::cout << "ed fin" << std::endl;
-  m_scene->acquireLock();
+  m_scene->acquireLock("ed fin");
   if (m_object != nullptr)
   {
     glm::vec3 p = m_object->getPosition();
@@ -59,7 +59,7 @@ void Editor::on_le_obj_pos_x_editingFinished()
       std::cout << "ex" << std::endl;
     }
   }
-  m_scene->releaseLock();
+  m_scene->releaseLock("ed fin");
 }
 
 void Editor::on_le_obj_pos_y_editingFinished()

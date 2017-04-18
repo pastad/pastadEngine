@@ -1183,6 +1183,7 @@ void Engine::handleEditorRequests()
           std::cout << "setting scene" << std::endl;
           Engine::setScene(scene, true);
           scene->getCamera()->dontApplyPhysicsDrop();
+          scene->getCamera()->setRotationAllowed();
         }
      
       }
