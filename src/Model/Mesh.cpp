@@ -114,7 +114,6 @@ void  Mesh::initMesh(const  IndexedRepresentation& model)
   gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, model.m_indices.size() * sizeof(model.m_indices[0]), &model.m_indices[0], gl::STATIC_DRAW );
  
   gl::BindVertexArray(0);
-
 }
 
 

@@ -14,9 +14,9 @@
 #include "SkyboxShader.h"
 #include "Terrain.h"
 #include "Water.h"
+#include "Cloth.h"
 #include "Helper.h"
 #include "SceneTreeElement.h"
-#include "PastadEditor.h"
 
 #include <iostream>
 #include <iomanip>
@@ -75,7 +75,10 @@ Scene::~Scene()
     delete m_camera;
   if(m_terrain != nullptr)
     delete m_terrain;
+
+  m_mutex.unlock();
   Engine::getLog()->log("Scene", "deletion complete");
+
 }
 
 
@@ -155,9 +158,7 @@ void Scene::update(SceneTreeElement * element,  float delta)
 void Scene::timeUpdate(float delta)
 {
   m_time_line_seconds += delta;
-  
-  if(Engine::getPastadEditor() != nullptr)
-    Engine::getPastadEditor()->setTime(getTimeString());
+
 
   //std::cout <<delta <<std::endl;
   //std::cout << getTimeString() <<std::endl;
@@ -218,6 +219,10 @@ void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, R
   for(std::vector<Water *>::iterator it = m_water_effects.begin(); it != m_water_effects.end();it++)
   {
     (*it)->render(water_shader);
+  }
+  for (std::vector<Cloth *>::iterator it = m_cloth_effects.begin(); it != m_cloth_effects.end(); it++)
+  {
+    (*it)->render(render_shader);
   }
 
 }
@@ -951,6 +956,22 @@ Water * Scene::addWaterEffect(glm::vec3 pos, float size)
   }
   m_water_effects.push_back(w);
   return w;  
+}
+
+// cloth
+
+// adds a cloth effect to the scene
+Cloth * Scene::addClothEffect(glm::vec3 pos, float size)
+{
+  Cloth * cloth = new Cloth();
+  if (!cloth->init(10, 10))
+  {
+    delete cloth;
+    return nullptr;
+  }
+
+  m_cloth_effects.push_back(cloth);
+  return cloth;
 }
 
 // terrain

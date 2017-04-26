@@ -11,8 +11,10 @@
 #include "Light.h"
 #include "IOSubsystem.h"
 
+
+#include "Player.h"
+
 #include "Helper.h"
-#include "QEditorExternal.hpp"
 
 #include "GUI.h"
 #include "Text.h"
@@ -21,6 +23,8 @@
 #include <glm/glm.hpp>
 #include <future>
 #include <windows.h>
+
+#include "Camera.h"
 
 #include <QtWidgets/QApplication>
 
@@ -35,11 +39,6 @@
 
 int main(int argc, char *argv[])
 {
- // QApplication app(argc, argv);
- //// QEditorExternal w;
- // w.show();
-//
- // app.exec();
 
   Engine engine;
 
@@ -51,40 +50,34 @@ int main(int argc, char *argv[])
   engine.setPostProcessing(PP_BLOOM, true);
 
   // load and set the start scene
-	Scene *  scene = new Scene();
-	scene->load("island-scene.xml");
+	Scene *  scene = new Scene();	
 
-  Object * obj = scene->addObject( "models/energy_remain.obj",glm::vec3(0,0,0) , false);
-  if(obj != nullptr)
-  {
-    Script * s1 = obj->addScript();
-    RotationScriptElement * rs1= s1->addRotationScript();
-    rs1->setupAlways();
-    rs1->setup(glm::vec3(100,0,0) ); 
-  }
+ 
 
-  Object * obj2 = scene->addObject("models/rooster.dae", glm::vec3(1, 0, 0), false);
-  if (obj2 != nullptr)
-  {
-    obj2->setScale(glm::vec3(0.1f,0.1f,0.1f));
-    Script * s2 = obj2->addScript();
-    RotationScriptElement * rs2 = s2->addRotationScript();
-    rs2->setupAlways();
-    rs2->setup(glm::vec3(0,100,0));
-  }
+
+  Light * l = scene->addLight();
+  l->setDirectional(glm::vec3(0, -1, 1), glm::vec3(1, 1, 1), glm::vec3(1, 1, 1), glm::vec3(1, 1, 1), 0.5f, true);
 
 	engine.setScene(scene, false);
 
-  //std::future<void> future_editor = std::async(startEditor, argc, argv);
+  Object * pobj = scene->addObject("game/low_poly.obj", false);
+  pobj->setScale(glm::vec3(0.1f, 0.1f, 0.1f));
+  Player * player = new Player(pobj, scene->getCamera());
+  pobj->applyPhysics();
+
+ // Object * terrain = scene->addObject("game/terrain.obj", true);
+//  terrain->applyPhysicsStatic();
+ // terrain->applyPhysicsStatic();
+
+  Cloth * cl = scene->addClothEffect(glm::vec3(0, 3, 0), 2);
   
 
   // run the main loop
   while(engine.running())
   {
-    scene->acquireLock();
     engine.update();
-    engine.render();   
-    scene->releaseLock();
+    engine.render();  
+    player->update(0.01f);
   }
    
    // shut everything down
@@ -95,6 +88,7 @@ int main(int argc, char *argv[])
   if(scene != nullptr)
     delete scene;  
 
+  delete player;
 
   return 0;  
 }

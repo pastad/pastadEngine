@@ -30,7 +30,7 @@ Camera::Camera(float x, float y, float z): m_pos(x,y,z),m_rotation_allowed(false
   m_rot_2 =0.0f;
   m_rot_1 = 90.0f;
   m_speed = 5.0f;
-  m_rotation_speed = 0.2f;  
+  m_rotation_speed = 1.0f;  
   m_exposure = 1.0f;
   m_plane_top = new Plane();
   m_plane_bottom = new Plane();
@@ -143,8 +143,8 @@ void Camera::movementWithCollisionCheck(glm::vec3 dir, float step)
 
 void Camera::rotate(float deltax,float deltay)
 {
-  if(m_rotation_allowed)
-  {  
+ // if(m_rotation_allowed)
+//  {  
 
     m_rot_1 += deltax*m_rotation_speed;
     m_rot_2 -= deltay*m_rotation_speed;
@@ -152,9 +152,9 @@ void Camera::rotate(float deltax,float deltay)
 
     // limit to range for better retrieval
     if(m_rot_1 >360.0f)
-      m_rot_1 = 0.0f;
+      m_rot_1 -= 360.0f;
     if(m_rot_1 <0.0f)
-      m_rot_1 = 360.0f;
+      m_rot_1 += 360.0f;
 
     // limt so that we can turn upside down
     if(m_rot_2 >89.0f)
@@ -163,12 +163,14 @@ void Camera::rotate(float deltax,float deltay)
       m_rot_2 = -89.0f;
 
     m_forward = Helper::anglesToDirection(m_rot_1,m_rot_2);
-    Engine::getScene()->cameraRotated();
+    if( Engine::isStarted())
+      Engine::getScene()->cameraRotated();
 
     //Engine::getLog()->log("Camera", "rotated");
     if(external_cameraRotatedCallback != nullptr)
       external_cameraRotatedCallback();
-  }
+    recalculateMatrices();
+  //}
 }
 
 void Camera::move(glm::vec3 step)
@@ -198,7 +200,7 @@ void Camera::update(float delta_time)
     bool moved = false;
     //m_pos -= m_up * 0.000001f;
 
-    if(IOSubsystem::isKeyPressed('W'))
+   /* if(IOSubsystem::isKeyPressed('W'))
     {
       
       glm::vec3 f = m_forward;
@@ -329,14 +331,14 @@ void Camera::update(float delta_time)
     {
       moved = true;
       rotate(0,-5);
-    }
+    }*/
     if(moved)
     {
       Engine::getScene()->cameraMoved();  
     }
-    glm::vec2 mouse_movement = IOSubsystem::getMouseDelta();
-    rotate(mouse_movement.x, mouse_movement.y);
-    recalculateMatrices();
+   // glm::vec2 mouse_movement = IOSubsystem::getMouseDelta();
+  //  rotate(mouse_movement.x, mouse_movement.y);
+  //  recalculateMatrices();
   }
 }
 
@@ -694,3 +696,9 @@ void Camera::registerRotatedCallback( void  (*callback)(void)   )
   external_cameraRotatedCallback = callback;
 }
 
+void Camera::lookAt(glm::vec3 pos, glm::vec2 rot, float d)
+{
+  rotate(rot.x, rot.y);
+  m_pos = pos - m_forward * d;
+  recalculateMatrices();
+}

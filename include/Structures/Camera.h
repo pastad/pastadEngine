@@ -126,6 +126,8 @@ public:
     void setMovementCollisionCheck();
     void unsetMovementCollisionCheck();
 
+    void lookAt(glm::vec3 pos, glm::vec2 rot, float d);
+
  
 private:
 

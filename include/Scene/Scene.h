@@ -22,6 +22,7 @@ class SkyboxShader;
 class SceneTreeElement;
 class Terrain;
 class Water;
+class Cloth;
 
 class Scene
 {
@@ -81,6 +82,9 @@ public:
 
   // adds a water effect to the scene
   Water * addWaterEffect(glm::vec3 pos, float size);
+
+  // adds a cloth effect to the scene
+  Cloth * addClothEffect(glm::vec3 pos, float size);
 
   // adds a terrain to the scene
   Terrain * addTerrain();
@@ -161,6 +165,9 @@ private:
 
   // stores the water effects
   std::vector<Water *> m_water_effects;
+
+  // stores the cloth effects
+  std::vector<Cloth *> m_cloth_effects;
 
   // camera of the scene
   Camera * m_camera;

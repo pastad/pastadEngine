@@ -29,8 +29,6 @@ class Object;
 class Light;
 class SceneEditor;
 class Editor;
-class PastadEditor;
-
 class EngineRequest;
 
 
@@ -196,11 +194,8 @@ public:
   // adds a request | for threads
   static void addRequest(EngineRequest * er);
 
-  // sets the ext editor
-  static void setPastadEditor(PastadEditor * editor);
+  static bool isStarted();
 
-  // returns the ext editor
-  static PastadEditor * getPastadEditor();
 
 
 
@@ -280,15 +275,7 @@ private:
 	// run method quitter
 	static bool m_run;
 
-  // the new external editor
-  static Editor * m_editor;
-  static std::future<void> m_editor_future;
 
-  // engine requests
-  static std::vector<EngineRequest *> m_requests;
-
-  // holds a pointer to the editor i active
-  static PastadEditor * m_pastad_editor;
 
 	// starts the subsystems
 	static bool startUpSubsystems();
@@ -312,8 +299,6 @@ private:
 	// static for async button check
 	static bool buttonCheck(GUI *gui , float x, float y);
 
-  // handles add requests from the editor
-  static void handleEditorRequests();
 
   // starts the external editor
  // static void startEditor();

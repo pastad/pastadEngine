@@ -18,9 +18,8 @@
 #include "Camera.h"
 #include "Object.h"
 #include "Helper.h"
-#include "PastadEditor.h"
 
-#include "EngineRequest.h"
+
 
 // the statics
 bool Engine::m_initialized;
@@ -50,16 +49,9 @@ bool Engine::m_render_update_needed;
 bool Engine::m_fullscreen;
 bool Engine::m_gui_movement_lock = false;
 bool Engine::m_switch_scene =false;
-bool Engine::m_run;
-Editor * Engine::m_editor;
-std::future<void> Engine::m_editor_future;
-
-PastadEditor *Engine::m_pastad_editor = nullptr;
+bool Engine::m_run = false;
 
 Engine::EXTERNALUPDATE Engine::m_external_update = nullptr;
-
-std::vector<EngineRequest *> Engine::m_requests;
-
 
 
 Engine::Engine()
@@ -315,8 +307,11 @@ void Engine::shutDown()
 
     if(m_log != nullptr)
 		  m_log->log("Engine", "shut down");
-     if(m_scene != nullptr)
+    if (m_scene != nullptr)
+    {
       delete m_scene;
+      m_scene = nullptr;
+    }
 		if(m_scene_editor != nullptr)
 			delete m_scene_editor;
     if(m_engine_gui != nullptr)
@@ -522,7 +517,6 @@ void Engine::run()
   m_run = true;
   while (running() && m_run)
   {
-    handleEditorRequests();
     if(m_scene != nullptr)
       m_scene->acquireLock("EngineRun");
     m_render_system->acquireRenderLock("EngineRun");
@@ -550,6 +544,8 @@ bool Engine::running()
 	//std::cout << "------------------------------" << std::endl;
 	//float now = float(glfwGetTime());
 //	std::cout << now << std::endl;
+  if (IOSubsystem::isKeyPressed( GLFW_KEY_ESCAPE))
+    return false;
 	if(glfwWindowShouldClose(m_window))
 	{
 		m_log->log("Engine", "window was closed");
@@ -618,6 +614,13 @@ void Engine::refreshShaders()
 
 // getter/setters functions -----------------------------------------------------------------------------------------
 
+
+
+ bool Engine::isStarted()
+{
+  return m_run;
+}
+
 // log
 
 Log * Engine::getLog()
@@ -625,12 +628,7 @@ Log * Engine::getLog()
   return m_log;
 }
 
-// editor
 
-Editor *  Engine::getEditor()
-{
-  return m_editor;
-}
 
 
 // scene
@@ -669,12 +667,7 @@ void Engine::sceneSwitch()
 		m_scene_next = nullptr; 
 		m_log->log("Engine", "scene switched");   
     m_switch_scene = false;
-
-    if (m_pastad_editor != nullptr)
-    {
-     // std::cout << "refresh editor" << std::endl;
-     // m_pastad_editor->refreshAll();
-    }
+    
     if (m_scene != nullptr)
       m_scene->acquireLock("EngineSceneSwitch");
 	}
@@ -1088,129 +1081,8 @@ bool Engine::readConfig(std::string path, unsigned int* width, unsigned int *hei
   return true;
 }
 
-void Engine::handleEditorRequests()
-{
-  if(m_scene != nullptr)
-  {
-    for (std::vector<EngineRequest *>::iterator it = m_requests.begin() ; it != m_requests.end();)
-    {
-      if ((*it)->getType() == ERT_SHADER_REFRESH)
-      {
-        refreshShaders();
-      }
-      if ((*it)->getType() == ERT_ADD_OBJECT)
-      {
-        AddObjectRequest * aor = ((AddObjectRequest *)(*it));
-        Object * obj = m_scene->addObject( aor->getPath(), glm::vec3(0, 0, 0), aor->getStatic());
-
-        if (aor->getShadowOnly())
-          obj->setVisibility(Visibility::V_Shadow);
-        if(!aor->getVisible())
-          obj->setVisibility(Visibility::V_None);
 
 
-        if (aor->getApplyPhysics())
-          obj->applyPhysics();
-        if (aor->getPhysicsStatic() )
-          obj->applyPhysicsStatic();
-
-        
-        m_pastad_editor->changeObject(obj);
-      }
-      if ((*it)->getType() == ERT_REMOVE_OBJECT)
-      {
-        getLog()->log("Engine", "rem object");
-        m_scene->removeObject(((RemoveObjectRequest *)(*it))->getObject());
-        m_pastad_editor->refreshObjectList();
-      }
-      if ((*it)->getType() == ERT_ADD_LIGHT)
-      {
-        if (((AddLightRequest *)(*it))->getLightType() == LIGHT_POINT)
-        {
-          Light * new_light = m_scene->addLight();
-          if (!new_light->setPoint(m_scene->getCamera()->getPosition(), glm::vec3(1, 1, 1), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1, 1, 1), 0.5f, 0.1f, 0.09f, 0.032f, ((AddLightRequest *)(*it))->castsShadow()))
-            m_scene->removeLight(new_light);
-          else
-            m_pastad_editor->changeLight(new_light);
-          m_pastad_editor->refreshLightList();
-        }
-        if (((AddLightRequest *)(*it))->getLightType() == LIGHT_DIRECTIONAL)
-        {
-          Light * new_light = m_scene->addLight();
-          if (!new_light->setDirectional(glm::vec3(0, 1, 0), glm::vec3(1, 0.95, 0.9), glm::vec3(1, 1, 1), glm::vec3(1, 1, 1), 0.3f, ((AddLightRequest *)(*it))->castsShadow()))
-            m_scene->removeLight(new_light);
-          else
-            m_pastad_editor->changeLight(new_light);
-          m_pastad_editor->refreshLightList();
-        }
-        if (((AddLightRequest *)(*it))->getLightType() == LIGHT_SPOT)
-        {
-          Light * new_light = m_scene->addLight();
-          if (!new_light->setSpot(m_scene->getCamera()->getPosition(), glm::vec3(1, 1, 1), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1, 1, 1), 1.0f, 1.0f, 0.09f, 0.032f, 45.0f, glm::vec2(0, 0), ((AddLightRequest *)(*it))->castsShadow()))
-            m_scene->removeLight(new_light);
-          else
-            m_pastad_editor->changeLight(new_light);
-          m_pastad_editor->refreshLightList();
-        }
-      }
-      if ((*it)->getType() == ERT_REMOVE_LIGHT)
-      {
-        m_scene->removeLight(((RemoveLightRequest *)(*it))->getLight());
-        m_pastad_editor->refreshLightList();
-      }
-      if ((*it)->getType() == ERT_SET_SHADOW_TECHNIQUE_DIRECTIONAL)
-      {
-        setShadowTechniqueDirectional(((SetShadowTechniqueDirectionalRequest *)(*it))->getShadowTechnique() );
-      }
-      if ((*it)->getType() == ERT_SET_SHADOW_TECHNIQUE_POINT)
-      {
-        setShadowTechniquePoint(((SetShadowTechniquePointRequest *)(*it))->getShadowTechnique());
-      }
-      if ((*it)->getType() == ERT_SET_SHADOW_TECHNIQUE_SSAO)
-      {
-        setShadowTechniqueSSAO(((SetShadowTechniqueAdditionalRequest *)(*it))->getShadowTechnique());
-      }
-      if ((*it)->getType() == ERT_SET_PP_TECHNIQUE)
-      {
-        setPostProcessing(((SetPPTechniqueRequest *)(*it))->getPPTechnique(), ((SetPPTechniqueRequest *)(*it))->getState());
-      }
-      if ((*it)->getType() == ERT_LOAD_SCENE)
-      {
-        Scene * scene = new Scene();
-
-        if (scene->load(((LoadSceneRequest *)(*it))->getPath()))
-        {
-          std::cout << "setting scene" << std::endl;
-          Engine::setScene(scene, true);
-          scene->getCamera()->dontApplyPhysicsDrop();
-        }
-     
-      }
-
-      delete (*it);
-      it = m_requests.erase(it);
-    } 
-  
-  
-  }
-}
-
-
-void Engine::setPastadEditor(PastadEditor * editor)
-{
-  m_pastad_editor = editor;
-  m_edit_mode = EM_EXTERNAL_EDITOR;
-}
-
-PastadEditor * Engine::getPastadEditor()
-{
-  return m_pastad_editor;
-}
-
-void Engine::addRequest(EngineRequest * er)
-{
-  m_requests.push_back(er);
-}
 
 /*
 void Engine::startEditor()

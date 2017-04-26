@@ -22,7 +22,7 @@ void Script::update(float delta, Scene * scene,  Object * object)
   {
   
     (*it)->update(delta,scene,object);
-    if( (*it)->isEnded() && ( Engine::getPastadEditor() == nullptr ) )
+    if( (*it)->isEnded()  )
     {
       //(*it)->notifySuccessors();
       delete (*it); 
