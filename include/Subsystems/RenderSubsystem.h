@@ -41,7 +41,7 @@ public:
 	// --- Additionals ---
 
 	// Renders the scene currently set in the Engine
-	void render();
+    void render(bool swap_buffer);
 
 
 	// returns the shader used for standard rendering
@@ -77,7 +77,7 @@ public:
 private:
 
 	// the gl window pointer
-	GLFWwindow * m_window;
+    //EDITGLFWwindow * m_window;
 
 	// the render shader
 	RenderShader * m_shader; 
@@ -159,7 +159,7 @@ private:
 	void startRender();
 
 	// ends the rendering cycle
-	void endRender();
+    void endRender(bool swap_buffer);
 
 	// the render passess
 	void renderPassGBuffer();

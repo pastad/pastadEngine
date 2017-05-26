@@ -22,7 +22,7 @@
 #include <sstream>
 #include <iomanip>
 
-Camera::Camera(float x, float y, float z): m_pos(x,y,z),m_rotation_allowed(false)
+Camera::Camera(float x, float y, float z): m_pos(x,y,z),m_rotation_allowed(true)
 {
   m_forward = glm::vec3(0.0f, 0.0f, 1.0f);
   m_up    = glm::vec3(0.0f, 1.0f,  0.0f);
@@ -38,7 +38,7 @@ Camera::Camera(float x, float y, float z): m_pos(x,y,z),m_rotation_allowed(false
   m_plane_right = new Plane();
   m_plane_front = new Plane();
   m_plane_back = new Plane();
-  m_should_fall_be_checked = true;
+  m_should_fall_be_checked = false;
   m_movement_check = true;
 
   m_bottom_offset = 0.0f;
@@ -164,10 +164,12 @@ void Camera::rotate(float deltax,float deltay)
 
     m_forward = Helper::anglesToDirection(m_rot_1,m_rot_2);
     Engine::getScene()->cameraRotated();
-
-    //Engine::getLog()->log("Camera", "rotated");
+    std::cout << m_rot_1 <<std::endl;
+   // Engine::getLog()->log("Camera", "rotated");
     if(external_cameraRotatedCallback != nullptr)
       external_cameraRotatedCallback();
+
+    recalculateMatrices();
   }
 }
 
@@ -175,7 +177,6 @@ void Camera::move(glm::vec3 step)
 {
   m_pos += step;
   recalculateMatrices();
-  //Engine::getLog()->log("Camera", "moved camera ");
   if(external_cameraMovedCallback != nullptr)
     external_cameraMovedCallback();
   m_should_fall_be_checked = true;
@@ -336,7 +337,7 @@ void Camera::update(float delta_time)
     }
     glm::vec2 mouse_movement = IOSubsystem::getMouseDelta();
     rotate(mouse_movement.x, mouse_movement.y);
-    recalculateMatrices();
+    //recalculateMatrices();
   }
 }
 

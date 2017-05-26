@@ -80,7 +80,7 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 {
 	if(! m_initialized)
 	{
-		m_window = window;
+//EDIT		m_window = window;
 		m_shader = new RenderShader();
 		m_text_shader = new TextShader();
 		m_image_shader = new ImageShader();
@@ -411,13 +411,13 @@ void RenderSubsystem::renderPassPostProcess()
 	m_pp_shader->setTextureScaling( glm::vec2(1.0f /Engine::getWindowWidth(),1.0f /Engine::getWindowHeight()) );
 
 	gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
-  gl::Disable(gl::DEPTH_TEST);
+    gl::Disable(gl::DEPTH_TEST);
 
-  m_pp_shader->setRenderPass(PASS_STANDARD);
-  m_render_quad->render();	
+    m_pp_shader->setRenderPass(PASS_STANDARD);
+    m_render_quad->render();
 
 	gl::Finish();
-	//Engine::getLog()->log("RenderSubsystem", "pp pass");
+    //Engine::getLog()->log("RenderSubsystem", "pp pass");
 }
 
 void RenderSubsystem::renderPassLightBlur()
@@ -569,14 +569,14 @@ void RenderSubsystem::startRender()
   if(m_initialized)
   {
    // acquireRenderLock("RenderSubsystem");
-    Engine::getLog()->log(LF_Main,"RenderSubsystem", "start render");
+  //  Engine::getLog()->log(LF_Main,"RenderSubsystem", "start render");
     gl::ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     m_shader->reset();
     Helper::checkGLError("startRender");
   }
 }
 
-void RenderSubsystem::render()
+void RenderSubsystem::render(bool swap_buffer)
 {
 //	float now = float(glfwGetTime());
 	//std::cout << "rb"<< now << std::endl;
@@ -584,7 +584,7 @@ void RenderSubsystem::render()
 	if( Engine::getScene() != nullptr)
 	{
 	//	now = float(glfwGetTime());
-		//std::cout<<"pre gb" << now << std::endl;
+       // std::cout<<"pre gb"  << std::endl;
 		renderPassGBuffer();
 	//	now = float(glfwGetTime());
 	//	std::cout << "pre sb" << float(glfwGetTime())- now  << std::endl;
@@ -613,19 +613,20 @@ void RenderSubsystem::render()
 	}
 	renderUI();
 
-	endRender();
+    endRender(swap_buffer);
 
 }
 
-void RenderSubsystem::endRender()
+void RenderSubsystem::endRender(bool swap_buffer)
 {
 	if(m_initialized)
-	{		
-		glfwSwapBuffers(m_window);
+    {
+        //if(swap_buffer)
+        //    glfwSwapBuffers(m_window);
 		m_shader->reset();
 
     Helper::checkGLError("end Render");
-    Engine::getLog()->log(LF_Main, "RenderSubsystem", "end render");
+   // Engine::getLog()->log(LF_Main, "RenderSubsystem", "end render");
    // releaseRenderLock("RenderSubsystem");
 	}
 }
@@ -733,7 +734,8 @@ void RenderSubsystem::acquireRenderLock(std::string who)
   Engine::getLog()->log(LF_TS, "RenderSubsystem","lock wanted by ", who);
  // std::cout << &m_render_mutex <<std::endl;
   try
-  {  m_render_mutex.lock(); }
+  {  //m_render_mutex.lock();
+  }
   catch (std::exception ex)
   {
     Engine::getLog()->log("EXCEPTION", "locking");
@@ -743,7 +745,8 @@ void RenderSubsystem::acquireRenderLock(std::string who)
 void RenderSubsystem::releaseRenderLock(std::string who)
 {
   try
-  {  m_render_mutex.unlock();  }
+  {  //m_render_mutex.unlock();
+    }
   catch (std::exception ex)
   {
     Engine::getLog()->log("EXCEPTION", "locking");

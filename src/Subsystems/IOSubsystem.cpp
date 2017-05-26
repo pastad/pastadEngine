@@ -40,14 +40,14 @@ bool IOSubsystem::startUp(GLFWwindow * window)
 	if(!m_initialized)
 	{
 		// init system here
-    glfwSetKeyCallback(window, keyCallback);
-    glfwSetCursorPosCallback(window, mouseMoveCallback);
-    glfwSetMouseButtonCallback(window, mouseButtonCallback);
-    glfwSetScrollCallback (window, mouseScrollCallback); 
+  //  glfwSetKeyCallback(window, keyCallback);
+   // glfwSetCursorPosCallback(window, mouseMoveCallback);
+   // glfwSetMouseButtonCallback(window, mouseButtonCallback);
+   // glfwSetScrollCallback (window, mouseScrollCallback);
 		Engine::getLog()->log("IOSubsystem", "started");
 		
-    m_initialized = true;
-    return true;
+         m_initialized = true;
+        return true;
 	}
 	return false;
 }

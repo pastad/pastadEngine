@@ -59,7 +59,8 @@ enum EngineMode
 {
   EM_NORMAL = 0,
   EM_INTERNAL_EDITOR =1,
-  EM_EXTERNAL_EDITOR =2
+  EM_EXTERNAL_EDITOR =2,
+  EM_QT_EDITOR =3
 };
 
 
@@ -68,6 +69,7 @@ class Engine
 {
 public:
   typedef void(*EXTERNALUPDATE)(float);
+  typedef void(*EXTERNALLOADED)();
 
 	Engine();
 	~Engine();
@@ -190,6 +192,9 @@ public:
   // register the update callback function
   static void setUpdateFunction(EXTERNALUPDATE callback_update);
 
+  // register functon that is called when scene was loaded
+  static void setLoadedFunction(EXTERNALLOADED callback_loaded);
+
   // stops the running method
   static void stopRunning();
 
@@ -219,7 +224,7 @@ private:
 	static PhysicSubsystem  * m_physic_system;
 
 	// gl context
-	static GLFWwindow * m_window;
+    //EDIT static GLFWwindow * m_window;
 
 	// the subsystems to be started
 	static unsigned int m_system_flags;
@@ -276,6 +281,9 @@ private:
 
 	// stores the external update function to be called 
 	static EXTERNALUPDATE m_external_update;
+
+    // stores the external function to be called when scene is loaded
+    static EXTERNALLOADED m_external_loaded;
   
 	// run method quitter
 	static bool m_run;

@@ -83,15 +83,15 @@ Scene::~Scene()
 
 void Scene::update(float delta)
 {
-  m_camera->update(delta);
+  //m_camera->update(delta);
 //  update( m_tree_root,delta);
 
   timeUpdate(delta * m_time_advance);
 
-  std::future<void> future_scriptupdate = std::async(updateObjectsScripts, m_objects_scripted, delta * m_time_advance, this);
-  std::future<void> future_animateupdate = std::async(updateObjectsAnimated, m_objects_animated, delta * m_time_advance);
-  future_scriptupdate.get();
-  future_animateupdate.get();
+  //EDIT std::future<void> future_scriptupdate = std::async(updateObjectsScripts, m_objects_scripted, delta * m_time_advance, this);
+  //EDIT std::future<void> future_animateupdate = std::async(updateObjectsAnimated, m_objects_animated, delta * m_time_advance);
+  //EDIT future_scriptupdate.get();
+  //EDIT future_animateupdate.get();
 
 }
 
@@ -101,14 +101,14 @@ void Scene::updateObjectsScripts(std::vector<Object *> objs, float delta, Scene 
   {
     for (std::vector<Object *>::iterator it = objs.begin(); it != objs.end(); )
     {
-      if ((*it)->acquireLock())
-      {
+     // if ((*it)->acquireLock())
+     // {
         (*it)->update(delta, current);
         (*it)->releaseLock();
         it = objs.erase(it);
-      }
-      else
-        it++;
+     // }
+      //else
+       // it++;
     }
   }
 }
@@ -118,14 +118,14 @@ void Scene::updateObjectsAnimated(std::vector<Object *> objs, float delta )
   {
     for (std::vector<Object *>::iterator it = objs.begin(); it != objs.end(); )
     {
-      if ((*it)->acquireLock())
-      {
+     // if ((*it)->acquireLock())
+     // {
         (*it)->advanceAnimation(delta);
         (*it)->releaseLock();
         it = objs.erase(it);
-      }
-      else
-        it++;
+      //}
+     // else
+       // it++;
     }
   }
 }
@@ -156,8 +156,8 @@ void Scene::timeUpdate(float delta)
 {
   m_time_line_seconds += delta;
   
-  if(Engine::getPastadEditor() != nullptr)
-    Engine::getPastadEditor()->setTime(getTimeString());
+  //EDIT if(Engine::getPastadEditor() != nullptr)
+  //EDIT  Engine::getPastadEditor()->setTime(getTimeString());
 
   //std::cout <<delta <<std::endl;
   //std::cout << getTimeString() <<std::endl;
@@ -516,6 +516,7 @@ bool Scene::load(std::string path)
     {
       std::string type = std::string(child->Name() );
       Engine::getLog()->log("Scene", "element read:", type);
+
       if( type == "Light")
       {
         Light * new_light = addLight();
@@ -690,9 +691,9 @@ Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, 
 {
   try
   {
-    acquireLock("addObject");
-    if( this == Engine::getScene())
-      Engine::getRenderSubsystem()->acquireRenderLock("PastadEditorAddObject");
+    //acquireLock("addObject");
+  //  if( this == Engine::getScene())
+    //  Engine::getRenderSubsystem()->acquireRenderLock("PastadEditorAddObject");
 
     Helper::checkGLError("add Object");
 
@@ -755,9 +756,9 @@ Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, 
 }
 Object * Scene::addObject(std::string path,  bool instanced ,  bool static_object)
 {
-  acquireLock("addObject");
-  if (this == Engine::getScene())
-    Engine::getRenderSubsystem()->acquireRenderLock("PastadEditorAddObject");
+ // acquireLock("addObject");
+ // if (this == Engine::getScene())
+  //  Engine::getRenderSubsystem()->acquireRenderLock("PastadEditorAddObject");
  
   Engine::getLog()->log("Scene", "adding Object");
   Model * m = RessourceManager::loadModel(path, instanced);
@@ -806,7 +807,7 @@ Object * Scene::addObject(std::string path,  bool instanced ,  bool static_objec
 void Scene::removeObject(Object * obj)
 {
 
-  acquireLock("removeObject");
+ // acquireLock("removeObject");
   if(obj == nullptr)
     return;
   if( obj->isStaticFlagSet() )
@@ -1017,7 +1018,7 @@ void Scene::acquireLock(std::string who)
   try
   {
     Engine::getLog()->log(LF_TS, "Scene", "lock wanted by ", who);
-    m_mutex.lock();
+   // m_mutex.lock();
     Engine::getLog()->log(LF_TS, "Scene", "lock acquired by ", who);
   }
   catch (std::exception ex)
@@ -1030,7 +1031,7 @@ void Scene::releaseLock(std::string who)
 {
   try
   {
-    m_mutex.unlock();
+    //m_mutex.unlock();
     Engine::getLog()->log(LF_TS, "Scene", "lock unlocked by ", who);
   }
   catch (std::exception ex)
