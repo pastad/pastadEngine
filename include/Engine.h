@@ -91,7 +91,7 @@ public:
 	static bool checkVersionSupport(unsigned int version_major, unsigned int version_minor );
 
 	// update function
-	static void update();
+    static void update(float time_ );
 
 	// returns true if application should continue running
 	static bool running();
@@ -305,7 +305,7 @@ private:
 	static bool shutDownSubsystems();
 
 	// updates the time (FPS,...)
-	static void timeUpdate();
+    static void timeUpdate(float time_ );
 
 	// callbacks for opengl
 	static void windowSizeChangedCallback(GLFWwindow* window, int width, int height);

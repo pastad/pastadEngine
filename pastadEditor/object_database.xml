@@ -1,10 +1,12 @@
 <ObjectDatabase>
     <ObjectDatabaseEntry id="1" name="bush2" path="game/models/bush2.obj" icon_path="models/bush2.PNG" description="low poly bush
 selfmade"/>
-    <ObjectDatabaseEntry id="2" name="flower" path="models/flower.obj" icon_path="Not set" description="a low poly flower
+    <ObjectDatabaseEntry id="2" name="flower" path="models/flower.obj" icon_path="models/flower.PNG" description="a low poly flower
 red pedals, green stem"/>
-    <ObjectDatabaseEntry id="3" name="Table" path="models/table_medieval_trestle.obj" icon_path="Not set" description="A table"/>
-    <ObjectDatabaseEntry id="5" name="island" path="models/island2.obj" icon_path="Not set" description="..."/>
-    <ObjectDatabaseEntry id="6" name="rooster" path="models/rooster.dae" icon_path="Not set" description="..."/>
-    <ObjectDatabaseEntry id="7" name="testLighting" path="models/lightingTest.obj" icon_path="Not set" description="..."/>
+    <ObjectDatabaseEntry id="5" name="island" path="models/island2.obj" icon_path="models/island.PNG" description="simple island.. used in a simple game"/>
+    <ObjectDatabaseEntry id="12" name="tree" path="models/tree2.obj" icon_path="models/tree2.PNG" description="a low poly tree"/>
+    <ObjectDatabaseEntry id="13" name="butterly" path="models/butterfly.dae" icon_path="Not set" description="..."/>
+    <ObjectDatabaseEntry id="14" name="energy_remain" path="models/energy_remain.obj" icon_path="Not set" description="..."/>
+    <ObjectDatabaseEntry id="15" name="grass" path="models/grass2.obj" icon_path="Not set" description="..."/>
+    <ObjectDatabaseEntry id="16" name="sponza" path="models/sponza/sponza.obj" icon_path="Not set" description="..."/>
 </ObjectDatabase>

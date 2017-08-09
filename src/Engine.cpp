@@ -230,7 +230,7 @@ bool Engine::initialize(std::string path)
   }
 
   // initialize opengl
- //EDIT glfwInit();
+  //glfwInit();
 
   refreshWindow();
 
@@ -450,37 +450,39 @@ void Engine::refreshWindow()
 
 }
 
-void Engine::update()
+void Engine::update(float time_ )
 {
-	//float now = float(glfwGetTime());
-	//std::cout << now << std::endl;
+    //float now = float(glfwGetTime());
+    //std::cout << now << std::endl;
+    //now =time_;
 	if(m_initialized)
 	{    
 		sceneSwitch();
 		if(m_scene != nullptr)
 		{
 
-            m_scene->update(0.1f);
+            m_scene->update( time_ - m_time_last);
 
-            //if( m_system_flags & PHYSIC_SUBSYSTEM )
-            //	m_physic_system->updateScene(m_scene, m_time_delta);
+            if( m_system_flags & PHYSIC_SUBSYSTEM )
+                m_physic_system->updateScene(m_scene, m_time_delta);
 
         //  if(m_edit_mode == EM_INTERNAL_EDITOR)
-        //	  m_scene_editor->update();
+       //	  m_scene_editor->update();
          }
 
     //EDIT	IOSubsystem::clearKeys();
 
         //EDIT glfwPollEvents();
-        //EDIT timeUpdate();
+         timeUpdate(time_);
 	}
 	//now = float(glfwGetTime());
 	//std::cout << now << std::endl;
 }
 
-void Engine::timeUpdate()
+
+void Engine::timeUpdate(float time_)
 {
-    float now = 0;//EDITfloat(glfwGetTime());
+    float now = time_;//EDITfloat(glfwGetTime());
 	m_time_samples[m_current_time_sample] = now;
 	//std::cout << now << std::endl;
 
@@ -534,7 +536,7 @@ void Engine::run()
    // m_render_system->acquireRenderLock("EngineRun");
     if(m_external_update!= nullptr)
       m_external_update(getTimeDelta());
-    update();   
+    update(0.0f);
     render();  
 
     Helper::checkGLError("EngineRun");

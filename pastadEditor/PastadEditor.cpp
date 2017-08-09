@@ -6,6 +6,9 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets\qfiledialog.h>
 
+#include <qopenglcontext.h>
+#include <qopenglwidget.h>
+
 #include "Engine.h"
 #include "RenderSubsystem.h"
 #include "IOSubsystem.h"
@@ -145,6 +148,8 @@ void PastadEditor::changeLight(Light * light)
 {
   m_light = light;
   refreshSelected();
+  //ui.openGLWidget->context.
+
 }
 
 // menu
@@ -167,6 +172,7 @@ void PastadEditor::on_actionLoadScene_triggered()
       Engine::addRequest((EngineRequest *)lsr);
     }
   }
+  ui.openGLWidget->makeCurrent();
 
 }
 void PastadEditor::on_actionNewObjectDatabase_triggered()

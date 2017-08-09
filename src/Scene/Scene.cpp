@@ -88,10 +88,10 @@ void Scene::update(float delta)
 
   timeUpdate(delta * m_time_advance);
 
-  //EDIT std::future<void> future_scriptupdate = std::async(updateObjectsScripts, m_objects_scripted, delta * m_time_advance, this);
-  //EDIT std::future<void> future_animateupdate = std::async(updateObjectsAnimated, m_objects_animated, delta * m_time_advance);
-  //EDIT future_scriptupdate.get();
-  //EDIT future_animateupdate.get();
+  std::future<void> future_scriptupdate = std::async(updateObjectsScripts, m_objects_scripted, delta * m_time_advance, this);
+  std::future<void> future_animateupdate = std::async(updateObjectsAnimated, m_objects_animated, delta * m_time_advance);
+  future_scriptupdate.get();
+  future_animateupdate.get();
 
 }
 
@@ -103,6 +103,7 @@ void Scene::updateObjectsScripts(std::vector<Object *> objs, float delta, Scene 
     {
      // if ((*it)->acquireLock())
      // {
+        std::cout<< "script up" <<std::endl;
         (*it)->update(delta, current);
         (*it)->releaseLock();
         it = objs.erase(it);

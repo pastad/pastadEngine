@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external\gl_core_4_.hpp" />
-    <ClInclude Include="include\Editor\Editor.h" />
+    <ClInclude Include="include\Effects\Cloth.h" />
     <ClInclude Include="include\Effects\Water.h" />
     <ClInclude Include="include\Effects\Wave.h" />
     <ClInclude Include="include\Engine.h" />
@@ -50,9 +50,11 @@
     <ClInclude Include="include\Render\DirectionalShadowBuffer.h" />
     <ClInclude Include="include\Render\GBuffer.h" />
     <ClInclude Include="include\Render\JitterTexture.h" />
+    <ClInclude Include="include\Render\NoiseTexture.h" />
     <ClInclude Include="include\Render\PointShadowBuffer.h" />
     <ClInclude Include="include\Render\Quad.h" />
     <ClInclude Include="include\Render\RenderBuffer.h" />
+    <ClInclude Include="include\Render\TransparentBuffer.h" />
     <ClInclude Include="include\RessourceManager.h" />
     <ClInclude Include="include\Scene\Scene.h" />
     <ClInclude Include="include\Scene\SceneEditor.h" />
@@ -61,6 +63,8 @@
     <ClInclude Include="include\Script\RotationScriptElement.h" />
     <ClInclude Include="include\Script\Script.h" />
     <ClInclude Include="include\Script\ScriptElement.h" />
+    <ClInclude Include="include\Script\TranslationScriptElement.h" />
+    <ClInclude Include="include\Shaders\ComputeShader.h" />
     <ClInclude Include="include\Shaders\ImageShader.h" />
     <ClInclude Include="include\Shaders\PostProcessingShader.h" />
     <ClInclude Include="include\Shaders\RenderBaseShader.h" />
@@ -77,12 +81,14 @@
     <ClInclude Include="include\Subsystems\PhysicSubsystem.h" />
     <ClInclude Include="include\Subsystems\RenderSubsystem.h" />
     <ClInclude Include="include\Subsystems\Subsystem.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="QEditorExternal\ui_QEditorExternal.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="external\gl_core_4_.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="src\Editor\Editor.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="src\Effects\Cloth.cpp" />
     <ClCompile Include="src\Effects\Water.cpp" />
     <ClCompile Include="src\Effects\Wave.cpp" />
     <ClCompile Include="src\Engine.cpp" />
@@ -110,9 +116,11 @@
     <ClCompile Include="src\Render\DirectionalShadowBuffer.cpp" />
     <ClCompile Include="src\Render\GBuffer.cpp" />
     <ClCompile Include="src\Render\JitterTexture.cpp" />
+    <ClCompile Include="src\Render\NoiseTexture.cpp" />
     <ClCompile Include="src\Render\PointShadowBuffer.cpp" />
     <ClCompile Include="src\Render\Quad.cpp" />
     <ClCompile Include="src\Render\RenderBuffer.cpp" />
+    <ClCompile Include="src\Render\TransparentBuffer.cpp" />
     <ClCompile Include="src\RessourceManager.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\SceneEditor.cpp" />
@@ -121,6 +129,8 @@
     <ClCompile Include="src\Script\RotationScriptElement.cpp" />
     <ClCompile Include="src\Script\Script.cpp" />
     <ClCompile Include="src\Script\ScriptElement.cpp" />
+    <ClCompile Include="src\Script\TranslationScriptElement.cpp" />
+    <ClCompile Include="src\Shaders\ComputeShader.cpp" />
     <ClCompile Include="src\Shaders\ImageShader.cpp" />
     <ClCompile Include="src\Shaders\PostProcessingShader.cpp" />
     <ClCompile Include="src\Shaders\RenderBaseShader.cpp" />
@@ -150,26 +160,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>

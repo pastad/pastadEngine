@@ -9,6 +9,8 @@
 #ifndef UI_PASTADEDITOR_H
 #define UI_PASTADEDITOR_H
 
+#include "Engine.h"
+
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>

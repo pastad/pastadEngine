@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'PastadEditorp13352.ui'
+** Form generated from reading UI file 'PastadEditormU1400.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef PASTADEDITORP13352_H
-#define PASTADEDITORP13352_H
+#ifndef PASTADEDITORMU1400_H
+#define PASTADEDITORMU1400_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
@@ -23,6 +23,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QOpenGLWidget>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSpinBox>
@@ -147,6 +148,7 @@ public:
     QLabel *lbl_time;
     QPushButton *pb_refresh_shaders;
     QPushButton *pb_scene_reset;
+    QOpenGLWidget *openGLWidget;
     QMenuBar *menuBar;
     QMenu *menuScene;
     QMenu *menuObjectDatabase;
@@ -178,7 +180,7 @@ public:
         pb_scene_play->setGeometry(QRect(10, 10, 31, 23));
         tabWidget = new QTabWidget(centralWidget);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
-        tabWidget->setGeometry(QRect(10, 50, 701, 771));
+        tabWidget->setGeometry(QRect(430, 60, 281, 761));
         tabWidget->setLayoutDirection(Qt::LeftToRight);
         tabWidget->setTabShape(QTabWidget::Rounded);
         tabWidget->setTabsClosable(false);
@@ -518,6 +520,9 @@ public:
         pb_scene_reset = new QPushButton(centralWidget);
         pb_scene_reset->setObjectName(QStringLiteral("pb_scene_reset"));
         pb_scene_reset->setGeometry(QRect(90, 10, 31, 23));
+        openGLWidget = new QOpenGLWidget(centralWidget);
+        openGLWidget->setObjectName(QStringLiteral("openGLWidget"));
+        openGLWidget->setGeometry(QRect(10, 50, 411, 581));
         PastadEditorClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(PastadEditorClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -544,7 +549,7 @@ public:
 
         retranslateUi(PastadEditorClass);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(3);
         cb_shadow_type->setCurrentIndex(2);
         cb_anti_aliasing->setCurrentIndex(1);
         cb_shadow_type_point->setCurrentIndex(2);
@@ -681,4 +686,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // PASTADEDITORP13352_H
+#endif // PASTADEDITORMU1400_H

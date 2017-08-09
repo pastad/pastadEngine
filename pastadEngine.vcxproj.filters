@@ -186,10 +186,25 @@
     <ClInclude Include="external\gl_core_4_.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Editor\Editor.h">
+    <ClInclude Include="QEditorExternal\ui_QEditorExternal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="QEditorExternal\ui_QEditorExternal.h">
+    <ClInclude Include="include\Render\NoiseTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Render\TransparentBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Script\TranslationScriptElement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Shaders\ComputeShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Effects\Cloth.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -359,7 +374,22 @@
     <ClCompile Include="external\gl_core_4_.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\Editor.cpp">
+    <ClCompile Include="src\Render\NoiseTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Render\TransparentBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\TranslationScriptElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Effects\Cloth.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shaders\ComputeShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

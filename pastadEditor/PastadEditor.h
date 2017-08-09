@@ -2,6 +2,7 @@
 #define PASTADEDITOR_H
 
 #include <QtWidgets/QMainWindow>
+#include "Engine.h"
 #include "ui_PastadEditor.h"
 
 
@@ -162,6 +163,8 @@ public slots:
     void on_rb_hdr_clicked(bool value);
     void on_rb_bloom_clicked(bool value);
     void on_rb_ssao_clicked(bool value);
+
+
 
 private:
 
