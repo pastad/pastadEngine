@@ -16,7 +16,6 @@
 #include "Water.h"
 #include "Helper.h"
 #include "SceneTreeElement.h"
-#include "PastadEditor.h"
 
 #include <iostream>
 #include <iomanip>
@@ -40,8 +39,7 @@ Scene::Scene()
   m_fog_color = glm::vec3(1,1,1);
   m_fog_factor = 0.0f;
   m_fog_offset = 0.0f;
-  
-}
+  }
 
 Scene::~Scene()
 {  
@@ -83,8 +81,8 @@ Scene::~Scene()
 
 void Scene::update(float delta)
 {
-  //m_camera->update(delta);
-//  update( m_tree_root,delta);
+  //m_camera->update(delta); // REMARKS : for advanced stuff, not working
+  //update( m_tree_root,delta);
 
   timeUpdate(delta * m_time_advance);
 
@@ -101,15 +99,10 @@ void Scene::updateObjectsScripts(std::vector<Object *> objs, float delta, Scene 
   {
     for (std::vector<Object *>::iterator it = objs.begin(); it != objs.end(); )
     {
-     // if ((*it)->acquireLock())
-     // {
-        std::cout<< "script up" <<std::endl;
-        (*it)->update(delta, current);
-        (*it)->releaseLock();
-        it = objs.erase(it);
-     // }
-      //else
-       // it++;
+      std::cout<< "script up" <<std::endl;
+      (*it)->update(delta, current);
+      (*it)->releaseLock();
+      it = objs.erase(it);
     }
   }
 }
@@ -119,14 +112,9 @@ void Scene::updateObjectsAnimated(std::vector<Object *> objs, float delta )
   {
     for (std::vector<Object *>::iterator it = objs.begin(); it != objs.end(); )
     {
-     // if ((*it)->acquireLock())
-     // {
-        (*it)->advanceAnimation(delta);
-        (*it)->releaseLock();
-        it = objs.erase(it);
-      //}
-     // else
-       // it++;
+      (*it)->advanceAnimation(delta);
+      (*it)->releaseLock();
+      it = objs.erase(it);
     }
   }
 }
@@ -156,10 +144,6 @@ void Scene::update(SceneTreeElement * element,  float delta)
 void Scene::timeUpdate(float delta)
 {
   m_time_line_seconds += delta;
-  
-  //EDIT if(Engine::getPastadEditor() != nullptr)
-  //EDIT  Engine::getPastadEditor()->setTime(getTimeString());
-
   //std::cout <<delta <<std::endl;
   //std::cout << getTimeString() <<std::endl;
 }
@@ -168,7 +152,7 @@ void Scene::timeUpdate(float delta)
 //  render -------------------------------------------------
 
 void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, RenderBaseShader * terrain_shader , RenderBaseShader *  water_shader, bool transparent)
-{  
+{
 
   render_shader->setLights(&m_lights);
   render_shader->setCameraPosition(m_camera->getPosition());
@@ -209,7 +193,6 @@ void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, R
   //glEnable(GL_BLEND);
   //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
   
-
   //glDisable(GL_BLEND);
     
   if(skybox_shader != nullptr)
@@ -230,7 +213,6 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
   {
     if( (*it)->getShadowRefresh() && (*it)->isShadowEnabled())
     {
-      //Engine::getLog()->log("Scene", "re-render light");
       if( directional_enabled && ( (*it)->getType() == LIGHT_SPOT ) )
       {
         shadow_shader->use();
@@ -241,8 +223,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
         for (std::vector<Model *>::iterator it = m_models_instanced.begin(); it != m_models_instanced.end(); it++)
         {
           (*it)->render((RenderBaseShader *)shadow_shader, false);
-        }
-    
+        }    
 
         for(std::map<std::string, Model *>::iterator it2 = m_models.begin(); it2 != m_models.end();it2++)
         {
@@ -263,8 +244,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
           it2->second->render((RenderBaseShader *)shadow_shader,objs, false);
 
           //it2->second->render(shadow_shader, false);
-        }
- 
+        } 
 
         if(m_terrain != nullptr)
           m_terrain->renderWithoutMaterial(shadow_shader);
@@ -389,11 +369,10 @@ void Scene::refreshRenderObjects()
   {
     (*ito)->unsetExtractionFlag();
   }
- 
-
-  //refreshRenderObjectsSceneTree();
+  //refreshRenderObjectsSceneTree(); // REMARKS: again advanced
   //std::cout << m_render_objects.size()<<std::endl;
   //m_render_objects.clear();
+
   glm::vec3 v = m_camera->getDirection();
   v = glm::normalize(v);
 
@@ -523,7 +502,6 @@ bool Scene::load(std::string path)
         Light * new_light = addLight();
 		    if (new_light != nullptr)
 		    {
-
           Engine::getLog()->log("Scene", "adding light to scene");
 			    if (!new_light->load(child))
 				    removeLight(new_light);
@@ -550,19 +528,19 @@ bool Scene::load(std::string path)
 
         if (new_object == nullptr)
         {
-             removeObject(new_object);
+          removeObject(new_object);
         }
         else
         {
-            if (!new_object->load(child))
-            {
-                removeObject(new_object);
-            }
-            else
-            {
-                new_object->refreshAABB();
-                m_tree_root->insert(new_object);
-            }
+          if (!new_object->load(child))
+          {
+            removeObject(new_object);
+          }
+          else
+          {
+            new_object->refreshAABB();
+            m_tree_root->insert(new_object);
+          }
         }
       }
       if( type == "Skybox")
@@ -580,11 +558,9 @@ bool Scene::load(std::string path)
   else  
     Engine::getLog()->log("Scene", "no children in scene file");    
   Helper::checkGLError("SceneLoad");
- // releaseLock();
+
   return true;
 }
-
-
 
 
 
@@ -692,10 +668,6 @@ Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, 
 {
   try
   {
-    //acquireLock("addObject");
-  //  if( this == Engine::getScene())
-    //  Engine::getRenderSubsystem()->acquireRenderLock("PastadEditorAddObject");
-
     Helper::checkGLError("add Object");
 
     Engine::getLog()->log("Scene", "adding Object");
@@ -742,11 +714,6 @@ Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, 
     else    
        Engine::getLog()->log("Scene", "Object is null");
 
-    if (this == Engine::getScene())
-      Engine::getRenderSubsystem()->releaseRenderLock("PastadEditorAddObject");
-
-    releaseLock("addObject");
-
     return obj;
   }
   catch (...)
@@ -757,10 +724,6 @@ Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, 
 }
 Object * Scene::addObject(std::string path,  bool instanced ,  bool static_object)
 {
- // acquireLock("addObject");
- // if (this == Engine::getScene())
-  //  Engine::getRenderSubsystem()->acquireRenderLock("PastadEditorAddObject");
- 
   Engine::getLog()->log("Scene", "adding Object");
   Model * m = RessourceManager::loadModel(path, instanced);
   Object * obj  = nullptr;
@@ -797,18 +760,11 @@ Object * Scene::addObject(std::string path,  bool instanced ,  bool static_objec
     refreshRenderObjects();
   }
 
-  if (this == Engine::getScene())
-    Engine::getRenderSubsystem()->releaseRenderLock("PastadEditorAddObject");
-
-  releaseLock("addObject");
-
   return obj;
 }
 
 void Scene::removeObject(Object * obj)
 {
-
- // acquireLock("removeObject");
   if(obj == nullptr)
     return;
   if( obj->isStaticFlagSet() )
@@ -873,8 +829,6 @@ void Scene::removeObject(Object * obj)
     obj->getModel()->removeInstance(obj);
     refreshRenderObjects();
   }
-
-  releaseLock("removeObject");
 }
 
 std::vector<Object *> Scene::getPhysicsStaticObjects()
@@ -891,7 +845,6 @@ std::vector<Object *> Scene::getPhysicsStaticObjects()
       objs.push_back( (*it) );
   }
   return objs;
-
 }
 
 std::vector<Object *> Scene::getObjects(std::string ident)
@@ -937,7 +890,6 @@ int Scene::getObjectIdentification()
 {
   int id = m_object_counter;
   m_object_counter++;
-  //std::cout << id <<std::endl;
   return id;
 }
 

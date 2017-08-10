@@ -189,7 +189,6 @@ private:
   // the mutex for thread safety
   std::mutex m_mutex;
 
-
   // internal addObject request handling function ( with|without position)
   Object * addObject(std::string  path, glm::vec3 position, bool instanced, bool insert_in_tree, bool static_object);
   Object * addObject(std::string  path, bool instanced, bool static_object);

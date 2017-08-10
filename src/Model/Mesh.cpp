@@ -137,8 +137,8 @@ void Mesh::bufferModelMatrices(std::vector<glm::mat4> * matrices)
 }
 
 void Mesh::render(unsigned int num_instances)
-{  
-	gl::BindVertexArray(m_vertex_array_object);
+{
+  gl::BindVertexArray(m_vertex_array_object);
   gl::DrawElementsInstanced(gl::TRIANGLES, m_draw_count, gl::UNSIGNED_INT,0, num_instances);
   gl::BindVertexArray(0);
 }

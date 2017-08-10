@@ -19,10 +19,9 @@ Script::~Script()
 void Script::update(float delta, Scene * scene,  Object * object)
 { 
   for( std::vector<ScriptElement *>::iterator it = m_script_elements.begin(); it != m_script_elements.end();  )
-  {
-  
+  {  
     (*it)->update(delta,scene,object);
-    if( (*it)->isEnded() && ( Engine::getPastadEditor() == nullptr ) )
+    if( (*it)->isEnded() )
     {
       //(*it)->notifySuccessors();
       delete (*it); 

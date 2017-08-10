@@ -27,12 +27,6 @@ class GUI;
 class EngineGUI;
 class Object;
 class Light;
-class SceneEditor;
-class Editor;
-class PastadEditor;
-
-class EngineRequest;
-
 
 enum SubsystemType
 {
@@ -108,17 +102,11 @@ public:
 	// returns the current set scene
 	static Scene * getScene();
 
-  // called by the editor
-  static Editor * getEditor();
-
 	// function to request a GUI
 	static GUI * addGUI();
 
 	// returns engine gui
 	static EngineGUI * getEngineGUI();
-
-	//returns the scene editor
-	static SceneEditor * getSceneEditor();
 
 	// requiering and removing GUis
 	static std::vector< GUI *> * getGUIs();
@@ -198,18 +186,6 @@ public:
   // stops the running method
   static void stopRunning();
 
-  // adds a request | for threads
-  static void addRequest(EngineRequest * er);
-
-  // sets the ext editor
-  static void setPastadEditor(PastadEditor * editor);
-
-  // returns the ext editor
-  static PastadEditor * getPastadEditor();
-
-
-
-
 private:
 
 	// indicates if Engine is initialized
@@ -224,7 +200,7 @@ private:
 	static PhysicSubsystem  * m_physic_system;
 
 	// gl context
-    //EDIT static GLFWwindow * m_window;
+  static GLFWwindow * m_window;
 
 	// the subsystems to be started
 	static unsigned int m_system_flags;
@@ -267,9 +243,6 @@ private:
 	// true if engine is in editing mode
 	static unsigned int m_edit_mode;
 
-	// the editor for the scene
-	static SceneEditor * m_scene_editor;
-
 	// true if fullscreen is set
 	static bool m_fullscreen;
 
@@ -282,21 +255,11 @@ private:
 	// stores the external update function to be called 
 	static EXTERNALUPDATE m_external_update;
 
-    // stores the external function to be called when scene is loaded
-    static EXTERNALLOADED m_external_loaded;
+  // stores the external function to be called when scene is loaded
+  static EXTERNALLOADED m_external_loaded;
   
 	// run method quitter
 	static bool m_run;
-
-  // the new external editor
-  static Editor * m_editor;
-  static std::future<void> m_editor_future;
-
-  // engine requests
-  static std::vector<EngineRequest *> m_requests;
-
-  // holds a pointer to the editor i active
-  static PastadEditor * m_pastad_editor;
 
 	// starts the subsystems
 	static bool startUpSubsystems();
@@ -305,7 +268,7 @@ private:
 	static bool shutDownSubsystems();
 
 	// updates the time (FPS,...)
-    static void timeUpdate(float time_ );
+  static void timeUpdate(float time_ );
 
 	// callbacks for opengl
 	static void windowSizeChangedCallback(GLFWwindow* window, int width, int height);
@@ -319,12 +282,6 @@ private:
 
 	// static for async button check
 	static bool buttonCheck(GUI *gui , float x, float y);
-
-  // handles add requests from the editor
-  static void handleEditorRequests();
-
-  // starts the external editor
- // static void startEditor();
 
 };
 

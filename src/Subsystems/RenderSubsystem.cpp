@@ -272,8 +272,8 @@ void RenderSubsystem::renderPassGBuffer()
   m_water_shader->setViewMatrix(cam->getView());
   m_water_shader->setUniform("Delta", Engine::getScene()->getTime());
 
-  gl::Enable(gl::BLEND);
-  gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
+//  gl::Enable(gl::BLEND);
+  //gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
 
 
   m_shader->use();
@@ -282,7 +282,9 @@ void RenderSubsystem::renderPassGBuffer()
   m_shader->setRenderPass(1);
 
   if(scene != nullptr)
+  {
     scene->render(m_shader, m_skybox_shader, m_terrain_shader,m_water_shader, false);
+  }
 
   gl::Disable(gl::BLEND);
 
@@ -553,8 +555,6 @@ void RenderSubsystem::renderUI()
 
 	if(Engine::getEngineGUI() != nullptr)
 		Engine::getEngineGUI()->render(m_text_shader,m_image_shader, m_render_quad);
-	if(Engine::getSceneEditor() != nullptr)
-		Engine::getSceneEditor()->render(m_text_shader,m_image_shader, m_render_quad);
 
 	gl::Disable(gl::BLEND);
 	gl::Finish();
@@ -581,6 +581,8 @@ void RenderSubsystem::render(bool swap_buffer)
 //	float now = float(glfwGetTime());
 	//std::cout << "rb"<< now << std::endl;
 	startRender();
+
+
 	if( Engine::getScene() != nullptr)
 	{
 	//	now = float(glfwGetTime());
@@ -595,7 +597,7 @@ void RenderSubsystem::render(bool swap_buffer)
 
    // renderPassTransparent();
 
-    renderSSAO();   
+        renderSSAO();
 
 		renderPassLight();
 

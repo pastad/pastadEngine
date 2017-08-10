@@ -190,9 +190,6 @@ void Editor::mouseButtonCallback(int idx, bool state)
   glm::vec2 p = IOSubsystem::getMouseCoordinates();
   m_light = Engine::pickLightAt(p);
   m_object = Engine::pickObjectAt(p);
-
-  Engine::getEditor()->refreshObject();
-  Engine::getEditor()->refreshLight();
 }
 
 void Editor::setupUi(QMainWindow *Editor)
