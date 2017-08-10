@@ -40,14 +40,17 @@ bool IOSubsystem::startUp(GLFWwindow * window)
 	if(!m_initialized)
 	{
 		// init system here
-  //  glfwSetKeyCallback(window, keyCallback);
-   // glfwSetCursorPosCallback(window, mouseMoveCallback);
-   // glfwSetMouseButtonCallback(window, mouseButtonCallback);
-   // glfwSetScrollCallback (window, mouseScrollCallback);
+    if( window != nullptr)
+    {
+      glfwSetKeyCallback(window, keyCallback);
+      glfwSetCursorPosCallback(window, mouseMoveCallback);
+      glfwSetMouseButtonCallback(window, mouseButtonCallback);
+      glfwSetScrollCallback (window, mouseScrollCallback);
+    }
 		Engine::getLog()->log("IOSubsystem", "started");
 		
-         m_initialized = true;
-        return true;
+    m_initialized = true;
+    return true;
 	}
 	return false;
 }
@@ -170,8 +173,8 @@ std::string IOSubsystem::readFile(std::string path)
 
 void IOSubsystem::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
- // if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
- //   Engine::errorShutDown();
+  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    Engine::shutDown();
 
   if(action == GLFW_PRESS)
   {

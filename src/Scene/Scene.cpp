@@ -81,8 +81,8 @@ Scene::~Scene()
 
 void Scene::update(float delta)
 {
-  //m_camera->update(delta); // REMARKS : for advanced stuff, not working
-  //update( m_tree_root,delta);
+  m_camera->update(delta);
+  //update( m_tree_root,delta);// REMARKS : for advanced stuff, not working
 
   timeUpdate(delta * m_time_advance);
 

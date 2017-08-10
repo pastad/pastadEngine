@@ -472,7 +472,6 @@ Object * Model::getInstance(Scene * scene)
 void Model::removeInstance( Object * obj)
 {
   m_mutex.lock();
-  Engine::getRenderSubsystem()->acquireRenderLock("Model");
   for(std::vector<Object *>::iterator it = m_instances.begin(); it != m_instances.end();)
   {
     if( (*it) == obj)
@@ -482,7 +481,6 @@ void Model::removeInstance( Object * obj)
     else
       it++;
   }
-  Engine::getRenderSubsystem()->releaseRenderLock("Model");
   m_mutex.unlock();
 }
 

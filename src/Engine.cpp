@@ -28,7 +28,7 @@ Log * Engine::m_log;
 RenderSubsystem * Engine::m_render_system;
 IOSubsystem * Engine::m_io_system;
 PhysicSubsystem * Engine::m_physic_system;
-GLFWwindow * Engine::m_window;
+GLFWwindow * Engine::m_window = nullptr;
 unsigned int Engine::m_system_flags;
 Scene * Engine::m_scene;
 Scene * Engine::m_scene_next = nullptr;
@@ -158,8 +158,8 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
     glfwSetFramebufferSizeCallback(m_window, framebufferSizeChangedCallback);
 
   // if in edit mode bind the cursor
-  //if(m_edit_mode == EM_NORMAL )
-  //  glfwSetInputMode(m_window,GLFW_CURSOR, GLFW_CURSOR_DISABLED);  // REMARK ??
+    if(m_edit_mode == EM_NORMAL )
+      glfwSetInputMode(m_window,GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   }
 
   gl::DepthFunc(gl::LEQUAL);
@@ -345,12 +345,12 @@ bool Engine::startUpSubsystems()
 {
   if( m_system_flags & IO_SUBSYSTEM )
   {
-    if(! m_io_system->startUp(nullptr) )
+    if(! m_io_system->startUp(m_window) )
       return false;
   }
   if( m_system_flags & RENDER_SUBSYSTEM )
   {
-    if(! m_render_system->startUp(nullptr) )
+    if(! m_render_system->startUp(m_window) )
       return false;
   }
   if( m_system_flags & PHYSIC_SUBSYSTEM )
@@ -413,7 +413,10 @@ void Engine::refreshWindow()
 
     // check window creation
     if(m_window == nullptr)
+    {
+      getLog()->log("Engine", "window couldn't be created");
       glfwTerminate();
+    }
     else
     {
       glfwMakeContextCurrent(m_window);

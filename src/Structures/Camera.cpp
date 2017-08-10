@@ -29,7 +29,7 @@ Camera::Camera(float x, float y, float z): m_pos(x,y,z),m_rotation_allowed(true)
   m_fov = 45.0f;
   m_rot_2 =0.0f;
   m_rot_1 = 90.0f;
-  m_speed = 5.0f;
+  m_speed = 0.01f;
   m_rotation_speed = 0.2f;  
   m_exposure = 1.0f;
   m_plane_top = new Plane();
@@ -149,7 +149,6 @@ void Camera::rotate(float deltax,float deltay)
     m_rot_1 += deltax*m_rotation_speed;
     m_rot_2 -= deltay*m_rotation_speed;
 
-
     // limit to range for better retrieval
     if(m_rot_1 >360.0f)
       m_rot_1 = 0.0f;
@@ -163,9 +162,8 @@ void Camera::rotate(float deltax,float deltay)
       m_rot_2 = -89.0f;
 
     m_forward = Helper::anglesToDirection(m_rot_1,m_rot_2);
-    Engine::getScene()->cameraRotated();
-    std::cout << m_rot_1 <<std::endl;
-   // Engine::getLog()->log("Camera", "rotated");
+    Engine::getScene()->cameraRotated(); 
+
     if(external_cameraRotatedCallback != nullptr)
       external_cameraRotatedCallback();
 
@@ -197,11 +195,9 @@ void Camera::update(float delta_time)
 
     float step = delta * m_speed;
     bool moved = false;
-    //m_pos -= m_up * 0.000001f;
 
     if(IOSubsystem::isKeyPressed('W'))
     {
-      
       glm::vec3 f = m_forward;
       if( !isUpDownTranslationAllowed()) // dont allow running upwards ...
         f.y = 0.0f;
@@ -270,8 +266,6 @@ void Camera::update(float delta_time)
         moved = true;
         m_pos =  m_pos + -m_right * step;
       }
-
-      //m_pos -= right * step;
     }
     if(IOSubsystem::isKeyPressed('D'))
     {
@@ -601,7 +595,6 @@ unsigned int  Camera::insideFrustrum(Object * obj)
     }
     if( num_inside ==0 )
     {
-      //std::cout << "outside"<<std::endl;
       return FRUSTRUM_NO_INTERSECTION;
     }
     else
@@ -609,9 +602,6 @@ unsigned int  Camera::insideFrustrum(Object * obj)
       if(num_outside >0)
         ret = FRUSTRUM_INTERSECTION;
     }
-
-
-
   }
   return ret;
 }
@@ -654,9 +644,6 @@ unsigned int Camera::insideFrustrum(BoundingBox * bb)
       if(num_outside >0)
         ret = FRUSTRUM_INTERSECTION;
     }
-
-
-
   }
   return ret;
 }

@@ -70,14 +70,10 @@ public:
 	// returns light at position
 	Light * pickLightAt(glm::vec2 p);
 
-  // acquires and release the render lock
-  void acquireRenderLock(std::string who);
-  void releaseRenderLock(std::string who);
-
 private:
 
 	// the gl window pointer
-    //EDITGLFWwindow * m_window;
+  GLFWwindow * m_window;
 
 	// the render shader
 	RenderShader * m_shader; 
@@ -152,14 +148,11 @@ private:
 	// true if bloom is set
 	bool m_enable_bloom;
 
-  // mutex to lock when rendering | should ensure no manipulation during render passes
-  std::mutex m_render_mutex;
-
 	// starts the rendering cycle
 	void startRender();
 
 	// ends the rendering cycle
-    void endRender(bool swap_buffer);
+  void endRender(bool swap_buffer);
 
 	// the render passess
 	void renderPassGBuffer();

@@ -80,7 +80,7 @@ bool RenderSubsystem::startUp(GLFWwindow * window)
 {
 	if(! m_initialized)
 	{
-//EDIT		m_window = window;
+    m_window = window;
 		m_shader = new RenderShader();
 		m_text_shader = new TextShader();
 		m_image_shader = new ImageShader();
@@ -290,7 +290,6 @@ void RenderSubsystem::renderPassGBuffer()
 
   gl::Finish();
   m_gbuffer->unbindFromInput();
-  //Engine::getLog()->log("RenderSubsystem", "gbuffer passs");
 
 }
 
@@ -333,7 +332,6 @@ void RenderSubsystem::renderPassLight()
   gl::Finish();
 
   m_pp_buffer->unbindFromInput();
-  //Engine::getLog()->log("RenderSubsystem", "light pass");
 }
 
 void RenderSubsystem::renderPassTransparent()
@@ -557,8 +555,7 @@ void RenderSubsystem::renderUI()
 		Engine::getEngineGUI()->render(m_text_shader,m_image_shader, m_render_quad);
 
 	gl::Disable(gl::BLEND);
-	gl::Finish();
-	//Engine::getLog()->log("RenderSubsystem", "ui pass");
+  gl::Finish();
 }
 
 
@@ -568,8 +565,6 @@ void RenderSubsystem::startRender()
 {
   if(m_initialized)
   {
-   // acquireRenderLock("RenderSubsystem");
-  //  Engine::getLog()->log(LF_Main,"RenderSubsystem", "start render");
     gl::ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     m_shader->reset();
     Helper::checkGLError("startRender");
@@ -578,58 +573,40 @@ void RenderSubsystem::startRender()
 
 void RenderSubsystem::render(bool swap_buffer)
 {
-//	float now = float(glfwGetTime());
-	//std::cout << "rb"<< now << std::endl;
 	startRender();
 
-
 	if( Engine::getScene() != nullptr)
-	{
-	//	now = float(glfwGetTime());
-       // std::cout<<"pre gb"  << std::endl;
+  {
 		renderPassGBuffer();
-	//	now = float(glfwGetTime());
-	//	std::cout << "pre sb" << float(glfwGetTime())- now  << std::endl;
+
 		if(m_shadows_standard_directional_enabled || m_shadows_standard_point_enabled)
 			renderPassShadow();
-	//	now = float(glfwGetTime());
-	//	std::cout << now << std::endl;
 
    // renderPassTransparent();
 
-        renderSSAO();
+    renderSSAO();
 
 		renderPassLight();
 
-
-	//	now = float(glfwGetTime());
-		//std::cout << now << std::endl;
 		if(m_enable_bloom)
-			renderPassLightBlur();
-	  //now = float(glfwGetTime());
-		//std::cout << now << std::endl;
+      renderPassLightBlur();
 
-		renderPassPostProcess();
-		//now = float(glfwGetTime());
-		//std::cout <<"rb end "<< now << std::endl;
+    renderPassPostProcess();
 	}
 	renderUI();
 
-    endRender(swap_buffer);
-
+  endRender(swap_buffer);
 }
 
 void RenderSubsystem::endRender(bool swap_buffer)
 {
 	if(m_initialized)
-    {
-        //if(swap_buffer)
-        //    glfwSwapBuffers(m_window);
+  {
+    if(swap_buffer && (m_window != nullptr) )
+      glfwSwapBuffers(m_window);
 		m_shader->reset();
 
     Helper::checkGLError("end Render");
-   // Engine::getLog()->log(LF_Main, "RenderSubsystem", "end render");
-   // releaseRenderLock("RenderSubsystem");
 	}
 }
 
@@ -657,8 +634,7 @@ void RenderSubsystem::setPostProcessing(PostprocessType type, bool enable)
   {
     unsigned int  t  = m_pp_techniques & (!(unsigned int)type);
     m_pp_techniques = (PostprocessType) t;
-  }
-  
+  }  
 
 	m_pp_shader->use();
 	if( type == PP_FXAA)
@@ -727,31 +703,4 @@ Light * RenderSubsystem::pickLightAt(glm::vec2 p)
 {
 	int id  = m_gbuffer->pickObjectAt(p);
 	return  Engine::getScene()->getLight(id);
-}
-
-// lock methods ------------------------------------------
-
-void RenderSubsystem::acquireRenderLock(std::string who)
-{
-  Engine::getLog()->log(LF_TS, "RenderSubsystem","lock wanted by ", who);
- // std::cout << &m_render_mutex <<std::endl;
-  try
-  {  //m_render_mutex.lock();
-  }
-  catch (std::exception ex)
-  {
-    Engine::getLog()->log("EXCEPTION", "locking");
-  }
-  Engine::getLog()->log(LF_TS, "RenderSubsystem", "lock acquired by ", who);
-}
-void RenderSubsystem::releaseRenderLock(std::string who)
-{
-  try
-  {  //m_render_mutex.unlock();
-    }
-  catch (std::exception ex)
-  {
-    Engine::getLog()->log("EXCEPTION", "locking");
-  }
-  Engine::getLog()->log(LF_TS, "RenderSubsystem", "lock released by ", who);
 }
