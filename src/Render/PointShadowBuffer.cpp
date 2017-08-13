@@ -20,12 +20,6 @@ PointShadowBuffer::~PointShadowBuffer()
 
 bool PointShadowBuffer::initialize(  int width ,  int height)
 {
-  /*for(int x=0; x< 6;x++)
-  {
-    m_buffers[x] = new DirectionalShadowBuffer();
-    if( !m_buffers[x]->initialize(width,height))
-      return false;
-  }*/
   m_width = width;
   m_height = height;
   gl::GenFramebuffers(1, &m_buffer_handle);
@@ -74,7 +68,6 @@ void PointShadowBuffer::bindForInput(GLenum face)
   //m_buffers[iteration]->bindForInput(); 
   gl::Viewport(0, 0, Engine::getWindowWidth(), Engine::getWindowHeight());
   //glBindFramebuffer(gl::FRAMEBUFFER, m_buffer_handle);
-
 
   gl::BindFramebuffer(gl::DRAW_FRAMEBUFFER, m_buffer_handle);
   gl::FramebufferTexture2D(gl::DRAW_FRAMEBUFFER, gl::COLOR_ATTACHMENT0, face, m_cube_texture, 0);

@@ -186,7 +186,7 @@ private:
   float m_fog_factor;
   float m_fog_offset;
 
-  // the mutex for thread safety
+  // the mutex
   std::mutex m_mutex;
 
   // internal addObject request handling function ( with|without position)

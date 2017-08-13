@@ -54,6 +54,14 @@ AnimationMesh::AnimationMesh(const aiMesh*mesh, int mat_index)
     model.m_positions.push_back(glm::vec3(pPos->x,pPos->y,pPos->z )  );
     model.m_texCoords.push_back(glm::vec2(pTexCoord->x,1-pTexCoord->y)); // Flipp tex coords in y
     model.m_normals.push_back(glm::vec3(pNormal->x,pNormal->y,pNormal->z ));
+
+    if( mesh->HasTangentsAndBitangents() )
+    {
+      aiVector3D* pTangent = &(mesh->mTangents[i]);
+      aiVector3D* pBitangent = &(mesh->mBitangents[i]);
+      model.m_tangents.push_back(glm::vec3(pTangent->x,pTangent->y,pTangent->z ));
+      model.m_bitangents.push_back(glm::vec3(pBitangent->x,pBitangent->y,pBitangent->z ));
+    }
   } 
 
   for (unsigned int i = 0 ; i < mesh->mNumFaces ; i++)
@@ -138,6 +146,18 @@ void AnimationMesh::initMesh(const  IndexedRepresentation& model)
   gl::EnableVertexAttribArray(2);
   gl::VertexAttribPointer(2, 3, gl::FLOAT, gl::FALSE_, 0, 0);
 
+  gl::BindBuffer(gl::ARRAY_BUFFER, m_vertex_array_buffers[TANGENT_VB]);
+  gl::BufferData(gl::ARRAY_BUFFER, model.m_tangents.size() * sizeof(model.m_tangents[0]), &model.m_tangents[0], gl::STATIC_DRAW );
+
+  gl::EnableVertexAttribArray(3);
+  gl::VertexAttribPointer(3, 3, gl::FLOAT, gl::FALSE_, 0, 0);
+
+  gl::BindBuffer(gl::ARRAY_BUFFER, m_vertex_array_buffers[BITANGENT_VB]);
+  gl::BufferData(gl::ARRAY_BUFFER, model.m_bitangents.size() * sizeof(model.m_bitangents[0]), &model.m_bitangents[0], gl::STATIC_DRAW );
+
+  gl::EnableVertexAttribArray(4);
+  gl::VertexAttribPointer(4, 3, gl::FLOAT, gl::FALSE_, 0, 0);
+
   gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, m_vertex_array_buffers[INDEX_VB]);
   gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, model.m_indices.size() * sizeof(model.m_indices[0]), &model.m_indices[0], gl::STATIC_DRAW );
 
@@ -145,10 +165,10 @@ void AnimationMesh::initMesh(const  IndexedRepresentation& model)
 
   gl::BindBuffer(gl::ARRAY_BUFFER, m_vertex_array_buffers[BONE_VB]);
   gl::BufferData(gl::ARRAY_BUFFER, sizeof(model.m_bones[0]) * model.m_bones.size(), &model.m_bones[0], gl::STATIC_DRAW);
-  gl::EnableVertexAttribArray(4);
-  gl::VertexAttribIPointer(4, 4, gl::INT, sizeof(VertexBoneData), (const GLvoid*)0);
-  gl::EnableVertexAttribArray(5);
-  gl::VertexAttribPointer(5, 4, gl::FLOAT, gl::FALSE_, sizeof(VertexBoneData), (const GLvoid*)16);
+  gl::EnableVertexAttribArray(6);
+  gl::VertexAttribIPointer(6, 4, gl::INT, sizeof(VertexBoneData), (const GLvoid*)0);
+  gl::EnableVertexAttribArray(7);
+  gl::VertexAttribPointer(7, 4, gl::FLOAT, gl::FALSE_, sizeof(VertexBoneData), (const GLvoid*)16);
 
   gl::BindVertexArray(0);
 

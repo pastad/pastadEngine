@@ -185,7 +185,7 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 bool Engine::initialize(std::string path)
 {
 
-  m_log = new Log((LogFlag)(LF_Editor ));
+  m_log = new Log((LogFlag)(LF_All ));
   m_log->debugMode();
 
   tinyxml2::XMLDocument document;

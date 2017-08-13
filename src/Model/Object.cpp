@@ -639,18 +639,6 @@ bool Object::isOnlyShadowRendered()
 }*/
 
 
-bool Object::acquireLock()
-{
-  return m_mutex.try_lock();
-}
-void Object::acquireLockHard()
-{
-  m_mutex.lock();
-}
-void Object::releaseLock()
-{
-  m_mutex.unlock();
-}
 void Object::setFallShouldBeChecked()
 {
   m_needs_fall_check = true;

@@ -46,9 +46,6 @@ private:
 
    // holds the loaded materials
   static std::map<std::string, Material *> m_materials;
-
-  // the lock for mt
-  static std::mutex m_lock;
   
 
 };

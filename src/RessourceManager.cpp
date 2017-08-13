@@ -13,7 +13,7 @@
 std::map<std::string, Model *> RessourceManager::m_models;
 std::map<std::string, Texture *> RessourceManager::m_textures;
 std::map<std::string, Material *> RessourceManager::m_materials;
-std::mutex RessourceManager::m_lock;
+
 
 RessourceManager::RessourceManager()
 {
@@ -35,7 +35,7 @@ Model * RessourceManager::loadModel(std::string path, bool instanced)
 {	
 	Model * model = nullptr;
 
-  m_lock.lock();
+
   Engine::getLog()->log("RessourceManager", "loading model", path);
 
 	std::map<std::string, Model *>::iterator it = m_models.find(path);	
@@ -60,8 +60,7 @@ Model * RessourceManager::loadModel(std::string path, bool instanced)
 			delete model;
 			model = nullptr;
 		}
-	}
-  m_lock.unlock();
+  }
   Engine::getLog()->log("RessourceManager", "done");
 	return model;
 }

@@ -61,6 +61,8 @@ private:
     TEXCOORD_VB,
     NORMAL_VB,
     INDEX_VB,
+    TANGENT_VB,
+    BITANGENT_VB,
     BONE_VB,
     NUM_BUFFERS
   };

@@ -122,7 +122,6 @@ int GBuffer::pickObjectAt(glm::vec2 pos)
     return 0;
 
   int ret = texData[p];
-  //std::cout << "chosen: "<<ret <<" left: "<< texData[p-1] <<" right: "<< texData[p+1]<<std::endl;
 
   delete [] texData;
   return ret;

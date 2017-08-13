@@ -225,8 +225,7 @@ void IOSubsystem::mouseButtonCallback(GLFWwindow * window, int button, int actio
  if(action == GLFW_PRESS)
   {        
     if(!m_mouse_buttons[button])  
-    {  
-      //Engine::getLog()->log("IOSubsystem","mouse pressed and released");   
+    {
       m_mouse_buttons_released_and_pressed[button] = true;
     }
 
@@ -234,7 +233,6 @@ void IOSubsystem::mouseButtonCallback(GLFWwindow * window, int button, int actio
   }
   if(action == GLFW_RELEASE)
   {
-    //Engine::getLog()->log("IOSubsystem", "mouse button released");
     if(m_mouse_buttons[button])  
     {  
       m_mouse_buttons_pressed_and_released[button] = true;

@@ -80,6 +80,7 @@ private slots:
     //saves
     void savePos();
     void saveRot();
+    void saveScale();
     void saveObjectSpecs();
 
     //refreshs
@@ -100,6 +101,9 @@ private slots:
     void on_le_obj_rot_x_editingFinished();
     void on_le_obj_rot_y_editingFinished();
     void on_le_obj_rot_z_editingFinished();
+    void on_le_obj_scale_x_editingFinished();
+    void on_le_obj_scale_y_editingFinished();
+    void on_le_obj_scale_z_editingFinished();
 
     //radio buttons
     void on_rb_obj_fixed_clicked(bool value);

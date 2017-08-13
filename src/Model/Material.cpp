@@ -147,7 +147,7 @@ Material::Material(aiMaterial * pMaterial, std::string dir)
     std::string path = dir + "/" + p2;
 
     // load it and store it in our mapping
-    m_height_texture = RessourceManager::loadTexture(path);
+    m_normal_texture = RessourceManager::loadTexture(path); // because assimp programmers think HEIGHT == NORMALS ...
    
   }
   if (pMaterial->GetTexture(aiTextureType_OPACITY, 0, &Path2, NULL, NULL, &strength2, NULL, NULL) == AI_SUCCESS)
@@ -203,7 +203,7 @@ Material::Material(aiMaterial * pMaterial, std::string dir)
 void Material::bind(int unit, RenderShader * render_shader)
 {
   if(m_base_texture_set)
-  {    
+  {
     render_shader->setColorOnly(false); 
     int c =0;
 

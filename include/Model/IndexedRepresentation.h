@@ -61,6 +61,12 @@ class IndexedRepresentation
     // the nomrals of the representation
     std::vector<glm::vec3> m_normals;
 
+    // the tangents of the representation
+    std::vector<glm::vec3> m_tangents;
+
+    // the bitangets of the representation
+    std::vector<glm::vec3> m_bitangents;
+
     // the indices of the representation
     std::vector<unsigned int> m_indices;
 

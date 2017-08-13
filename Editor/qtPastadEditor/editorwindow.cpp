@@ -137,7 +137,8 @@ void CustomOpenGLWindow::initialize()
     m_engine->setLoadedFunction(&EditorWindow::sceneLoadedCallback);
 
     Scene * scene = new Scene();
-    scene->load("demo2.xml");  // DEBUG: autoload
+    scene->load("demo2f.xml");  // DEBUG: autoload
+    scene->getCamera()->unsetMovementCollisionCheck();
 
     m_engine->setScene(scene, false);
 
@@ -259,6 +260,7 @@ void EditorWindow::on_pbLoadScene_clicked(bool checked)
               Engine::setScene(scene, true);
               scene->getCamera()->dontApplyPhysicsDrop();
               scene->getCamera()->setRotationAllowed();
+               scene->getCamera()->unsetMovementCollisionCheck();
               refreshObjectList();
               refreshLightList();
             }
@@ -391,6 +393,17 @@ void EditorWindow::refreshSelected()
     ui->le_obj_rot_z->setText(QString::fromUtf8(ss.str().c_str()));
     ss.str(""); ss.clear();
 
+    glm::vec3 scale = m_object->getScale();
+    ss << scale.x;
+    ui->le_obj_scale_x->setText(QString::fromUtf8(ss.str().c_str()));
+    ss.str(""); ss.clear();
+    ss << scale.y;
+    ui->le_obj_scale_y->setText(QString::fromUtf8(ss.str().c_str()));
+    ss.str(""); ss.clear();
+    ss << scale.z;
+    ui->le_obj_scale_z->setText(QString::fromUtf8(ss.str().c_str()));
+    ss.str(""); ss.clear();
+
 
 
     ui->rb_obj_fixed->setChecked(m_object->isStaticFlagSet());
@@ -468,7 +481,7 @@ void EditorWindow::on_pb_objects_add_clicked()
 
     if (scene != nullptr )
     {
-      Object * obj = m_scene->addObject( entry.m_path, glm::vec3(0, 0, 0), ui->rb_obj_fixed->isChecked() );
+      Object * obj = scene->addObject( entry.m_path, glm::vec3(0, 0, 0), ui->rb_obj_fixed->isChecked() );
 
        if ( ui->rb_obj_shadow_only->isChecked())
          obj->setVisibility(Visibility::V_Shadow);
@@ -559,6 +572,12 @@ void EditorWindow::on_le_obj_rot_y_editingFinished()
 {  saveRot();}
 void EditorWindow::on_le_obj_rot_z_editingFinished()
 {  saveRot();}
+void EditorWindow::on_le_obj_scale_x_editingFinished()
+{  saveScale();}
+void EditorWindow::on_le_obj_scale_y_editingFinished()
+{  saveScale();}
+void EditorWindow::on_le_obj_scale_z_editingFinished()
+{  saveScale();}
 void EditorWindow::on_rb_obj_apply_physic_clicked(bool value)
 {  saveObjectSpecs(); }
 void EditorWindow::on_rb_obj_physic_static_clicked(bool value)
@@ -620,6 +639,27 @@ void EditorWindow::saveRot()
     refreshSelected();
   }
 }
+void EditorWindow::saveScale()
+{
+  if (m_object != nullptr)
+  {
+    try
+    {
+      glm::vec3 r;
+      r.x = std::stof(ui->le_obj_scale_x->text().toStdString());
+      r.y = std::stof(ui->le_obj_scale_y->text().toStdString());
+      r.z = std::stof(ui->le_obj_scale_z->text().toStdString());
+
+      m_object->setScale(r);
+    }
+    catch (const std::exception&)
+    {
+      Engine::getLog()->log(LF_Editor, "PastadEditor", "cannot save scale");
+    }
+    refreshSelected();
+  }
+}
+
 
 
 void EditorWindow::saveObjectSpecs()

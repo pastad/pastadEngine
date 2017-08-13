@@ -56,7 +56,6 @@ void PhysicSubsystem::updateScene(Scene * scene, float delta)
         bool res = collisionRayObject( o, &ra , &dist);
         if( res )
         {
-          //std::cout<< dist <<std::endl;
           if(dist < distance)
             distance =dist;
         }
@@ -182,7 +181,6 @@ bool PhysicSubsystem::collisionRayMesh( Mesh * m , glm::mat4 transform, Ray * ra
 
   float max_dist =  std::numeric_limits<float>::max();
   bool intersection = false;
- // std::cout << ir->m_indices.size() /3.0f <<std::endl;
   for( int i =0; i < ir->m_indices.size(); i+=3)
   {
 
@@ -293,8 +291,7 @@ bool PhysicSubsystem::collisionMovement(Scene * scene, glm::vec3 pos, glm::vec3 
     if( ! collisionRayScene(scene, &r, &distance))
     {        
       // if no collision update  
-      *new_pos = npos;      
-      //std::cout << "no col"<< dir.x<<" , "<< dir.y<<" , "<< dir.z<<" , " <<std::endl;
+      *new_pos = npos;
       return true;
     }
     else
@@ -325,8 +322,6 @@ bool PhysicSubsystem::collisionMovement(Scene * scene, glm::vec3 pos, glm::vec3 
               *new_pos = pos +  glm::vec3(0,  (bottom_off_halfed- distance3),0);
               return true;
             }
-            //else
-           //   std::cout <<distance3<<std::endl;
           }
         }
         return false;     

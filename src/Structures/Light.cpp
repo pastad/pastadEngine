@@ -501,7 +501,6 @@ bool Light::isInRange(glm::vec3 p)
 
 void Light::refresh()
 {
-
   m_refresh_shadow = true;
 }
 
@@ -725,7 +724,6 @@ void Light::bindForShadowRenderDirectional(RenderBaseShader * shadow_shader)
 
 void Light::bindForShadowRenderPoint( RenderBaseShader * point_shadow_shader, int iteration)
 {
-  //std::cout<< "rerender light"<<std::endl;
   if( m_type == LIGHT_POINT)
   { 
      
@@ -824,8 +822,7 @@ void Light::bindForRender(RenderShader * render_shader)
       );
       if( m_shadow_enabled )
       {
-        int num = render_shader->setShadowMap(biasMatrix * getProjection() * getView());
-       // std::cout << num <<std::endl;
+        int num = render_shader->setShadowMap(biasMatrix * getProjection() * getView());   
         m_shadow_index = num;
         m_directional_buffer->bindForOutput(num);
       }

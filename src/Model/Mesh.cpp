@@ -45,6 +45,15 @@ Mesh::Mesh(const aiMesh*mesh, int mat_index)
     m_indexed_representation.m_positions.push_back(glm::vec3(pPos->x,pPos->y,pPos->z )  );       
     m_indexed_representation.m_texCoords.push_back(glm::vec2(pTexCoord->x,1-pTexCoord->y)); // Flipp tex coords in y
     m_indexed_representation.m_normals.push_back(glm::vec3(pNormal->x,pNormal->y,pNormal->z ));
+
+   if( mesh->HasTangentsAndBitangents() )
+   {
+     aiVector3D* pTangent = &(mesh->mTangents[i]);
+     aiVector3D* pBitangent = &(mesh->mBitangents[i]);
+     m_indexed_representation.m_tangents.push_back(glm::vec3(pTangent->x,pTangent->y,pTangent->z ));
+     m_indexed_representation.m_bitangents.push_back(glm::vec3(pBitangent->x,pBitangent->y,pBitangent->z ));
+   }
+
   }
   m_bounding_box = new BoundingBox(min_x,max_x,min_y,max_y,min_z,max_z);
 
@@ -109,6 +118,18 @@ void  Mesh::initMesh(const  IndexedRepresentation& model)
 
   gl::EnableVertexAttribArray(2);
   gl::VertexAttribPointer(2, 3, gl::FLOAT, gl::FALSE_, 0, 0);
+
+  gl::BindBuffer(gl::ARRAY_BUFFER, m_vertex_array_buffers[TANGENT_VB]);
+  gl::BufferData(gl::ARRAY_BUFFER, model.m_tangents.size() * sizeof(model.m_tangents[0]), &model.m_tangents[0], gl::STATIC_DRAW );
+
+  gl::EnableVertexAttribArray(3);
+  gl::VertexAttribPointer(3, 3, gl::FLOAT, gl::FALSE_, 0, 0);
+
+  gl::BindBuffer(gl::ARRAY_BUFFER, m_vertex_array_buffers[BITANGENT_VB]);
+  gl::BufferData(gl::ARRAY_BUFFER, model.m_bitangents.size() * sizeof(model.m_bitangents[0]), &model.m_bitangents[0], gl::STATIC_DRAW );
+
+  gl::EnableVertexAttribArray(4);
+  gl::VertexAttribPointer(4, 3, gl::FLOAT, gl::FALSE_, 0, 0);
 
   gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, m_vertex_array_buffers[INDEX_VB]);
   gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, model.m_indices.size() * sizeof(model.m_indices[0]), &model.m_indices[0], gl::STATIC_DRAW );

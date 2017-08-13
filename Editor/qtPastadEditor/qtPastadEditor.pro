@@ -239,7 +239,7 @@ INCLUDEPATH += $$PWD/../../../libs/boost_1_59_0/lib64-msvc-14.0
 DEPENDPATH += $$PWD/../../../libs/boost_1_59_0/lib64-msvc-14.0
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../libs/tinyxml2-master/tinyxml2/bin/x64-Release-Dll/ -ltinyxml2
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../libs/tinyxml2-master/tinyxml2/bin/x64-Release-Dll/ -ltinyxml2
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../libs/tinyxml2-master/tinyxml2/bin/x64-Debug-Dll/ -ltinyxml2
 else:unix: LIBS += -L$$PWD/../../../libs/tinyxml2-master/tinyxml2/bin/x64-Release-Dll/ -ltinyxml2
 
 INCLUDEPATH += $$PWD/../../../libs/tinyxml2-master/tinyxml2/bin/x64-Release-Dll
@@ -253,14 +253,14 @@ INCLUDEPATH += $$PWD/../../../libs/assimp/lib64
 DEPENDPATH += $$PWD/../../../libs/assimp/lib64
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../libs/soil/lib/ -lSOIL_64
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../libs/soil/lib/ -lSOIL_64
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../libs/soil/lib/ -lSOILd_64
 else:unix: LIBS += -L$$PWD/../../../libs/soil/lib/ -lSOIL_64
 
 INCLUDEPATH += $$PWD/../../../libs/soil
 DEPENDPATH += $$PWD/../../../libs/soil
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../libs/freetype-2.6.2/objs/vc2010/x64/ -lfreetype262MT
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../libs/freetype-2.6.2/objs/vc2010/x64/ -lfreetype262MT
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../libs/freetype-2.6.2/objs/vc2010/x64/ -lfreetype262d
 else:unix: LIBS += -L$$PWD/../../../libs/freetype-2.6.2/objs/vc2010/x64/ -lfreetype262MT
 
 INCLUDEPATH += $$PWD/../../../libs/freetype-2.6.2/objs/vc2010/x64
@@ -286,3 +286,5 @@ FORMS += \
     ObjectDatabaseEditor.ui \
     scriptwindow \
     SuccessorSelector.ui
+
+DISTFILES +=

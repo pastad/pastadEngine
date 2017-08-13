@@ -162,7 +162,6 @@ void Model::render(RenderBaseShader * render_shader, std::vector<Object *> objec
 
 bool Model::load()
 {
-  m_mutex.lock();
   Engine::getLog()->log("Model", "Loading model ", m_path);
 
   m_animated = false;
@@ -172,7 +171,7 @@ bool Model::load()
   else
   {
     Engine::getLog()->log("Model", "Couldn't open file");
-    m_mutex.unlock();
+
     return false;
   }
 
@@ -183,7 +182,7 @@ bool Model::load()
   if( !m_scene)
   {
     Engine::getLog()->log("Model","Loading error", m_importer.GetErrorString());
-    m_mutex.unlock();
+
     return false;
   }
 
@@ -191,7 +190,6 @@ bool Model::load()
   m_GlobalInverseTransform.Inverse();
 
   processScene();
-  m_mutex.unlock();
 	return true;
 }
 
@@ -460,18 +458,13 @@ bool Model::isAnimated()
 
 Object * Model::getInstance(Scene * scene)
 {
-  m_mutex.lock();
-  //Engine::getRenderSubsystem()->acquireRenderLock("Model");
   Object * obj = new Object(m_path, this,scene);
-
   m_instances.insert(m_instances.end(),obj);
-  //Engine::getRenderSubsystem()->releaseRenderLock("Model");
-  m_mutex.unlock();
+  std::cout << m_instances.size()<<std::endl;
   return obj;
 }
 void Model::removeInstance( Object * obj)
 {
-  m_mutex.lock();
   for(std::vector<Object *>::iterator it = m_instances.begin(); it != m_instances.end();)
   {
     if( (*it) == obj)
@@ -481,7 +474,6 @@ void Model::removeInstance( Object * obj)
     else
       it++;
   }
-  m_mutex.unlock();
 }
 
 std::map<int,Material *> Model::getMaterials()

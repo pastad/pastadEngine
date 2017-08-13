@@ -122,7 +122,7 @@ void FileViewer::refreshButtons()
   std::map<std::string,boost::filesystem::path>::iterator it = m_current_path_directories.begin();
   std::map<std::string,boost::filesystem::path>::iterator it2 = m_current_path_files.begin();
 
-  for(int x=0; x<m_view_offset;x++)
+  for(unsigned int x=0; x<m_view_offset;x++)
   {
     if(x <m_current_path_directories.size())
       it++;

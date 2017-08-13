@@ -39,9 +39,9 @@ void Terrain::generate()
   m_terrain_size =1000;
   float step_size = (float)m_terrain_size / (float) m_subdivision_amount;
 
-  for( int y =0; y< m_subdivision_amount ; y++)
+  for( unsigned int y =0; y< m_subdivision_amount ; y++)
   {
-    for( int x = 0; x < m_subdivision_amount ; x++)
+    for( unsigned int x = 0; x < m_subdivision_amount ; x++)
     {
       model.m_positions.push_back(glm::vec3(x *step_size, heightFunction(glm::vec2( x *step_size,y * step_size )  )  , y * step_size)  );
       model.m_texCoords.push_back(glm::vec2(0,0)); // Flipp tex coords in y
@@ -49,9 +49,9 @@ void Terrain::generate()
     }
   }
 
-  for( int y =0; y< m_subdivision_amount-1 ; y++)
+  for(unsigned int y =0; y< m_subdivision_amount-1 ; y++)
   {
-    for( int x = 0; x < m_subdivision_amount -1; x++)
+    for(unsigned int x = 0; x < m_subdivision_amount -1; x++)
     {     
        
       int offset = y * m_subdivision_amount;

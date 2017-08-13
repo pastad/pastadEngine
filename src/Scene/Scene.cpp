@@ -101,7 +101,7 @@ void Scene::updateObjectsScripts(std::vector<Object *> objs, float delta, Scene 
     {
       std::cout<< "script up" <<std::endl;
       (*it)->update(delta, current);
-      (*it)->releaseLock();
+
       it = objs.erase(it);
     }
   }
@@ -113,7 +113,7 @@ void Scene::updateObjectsAnimated(std::vector<Object *> objs, float delta )
     for (std::vector<Object *>::iterator it = objs.begin(); it != objs.end(); )
     {
       (*it)->advanceAnimation(delta);
-      (*it)->releaseLock();
+
       it = objs.erase(it);
     }
   }
@@ -153,6 +153,7 @@ void Scene::timeUpdate(float delta)
 
 void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, RenderBaseShader * terrain_shader , RenderBaseShader *  water_shader, bool transparent)
 {
+  acquireLock("scene render");
 
   render_shader->setLights(&m_lights);
   render_shader->setCameraPosition(m_camera->getPosition());
@@ -203,12 +204,12 @@ void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, R
   {
     (*it)->render(water_shader);
   }
-
+  releaseLock("scene render");
 }
 
 void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* point_shadow_shader, bool directional_enabled, bool point_enabled)
 {  
-
+    acquireLock("scene render shadow");
   for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end();it++)
   {
     if( (*it)->getShadowRefresh() && (*it)->isShadowEnabled())
@@ -308,6 +309,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
       }
     }
   }
+  releaseLock("scene render shadow");
 }
 
 void Scene::renderSkybox(SkyboxShader * skybox_shader)
@@ -668,6 +670,7 @@ Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, 
 {
   try
   {
+    acquireLock("scene add");
     Helper::checkGLError("add Object");
 
     Engine::getLog()->log("Scene", "adding Object");
@@ -676,13 +679,16 @@ Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, 
     if(m != nullptr)
     {
       obj = m->getInstance(this);
-      if( obj!= nullptr)
+      if( obj != nullptr)
       {
-        obj->setId(getObjectIdentification());
+            Engine::getLog()->log("Scene", "adding Object2");
+            std::cout << obj <<std::endl;
+            std::cout << obj->getModel() <<std::endl;
+    //    obj->setId(getObjectIdentification());
         obj->setPosition(position);
-
         if (obj->getModel()->isInstanced())
         {
+              Engine::getLog()->log("Scene", "adding Object3i");
           bool should_be_inserted = true;
           for (int x = 0; x < m_models_instanced.size(); x++)
           {
@@ -694,6 +700,7 @@ Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, 
         }
         else
         {
+              Engine::getLog()->log("Scene", "adding Object3");
           if( obj->isAnimated())
             m_objects_animated.push_back(obj);
 
@@ -705,20 +712,23 @@ Object * Scene::addObject(std::string path, glm::vec3 position, bool instanced, 
           else
             m_objects_dynamic.push_back(obj);
           m_models[path] = m;
-          if(insert_in_tree )
-            m_tree_root->insert(obj);             
+                          std::cout << obj <<std::endl;
+        //  m_models.insert(std::pair<std::string , Model*>(path, m) );
+        //  if(insert_in_tree )
+        //    m_tree_root->insert(obj);
           refreshRenderObjects();
         }
       }
     }
     else    
        Engine::getLog()->log("Scene", "Object is null");
-
+    Engine::getLog()->log("Scene", "done");
+    releaseLock("scene add");
     return obj;
   }
-  catch (...)
+  catch (std::exception ex)
   {
-
+    Engine::getLog()->log("Scene", ex.what());
   }
   return nullptr;
 }
@@ -971,7 +981,7 @@ void Scene::acquireLock(std::string who)
   try
   {
     Engine::getLog()->log(LF_TS, "Scene", "lock wanted by ", who);
-   // m_mutex.lock();
+    m_mutex.lock();
     Engine::getLog()->log(LF_TS, "Scene", "lock acquired by ", who);
   }
   catch (std::exception ex)
@@ -984,7 +994,7 @@ void Scene::releaseLock(std::string who)
 {
   try
   {
-    //m_mutex.unlock();
+    m_mutex.unlock();
     Engine::getLog()->log(LF_TS, "Scene", "lock unlocked by ", who);
   }
   catch (std::exception ex)

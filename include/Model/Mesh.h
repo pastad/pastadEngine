@@ -50,6 +50,8 @@ private:
       POSITION_VB,
       TEXCOORD_VB,
       NORMAL_VB,
+      TANGENT_VB,
+      BITANGENT_VB,
       INDEX_VB,
       MODEL_VB,
       NUM_BUFFERS

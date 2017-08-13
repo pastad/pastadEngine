@@ -161,11 +161,6 @@ public:
 
   // removes and deletes the set script
   void removeScript();
-
-  // acquires the mutex lock or waits
-  bool acquireLock();
-  void acquireLockHard();
-  void releaseLock();
   
   // resets the object to the start
   void resetToStart();
@@ -222,9 +217,6 @@ private:
     
   // the scene the object is contained in
   Scene * m_parent_scene;
-
-  // the mutex for thread safety
-  std::mutex m_mutex;
 
   // starting rotation and position for script resets
   glm::vec3 m_start_position;
