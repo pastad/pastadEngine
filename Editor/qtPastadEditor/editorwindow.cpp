@@ -36,6 +36,7 @@ std::vector<Object *> EditorWindow::m_objects;
 std::vector<Light *> EditorWindow::m_lights;
 std::vector<ScriptElement*> EditorWindow::m_script_elements;
 bool EditorWindow::m_refreshing;
+bool EditorWindow::m_initialized;
 
  Ui::EditorWindow * EditorWindow::ui;
 
@@ -79,22 +80,25 @@ EditorWindow::EditorWindow(QWidget *parent) :
     QDialog(parent)
 
 {
-    ui = new Ui::EditorWindow;
-    ui->setupUi(this);
+  ui = new Ui::EditorWindow;
+  ui->setupUi(this);
 
-    m_window = new CustomOpenGLWindow(this->windowHandle());
-    QWidget * widget =QWidget::createWindowContainer( (QWindow *)m_window, this);
+  m_window = new CustomOpenGLWindow(this->windowHandle());
+  QWidget * widget =QWidget::createWindowContainer( (QWindow *)m_window, this);
 
-    widget->setParent( ui->verticalLayout->widget());
+  widget->setParent( ui->verticalLayout->widget());
 
-    ui->verticalLayout->addWidget(widget);
+  ui->verticalLayout->addWidget(widget);
 
-    timerId = startTimer(1);
+  timerId = startTimer(1);
+
+
 
 
 }
 void EditorWindow::update()
 {
+
 }
 bool EditorWindow::running()
 {
@@ -103,8 +107,8 @@ bool EditorWindow::running()
 
 EditorWindow::~EditorWindow()
 {
-    killTimer(timerId);
-    delete ui;
+  killTimer(timerId);
+  delete ui;
 }
 void EditorWindow::timerEvent(QTimerEvent *event)
 {
@@ -112,51 +116,63 @@ void EditorWindow::timerEvent(QTimerEvent *event)
   m_window->current_time =QTime::currentTime().second() +  QTime::currentTime().msec()/1000.0f ;
   if(Engine::getScene() != nullptr)
   {
+    float t = Engine::getScene()->getTime();
 
-      float t = Engine::getScene()->getTime();
+    ui->lbl_time->setText(QString::fromStdString(Engine::getScene()->getTimeString()));
+    //ui->lbl_time->setText(QString::number(t));
 
-      ui->lbl_time->setText(QString::number(t));
+    if(!m_initialized)
+    {
 
+      m_object_database = new ObjectDatabase("default_db.xml");
+      if( m_object_database->load() )
+        refreshObjectDatabase();
+      else
+      {
+        delete m_object_database;
+        m_object_database = nullptr;
+      }
+      m_initialized = true;
+    }
   }
 }
 
 void CustomOpenGLWindow::initialize()
 {
-    m_engine = new Engine();
-    if(! m_engine->initialize(900, 680, RENDER_SUBSYSTEM | PHYSIC_SUBSYSTEM , EM_QT_EDITOR, false) )
-        std::cout << "enigne start failed" <<std::endl;
+  m_engine = new Engine();
+  if(! m_engine->initialize(900, 680, RENDER_SUBSYSTEM | PHYSIC_SUBSYSTEM , EM_QT_EDITOR, false) )
+      std::cout << "enigne start failed" <<std::endl;
 
+  m_engine->setShadowTechniqueDirectional(ST_STANDARD );
+  m_engine->setShadowTechniquePoint(ST_STANDARD);
 
-    m_engine->setShadowTechniqueDirectional(ST_STANDARD );
-    m_engine->setShadowTechniquePoint(ST_STANDARD);
+  m_engine->setPostProcessing(PP_FXAA, true);
+  m_engine->setPostProcessing(PP_HDR, true);
+  m_engine->setPostProcessing(PP_BLOOM, true);
 
-    m_engine->setPostProcessing(PP_FXAA, true);
-    m_engine->setPostProcessing(PP_HDR, true);
-    m_engine->setPostProcessing(PP_BLOOM, true);
+  m_engine->setLoadedFunction(&EditorWindow::sceneLoadedCallback);
 
-    m_engine->setLoadedFunction(&EditorWindow::sceneLoadedCallback);
+  Scene * scene = new Scene();
+  scene->load("default_scene.xml");  // DEBUG: autoload
+  scene->getCamera()->unsetMovementCollisionCheck();
+  scene->getCamera()->dontApplyPhysicsDrop();
 
-    Scene * scene = new Scene();
-    scene->load("demo2f.xml");  // DEBUG: autoload
-    scene->getCamera()->unsetMovementCollisionCheck();
+  m_engine->setScene(scene, false);
 
-    m_engine->setScene(scene, false);
-
-    EditorWindow::refreshObjectList();
-    EditorWindow::refreshLightList();
-
+  EditorWindow::refreshObjectList();
+  EditorWindow::refreshLightList();
 }
 
 void CustomOpenGLWindow::mouseMoveEvent(QMouseEvent *event)
 {
    if(last_mouse_pos.x() !=0.0f && last_mouse_pos.y() != 0.0f)
    {
-       if(mouse_pressed)
-       {
-           QPoint delta = last_mouse_pos - event->pos();
-           if(m_engine != nullptr)
-                m_engine->getScene()->getCamera()->rotate(delta.x(),delta.y());
-       }
+     if(mouse_pressed)
+     {
+       QPoint delta = last_mouse_pos - event->pos();
+       if(m_engine != nullptr)
+            m_engine->getScene()->getCamera()->rotate(delta.x(),delta.y());
+     }
    }
 
    last_mouse_pos = event->pos();
@@ -165,7 +181,7 @@ void CustomOpenGLWindow::mouseMoveEvent(QMouseEvent *event)
 void CustomOpenGLWindow::mousePressEvent(QMouseEvent *event)
 {
    if(event->button()  == Qt::MouseButton::RightButton )
-        mouse_pressed = true;
+      mouse_pressed = true;
     if(event->button()  == Qt::MouseButton::LeftButton )
     {
        glm::vec2 pos(last_mouse_pos.x(),last_mouse_pos.y()  );
@@ -192,29 +208,29 @@ void CustomOpenGLWindow::wheelEvent ( QWheelEvent * event )
 
 void CustomOpenGLWindow::keyPressEvent(QKeyEvent *event)
 {
-    if(m_engine != nullptr)
+  if(m_engine != nullptr)
+  {
+    if(event->key() == Qt::Key_W)
     {
-        if(event->key() == Qt::Key_W)
-        {
-           m_engine->getScene()->getCamera()->move(m_engine->getScene()->getCamera()->getDirection() *0.2f);
-           m_engine->getScene()->cameraMoved();
-        }
-        if(event->key() == Qt::Key_S)
-        {
-           m_engine->getScene()->getCamera()->move(m_engine->getScene()->getCamera()->getDirection() *-0.2f);
-           m_engine->getScene()->cameraMoved();
-        }
-        if(event->key() == Qt::Key_A)
-        {
-           m_engine->getScene()->getCamera()->move(m_engine->getScene()->getCamera()->getRight() *-0.2f);
-           m_engine->getScene()->cameraMoved();
-        }
-        if(event->key() == Qt::Key_D)
-        {
-           m_engine->getScene()->getCamera()->move(m_engine->getScene()->getCamera()->getRight() *0.2f);
-           m_engine->getScene()->cameraMoved();
-        }
+       m_engine->getScene()->getCamera()->move(m_engine->getScene()->getCamera()->getDirection() *0.2f);
+       m_engine->getScene()->cameraMoved();
     }
+    if(event->key() == Qt::Key_S)
+    {
+       m_engine->getScene()->getCamera()->move(m_engine->getScene()->getCamera()->getDirection() *-0.2f);
+       m_engine->getScene()->cameraMoved();
+    }
+    if(event->key() == Qt::Key_A)
+    {
+       m_engine->getScene()->getCamera()->move(m_engine->getScene()->getCamera()->getRight() *-0.2f);
+       m_engine->getScene()->cameraMoved();
+    }
+    if(event->key() == Qt::Key_D)
+    {
+       m_engine->getScene()->getCamera()->move(m_engine->getScene()->getCamera()->getRight() *0.2f);
+       m_engine->getScene()->cameraMoved();
+    }
+  }
 }
 void CustomOpenGLWindow::keyReleaseEvent(QKeyEvent *event)
 {
@@ -236,36 +252,62 @@ bool CustomOpenGLWindow::running()
 
 
 // scene ---------------------------------------------------------------------------------------------------------
+
+void EditorWindow::on_pbNewScene_clicked(bool checked)
+{
+    try
+    {
+       Scene * scene = new Scene();
+       std::cout << "setting new scene" << std::endl;
+       Engine::setScene(scene, true);
+       scene->getCamera()->dontApplyPhysicsDrop();
+       scene->getCamera()->setRotationAllowed();
+       scene->getCamera()->unsetMovementCollisionCheck();
+
+       m_object = nullptr;
+       m_light = nullptr;
+
+       refreshObjectList();
+       refreshLightList();
+
+    }
+    catch(std::exception ex)
+    {
+        std::cout << ex.what() <<std::endl;
+    }
+}
+
+
 void EditorWindow::on_pbLoadScene_clicked(bool checked)
 {
     try
     {
-        QString file_name = QFileDialog::getOpenFileName(this,
-          tr("Model file path "), QDir::currentPath(), tr("Model Files (*.*)"));
-        if (file_name.toUtf8() == "")
-          file_name = QString("Not set");
-        else
+      QString file_name = QFileDialog::getOpenFileName(this,
+        tr("Model file path "), QDir::currentPath(), tr("Model Files (*.*)"));
+      if (file_name.toUtf8() == "")
+        file_name = QString("Not set");
+      else
+      {
+        std::size_t found = file_name.toStdString().find(QDir::currentPath().toStdString());
+        if (found != std::string::npos)
         {
-          std::size_t found = file_name.toStdString().find(QDir::currentPath().toStdString());
-          if (found != std::string::npos)
+          std::cout << QDir::currentPath().toStdString().size() << std::endl;
+          std::string str3 = file_name.toStdString().substr(QDir::currentPath().toStdString().size() + 1);
+
+          Scene * scene = new Scene();
+
+          if (scene->load(str3) )
           {
-            std::cout << QDir::currentPath().toStdString().size() << std::endl;
-            std::string str3 = file_name.toStdString().substr(QDir::currentPath().toStdString().size() + 1);
-
-            Scene * scene = new Scene();
-
-            if (scene->load(str3) )
-            {
-              std::cout << "setting scene" << std::endl;
-              Engine::setScene(scene, true);
-              scene->getCamera()->dontApplyPhysicsDrop();
-              scene->getCamera()->setRotationAllowed();
-               scene->getCamera()->unsetMovementCollisionCheck();
-              refreshObjectList();
-              refreshLightList();
-            }
+            std::cout << "setting scene" << std::endl;
+            Engine::setScene(scene, true);
+            scene->getCamera()->dontApplyPhysicsDrop();
+            scene->getCamera()->setRotationAllowed();
+             scene->getCamera()->unsetMovementCollisionCheck();
+            refreshObjectList();
+            refreshLightList();
           }
         }
+      }
     }
     catch(std::exception ex)
     {
@@ -277,18 +319,18 @@ void EditorWindow::on_pbSaveScene_clicked(bool checked)
 {
     try
     {
-        std::string file_name = QFileDialog::getSaveFileName(this,
-          tr("Save Scene "), QDir::currentPath(), tr("XML Files (*.xml)")).toUtf8();
+      std::string file_name = QFileDialog::getSaveFileName(this,
+        tr("Save Scene "), QDir::currentPath(), tr("XML Files (*.xml)")).toUtf8();
 
-        if (file_name != "")
+      if (file_name != "")
+      {
+        Scene * scene = Engine::getScene();
+
+        if (scene != nullptr)
         {
-          Scene * scene = Engine::getScene();
-
-          if (scene != nullptr)
-          {
-            scene->save(file_name);
-          }
+          scene->save(file_name);
         }
+      }
     }
         catch(std::exception ex)
     {
@@ -310,7 +352,7 @@ void EditorWindow::refreshObjectList()
   Scene * scene = Engine::getScene();
   if (scene != nullptr)
   {
-   // scene->acquireLock("refreshObjectList");
+    scene->acquireLock("refreshObjectList");
     m_objects = scene->getObjects();
 
     for (std::vector<Object *>::iterator it = m_objects.begin(); it != m_objects.end(); it++)
@@ -321,7 +363,7 @@ void EditorWindow::refreshObjectList()
         //ui->lw_sc_objects->insertItem(ui->lw_sc_objects->count(), QString::fromUtf8((*it)->getIdentifier().c_str()));
       }
     }
-  //  scene->releaseLock("refreshObjectList");
+    scene->releaseLock("refreshObjectList");
   }
   std::cout << "ref obj list end" << std::endl;
 }
@@ -521,7 +563,7 @@ void EditorWindow::on_pb_object_remove_clicked()
 
 void EditorWindow::changeObject(Object * obj)
 {
-    std::cout << "change obj" <<std::endl;
+  std::cout << "change obj" <<std::endl;
   m_object =obj;
   m_object_scripts = obj;
 
@@ -962,33 +1004,33 @@ void EditorWindow::on_pb_lights_add_clicked()
   Scene * scene = Engine::getScene();
   if(scene != nullptr)
   {
-      if (sel == "directional")
-      {
-          Light * new_light = scene->addLight();
-          if (!new_light->setDirectional(glm::vec3(0, 1, 0), glm::vec3(1, 0.95, 0.9), glm::vec3(1, 1, 1), glm::vec3(1, 1, 1), 0.3f, ui->rb_lights_cast_shadow->isChecked()))
-            scene->removeLight(new_light);
-          else
-            changeLight(new_light);
-         refreshLightList();
-      }
-      if (sel == "spot")
-      {
-          Light * new_light = scene->addLight();
-          if (!new_light->setSpot(scene->getCamera()->getPosition(), glm::vec3(1, 1, 1), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1, 1, 1), 1.0f, 1.0f, 0.09f, 0.032f, 45.0f, glm::vec2(0, 0),ui->rb_lights_cast_shadow->isChecked()))
-            scene->removeLight(new_light);
-          else
-            changeLight(new_light);
-          refreshLightList();
-      }
-      if (sel == "point")
-      {
-          Light * new_light = scene->addLight();
-          if (!new_light->setPoint(scene->getCamera()->getPosition(), glm::vec3(1, 1, 1), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1, 1, 1), 0.5f, 0.1f, 0.09f, 0.032f, ui->rb_lights_cast_shadow->isChecked()))
-            scene->removeLight(new_light);
-          else
-            changeLight(new_light);
-          refreshLightList();
-      }
+    if (sel == "directional")
+    {
+        Light * new_light = scene->addLight();
+        if (!new_light->setDirectional(glm::vec3(0, 1, 0), glm::vec3(1, 0.95, 0.9), glm::vec3(1, 1, 1), glm::vec3(1, 1, 1), 0.3f, ui->rb_lights_cast_shadow->isChecked()))
+          scene->removeLight(new_light);
+        else
+          changeLight(new_light);
+       refreshLightList();
+    }
+    if (sel == "spot")
+    {
+        Light * new_light = scene->addLight();
+        if (!new_light->setSpot(scene->getCamera()->getPosition(), glm::vec3(1, 1, 1), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1, 1, 1), 1.0f, 1.0f, 0.09f, 0.032f, 45.0f, glm::vec2(0, 0),ui->rb_lights_cast_shadow->isChecked()))
+          scene->removeLight(new_light);
+        else
+          changeLight(new_light);
+        refreshLightList();
+    }
+    if (sel == "point")
+    {
+        Light * new_light = scene->addLight();
+        if (!new_light->setPoint(scene->getCamera()->getPosition(), glm::vec3(1, 1, 1), glm::vec3(1.0, 1.0, 1.0), glm::vec3(1, 1, 1), 0.5f, 0.1f, 0.09f, 0.032f, ui->rb_lights_cast_shadow->isChecked()))
+          scene->removeLight(new_light);
+        else
+          changeLight(new_light);
+        refreshLightList();
+    }
   }
 }
 void EditorWindow::on_lw_lights_active_currentRowChanged(int row)

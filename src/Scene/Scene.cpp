@@ -39,6 +39,7 @@ Scene::Scene()
   m_fog_color = glm::vec3(1,1,1);
   m_fog_factor = 0.0f;
   m_fog_offset = 0.0f;
+  m_time_line_seconds = 0.0f;
   }
 
 Scene::~Scene()
@@ -153,7 +154,7 @@ void Scene::timeUpdate(float delta)
 
 void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, RenderBaseShader * terrain_shader , RenderBaseShader *  water_shader, bool transparent)
 {
-  acquireLock("scene render");
+  //acquireLock("scene render");
 
   render_shader->setLights(&m_lights);
   render_shader->setCameraPosition(m_camera->getPosition());
@@ -204,12 +205,12 @@ void Scene::render(RenderShader * render_shader, SkyboxShader * skybox_shader, R
   {
     (*it)->render(water_shader);
   }
-  releaseLock("scene render");
+  //releaseLock("scene render");
 }
 
 void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* point_shadow_shader, bool directional_enabled, bool point_enabled)
 {  
-    acquireLock("scene render shadow");
+   // acquireLock("scene render shadow");
   for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end();it++)
   {
     if( (*it)->getShadowRefresh() && (*it)->isShadowEnabled())
@@ -309,7 +310,7 @@ void Scene::renderShadow(RenderBaseShader * shadow_shader, RenderBaseShader* poi
       }
     }
   }
-  releaseLock("scene render shadow");
+  //releaseLock("scene render shadow");
 }
 
 void Scene::renderSkybox(SkyboxShader * skybox_shader)
@@ -599,15 +600,17 @@ SceneTreeElement * Scene::getSceneRoot()
 //light
 
 Light * Scene::addLight()
-{
- 
+{ 
+  acquireLock("add Light ");
   Light * light = new Light();
   m_lights.insert(m_lights.end(), light);  
+  releaseLock("add Light");
   return light; 
 }
 
 void Scene::removeLight(Light * l)
 {
+  acquireLock("remove Light ");
   int id = l->getId();
   for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end();)
   {
@@ -620,15 +623,18 @@ void Scene::removeLight(Light * l)
     else
       it++;
   }
+  releaseLock("remove Light");
 }
 
 Light * Scene::getLight(int id)
 {
+  acquireLock("add light");
   for(std::vector<Light *>::iterator it = m_lights.begin(); it != m_lights.end(); it++)
   {
     if( (*it)->getId() == id)
       return (*it);
   }
+  releaseLock("add light");
   return nullptr;
 }
 std::vector<Light *> Scene::getLights()

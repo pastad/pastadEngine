@@ -568,6 +568,9 @@ void RenderSubsystem::startRender()
     gl::ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     m_shader->reset();
     Helper::checkGLError("startRender");
+    Scene * scene = Engine::getScene();
+    if(scene != nullptr)
+      scene->acquireLock("start Render");
   }
 }
 
@@ -607,6 +610,9 @@ void RenderSubsystem::endRender(bool swap_buffer)
 		m_shader->reset();
 
     Helper::checkGLError("end Render");
+    Scene * scene = Engine::getScene();
+    if(scene != nullptr)
+      scene->releaseLock("end Render");
 	}
 }
 

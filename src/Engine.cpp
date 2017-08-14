@@ -84,7 +84,7 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 	Engine::m_time_delta = 0.0f;
 	Engine::m_time_last = -1.0f;
 
-  m_log = new Log( (LogFlag) (  LF_All )   );
+  m_log = new Log( (LogFlag) (  LF_Editor )   );
 	m_log->debugMode();
 
 	m_render_system =  new RenderSubsystem();
@@ -185,7 +185,7 @@ bool Engine::initialize(unsigned int width, unsigned int height, unsigned int sy
 bool Engine::initialize(std::string path)
 {
 
-  m_log = new Log((LogFlag)(LF_All ));
+  m_log = new Log((LogFlag)(LF_Editor ));
   m_log->debugMode();
 
   tinyxml2::XMLDocument document;
@@ -435,7 +435,8 @@ void Engine::update(float time_ )
 		sceneSwitch();
 		if(m_scene != nullptr)
 		{
-      m_scene->update( time_ - m_time_last);
+      if(m_time_last != -1.0f)
+        m_scene->update( time_ - m_time_last);
 
       if( m_system_flags & PHYSIC_SUBSYSTEM )
         m_physic_system->updateScene(m_scene, m_time_delta);

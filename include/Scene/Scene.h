@@ -138,6 +138,9 @@ public:
   void acquireLock(std::string who);
   void releaseLock(std::string who);
 
+  // returns a string of the current scene time
+  std::string getTimeString();
+
 private:
 
   // holds pointers to the objects
@@ -201,9 +204,6 @@ private:
 
   // updates the time by delta
   void timeUpdate(float delta);
-
-  // returns a string of the current scene time
-  std::string getTimeString();
 
   // the update functions
   static void updateObjectsScripts(std::vector<Object *> objs,  float delta, Scene * current);

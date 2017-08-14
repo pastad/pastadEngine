@@ -34,7 +34,7 @@
   <widget class="QPushButton" name="pbLoadScene">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>110</x>
      <y>0</y>
      <width>75</width>
      <height>23</height>
@@ -47,7 +47,7 @@
   <widget class="QPushButton" name="pbSaveScene">
    <property name="geometry">
     <rect>
-     <x>90</x>
+     <x>200</x>
      <y>0</y>
      <width>75</width>
      <height>23</height>
@@ -1522,6 +1522,22 @@ D</string>
    </property>
    <property name="text">
     <string>time</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pbNewScene">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>0</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>New Scene</string>
+   </property>
+   <property name="checkable">
+    <bool>false</bool>
    </property>
   </widget>
  </widget>

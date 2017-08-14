@@ -60,14 +60,13 @@ private:
 
     static void refreshSelected();
 
-
-
+    static bool m_initialized;
 
 protected:
     void timerEvent(QTimerEvent *event);
 private slots:
 
-
+    void on_pbNewScene_clicked(bool checked);
     void on_pbLoadScene_clicked(bool checked);
     void on_pbSaveScene_clicked(bool checked);
 
