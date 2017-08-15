@@ -1,0 +1,8 @@
+<ObjectDatabase>
+    <ObjectDatabaseEntry id="1" name="Ground" path="models/demo_scene/ground.obj" icon_path="models/demo_scene/path.png" description="The street for the demo scene."/>
+    <ObjectDatabaseEntry id="2" name="Wall" path="models/demo_scene/wall.obj" icon_path="models/demo_scene/wall.png" description="The backgorund for the demo scene."/>
+    <ObjectDatabaseEntry id="3" name="Dumpster" path="models/demo_scene/dumpster/dumpster.obj" icon_path="Not set" description="..."/>
+    <ObjectDatabaseEntry id="4" name="LampOuter" path="models/demo_scene/lamp_outer.obj" icon_path="Not set" description="..."/>
+    <ObjectDatabaseEntry id="6" name="Background" path="models/demo_scene/background.obj" icon_path="models/demo_scene/background.png" description="The whole background of the demo scene."/>
+    <ObjectDatabaseEntry id="9" name="Barrel" path="models/demo_scene/barrel/fuel_can.obj" icon_path="models/demo_scene/barrel/preview.png" description="Provided by Nobiax. nobiax.deviantart.com"/>
+</ObjectDatabase>

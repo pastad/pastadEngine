@@ -1,0 +1,51 @@
+-IC:/Qt/5.8/msvc2015_64/mkspecs/win32-msvc2015
+-IC:/Users/pastad/Documents/pastadEngine/Editor/qtPastadEditor
+-IC:/Program Files (x86)/Windows Kits/10/Lib/10.0.14393.0/um/x64
+-IC:/Users/pastad/Documents/pastadEngine/external
+-IC:/Users/pastad/Documents/pastadEngine/include/Effects
+-IC:/Users/pastad/Documents/pastadEngine/include/Model
+-IC:/Users/pastad/Documents/pastadEngine/include/Geometric
+-IC:/Users/pastad/Documents/pastadEngine/include/Render
+-IC:/Users/pastad/Documents/pastadEngine/include/GUI
+-IC:/Users/pastad/Documents/pastadEngine/include/Extension
+-IC:/Users/pastad/Documents/pastadEngine/include/Scene
+-IC:/Users/pastad/Documents/pastadEngine/include/Script
+-IC:/Users/pastad/Documents/pastadEngine/include/Shaders
+-IC:/Users/pastad/Documents/pastadEngine/include/Subsystems
+-IC:/Users/pastad/Documents/pastadEngine/include/Structures
+-IC:/Users/pastad/Documents/pastadEngine/include
+-IC:/Users/pastad/Documents/pastadEngine/pastadEditor
+-IC:/Users/pastad/Documents/libs/glm
+-IC:/Users/pastad/Documents/libs/glfw_64/include
+-IC:/Users/pastad/Documents/libs/assimp/include
+-IC:/Users/pastad/Documents/libs/tinyxml2-master
+-IC:/Users/pastad/Documents/libs/soil/src
+-IC:/Users/pastad/Documents/libs/SFML-2.4.0/include
+-IC:/Users/pastad/Documents/libs/boost_1_59_0
+-IC:/Users/pastad/Documents/libs/freetype-2.6.5/include
+-IC:/Program Files (x86)/Windows Kits/10/Lib/10.0.14393.0/um/x64
+-IC:/Users/pastad/Documents/libs/glfw_64/lib-vc2015
+-IC:/Users/pastad/Documents/libs/boost_1_59_0/lib64-msvc-14.0
+-IC:/Users/pastad/Documents/libs/tinyxml2-master/tinyxml2/bin/x64-Release-Dll
+-IC:/Users/pastad/Documents/libs/assimp/lib64
+-IC:/Users/pastad/Documents/libs/soil
+-IC:/Users/pastad/Documents/libs/freetype-2.6.2/objs/vc2010/x64
+-IC:/Program Files (x86)/Windows Kits/10/Lib/10.0.14393.0/um/x64
+-IC:/Program Files (x86)/Windows Kits/10/Lib/10.0.14393.0/um/x64
+-IC:/Qt/5.8/msvc2015_64/include
+-IC:/Qt/5.8/msvc2015_64/include/QtQuick
+-IC:/Qt/5.8/msvc2015_64/include/QtOpenGL
+-IC:/Qt/5.8/msvc2015_64/include/QtWidgets
+-IC:/Qt/5.8/msvc2015_64/include/QtGui
+-IC:/Qt/5.8/msvc2015_64/include/QtANGLE
+-IC:/Qt/5.8/msvc2015_64/include/QtQml
+-IC:/Qt/5.8/msvc2015_64/include/QtNetwork
+-IC:/Qt/5.8/msvc2015_64/include/QtCore
+-I.
+-IC:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\INCLUDE
+-IC:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\ATLMFC\INCLUDE
+-IC:\Program Files (x86)\Windows Kits\10\include\10.0.15063.0\ucrt
+-IC:\Program Files (x86)\Windows Kits\NETFXSDK\4.6.1\include\um
+-IC:\Program Files (x86)\Windows Kits\10\include\10.0.15063.0\shared
+-IC:\Program Files (x86)\Windows Kits\10\include\10.0.15063.0\um
+-IC:\Program Files (x86)\Windows Kits\10\include\10.0.15063.0\winrt
