@@ -5,7 +5,7 @@ Video : [https://www.youtube.com/watch?v=K5UyU4VL4TI](https://www.youtube.com/wa
 Screenshots:
 
 ![Alt text](/Release/screenshot.PNG?raw=true "Optional Title")
-![Alt text](/Release/screenshot_3.JPG?raw=true "Optional Title")
+![Alt text](/Release/screenshot_4.PNG?raw=true "Optional Title")
 
 
 This is a rendering engine project. It includes an editor to maipulate the scene (place object, lights, ... )
@@ -101,6 +101,7 @@ Partially done ( improvements should be done) :
   - SceneEditor
     - Add Skybox
 
+  - HDR ( basic |should be improved later ) 
 
 TODO:
 
@@ -110,9 +111,7 @@ Structural:
   
 Graphical:
   - water
-  - ambient oclusion
   - bloom effect ( basic|needs major improvement)
-  - HDR ( basic |should be improved later ) 
   - terrain
   - OIT
 
