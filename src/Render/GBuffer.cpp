@@ -17,6 +17,8 @@ GBuffer::~GBuffer()
 
   delete m_position_texture;
   delete m_normal_texture;
+  delete m_tangent_texture;
+  delete m_bitangent_texture;
   delete m_color_texture;
   delete m_material_texture;  
 }
@@ -38,6 +40,12 @@ bool GBuffer::initialize()
   
   m_normal_texture = new Texture();
   m_normal_texture->create(0, gl::RGB32F,Engine::getWindowWidth(),  Engine::getWindowHeight());
+
+  m_tangent_texture = new Texture();
+  m_tangent_texture->create(0, gl::RGB32F,Engine::getWindowWidth(),  Engine::getWindowHeight());
+
+  m_bitangent_texture = new Texture();
+  m_bitangent_texture->create(0, gl::RGB32F,Engine::getWindowWidth(),  Engine::getWindowHeight());
   
   m_color_texture =  new Texture();
   m_color_texture->create(0, gl::RGBA8,Engine::getWindowWidth(),  Engine::getWindowHeight());
@@ -55,10 +63,12 @@ bool GBuffer::initialize()
   m_color_texture->bindToFramebuffer(gl::COLOR_ATTACHMENT2);  
   m_material_texture->bindToFramebuffer(gl::COLOR_ATTACHMENT3);  
   m_color_texture_2->bindToFramebuffer(gl::COLOR_ATTACHMENT4);
+  m_tangent_texture->bindToFramebuffer(gl::COLOR_ATTACHMENT5);
+  m_bitangent_texture->bindToFramebuffer(gl::COLOR_ATTACHMENT6);
 
   GLenum drawBuffers[] = {gl::NONE, gl::COLOR_ATTACHMENT0, gl::COLOR_ATTACHMENT1,
-                      gl::COLOR_ATTACHMENT2,  gl::COLOR_ATTACHMENT3,  gl::COLOR_ATTACHMENT4 };
-  gl::DrawBuffers(6, drawBuffers);
+                      gl::COLOR_ATTACHMENT2,  gl::COLOR_ATTACHMENT3,  gl::COLOR_ATTACHMENT4 ,  gl::COLOR_ATTACHMENT5 ,  gl::COLOR_ATTACHMENT6 };
+  gl::DrawBuffers(8, drawBuffers);
 
   gl::BindFramebuffer(gl::FRAMEBUFFER, 0);
 
@@ -91,6 +101,8 @@ void GBuffer::bindForOutput(int offset)
   m_color_texture->bind(2 + offset);
   m_material_texture->bind(3 + offset);
   m_color_texture_2->bind(4 + offset);
+  m_tangent_texture ->bind(5 + offset);
+  m_bitangent_texture->bind(6 + offset);
 }
 
 void GBuffer::bindMaterialTextureForOutput(unsigned int off)

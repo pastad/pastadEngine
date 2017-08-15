@@ -14,7 +14,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Database Editor</string>
   </property>
   <widget class="QListWidget" name="lw_objects_chooser">
    <property name="geometry">

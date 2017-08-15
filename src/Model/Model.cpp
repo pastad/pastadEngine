@@ -94,6 +94,7 @@ void Model::render(RenderBaseShader * render_shader, std::vector<Object *> objec
       {
         if( with_material )
           m_materials.at((*it)->getMaterialIndex())->bind(0, (RenderShader *) render_shader); 
+
         bool ren = false;
 
         if (transparent_enabled)

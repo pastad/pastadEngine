@@ -320,7 +320,7 @@ void RenderSubsystem::renderPassLight()
   m_shader->setIdentityMatrices();
   m_shader->setAllMaterialsForRenderPass();
 
-  m_ssao_buffer->bindForOutput(5);
+  m_ssao_buffer->bindForOutput(7);
   //m_transparent_buffer->bindForOutput(6);
 
   m_shader->setRenderPass(2);
@@ -489,7 +489,7 @@ void RenderSubsystem::renderSSAO()
   m_pp_shader->setCameraPosition(cam->getPosition());
 
   m_gbuffer->bindForOutput();
-  m_noise_texture->bind(5);
+  m_noise_texture->bind(7);
  // m_transparent_buffer->bindForOutput(6);
   m_ssao_buffer->bindForInput();
  
@@ -501,7 +501,7 @@ void RenderSubsystem::renderSSAO()
 	gl::Finish();
 
 	m_ssao_buffer->unbindFromInput();
-  
+/* // EDIT :REMOVE ME!
   // blur 1
 
   m_pp_shader->setRenderPass(PASS_BLUR_1);
@@ -537,7 +537,7 @@ void RenderSubsystem::renderSSAO()
 
   gl::Finish();
 
-  m_ssao_buffer->unbindFromInput();
+  m_ssao_buffer->unbindFromInput();*/
 }
 
 void RenderSubsystem::renderUI()
