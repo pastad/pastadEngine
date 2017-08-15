@@ -1,0 +1,84 @@
+<Scene>
+    <Light Type="1">
+        <Position x="-1" y="3" z="0.55000001"/>
+        <Direction x="0" y="0" z="0"/>
+        <Rotation x="0" y="0"/>
+        <ColorAmbient x="1" y="1" z="1"/>
+        <ColorDiffuse x="1" y="1" z="1"/>
+        <ColorSpecular x="1" y="1" z="1"/>
+        <Intensity value="0.40000001"/>
+        <AttenuationConstant value="0.1"/>
+        <AttenuationLinear value="0.090000004"/>
+        <AttenuationQuadratic value="0.032000002"/>
+        <CutoffAngle value="-33791.004"/>
+        <ShadowEnabled value="1"/>
+    </Light>
+    <Light Type="1">
+        <Position x="-5.0100002" y="3" z="-4.4655399"/>
+        <Direction x="0" y="0" z="0"/>
+        <Rotation x="0" y="0"/>
+        <ColorAmbient x="1" y="1" z="1"/>
+        <ColorDiffuse x="1" y="1" z="1"/>
+        <ColorSpecular x="1" y="1" z="1"/>
+        <Intensity value="0"/>
+        <AttenuationConstant value="0.1"/>
+        <AttenuationLinear value="0.090000004"/>
+        <AttenuationQuadratic value="0.032000002"/>
+        <CutoffAngle value="9.275521e-39"/>
+        <ShadowEnabled value="1"/>
+    </Light>
+    <Light Type="0">
+        <Position x="0" y="0" z="0"/>
+        <Direction x="-1" y="-1" z="1"/>
+        <Rotation x="0" y="0"/>
+        <ColorAmbient x="1" y="1" z="1"/>
+        <ColorDiffuse x="1" y="1" z="1"/>
+        <ColorSpecular x="1" y="1" z="1"/>
+        <Intensity value="2.7755576e-17"/>
+        <AttenuationConstant value="0"/>
+        <AttenuationLinear value="0"/>
+        <AttenuationQuadratic value="0"/>
+        <CutoffAngle value="0"/>
+        <ShadowEnabled value="1"/>
+    </Light>
+    <Object>
+        <Position x="-4" y="0" z="0.5"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="models/demo_scene/dumpster/dumpster.obj"/>
+        <PhysicsEnabled value="1"/>
+        <PhysicsStatic value="1"/>
+        <Visibility value="2"/>
+        <Static value="1"/>
+    </Object>
+    <Object>
+        <Position x="-1" y="3" z="0.55000001"/>
+        <Rotation x="0" y="90" z="0"/>
+        <Scale x="0.0099999998" y="0.0099999998" z="0.0099999998"/>
+        <Identifier value="models/demo_scene/lamp_outer.obj"/>
+        <PhysicsEnabled value="0"/>
+        <PhysicsStatic value="0"/>
+        <Visibility value="2"/>
+        <Static value="1"/>
+    </Object>
+    <Object>
+        <Position x="0.0099999998" y="0" z="0"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Identifier value="models/demo_scene/background.obj"/>
+        <PhysicsEnabled value="0"/>
+        <PhysicsStatic value="0"/>
+        <Visibility value="2"/>
+        <Static value="1"/>
+    </Object>
+    <Object>
+        <Position x="-5" y="0" z="0.5"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="0.5" y="0.5" z="0.5"/>
+        <Identifier value="models/demo_scene/barrel/fuel_can.obj"/>
+        <PhysicsEnabled value="1"/>
+        <PhysicsStatic value="0"/>
+        <Visibility value="2"/>
+        <Static value="0"/>
+    </Object>
+</Scene>
